@@ -1,0 +1,83 @@
+buildscript {
+    repositories {
+        //mavenLocal()
+        mavenCentral()
+    }
+    dependencies {
+        classpath "io.ebean:ebean-gradle-plugin:11.9.1"
+    }
+}
+
+plugins {
+    id 'java'
+    id 'idea'
+    id 'application'
+    id 'io.franzbecker.gradle-lombok' version '1.14'
+    id 'checkstyle'
+    id "org.flywaydb.flyway" version "5.1.4"
+
+}
+apply plugin:'io.ebean'
+
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile ('com.sparkjava:spark-core:2.7.2')
+    compile ('com.google.guava:guava:26.0-jre')
+
+    compile('org.apache.logging.log4j:log4j-api:2.11.1')
+    compile('org.apache.logging.log4j:log4j-core:2.11.1')
+    // Making windows prettier
+    compile('org.fusesource.jansi:jansi:1.17')
+    compile('org.apache.logging.log4j:log4j-slf4j-impl:2.11.1')
+    compile('com.fasterxml.jackson.core:jackson-databind:2.9.6')
+    compile('io.ebean:ebean:11.22.5')
+    compile('org.postgresql:postgresql:42.2.2')
+    compile('ma.glasnost.orika:orika-core:1.5.2')
+    compile('org.flywaydb:flyway-core:5.1.4')
+    compile('com.google.inject:guice:4.2.1')
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+compileJava.options.encoding = "UTF-8"
+compileTestJava.options.encoding = "UTF-8"
+
+mainClassName = "my.little.changelog.Starter"
+
+run {
+    if (project.hasProperty("appArgs")) {
+        args Eval.me(appArgs)
+    }
+}
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'my.little.changelog.Starter'
+    }
+
+    doFirst {
+        from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    }
+    exclude 'META-INF/*.RSA', 'META-INF/*.SF','META-INF/*.DSA'
+}
+
+lombok {
+    version = '1.18.2'
+    sha256 = ""
+}
+
+// Плагин для проверки стилистики кода
+// Запускается gradle checkstyleMain
+checkstyle {
+    configFile = rootProject.file('src/main/resources/checkstyle.xml')
+    toolVersion ="8.8"
+}
+
+ebean {
+    debugLevel = 1
+}
