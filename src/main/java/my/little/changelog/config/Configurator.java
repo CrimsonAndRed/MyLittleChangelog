@@ -57,6 +57,7 @@ public class Configurator {
 
     /**
      * Big facade of initting tasks to run.
+     *
      * @throws Exception can throw any exception during initialization stage
      */
     public void initApplication() throws Exception {
@@ -84,6 +85,8 @@ public class Configurator {
 
     /**
      * Initialization of logger (log4j2).
+     *
+     * @param env current environment
      */
     private void initLogger(String env) {
         ConfigurationSource source;
