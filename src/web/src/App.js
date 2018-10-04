@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 
-import _ from 'lodash'
+import _ from 'lodash';
 
-import './assets/css/default.min.css';
+import './assets/css/main.min.css';
 
 class App extends Component {
   render() {

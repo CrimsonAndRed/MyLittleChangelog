@@ -12,11 +12,13 @@
     "start": "concurrently \"react-scripts start\" \"gulp\"",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "prebuild": "gulp build_scss"
   },
   "devDependencies": {
     "gulp": "^3.9.1",
     "gulp-changed": "^3.2.0",
+    "gulp-clean": "^0.4.0",
     "gulp-clean-css": "^3.10.0",
     "gulp-rename": "^1.4.0",
     "gulp-sass": "^4.0.1",
