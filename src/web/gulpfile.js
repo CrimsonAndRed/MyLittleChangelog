@@ -17,7 +17,8 @@ gulp.task('compile_scss', function() {
 	.pipe(sass().on('error', sass.logError))
 	.pipe(minifyCSS())
 	.pipe(rename({suffix: '.min'}))
-	.pipe(changed(SCSS_DEST))
+	// Cannot handle imports :(
+//	.pipe(changed(SCSS_DEST))
 	.pipe(gulp.dest(SCSS_DEST));
 });
 
