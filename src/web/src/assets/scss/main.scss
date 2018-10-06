@@ -1,13 +1,11 @@
-@import 'background.scss';
+@import 'background';
+@import 'header';
+@import 'util/btns';
+@import 'util/align';
 
 body {
-	font-size: 32px;
-
-	a {
-		color: red;
-	}
-}
-
-#main-header {
-	width: 100%;
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 500;
+    margin: 0px;
+	font-size: 16px;
 }
