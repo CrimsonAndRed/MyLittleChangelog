@@ -6,6 +6,7 @@ import com.google.inject.Injector;
 import com.google.inject.Singleton;
 import lombok.extern.log4j.Log4j2;
 import my.little.changelog.controller.AuthController;
+import my.little.changelog.controller.TestController;
 import my.little.changelog.global.GlobalParams;
 import my.little.changelog.router.decor.*;
 import spark.Request;
@@ -36,6 +37,9 @@ public class Router {
 
     @Inject
     private AuthController authController;
+
+    @Inject
+    private TestController testController;
 
     @Inject
     private Injector injector;
@@ -95,6 +99,11 @@ public class Router {
                 .log()
                 .build());
 
+        Spark.get("/test", Router.Builder.create(testController::test)
+                .measure()
+                .json()
+                .log()
+                .build());
     }
 
     /**
@@ -180,12 +189,12 @@ public class Router {
         }
 
         /**
-         * Default builder, that wraps method call with default functionality (log -> auth -> transaction -> measure -> json -> method call).
+         * Default builder, that wraps method call with default functionality (log -> auth -> transaction -> json -> measure  method call).
          * @param controllerFunc function to be wrapped.
          * @return Wrapped method call.
          */
         public static Route createDefault(BiFunction<Request, Response, Object> controllerFunc) {
-            return new Builder(controllerFunc).json().measure().transaction().auth().log().build();
+            return new Builder(controllerFunc).measure().json().transaction().auth().log().build();
         }
 
     }
