@@ -104,6 +104,13 @@ public class Router {
                 .json()
                 .log()
                 .build());
+
+        Spark.get("/exception", Router.Builder.create(testController::exception)
+                .measure()
+                .json()
+                .log()
+                .build());
+        Spark.get("/nothing", Router.Builder.createDefault(testController::nothing));
     }
 
     /**

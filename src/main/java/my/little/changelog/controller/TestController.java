@@ -23,4 +23,12 @@ public class TestController {
         response.add("Today is " + currTime.getYear() + " year");
         return response;
     }
+
+    public Object exception(Request req, Response res) {
+        throw new RuntimeException();
+    }
+
+    public Object nothing(Request req, Response res) {
+        return new Object();
+    }
 }
