@@ -1,5 +1,6 @@
 @import 'background';
 @import 'header';
+@import 'toast';
 @import 'util/btns';
 @import 'util/align';
 
@@ -7,5 +8,10 @@ body {
     font-family: 'Open Sans', sans-serif;
     font-weight: 500;
     margin: 0px;
-	font-size: 16px;
+    font-size: 16px;
+
+    #main-body {
+      max-width: 1000px;
+      margin: auto;
+    }
 }

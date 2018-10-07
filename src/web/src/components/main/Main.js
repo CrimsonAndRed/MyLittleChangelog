@@ -1,27 +1,29 @@
 import React, { Component } from 'react';
-import axios from 'axios';
+import * as qry from '../../services/query';
 
 class Main extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {showStrings: []};
+    this.state = {showStrings: [], teststr: ''};
   }
 
 	render() {
 		return (
 		    <div>
-		      { this.state.showStrings.map(item => <p> { item } </p>) }
+          <div>
+            { this.state.showStrings.map(item => <span> { item } </span>) }
+          </div>
+		      <button onClick= {() => window.toaster.addToast({text: this.state.teststr, type: 'error'})}> add </button>
+          <textarea value={ this.state.teststr } onChange={(e) => this.setState({teststr: e.target.value})}/>
 		    </div>
 		);
 	};
 
+
 	componentDidMount() {
-		axios.get(`http://localhost:9000/test`)
-  		.then(res => {
-        console.log(res.data)
-        this.setState({showStrings: res.data});
-      });
+    qry.get('test', (data) => this.setState({showStrings: data}));
+    
   }
 }
 
