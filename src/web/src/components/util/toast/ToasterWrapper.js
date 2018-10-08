@@ -12,10 +12,14 @@ class ToasterWrapper extends Component {
     this.dispose = this.dispose.bind(this);
   }
 
-  addToast(text) {
-    this.setState(prevState => ({
-      toasts: [...this.state.toasts, text]
+  addToast(toast) {
+    this.setState((prevState) => ({
+      toasts: [...this.state.toasts, toast]
     }));
+
+    if (toast.timeout !== -1) {
+      setTimeout(() => this.dispose(toast), toast.timeout * 1000 || 5000);
+    }
   };
 
   dispose(toast) {

@@ -6,6 +6,12 @@ class Main extends Component {
   constructor(props) {
     super(props);
     this.state = {showStrings: [], teststr: ''};
+    
+    this.getError = this.getError.bind(this);
+  }
+
+  getError() {
+    qry.get('exception', (data) => {});
   }
 
 	render() {
@@ -15,6 +21,7 @@ class Main extends Component {
             { this.state.showStrings.map(item => <span> { item } </span>) }
           </div>
 		      <button onClick= {() => window.toaster.addToast({text: this.state.teststr, type: 'error'})}> add </button>
+          <button onClick= { this.getError }> giv error </button>
           <textarea value={ this.state.teststr } onChange={(e) => this.setState({teststr: e.target.value})}/>
 		    </div>
 		);
