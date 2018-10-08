@@ -24,7 +24,7 @@ public class TestController {
     }
 
     public Object exception(Request req, Response res) {
-        throw new ArithmeticException();
+        throw new IllegalStateException("I am your exception");
     }
 
     public Object nothing(Request req, Response res) {
