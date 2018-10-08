@@ -7,15 +7,18 @@ class ToasterWrapper extends Component {
   constructor(props) {
     super(props);
     this.state = {toasts: []};
+
+    this.addToast = this.addToast.bind(this);
+    this.dispose = this.dispose.bind(this);
   }
 
-  addToast = (text) => {
+  addToast(text) {
     this.setState(prevState => ({
       toasts: [...this.state.toasts, text]
     }));
   };
 
-  dispose = (toast) => {
+  dispose(toast) {
     let filteredToasts = _(this.state.toasts).filter((item) => item !== toast).value();
     this.setState(prevState => ({
       toasts: filteredToasts

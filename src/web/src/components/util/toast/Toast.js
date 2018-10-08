@@ -3,9 +3,15 @@ import React, { Component } from 'react';
 // Toast structure:
 // text: text of toast
 // type: color of toast
+// timeout: how many seconds until disappear
 class Toast extends Component {
 
-  handleClick = (e) => {
+  constructor(props) {
+    super(props);
+    this.handleClick = this.handleClick.bind(this);
+  }
+
+  handleClick(e) {
     this.props.onDiposeClick(this.props.toast);
   };
 

@@ -23,7 +23,6 @@ class Main extends Component {
 
 	componentDidMount() {
     qry.get('test', (data) => this.setState({showStrings: data}));
-    
   }
 }
 
