@@ -5,6 +5,7 @@ import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Singleton;
 import lombok.extern.log4j.Log4j2;
+import my.little.changelog.controller.AdministrationController;
 import my.little.changelog.controller.AuthController;
 import my.little.changelog.controller.TestController;
 import my.little.changelog.global.GlobalParams;
@@ -34,6 +35,9 @@ public class Router {
 
     @Inject
     private GlobalParams globalParams;
+
+    @Inject
+    private AdministrationController administrationController;
 
     @Inject
     private AuthController authController;
@@ -83,7 +87,10 @@ public class Router {
 
         int port = Integer.parseInt(globalParams.get(PORT_PARAM));
         Spark.port(port);
+        // Enable CORS letting any methods/addresses
         enableCORS();
+        // Handling all exceptions as in json
+        Spark.exception(RuntimeException.class, administrationController::handleInternalError);
 
         Spark.post("/login",
             Router.Builder.create(authController::login)

@@ -3,7 +3,6 @@ package my.little.changelog.controller;
 import com.google.common.collect.Lists;
 import com.google.inject.Singleton;
 import lombok.extern.log4j.Log4j2;
-import my.little.changelog.json.JsonDto;
 import spark.Request;
 import spark.Response;
 
@@ -25,7 +24,7 @@ public class TestController {
     }
 
     public Object exception(Request req, Response res) {
-        throw new RuntimeException();
+        throw new ArithmeticException();
     }
 
     public Object nothing(Request req, Response res) {

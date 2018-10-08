@@ -29,7 +29,7 @@ import java.util.UUID;
 public class AuthController {
 
     /**
-     * Message to display or wrong user
+     * Message to display on wrong credentials.
      */
     private static final String REJECT_USER_MESSAGE = "Login or password is wrong";
 
