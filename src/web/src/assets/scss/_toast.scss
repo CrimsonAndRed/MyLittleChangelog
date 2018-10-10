@@ -5,6 +5,11 @@
     z-index: 50;
     overflow-y: hidden;
     height: 100%;
+
+    padding-left: 15px;
+
+    font-size: 14px;
+    font-weight: 300;
 }
 
 .toast {
@@ -15,14 +20,18 @@
 
   width: 200px;
   min-height: 50px;
-  text-align: center;
+  text-align: left;
 
   border-radius: 5px;
-  box-shadow: 0px 0px 7px grey;
+  box-shadow: 0px 0px 3px grey;
 
   // Default blue (mean sort of wrong usage)
   background-color: rgba(76, 76, 201, 0.7);
   cursor: pointer;
+
+  &:hover {
+    box-shadow: 0 0px 8px 0 rgba(0, 0, 0, 0.4);
+  }
 
   &.error {
     background-color: rgba(201, 76, 76, 0.7);

@@ -22,12 +22,10 @@ export function get(path, cb) {
           }
 
           msg = 'Code: ' + err.response.status + '\nError: ' + err.response.data.exceptionName + ' - ' + (err.response.data.errorMessage || '');
-        } else if (err.request) {
-          msg = 'Could not perform request to ' + err.request.responseURL;
         } else {
-          msg = 'Could not create requset to server';
+          msg = 'Could not create request to url: ' + url;
         }
-        window.toaster.addToast({text: msg, type: Toast.toastTypes.ERROR});
+        window.toaster.addToast({text: msg, type: Toast.toastTypes.ERROR, timeout: -1});
       });
 }
 
