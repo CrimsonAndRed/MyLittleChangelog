@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 
 // Toast structure:
+// id: identifier of toast (automatically set by wrapper)
 // text: text of toast
 // type: type of toast. Defined in Toast.toastTypes.
 // timeout: how many seconds until disappear, -1 is never, null -> 5 seconds.

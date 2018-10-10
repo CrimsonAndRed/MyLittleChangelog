@@ -12,7 +12,12 @@ class ToasterWrapper extends Component {
     this.dispose = this.dispose.bind(this);
   }
 
+  // Global id holder.
+  // Seems like it does not need syncronize in js?
+  static currentIdHolder = 0;
+
   addToast(toast) {
+    toast.id = ++ToasterWrapper.currentIdHolder;
     this.setState((prevState) => ({
       toasts: [...this.state.toasts, toast]
     }));
@@ -23,10 +28,12 @@ class ToasterWrapper extends Component {
   };
 
   dispose(toast) {
-    let filteredToasts = _(this.state.toasts).filter((item) => item !== toast).value();
-    this.setState(prevState => ({
-      toasts: filteredToasts
-    }));
+    let filteredToasts = _(this.state.toasts).filter((item) => item.id !== toast.id).value();
+    if (filteredToasts.length !== this.state.toasts.length) {
+      this.setState(prevState => ({
+        toasts: filteredToasts
+      }));
+    }
   };
 
 
@@ -36,8 +43,9 @@ class ToasterWrapper extends Component {
         { 
           this.state.toasts.map(item => 
             <Toast 
-              toast={ item }
-              onDiposeClick={(toast) => this.dispose(toast)}
+              key = { item.id }
+              toast = { item }
+              onDiposeClick = {(toast) => this.dispose(toast)}
             />
           ) 
         }
