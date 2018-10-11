@@ -1,17 +1,28 @@
 import React, { Component } from 'react';
 import * as qry from '../../services/query';
+import Modal from '../util/modal/Modal';
 
 class Main extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {showStrings: [], teststr: ''};
+    this.state = {showStrings: [], teststr: '', testModal: false};
     
     this.getError = this.getError.bind(this);
+    this.openModal = this.openModal.bind(this);
+    this.closeModal = this.closeModal.bind(this);
   }
 
   getError() {
     qry.get('exception', (data) => {});
+  }
+
+  openModal() {
+    this.setState({ testModal: true });
+  }
+
+  closeModal() {
+    this.setState({ testModal: false });
   }
 
 	render() {
@@ -22,7 +33,14 @@ class Main extends Component {
           </div>
 		      <button onClick= {() => window.toaster.addToast({text: this.state.teststr, type: 'error'})}> add </button>
           <button onClick= { this.getError }> giv error </button>
+          <button onClick= { this.openModal }> giv modal </button>
           <textarea value={ this.state.teststr } onChange={(e) => this.setState({teststr: e.target.value})}/>
+
+          { this.state.testModal && 
+            <Modal onClose={ this.closeModal }>
+              <p> sdssadsds </p>
+            </Modal>
+          }
 		    </div>
 		);
 	};

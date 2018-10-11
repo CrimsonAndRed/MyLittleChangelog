@@ -1,9 +1,14 @@
+@import 'util/variables';
+
 @import 'background';
-@import 'header';
-@import 'toast';
+
+@import 'components/header';
+
+@import 'util/toast';
 @import 'util/btns';
 @import 'util/align';
 @import 'util/text';
+@import 'util/modal';
 
 body {
     font-family: 'Open Sans', sans-serif;
