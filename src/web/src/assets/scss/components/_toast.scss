@@ -20,12 +20,6 @@
     border-radius: 5px;
     box-shadow: 0px 0px 3px grey;
 
-    // No text selection for user (looks ugly)
-    -moz-user-select: none;
-    -webkit-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-
     // Default blue (mean sort of wrong usage)
     background-color: rgba(76, 76, 201, 0.7);
     cursor: pointer;

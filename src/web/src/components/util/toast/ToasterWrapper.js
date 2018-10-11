@@ -39,7 +39,7 @@ class ToasterWrapper extends Component {
 
   render() {
     return (
-      <div id='toast-wrapper'>
+      <div id="toast-wrapper" className="no-select">
         { 
           this.state.toasts.map(item => 
             <Toast 
