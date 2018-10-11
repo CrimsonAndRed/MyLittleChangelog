@@ -3,12 +3,12 @@
 @import 'background';
 
 @import 'components/header';
+@import 'components/toast';
+@import 'components/modal';
 
-@import 'util/toast';
 @import 'util/btns';
 @import 'util/align';
 @import 'util/text';
-@import 'util/modal';
 
 body {
     font-family: 'Open Sans', sans-serif;
@@ -16,7 +16,7 @@ body {
     margin: 0px;
     font-size: 16px;
 
-    #main-body {
+    #main-body { 
       max-width: 1000px;
       margin: auto;
     }

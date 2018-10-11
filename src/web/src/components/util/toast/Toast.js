@@ -42,7 +42,7 @@ class Toast extends Component {
         break;
     }
 
-    return "toast " + toastType;
+    return "toast content-container-10 " + toastType;
   };
 
   render() {

@@ -1,10 +1,28 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom'
 import { withRouter } from 'react-router-dom'
+import Modal from '../util/modal/Modal'
 
   
 
 class MenuHeader extends Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {showLoginModal: false};
+
+    this.showLoginPage = this.showLoginPage.bind(this);
+    this.dismissLoginPage = this.dismissLoginPage.bind(this);
+  }
+
+  showLoginPage() {
+    this.setState({showLoginModal: true})
+  }
+
+  dismissLoginPage() {
+    this.setState({showLoginModal: false})
+  }
+
   render() {
     return (
       <div id="main-header">
@@ -22,12 +40,22 @@ class MenuHeader extends Component {
               About
             </span>
           </Link>
-          <Link to='/login' className="menu-item">
+          <a 
+            className="menu-item as-pointer"
+            onClick= { this.showLoginPage }
+          >
             <span>
               Login
             </span>
-          </Link>
+          </a>
         </div>
+
+
+        { this.state.showLoginModal &&
+          <Modal onClose = { this.dismissLoginPage } >
+            <p>dsdsds</p>
+          </Modal>
+        }
       </div>
     );
   };

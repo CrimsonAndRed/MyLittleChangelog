@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 
+// Should have property onClose - what to do on modal close
 class Modal extends Component {
 
   render() {

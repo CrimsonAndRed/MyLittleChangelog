@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Switch, Route } from 'react-router-dom'
 
 import Main from './Main';
-import Login from './Login';
+import About from './About';
 import NotFound from './NotFound';
 import MenuHeader from './MenuHeader';
 
@@ -14,7 +14,7 @@ class MainRouter extends Component {
 	    	<div id="main-body">
 		        <Switch>
 		          <Route exact path='/' component={Main}/>
-		          <Route exact path='/login' component={Login}/>
+		          <Route exact path='/about' component={About}/>
 		          <Route component={NotFound}/>
 		        </Switch>
 	        </div>
