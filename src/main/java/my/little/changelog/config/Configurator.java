@@ -7,13 +7,13 @@ import io.ebean.Ebean;
 import io.ebean.EbeanServerFactory;
 import io.ebean.SqlRow;
 import io.ebean.config.ServerConfig;
+import io.ebean.datasource.DataSourceConfig;
 import lombok.extern.log4j.Log4j2;
 import my.little.changelog.config.job.TokenPurgeJob;
 import my.little.changelog.global.GlobalParams;
 import my.little.changelog.router.Router;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.core.config.ConfigurationSource;
-import org.avaje.datasource.DataSourceConfig;
 import org.flywaydb.core.Flyway;
 
 import java.io.InputStream;

@@ -18,8 +18,8 @@ public class CryptoService {
 
     /**
      * Hashes password with predefined salt (in properties).
-     * @param password user password
-     * @return Sha-256 salted hash
+     * @param password user password.
+     * @return Sha-256 salted hash.
      */
     @Nonnull
     public byte[] hashPassword(@Nonnull byte[] password) {
