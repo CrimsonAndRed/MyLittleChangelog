@@ -1,0 +1,19 @@
+.login-modal {
+
+  width: 350px;
+  height: 300px;
+
+  .login-modal-content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+
+    .login-modal-form-row {
+      width: 250px;
+    }
+
+    .login-modal-footer {
+      margin: auto auto 20px;
+    }
+  }
+}

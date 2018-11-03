@@ -6,4 +6,5 @@ import { BrowserRouter } from 'react-router-dom'
 ReactDOM.render(
 	<BrowserRouter  ref={(router) => {window.router = router}}>
 		  <App />
-	</BrowserRouter>, document.getElementById('root'));
+	</BrowserRouter>, document.getElementById('root')
+);

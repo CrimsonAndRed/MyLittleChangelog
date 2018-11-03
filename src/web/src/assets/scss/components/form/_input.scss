@@ -1,0 +1,17 @@
+.input-field {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid rgba(0,0,0,.1);
+  border-radius: 4px;
+  background-color: $light-grey;
+  line-height: 25px;
+  padding-left: 5px;
+
+  &.error {
+    border: 2px solid red;
+  }
+
+  &:hover {
+    background-color: $white;
+  }
+}

@@ -13,17 +13,13 @@ class App extends Component {
   render() {
     return (
       <div>
-        <ToasterWrapper ref={(toaster) => {window.toaster = toaster}}/>
+        <ToasterWrapper ref={(toaster) => {window.toaster = toaster}} />
         <Switch>
-          <Route path='/' component={MainRouter}/>
+          <Route path="/" component={MainRouter} />
         </Switch>
       </div>
     );
   };
-
-  componentDidMount(){
-  	console.log(_);
-  }
 }
 
 export default App;

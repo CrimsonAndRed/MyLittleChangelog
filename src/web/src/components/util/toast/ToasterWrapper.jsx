@@ -13,7 +13,7 @@ class ToasterWrapper extends Component {
   }
 
   // Global id holder.
-  // Seems like it does not need syncronize in js?
+  // Seems like it does not need syncronization in js?
   static currentIdHolder = 0;
 
   addToast(toast) {
@@ -43,9 +43,9 @@ class ToasterWrapper extends Component {
         { 
           this.state.toasts.map(item => 
             <Toast 
-              key = { item.id }
-              toast = { item }
-              onDiposeClick = {(toast) => this.dispose(toast)}
+              key={item.id}
+              toast={item}
+              onDiposeClick={(toast) => this.dispose(toast)}
             />
           ) 
         }

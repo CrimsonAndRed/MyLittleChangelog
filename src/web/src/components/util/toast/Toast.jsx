@@ -5,6 +5,9 @@ import React, { Component } from 'react';
 // text: text of toast
 // type: type of toast. Defined in Toast.toastTypes.
 // timeout: how many seconds until disappear, -1 is never, null -> 5 seconds.
+
+// Has props:
+// toast - toast with above listed structure
 class Toast extends Component {
 
   constructor(props) {
@@ -42,16 +45,14 @@ class Toast extends Component {
         break;
     }
 
-    return "toast content-container-10 " + toastType;
+    return 'toast content-container-10 ' + toastType;
   };
 
   render() {
     return (
         <div 
-          className={
-            this.toastClass(this.props.toast)
-          }  
-          onClick= { this.handleClick }
+          className={this.toastClass(this.props.toast)}  
+          onClick={this.handleClick}
         >
           <div className="several-lines">
             { this.props.toast.text }

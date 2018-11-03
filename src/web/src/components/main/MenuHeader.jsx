@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom'
 import { withRouter } from 'react-router-dom'
 import Modal from '../util/modal/Modal'
+import LoginModal from './LoginModal'
 
   
 
@@ -35,7 +36,7 @@ class MenuHeader extends Component {
               />
             </Link>
           </div>
-          <Link to='/about' className="flex-item-end menu-item">
+          <Link to="/about" className="flex-item-end menu-item">
             <span>
               About
             </span>
@@ -51,11 +52,11 @@ class MenuHeader extends Component {
         </div>
 
 
-        { this.state.showLoginModal &&
-          <Modal onClose = { this.dismissLoginPage } >
-            <p>dsdsds</p>
+        { this.state.showLoginModal && (
+          <Modal onClose={this.dismissLoginPage} sizeClass="login-modal">
+            <LoginModal onClose={this.dismissLoginPage}/>
           </Modal>
-        }
+        )}
       </div>
     );
   };

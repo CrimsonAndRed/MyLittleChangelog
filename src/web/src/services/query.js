@@ -1,7 +1,7 @@
 import axios from 'axios';
 import Toast from '../components/util/toast/Toast';
 // Methods for querying data from backend.
-// If there was an error - does nothing (will do smth soon).
+// If there was an error - generates toast
 
 // Get query
 // Redirects to /login in case of 401 or toasts in case of any other error.

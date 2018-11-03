@@ -31,16 +31,16 @@ class Main extends Component {
           <div>
             { this.state.showStrings.map(item => <span> { item } </span>) }
           </div>
-		      <button onClick= {() => window.toaster.addToast({text: this.state.teststr, type: 'error'})}> add </button>
-          <button onClick= { this.getError }> giv error </button>
-          <button onClick= { this.openModal }> giv modal </button>
-          <textarea value={ this.state.teststr } onChange={(e) => this.setState({teststr: e.target.value})}/>
+		      <button onClick={() => window.toaster.addToast({text: this.state.teststr, type: 'error'})}> add </button>
+          <button onClick={this.getError}> giv error </button>
+          <button onClick={this.openModal}> giv modal </button>
+          <textarea value={this.state.teststr} onChange={(e) => this.setState({teststr: e.target.value})} />
 
-          { this.state.testModal && 
-            <Modal onClose={ this.closeModal }>
+          { this.state.testModal && (
+            <Modal onClose={this.closeModal}>
               <p> sdssadsds </p>
             </Modal>
-          }
+          )}
 		    </div>
 		);
 	};

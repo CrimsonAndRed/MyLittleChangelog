@@ -1,3 +1,36 @@
 .as-pointer {
   cursor: pointer;
 }
+
+.btn {
+  border: 1px solid rgba(0,0,0,.1);
+  border-radius: 4px;
+  padding: 5px;
+  cursor: pointer;
+  background-color: $light-grey;
+
+  &.btn-text {
+    min-height: 29px;
+    min-width: 90px;
+  }
+
+  &.btn-light-red {
+
+    &:hover {
+      background-color: rgba(255, 0, 0, 0.1);
+    }
+  }
+
+  &.btn-light-green {
+    &:hover {
+      background-color: rgba(0, 255, 0, 0.1);
+    }
+  }
+
+  &:hover {
+    color: #666666;
+  }
+}
+
+
+

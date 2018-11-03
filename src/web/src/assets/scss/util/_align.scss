@@ -1,14 +1,22 @@
 .flex-container {
-    display: flex;
-    flex-direction: row; 
+  display: flex;
+  flex-direction: row; 
 }
 
 .flex-item-end { 
-    margin-left: auto;
+  margin-left: auto;
 }
 
 .inline-block {
   display: inline-block;
+}
+
+.block {
+  display: block;
+}
+
+.relative {
+  position: relative;
 }
 
 .content-container-5 { 
@@ -17,6 +25,20 @@
 
 .content-container-10 { 
   padding: 10px;
+}
+
+.bottom-right {
+  position: absolute;
+  bottom: 0px;
+  right: 0px;
+}
+
+.mg-auto {
+  margin: auto;
+}
+
+.mg-top-auto {
+  margin-top: auto;
 }
 
 .mg-top-5 {
@@ -57,4 +79,8 @@
 
 .width-100 {
   width: 100%;
+}
+
+.height-100 {
+  height: 100%;
 }
