@@ -1,15 +1,16 @@
 package my.little.changelog.router.decor;
 
 import com.google.common.base.Strings;
+import io.ebean.Ebean;
 import lombok.extern.log4j.Log4j2;
 import my.little.changelog.config.Configurator;
-import my.little.changelog.global.GuiceInjector;
 import my.little.changelog.model.auth.UserToken;
-import my.little.changelog.service.AuthService;
 import spark.Request;
 import spark.Response;
 import spark.Route;
 import spark.Spark;
+
+import java.util.UUID;
 
 /**
  * Router that checks user to be log on.
@@ -47,9 +48,13 @@ public class AuthRouter extends RouterDecorator {
             return null;
         }
 
-        // Kind of impossible to do it in field injection.
-        AuthService authService = GuiceInjector.getInjector().getInstance(AuthService.class);
-        UserToken userToken = authService.checkUserByToken(token);
+        UserToken userToken = Ebean.find(UserToken.class)
+                .select("id, createDate")
+                .fetch("user", "id, name, deleted")
+                .where()
+                .eq("token", UUID.fromString(token))
+                .eq("deleted", false)
+                .findOne();
         if (userToken == null) {
             log.warn("Token \"{}\" was not found. Request was aborted with 401 code.", token);
             Spark.halt(UNAUTHORIZED);

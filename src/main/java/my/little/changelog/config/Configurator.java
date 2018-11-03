@@ -41,8 +41,6 @@ public class Configurator {
     public static final String DATABASE_URL = "datasource.db.databaseUrl";
     /** Database driver .properties field name */
     public static final String DATABASE_DRIVER = "datasource.db.databaseDriver";
-    /** Password hash salt .properties field name */
-    public static final String HASH_SALT = "crypto.hashsalt";
     /** Token header name. */
     public static final String TOKEN_HEADER = "My-Little-Token";
     /** Default logger level. */

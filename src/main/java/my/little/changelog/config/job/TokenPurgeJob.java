@@ -22,21 +22,20 @@ public class TokenPurgeJob extends AbstractScheduledService {
      * Params:
      * - yesterday - date to compare. Lower dates than this date will be soft deleted.
      */
-    private static final String PURGE_TOKENS = "UPDATE user_token SET is_deleted = true, end_date = now() WHERE create_date < :yesterday AND is_deleted = false";
+    private static final String PURGE_TOKENS = "UPDATE user_token SET is_deleted = true, end_date = now() WHERE create_date < :dateBound AND is_deleted = false";
 
     @Override
     protected void runOneIteration() throws Exception {
         try (Transaction t = Ebean.beginTransaction()) {
 
             int rowsDeleted = Ebean.createUpdate(UserToken.class, PURGE_TOKENS)
-                    .setParameter("yesterday", LocalDateTime.now().minus(1, ChronoUnit.DAYS))
+                    .setParameter("dateBound", LocalDateTime.now().minus(1, ChronoUnit.DAYS))
                     .execute();
             log.info("Executed purge tokens job. Deleted {} tokens", rowsDeleted);
             t.commit();
         } catch (Exception e) {
             log.error("Could not purge tokens from database");
             log.error(Throwables.getStackTraceAsString(e));
-            log.warn("Gonna retry job in one hour");
         }
     }
 

@@ -23,6 +23,5 @@ public class LoginDto implements JsonDto {
     /**
      * User password.
      */
-    private  String password;
-
+    private String password;
 }
