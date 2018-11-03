@@ -1,6 +1,7 @@
 .input-field {
   width: 100%;
   box-sizing: border-box;
+  border: 2px solid rgba(0,0,0,0);
   border: 1px solid rgba(0,0,0,.1);
   border-radius: 4px;
   background-color: $light-grey;
@@ -8,7 +9,7 @@
   padding-left: 5px;
 
   &.error {
-    border: 2px solid red;
+    box-shadow: 0 0 2px red;
   }
 
   &:hover {

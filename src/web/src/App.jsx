@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Switch, Route } from 'react-router-dom'
 
-import _ from 'lodash';
 import ToasterWrapper from './components/util/toast/ToasterWrapper';
 import MainRouter from './components/main/MainRouter';
 

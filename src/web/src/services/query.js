@@ -12,8 +12,7 @@ export function get(path, cb) {
   axios.get(url)
       .then(res => {
         cb(res.data);
-      })
-      .catch((err) => {
+      }, err => {
         let msg = '';
         if (err.response) {
           if (err.response.status === 401) {
@@ -26,6 +25,10 @@ export function get(path, cb) {
           msg = 'Could not create request to url: ' + url;
         }
         window.toaster.addToast({text: msg, type: Toast.toastTypes.ERROR, timeout: -1});
+      })
+      .catch((cbError) => {
+        console.error(cbError);
+        window.toaster.addToast({text: cbError, type: Toast.toastTypes.ERROR, timeout: -1});
       });
 }
 
@@ -40,8 +43,7 @@ export function post(path, arg, cb) {
   axios.post(url, arg)
       .then(res => {
         cb(res.data);
-      })
-      .catch((err) => {
+      }, err => {
         let msg = '';
         if (err.response) {
           if (err.response.status === 401) {
@@ -56,5 +58,9 @@ export function post(path, arg, cb) {
           msg = 'Could not create requset to server';
         }
         window.toaster.addToast({text: msg, type: Toast.toastTypes.ERROR});
-      });
+      })
+      .catch(cbError => {
+        console.error(cbError);
+        window.toaster.addToast({text: cbError, type: Toast.toastTypes.ERROR, timeout: -1});
+      })
 }

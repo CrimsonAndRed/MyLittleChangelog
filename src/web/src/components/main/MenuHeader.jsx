@@ -43,7 +43,7 @@ class MenuHeader extends Component {
           </Link>
           <a 
             className="menu-item as-pointer"
-            onClick= { this.showLoginPage }
+            onClick={this.showLoginPage}
           >
             <span>
               Login
@@ -54,7 +54,7 @@ class MenuHeader extends Component {
 
         { this.state.showLoginModal && (
           <Modal onClose={this.dismissLoginPage} sizeClass="login-modal">
-            <LoginModal onClose={this.dismissLoginPage}/>
+            <LoginModal onClose={this.dismissLoginPage} />
           </Modal>
         )}
       </div>

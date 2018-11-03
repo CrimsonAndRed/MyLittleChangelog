@@ -14,7 +14,8 @@ class LoginModal extends Component {
 
     this.state = {
       login: '',
-      password: ''
+      password: '',
+      wrongCredentials: false
     }
   }
 
@@ -27,7 +28,18 @@ class LoginModal extends Component {
   }
 
   handleSend(e) {
-    console.log(this.state);
+    qry.post('login', {login: this.state.login, password: this.state.password}, (data) => {
+      if (data.data) {
+        var currentDate = new Date();
+        currentDate.setTime(currentDate.getTime() + (23*60*60*1000));
+        var expires = 'expires='+ currentDate.toUTCString();
+        document.cookie = 'My-Little-Token=' + data.data + ';' + expires + ';path=/';
+        this.props.onClose();
+      } else {
+        data.errors.forEach(err => window.toaster.addToast({text: err.text, type: 'error'}));
+        this.setState({wrongCredentials: true});
+      }
+    })
   }
 
   render() {
@@ -39,10 +51,10 @@ class LoginModal extends Component {
 
           <div className="form-content">
             <div className="login-modal-form-row mg-auto mg-bottom-10">
-              <VerticalFormField val={this.state.login} change={this.handleLogin} error={false} name="Login"/>
+              <VerticalFormField val={this.state.login} change={this.handleLogin} error={this.state.wrongCredentials} name="Login"/>
             </div>
             <div className="login-modal-form-row mg-auto">
-              <VerticalFormField val={this.state.password} change={this.handlePassword} error={false}  name="Password"/>
+              <VerticalFormField val={this.state.password} change={this.handlePassword} error={this.state.wrongCredentials}  name="Password"/>
             </div>
           </div>
 
