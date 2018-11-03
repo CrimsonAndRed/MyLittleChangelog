@@ -12,14 +12,13 @@ import javax.annotation.Nullable;
  */
 public class CustomError {
 
-
     /**
      * Any text value to identify error.
      */
     @Getter
     @Setter
     @Nullable
-    private String errorText;
+    private String text;
 
     /**
      * Empty Error without text.
@@ -29,9 +28,9 @@ public class CustomError {
 
     /**
      * Error with text.
-     * @param errorText text of error.
+     * @param text text of error.
      */
-    public CustomError(String errorText) {
-        this.errorText = errorText;
+    public CustomError(String text) {
+        this.text = text;
     }
 }

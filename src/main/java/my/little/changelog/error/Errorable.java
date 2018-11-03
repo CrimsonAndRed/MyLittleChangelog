@@ -69,7 +69,6 @@ public class Errorable implements JsonDto {
         this.data = data;
     }
 
-
     /**
      * Errorable with data and one error (as string) (not valid).
      * @param data data.
@@ -79,8 +78,6 @@ public class Errorable implements JsonDto {
         this.errors = Lists.newArrayList(new CustomError(error));
         this.data = data;
     }
-
-
 
     /**
      * Adds error to inner list. Even if it is Immutable.
