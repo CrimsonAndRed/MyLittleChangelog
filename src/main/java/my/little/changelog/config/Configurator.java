@@ -195,8 +195,7 @@ public class Configurator {
 
         // Migrate via Flyway
         try {
-            Flyway flyway = new Flyway();
-            flyway.setDataSource(url, userName, password);
+            Flyway flyway = Flyway.configure().dataSource(url, userName, password).load();
             flyway.migrate();
         } catch (Exception e) {
             log.error("Migration error happened");
