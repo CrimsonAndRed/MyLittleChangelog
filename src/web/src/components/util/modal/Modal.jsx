@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 
-// Should have property onClose - what to do on modal close
+// Has props:
+// onClose - anything this modal should do on "outside area" click.
 class Modal extends Component {
 
   constructor(props) {

@@ -1,8 +1,12 @@
 import React, { Component } from 'react';
 import * as qry from '../../services/query';
 
+import { connect } from 'react-redux'
+import { set } from '../../redux/actions/UsernameActions'
+
 import VerticalFormField from '../form/VerticalFormField'
 
+// Modal for handling user credentials.
 class LoginModal extends Component {
 
   constructor(props) {
@@ -10,7 +14,7 @@ class LoginModal extends Component {
 
     this.handleLogin = this.handleLogin.bind(this);
     this.handlePassword = this.handlePassword.bind(this);  
-    this.handleSend = this.handleSend.bind(this);
+    this.sendQry = this.sendQry.bind(this);
 
     this.state = {
       login: '',
@@ -27,19 +31,18 @@ class LoginModal extends Component {
     this.setState({password: e.target.value});
   }
 
-  handleSend(e) {
-    qry.post('login', {login: this.state.login, password: this.state.password}, (data) => {
-      if (data.data) {
-        var currentDate = new Date();
-        currentDate.setTime(currentDate.getTime() + (23*60*60*1000));
-        var expires = 'expires='+ currentDate.toUTCString();
-        document.cookie = 'My-Little-Token=' + data.data + ';' + expires + ';path=/';
+  sendQry(e) {
+    qry.post('login', (result) => {
+      if (result.data) {
+        window.Cookies.set('My-Little-Token', result.data.token, {exires: 1});
+        window.Cookies.set('My-Little-Username', result.data.username, {exires: 1});
+        this.props.login(result.data.username);
         this.props.onClose();
       } else {
-        data.errors.forEach(err => window.toaster.addToast({text: err.text, type: 'error'}));
+        result.errors.forEach(err => window.toaster.addToast({text: err.text, type: 'error'}));
         this.setState({wrongCredentials: true});
       }
-    })
+    }, {login: this.state.login, password: this.state.password})
   }
 
   render() {
@@ -62,7 +65,7 @@ class LoginModal extends Component {
             <button className="btn btn-text btn-light-red" onClick={this.props.onClose}>
               Cancel
             </button>
-            <button className="btn btn-text btn-light-green flex-item-end" onClick={this.handleSend}>
+            <button className="btn btn-text btn-light-green flex-item-end" onClick={this.sendQry}>
               Submit
             </button>
           </div>
@@ -71,4 +74,9 @@ class LoginModal extends Component {
   };
 }
 
-export default LoginModal;
+export default connect(
+    state => ({}),
+    dispatch => ({
+      login: (username) => dispatch(set(username))
+    })
+  )(LoginModal);

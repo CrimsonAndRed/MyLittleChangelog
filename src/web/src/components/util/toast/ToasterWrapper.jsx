@@ -6,10 +6,11 @@ class ToasterWrapper extends Component {
 
   constructor(props) {
     super(props);
+    window.toaster = this;
     this.state = {toasts: []};
 
     this.addToast = this.addToast.bind(this);
-    this.dispose = this.dispose.bind(this);
+    this.disposeToast = this.disposeToast.bind(this);
   }
 
   // Global id holder.
@@ -23,11 +24,11 @@ class ToasterWrapper extends Component {
     }));
 
     if (toast.timeout !== -1) {
-      setTimeout(() => this.dispose(toast), toast.timeout * 1000 || 5000);
+      setTimeout(() => this.disposeToast(toast), toast.timeout * 1000 || 5000);
     }
   };
 
-  dispose(toast) {
+  disposeToast(toast) {
     let filteredToasts = _(this.state.toasts).filter((item) => item.id !== toast.id).value();
     if (filteredToasts.length !== this.state.toasts.length) {
       this.setState(prevState => ({
@@ -35,7 +36,6 @@ class ToasterWrapper extends Component {
       }));
     }
   };
-
 
   render() {
     return (
@@ -45,7 +45,7 @@ class ToasterWrapper extends Component {
             <Toast 
               key={item.id}
               toast={item}
-              onDiposeClick={(toast) => this.dispose(toast)}
+              onDiposeClick={(toast) => this.disposeToast(toast)}
             />
           ) 
         }

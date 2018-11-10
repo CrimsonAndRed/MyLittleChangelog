@@ -9,7 +9,12 @@ import Toast from '../components/util/toast/Toast';
 // cb - callback to apply after successful response. The only argument for callback - returned data.
 export function get(path, cb) {
   let url = process.env.REACT_APP_API_URL + '/' + path;
-  axios.get(url)
+  let token = window.Cookies.get('My-Little-Token');
+  axios.get(url, {
+        headers: {
+          'My-Little-Token': token
+        }
+      })
       .then(res => {
         cb(res.data);
       }, err => {
@@ -38,9 +43,13 @@ export function get(path, cb) {
 // path - path for route, without first '/'
 // arg - argument for post query.
 // cb - callback to apply after successful response. The only argument for callback - returned data.
-export function post(path, arg, cb) {
+export function post(path, cb, arg) {
   let url = process.env.REACT_APP_API_URL + '/' + path;
-  axios.post(url, arg)
+  axios.post(url, arg, {
+        headers: {
+          'My-Little-Token': window.Cookies.get('My-Little-Token')
+        }
+      })
       .then(res => {
         cb(res.data);
       }, err => {

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import * as qry from '../../services/query';
 import Modal from '../util/modal/Modal';
 
+// Main class for initial page ('/' route) 
 class Main extends Component {
 
   constructor(props) {

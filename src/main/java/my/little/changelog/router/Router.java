@@ -95,26 +95,26 @@ public class Router {
         Spark.post("/login",
             Router.Builder.create(authController::login)
                 .json()
-                .measure()
                 .transaction()
+                .measure()
                 .log()
                 .build());
 
         Spark.post("/logout", Router.Builder.create(authController::logout)
-                .measure()
                 .transaction()
+                .measure()
                 .log()
                 .build());
 
         Spark.get("/test", Router.Builder.create(testController::test)
-                .measure()
                 .json()
+                .measure()
                 .log()
                 .build());
 
         Spark.get("/exception", Router.Builder.create(testController::exception)
-                .measure()
                 .json()
+                .measure()
                 .log()
                 .build());
         Spark.get("/nothing", Router.Builder.createDefault(testController::nothing));

@@ -20,10 +20,16 @@ public class CustomError {
     @Nullable
     private String text;
 
+    @Getter
+    @Setter
+    @Nullable
+    private ErrorType type;
+
     /**
      * Empty Error without text.
      */
     public CustomError() {
+        this.type = ErrorType.ERROR;
     }
 
     /**
@@ -32,5 +38,16 @@ public class CustomError {
      */
     public CustomError(String text) {
         this.text = text;
+        this.type = ErrorType.ERROR;
+    }
+
+    /**
+     * Error with text and type.
+     * @param text text.
+     * @param type type.
+     */
+    public CustomError(String text, ErrorType type) {
+        this.text = text;
+        this.type = type;
     }
 }

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 
+// Vertical for is an <text> with <input> under it
 // Has properties: 
 // error - red border around field
 // name - name of field (above field)
