@@ -32,10 +32,12 @@ class LoginModal extends Component {
   }
 
   sendQry(e) {
+    e.preventDefault();
     qry.post('login', (result) => {
       if (result.data) {
         window.Cookies.set('My-Little-Token', result.data.token, {exires: 1});
         window.Cookies.set('My-Little-Username', result.data.username, {exires: 1});
+        // redux login
         this.props.login(result.data.username);
         this.props.onClose();
       } else {
@@ -47,7 +49,7 @@ class LoginModal extends Component {
 
   render() {
     return (
-        <div className="login-modal-content">
+        <form className="login-modal-content" onSubmit={this.sendQry}>
           <div className="header mg-top-5 mg-bottom-10">
             Sign in
           </div>
@@ -57,19 +59,24 @@ class LoginModal extends Component {
               <VerticalFormField val={this.state.login} change={this.handleLogin} error={this.state.wrongCredentials} name="Login"/>
             </div>
             <div className="login-modal-form-row mg-auto">
-              <VerticalFormField val={this.state.password} change={this.handlePassword} error={this.state.wrongCredentials}  name="Password"/>
+              
+
+              <div className="mg-bottom-5 block mg-left-5">
+                Password
+              </div>
+              <input type="password" value={this.state.password} onChange={this.handlePassword} className={this.state.wrongCredentials ? 'input-field error' : 'input-field'}/>
             </div>
           </div>
 
           <div className="login-modal-footer login-modal-form-row flex-container">
-            <button className="btn btn-text btn-light-red" onClick={this.props.onClose}>
+            <button type="button" className="btn btn-text btn-light-red" onClick={this.props.onClose}>
               Cancel
             </button>
-            <button className="btn btn-text btn-light-green flex-item-end" onClick={this.sendQry}>
-              Submit
-            </button>
+            <input type="submit" value="Submit" className="btn btn-text btn-light-green flex-item-end" onClick={this.sendQry}>
+              
+            </input>
           </div>
-        </div>
+        </form>
     );
   };
 }

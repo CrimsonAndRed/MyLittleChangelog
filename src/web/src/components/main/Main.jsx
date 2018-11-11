@@ -30,7 +30,7 @@ class Main extends Component {
 		return (
 		    <div>
           <div>
-            { this.state.showStrings.map(item => <span> { item } </span>) }
+            { this.state.showStrings.map((item, index) => <span key={index}> { item } </span>) }
           </div>
 		      <button onClick={() => window.toaster.addToast({text: this.state.teststr, type: 'error'})}> add </button>
           <button onClick={this.getError}> giv error </button>

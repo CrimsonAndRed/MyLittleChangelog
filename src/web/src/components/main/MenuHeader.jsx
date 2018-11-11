@@ -24,11 +24,11 @@ class MenuHeader extends Component {
   }
 
   showLoginPage() {
-    this.setState({showLoginModal: true})
+    this.setState({showLoginModal: true});
   }
 
-  dismissLoginPage() {
-    this.setState({showLoginModal: false})
+  dismissLoginPage(e) {
+    this.setState({showLoginModal: false});
   }
 
   userLogin() {
