@@ -33,7 +33,7 @@ public class AuthService {
      * Query to lock tokens database table.
      * To exclude any kind of collision between tokens.
      */
-    private static final String LOCK_TOKENS_TABLE = "LOCK TABLE user_token IN SHARE MODE";
+    private static final String LOCK_TOKENS_TABLE = "LOCK TABLE user_token IN SHARE ROW EXCLUSIVE MODE";
 
     @Inject
     private CryptoService cryptoService;
