@@ -35,8 +35,8 @@ class LoginModal extends Component {
     e.preventDefault();
     qry.post('login', (result) => {
       if (result.data) {
-        window.Cookies.set('My-Little-Token', result.data.token, {exires: 1});
-        window.Cookies.set('My-Little-Username', result.data.username, {exires: 1});
+        window.Cookies.set('My-Little-Token', result.data.token, {expires: 1});
+        window.Cookies.set('My-Little-Username', result.data.username, {expires: 1});
         // redux login
         this.props.login(result.data.username);
         this.props.onClose();
