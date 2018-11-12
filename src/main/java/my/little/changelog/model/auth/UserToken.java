@@ -2,15 +2,14 @@ package my.little.changelog.model.auth;
 
 import io.ebean.Model;
 import io.ebean.annotation.SoftDelete;
-import lombok.AllArgsConstructor;
+import io.ebean.annotation.WhenCreated;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.UUID;
 
 /**
@@ -21,16 +20,23 @@ import java.util.UUID;
 @Table(name = "user_token")
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
 public class UserToken extends Model {
 
     /**
-     * Token Id.
+     * Token identifier.
      */
     @Id
     @Column(name = "id")
+    @Nonnull
     private Long id;
+
+    /**
+     * Token creation date.
+     */
+    @WhenCreated
+    @Column(name = "create_date")
+    @Nonnull
+    private Instant createDate;
 
     /**
      * Token uuid value.
@@ -40,26 +46,19 @@ public class UserToken extends Model {
     private UUID token;
 
     /**
-     * Token create date.
-     */
-    @Column(name = "create_date")
-    @Nonnull
-    private LocalDateTime createDate;
-
-    /**
-     * Token end date.
-     */
-    @Column(name = "end_date")
-    @Nullable
-    private LocalDateTime endDate;
-
-    /**
      * Token holder.
      */
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     @Nonnull
     private User user;
+
+    /**
+     * Date of token invalidation.
+     */
+    @Column(name = "end_date")
+    @Nullable
+    private Instant endDate;
 
     /**
      * Soft delete marker.

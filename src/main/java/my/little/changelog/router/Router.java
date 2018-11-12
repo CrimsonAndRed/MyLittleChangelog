@@ -7,6 +7,7 @@ import com.google.inject.Singleton;
 import lombok.extern.log4j.Log4j2;
 import my.little.changelog.controller.AdministrationController;
 import my.little.changelog.controller.AuthController;
+import my.little.changelog.controller.ProjectController;
 import my.little.changelog.controller.TestController;
 import my.little.changelog.global.GlobalParams;
 import my.little.changelog.router.decor.*;
@@ -41,6 +42,9 @@ public class Router {
 
     @Inject
     private AuthController authController;
+
+    @Inject
+    private ProjectController projectController;
 
     @Inject
     private TestController testController;
@@ -92,14 +96,7 @@ public class Router {
         // Handling all exceptions as in json
         Spark.exception(RuntimeException.class, administrationController::handleInternalError);
 
-        Spark.post("/login",
-            Router.Builder.create(authController::login)
-                .json()
-                .transaction()
-                .measure()
-                .log()
-                .build());
-
+        Spark.post("/login", Router.Builder.createDefaultUnauth(authController::login));
         Spark.post("/logout", Router.Builder.create(authController::logout)
                 .transaction()
                 .measure()
@@ -118,6 +115,9 @@ public class Router {
                 .log()
                 .build());
         Spark.get("/nothing", Router.Builder.createDefault(testController::nothing));
+        Spark.get("/project/all", Router.Builder.createDefaultUnauth(projectController::getAllProjects));
+        Spark.get("/project/my", Router.Builder.createDefault(projectController::getUsersProjects));
+        Spark.get("/project/:id", Router.Builder.createDefaultUnauth(projectController::getProjectById));
     }
 
     /**
@@ -211,5 +211,13 @@ public class Router {
             return new Builder(controllerFunc).measure().json().transaction().auth().log().build();
         }
 
+        /**
+         * Default builder, that wraps method call with default functionality without authentication(log -> transaction -> json -> measure  method call).
+         * @param controllerFunc function to be wrapped.
+         * @return Wrapped method call.
+         */
+        public static Route createDefaultUnauth(BiFunction<Request, Response, Object> controllerFunc) {
+            return new Builder(controllerFunc).measure().json().transaction().log().build();
+        }
     }
 }

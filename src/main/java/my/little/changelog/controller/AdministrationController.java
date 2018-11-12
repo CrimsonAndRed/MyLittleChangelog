@@ -3,6 +3,7 @@ package my.little.changelog.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Throwables;
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import lombok.extern.log4j.Log4j2;
 import my.little.changelog.error.MyInternalError;
 import spark.Request;
@@ -12,6 +13,7 @@ import spark.Response;
  * Controller for any administration tasks.
  */
 @Log4j2
+@Singleton
 public class AdministrationController {
 
     /**

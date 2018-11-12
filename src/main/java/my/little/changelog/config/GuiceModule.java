@@ -10,9 +10,11 @@ import com.google.inject.Singleton;
 import ma.glasnost.orika.MapperFacade;
 import my.little.changelog.global.GlobalParams;
 import my.little.changelog.global.OrikaMapper;
+import my.little.changelog.json.util.InstantJson;
 import my.little.changelog.json.util.LocalDateTimeJson;
 
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -53,6 +55,8 @@ public class GuiceModule extends AbstractModule {
         SimpleModule localDateTimeModule = new SimpleModule();
         localDateTimeModule.addSerializer(LocalDateTime.class, new LocalDateTimeJson.LocalDateTimeSerializer(null));
         localDateTimeModule.addDeserializer(LocalDateTime.class, new LocalDateTimeJson.LocalDateTimeDeserializer(null));
+        localDateTimeModule.addSerializer(Instant.class, new InstantJson.InstantSerializer(null));
+        localDateTimeModule.addDeserializer(Instant.class, new InstantJson.InstantDeserializer(null));
         mapper.registerModule(localDateTimeModule);
         // Some default properties
         mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);

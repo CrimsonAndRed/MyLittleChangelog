@@ -3,7 +3,6 @@ package my.little.changelog.service;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import io.ebean.Ebean;
-import io.ebean.Transaction;
 import lombok.extern.log4j.Log4j2;
 import my.little.changelog.error.Errorable;
 import my.little.changelog.model.auth.User;
@@ -12,7 +11,7 @@ import my.little.changelog.model.auth.dto.LoginDto;
 import my.little.changelog.model.auth.dto.LoginResponseDto;
 
 import javax.annotation.Nonnull;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
@@ -82,7 +81,6 @@ public class AuthService {
         UserToken token = new UserToken();
         token.setUser(user);
         token.setDeleted(false);
-        token.setCreateDate(LocalDateTime.now());
 
         // Doing it in case uuid collisions.
         // Anyway will be unlocked because this method call is wrapped in transaction BEGIN - COMMIT - ROLLBACK.
@@ -129,12 +127,8 @@ public class AuthService {
         log.debug("Trying to delete token \"{}\"", token);
         log.debug("Found {} tokens", tokens.size());
 
-        Transaction transaction = Ebean.currentTransaction();
-        transaction.setBatchMode(true);
-        transaction.setBatchSize(tokens.size());
-
         for (UserToken userToken : tokens) {
-            userToken.setEndDate(LocalDateTime.now());
+            userToken.setEndDate(Instant.now());
             userToken.setDeleted(true);
             userToken.save();
         }
