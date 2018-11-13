@@ -9,8 +9,6 @@ import my.little.changelog.model.business.Project;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.time.Instant;
-import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -35,6 +33,7 @@ public class ProjectService {
 
     /**
      * Find all projects, registered by giver user.
+     * @param user owner of projects.
      * @return list of user's projects.
      */
     @Nonnull
@@ -49,6 +48,7 @@ public class ProjectService {
 
     /**
      * Find projects by it's id.
+     * @param id id of project.
      * @return project or null.
      */
     @Nullable
