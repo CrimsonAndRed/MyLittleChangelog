@@ -72,8 +72,6 @@ lombok {
     sha256 = ""
 }
 
-// Плагин для проверки стилистики кода
-// Запускается gradle checkstyleMain
 checkstyle {
     configFile = rootProject.file('src/main/resources/checkstyle.xml')
     toolVersion ="8.8"
