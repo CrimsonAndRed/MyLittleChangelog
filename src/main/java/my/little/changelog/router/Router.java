@@ -5,12 +5,10 @@ import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Singleton;
 import lombok.extern.log4j.Log4j2;
-import my.little.changelog.controller.AdministrationController;
-import my.little.changelog.controller.AuthController;
-import my.little.changelog.controller.ProjectController;
-import my.little.changelog.controller.TestController;
+import my.little.changelog.controller.*;
 import my.little.changelog.global.GlobalParams;
 import my.little.changelog.router.decor.*;
+import my.little.changelog.service.ChangelogService;
 import spark.Request;
 import spark.Response;
 import spark.Route;
@@ -45,6 +43,9 @@ public class Router {
 
     @Inject
     private ProjectController projectController;
+
+    @Inject
+    private ChangelogController changelogController;
 
     @Inject
     private TestController testController;
@@ -117,7 +118,9 @@ public class Router {
         Spark.get("/nothing", Router.Builder.createDefault(testController::nothing));
         Spark.get("/project/all", Router.Builder.createDefaultUnauth(projectController::getAllProjects));
         Spark.get("/project/my", Router.Builder.createDefault(projectController::getUsersProjects));
-        Spark.get("/project/:id", Router.Builder.createDefaultUnauth(projectController::getProjectById));
+        Spark.get("/project/min/:id", Router.Builder.createDefaultUnauth(projectController::getMinimalProjectById));
+        Spark.get("/project/full/:id", Router.Builder.createDefaultUnauth(projectController::getFullProjectById));
+        Spark.get("/version/:id", Router.Builder.createDefaultUnauth(changelogController::getFullVersion));
     }
 
     /**

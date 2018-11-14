@@ -14,7 +14,7 @@ import javax.persistence.Version;
 import java.time.Instant;
 
 /**
- * Class with basic fields, to be presented in all database models.
+ * Class with basic fields, to be presented in most of basic database models.
  */
 @MappedSuperclass
 @Getter
@@ -47,10 +47,10 @@ public class BasicModel extends Model {
     private Instant updateDate;
 
     /**
-     * Version number.
+     * Inner version number.
      */
     @Version
-    @Column(name = "version")
+    @Column(name = "v")
     @Nonnull
-    private Long version;
+    private Long v;
 }

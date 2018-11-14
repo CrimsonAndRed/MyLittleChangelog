@@ -9,8 +9,9 @@ import my.little.changelog.config.Configurator;
 import my.little.changelog.error.Errorable;
 import my.little.changelog.global.OrikaMapper;
 import my.little.changelog.model.auth.UserToken;
-import my.little.changelog.model.business.Project;
-import my.little.changelog.model.business.dto.ProjectDto;
+import my.little.changelog.model.project.Project;
+import my.little.changelog.model.project.dto.FullProjectDto;
+import my.little.changelog.model.project.dto.MinimalisticProjectDto;
 import my.little.changelog.service.ProjectService;
 import spark.Request;
 import spark.Response;
@@ -38,9 +39,9 @@ public class ProjectController {
      * @param res default Spark response.
      * @return list of all projects.
      */
-    public List<ProjectDto> getAllProjects(Request req, Response res) {
-        List<Project> allProjects = projectService.getAll();
-        List<ProjectDto> result = beanMapper.mapAsList(allProjects, ProjectDto.class);
+    public List<MinimalisticProjectDto> getAllProjects(Request req, Response res) {
+        List<Project> allProjects = projectService.getMinimalisticAll();
+        List<MinimalisticProjectDto> result = beanMapper.mapAsList(allProjects, MinimalisticProjectDto.class);
         return result;
     }
 
@@ -50,7 +51,7 @@ public class ProjectController {
      * @param res default Spark response.
      * @return list of projects.
      */
-    public List<ProjectDto> getUsersProjects(Request req, Response res) {
+    public List<MinimalisticProjectDto> getUsersProjects(Request req, Response res) {
         String token = req.headers(Configurator.TOKEN_HEADER);
         UserToken userToken = Ebean.find(UserToken.class)
                 .select("id, createDate")
@@ -63,20 +64,21 @@ public class ProjectController {
         if (userToken == null) {
             return Collections.emptyList();
         }
-        List<Project> allProjects = projectService.getByUser(userToken.getUser());
-        List<ProjectDto> result = beanMapper.mapAsList(allProjects, ProjectDto.class);
+        List<Project> allProjects = projectService.getMinimalisticByUser(userToken.getUser());
+        List<MinimalisticProjectDto> result = beanMapper.mapAsList(allProjects, MinimalisticProjectDto.class);
         return result;
     }
 
     /**
      * Find project by id.
+     * Returns minimalistic information of project (only displayable) or error in case malformed parameter.
      * Has request parameters:
      * - id - identifier of project.
      * @param req default Spark request.
      * @param res default Spark response.
-     * @return Errorable with one project data.
+     * @return Errorable with one project data {@link MinimalisticProjectDto}.
      */
-    public Errorable getProjectById(Request req, Response res) {
+    public Errorable getMinimalProjectById(Request req, Response res) {
         String paramId = req.params("id");
         Long id;
         if (paramId == null) {
@@ -89,8 +91,35 @@ public class ProjectController {
                 return new Errorable(null, "Request error: could not parse number from " + paramId);
             }
         }
-        Project project = projectService.getById(id);
-        ProjectDto result = beanMapper.map(project, ProjectDto.class);
+        Project project = projectService.getMinimalisticById(id);
+        MinimalisticProjectDto result = beanMapper.map(project, MinimalisticProjectDto.class);
+        return new Errorable(result);
+    }
+
+    /**
+     * Find project by id.
+     * Returns full information of project (model {@link Project} can be saved based on this information) or error in case malformed parameter.
+     * Has request parameters:
+     * - id - identifier of project.
+     * @param req default Spark request.
+     * @param res default Spark response.
+     * @return Errorable with one project data {@link my.little.changelog.model.project.dto.FullProjectDto}.
+     */
+    public Errorable getFullProjectById(Request req, Response res) {
+        String paramId = req.params("id");
+        Long id;
+        if (paramId == null) {
+            return new Errorable(null, "Request error: could not read id");
+        } else {
+            try {
+                id = Long.valueOf(paramId);
+            } catch (NumberFormatException e) {
+                log.error(Throwables.getStackTraceAsString(e));
+                return new Errorable(null, "Request error: could not parse number from " + paramId);
+            }
+        }
+        Project project = projectService.getMinimalisticById(id);
+        FullProjectDto result = beanMapper.map(project, FullProjectDto.class);
         return new Errorable(result);
     }
 }

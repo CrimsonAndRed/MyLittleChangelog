@@ -7,12 +7,12 @@ import my.little.changelog.json.JsonDto;
 import javax.annotation.Nonnull;
 
 /**
- * DTO for User model.
+ * User model with minimal information.
  * Does not contain vital information like password or salt.
  */
 @Getter
 @Setter
-public class UserDto implements JsonDto {
+public class MinimalisticUserDto implements JsonDto {
 
     /**
      * User identifier.
@@ -25,10 +25,4 @@ public class UserDto implements JsonDto {
      */
     @Nonnull
     private String name;
-
-    /**
-     * Model version.
-     */
-    @Nonnull
-    private Long version;
 }

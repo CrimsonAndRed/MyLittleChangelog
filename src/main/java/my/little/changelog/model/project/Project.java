@@ -1,4 +1,4 @@
-package my.little.changelog.model.business;
+package my.little.changelog.model.project;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -8,7 +8,14 @@ import my.little.changelog.model.auth.User;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.persistence.*;
+import java.util.List;
 
+/**
+ * Project is a most generic unit.
+ * It contains several versions ("timeslices" of project state).
+ * Project is owned by one user.
+ * TODO user should be able to give permission to change his project by some other users.
+ */
 @Entity
 @Table(name = "project")
 @Getter
@@ -36,4 +43,11 @@ public class Project extends BasicModel {
     @JoinColumn(name = "create_user", referencedColumnName = "id")
     @Nonnull
     private User createUser;
+
+    /**
+     * List of versions of project.
+     */
+    @OneToMany
+    @Nonnull
+    private List<Version> versions;
 }

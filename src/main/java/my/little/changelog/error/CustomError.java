@@ -20,6 +20,9 @@ public class CustomError {
     @Nullable
     private String text;
 
+    /**
+     * Error type.
+     */
     @Getter
     @Setter
     @Nullable
