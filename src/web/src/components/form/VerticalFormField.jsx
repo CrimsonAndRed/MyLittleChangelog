@@ -26,7 +26,7 @@ class VerticalFormField extends Component {
           <div className="mg-bottom-5 block mg-left-5">
             { this.props.name }
           </div>
-          <input type="text" value={this.props.val} onChange={this.props.change} className={this.errorBorder()}/>
+          <input type="text" value={this.props.val} onChange={this.props.change} className={this.errorBorder()} />
         </div>
     );
   };

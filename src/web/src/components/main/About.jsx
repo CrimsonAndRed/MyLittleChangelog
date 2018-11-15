@@ -5,7 +5,7 @@ import React, { Component } from 'react';
 class About extends Component {
   render() {
     return (
-        <div className="flex-container">
+        <div className="flex-container main-centered content-container-5">
           About page
         </div>
     );

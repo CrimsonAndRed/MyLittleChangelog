@@ -1,3 +1,14 @@
 .form-content {
   font-size: 14px;
+
+  // wtf i need to override default browser's settings?
+  textarea {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 14px;
+  }
+
+  input {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 14px;
+  }
 }

@@ -12,7 +12,7 @@ export function get(path, cb) {
   let token = window.Cookies.get('My-Little-Token');
   axios.get(url, {
         headers: {
-          'My-Little-Token': token
+          'My-Little-Token': token ? token : ''
         }
       })
       .then(res => {
@@ -45,9 +45,10 @@ export function get(path, cb) {
 // cb - callback to apply after successful response. The only argument for callback - returned data.
 export function post(path, cb, arg) {
   let url = process.env.REACT_APP_API_URL + '/' + path;
+  let token = window.Cookies.get('My-Little-Token');
   axios.post(url, arg, {
         headers: {
-          'My-Little-Token': window.Cookies.get('My-Little-Token')
+          'My-Little-Token': token ? token : ''
         }
       })
       .then(res => {

@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom'
-import { withRouter } from 'react-router-dom'
 import Modal from '../util/modal/Modal'
 import LoginModal from './LoginModal'
 
+import { withRouter } from "react-router-dom";
 import { connect } from 'react-redux'
 import { unset } from '../../redux/actions/UsernameActions'
 
@@ -21,6 +21,11 @@ class MenuHeader extends Component {
     this.userLogin = this.userLogin.bind(this);
     this.signButton = this.signButton.bind(this);
     this.logout = this.logout.bind(this);
+    this.redirect = this.redirect.bind(this);
+  }
+
+  redirect(path) {
+    this.props.history.push(path);
   }
 
   showLoginPage() {
@@ -75,13 +80,12 @@ class MenuHeader extends Component {
     return (
       <div id="main-header">
         <div id="header-continer" className="flex-container content-container-5">
-          <div id="logo">
-            <Link to='/'>
-              <img
-                src="https://dummyimage.com/100x40/000/fff&text=My+Little+Logo" 
-                alt="logo"
-              />
-            </Link>
+          <div id="logo" className="as-pointer">
+            <img
+              src="https://dummyimage.com/100x40/000/fff&text=My+Little+Logo"
+              alt="logo"
+              onClick={() => this.redirect('/')}
+            />
           </div>
           <Link to="/about" className="flex-item-end content-container-5 menu-item">
             <span>
@@ -101,12 +105,12 @@ class MenuHeader extends Component {
   };
 }
 
-export default connect(
+export default withRouter(connect(
     state => ({
       username: state.usernameReducer.username
     }),
     dispatch => ({
       logout: () => dispatch(unset())
     })
-  )(withRouter(MenuHeader));
+  )(MenuHeader));
 
