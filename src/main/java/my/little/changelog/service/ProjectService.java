@@ -4,6 +4,7 @@ import com.google.inject.Singleton;
 import io.ebean.Ebean;
 import io.ebean.FetchConfig;
 import lombok.extern.log4j.Log4j2;
+import my.little.changelog.error.Errorable;
 import my.little.changelog.model.auth.User;
 import my.little.changelog.model.project.Project;
 
@@ -89,18 +90,54 @@ public class ProjectService {
      * @param project project object.
      * @return project object with id.
      */
-    public Project create(Project project) {
+    public Project create(Project project, User user) {
+        project.setCreateUser(user);
         project.save();
         return project;
     }
 
     /**
      * Updates existing project from user inputs.
+     * Checks user rights to manipulate with this project.
      * @param project project object.
-     * @return the same saved project.
+     * @return Errorable with the same saved project.
      */
-    public Project update(Project project) {
-        project.update();
-        return project;
+    public Errorable update(Project project, User user) {
+        if (this.checkUserIsOwner(project.getId(), user.getId())) {
+            project.update();
+            return new Errorable(project);
+        } else {
+            return new Errorable(null, "You are not permitted to update this project");
+        }
+    }
+
+    /**
+     * Deletes project by id.
+     * Checks user rights to manipulate with this project.
+     * @param project project object.
+     * @return Errorable with null data.
+     */
+    public Errorable delete(Project project, User user) {
+        if (this.checkUserIsOwner(project.getId(), user.getId())) {
+            project.delete();
+            return new Errorable(null);
+        } else {
+            return new Errorable(null, "You are not permitted to update this project");
+        }
+    }
+
+    /**
+     * Checks that user is owner of the project.
+     * @param projectId identifier of project.
+     * @param userId identifier of user.
+     * @return true if user is owner of project, false otherwise.
+     */
+    public boolean checkUserIsOwner(Long projectId, Long userId) {
+        int cnt = Ebean.find(Project.class)
+                .where()
+                .eq("id", projectId)
+                .eq("createUser.id", userId)
+                .findCount();
+        return cnt == 1;
     }
 }

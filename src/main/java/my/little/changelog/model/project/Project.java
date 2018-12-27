@@ -47,7 +47,14 @@ public class Project extends BasicModel {
     /**
      * List of versions of project.
      */
-    @OneToMany
+    @OneToMany(mappedBy = "project", cascade = {CascadeType.REMOVE})
     @Nonnull
     private List<Version> versions;
+
+    /**
+     * List of versions of project.
+     */
+    @OneToMany(mappedBy = "project", cascade = {CascadeType.REMOVE})
+    @Nonnull
+    private List<Route> routes;
 }

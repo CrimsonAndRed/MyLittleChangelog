@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import VerticalFormField from '../../form/VerticalFormField'
 
 import { withRouter } from "react-router-dom";
+import * as qry from '../../../services/query';
 
 
 // Has props:
@@ -22,13 +23,24 @@ class UserProjectNew extends Component {
 
     this.saveForm = this.saveForm.bind(this);
     this.dismissForm = this.dismissForm.bind(this);
-
-    console.log(this.props.history);
   }
 
   saveForm() {
     if (!this.state.name) {
-      window.toaster.addToast({text: "Project name is empty"});
+      window.toaster.addToast({text: 'Project name is empty'});
+    } else {
+      qry.post('project', (res) => {
+        if (res.errors.length === 0) {
+          window.toaster.addToast({text: 'Project created successfully', type: 'success'});
+          this.props.history.push('/projects');
+        } else {
+          res.errors.forEach((err) => window.toaster.addToast(err));
+        }
+        
+      }, {
+        name: this.state.name,
+        description: this.state.description
+      });
     }
   }
 
@@ -55,7 +67,7 @@ class UserProjectNew extends Component {
               />
             </div>
             <div className="new-project-fields">
-              <div className="mg-bottom-10 mg-top-10">
+              <div className="mg-bottom-10">
                 <VerticalFormField val={this.state.name} change={this.handleName} error={!this.state.name} name="Project name"/>
               </div>
               <div className="mg-bottom-5 block mg-left-5">

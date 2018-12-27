@@ -27,7 +27,7 @@ public class AuthController {
 
     /**
      * Log user in.
-     * Contains user login and password.
+     * Contains user login and password in body {@link LoginDto}.
      * @param req default Spark request.
      * @param res default Spark response.
      * @return User token or error.
@@ -52,6 +52,6 @@ public class AuthController {
         String token = req.headers(Configurator.TOKEN_HEADER);
 
         authService.logout(token);
-        return "Success";
+        return new Errorable("Success");
     }
 }

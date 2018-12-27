@@ -54,7 +54,7 @@ public class Version extends BasicModel {
     /**
      * Child changelogs of this timeslice.
      */
-    @OneToMany
+    @OneToMany(mappedBy = "version", cascade = {CascadeType.REMOVE})
     @Nonnull
     private List<Changelog> changelogs;
 }

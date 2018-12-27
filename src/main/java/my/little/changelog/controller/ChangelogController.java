@@ -8,8 +8,6 @@ import my.little.changelog.error.Errorable;
 import my.little.changelog.global.OrikaMapper;
 import my.little.changelog.model.project.Version;
 import my.little.changelog.model.project.dto.FullVersionDto;
-import my.little.changelog.model.project.dto.MinimalisticProjectDto;
-import my.little.changelog.model.project.dto.MinimalisticVersionDto;
 import my.little.changelog.service.ChangelogService;
 import spark.Request;
 import spark.Response;

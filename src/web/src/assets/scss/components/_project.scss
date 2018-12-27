@@ -53,3 +53,22 @@
     margin-left: 20px;
   }
 }
+
+.project-container {
+  display: flex;
+  flex-direction: row; 
+
+  .project-nav {
+    width: 100%;
+  }
+
+  .project-main {
+    min-width: 1000px;
+  }
+
+  .project-act {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+}

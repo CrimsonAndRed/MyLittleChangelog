@@ -12,7 +12,7 @@ class UserProjectBar extends Component {
   }
 
   click() {
-    this.props.history.push(`/version/${this.props.project.id}`)
+    this.props.history.push(`/project/${this.props.project.id}`)
   }
 
   render() {

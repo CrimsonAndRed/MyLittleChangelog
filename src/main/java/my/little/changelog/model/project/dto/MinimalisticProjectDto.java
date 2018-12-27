@@ -6,6 +6,7 @@ import my.little.changelog.json.JsonDto;
 import my.little.changelog.model.auth.dto.MinimalisticUserDto;
 
 import javax.annotation.Nonnull;
+import java.util.Comparator;
 
 /**
  * Dto for minimalistic project information.
@@ -15,6 +16,12 @@ import javax.annotation.Nonnull;
 @Getter
 @Setter
 public class MinimalisticProjectDto implements JsonDto {
+
+    /**
+     * Comparator for DTOs by id).
+     * It is implied that create date has same order as given id's.
+     */
+    public static final Comparator<MinimalisticProjectDto> COMPARATOR_BY_ID = Comparator.comparing(MinimalisticProjectDto::getId, Comparator.naturalOrder());
 
     /**
      * Project identifier.
@@ -27,6 +34,12 @@ public class MinimalisticProjectDto implements JsonDto {
      */
     @Nonnull
     private String name;
+
+    /**
+     * Project description.
+     */
+    @Nonnull
+    private String description;
 
     /**
      * Owner of project.

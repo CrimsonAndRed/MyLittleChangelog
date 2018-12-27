@@ -48,7 +48,7 @@ public class Router {
     private ChangelogController changelogController;
 
     @Inject
-    private TestController testController;
+    private VersionController versionController;
 
     @Inject
     private Injector injector;
@@ -98,29 +98,18 @@ public class Router {
         Spark.exception(RuntimeException.class, administrationController::handleInternalError);
 
         Spark.post("/login", Router.Builder.createDefaultUnauth(authController::login));
-        Spark.post("/logout", Router.Builder.create(authController::logout)
-                .transaction()
-                .measure()
-                .log()
-                .build());
+        Spark.post("/logout", Router.Builder.createDefaultUnauth(authController::logout));
 
-        Spark.get("/test", Router.Builder.create(testController::test)
-                .json()
-                .measure()
-                .log()
-                .build());
-
-        Spark.get("/exception", Router.Builder.create(testController::exception)
-                .json()
-                .measure()
-                .log()
-                .build());
-        Spark.get("/nothing", Router.Builder.createDefault(testController::nothing));
         Spark.get("/project/all", Router.Builder.createDefaultUnauth(projectController::getAllProjects));
         Spark.get("/project/my", Router.Builder.createDefault(projectController::getUsersProjects));
+        Spark.post("/project", Router.Builder.createDefault(projectController::createProject));
+        Spark.put("/project", Router.Builder.createDefault(projectController::updateProject));
+        Spark.delete("/project", Router.Builder.createDefault(projectController::deleteProject));
         Spark.get("/project/min/:id", Router.Builder.createDefaultUnauth(projectController::getMinimalProjectById));
         Spark.get("/project/full/:id", Router.Builder.createDefaultUnauth(projectController::getFullProjectById));
+
         Spark.get("/version/:id", Router.Builder.createDefaultUnauth(changelogController::getFullVersion));
+        Spark.post("/version", Router.Builder.createDefault(versionController::createVersion));
     }
 
     /**
