@@ -4,7 +4,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath "io.ebean:ebean-gradle-plugin:11.13.1"
+        classpath "io.ebean:ebean-gradle-plugin:11.26.1"
     }
 }
 
@@ -14,7 +14,7 @@ plugins {
     id 'application'
     id 'io.franzbecker.gradle-lombok' version '1.14'
     id 'checkstyle'
-    id 'org.flywaydb.flyway' version '5.2.1'
+    id 'org.flywaydb.flyway' version '5.2.4'
     id 'com.github.ben-manes.versions' version '0.20.0'
 
 }
@@ -27,18 +27,18 @@ repositories {
 
 dependencies {
     compile ('com.sparkjava:spark-core:2.8.0')
-    compile ('com.google.guava:guava:27.0-jre')
+    compile ('com.google.guava:guava:27.0.1-jre')
 
     compile('org.apache.logging.log4j:log4j-api:2.11.1')
     compile('org.apache.logging.log4j:log4j-core:2.11.1')
     // Making windows prettier
     compile('org.fusesource.jansi:jansi:1.17.1')
     compile('org.apache.logging.log4j:log4j-slf4j-impl:2.11.1')
-    compile('com.fasterxml.jackson.core:jackson-databind:2.9.7')
-    compile('io.ebean:ebean:11.24.1')
+    compile('com.fasterxml.jackson.core:jackson-databind:2.9.8')
+    compile('io.ebean:ebean:11.31.1')
     compile('org.postgresql:postgresql:42.2.5')
     compile('ma.glasnost.orika:orika-core:1.5.2')
-    compile('org.flywaydb:flyway-core:5.2.1')
+    compile('org.flywaydb:flyway-core:5.2.4')
     compile('com.google.inject:guice:4.2.2')
 }
 
