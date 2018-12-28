@@ -5,9 +5,9 @@ import io.ebean.annotation.SoftDelete;
 import io.ebean.annotation.WhenCreated;
 import lombok.Getter;
 import lombok.Setter;
+import my.little.changelog.annotation.NotNull;
+import my.little.changelog.annotation.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.persistence.*;
 import java.time.Instant;
 import java.util.UUID;
@@ -27,7 +27,7 @@ public class UserToken extends Model {
      */
     @Id
     @Column(name = "id")
-    @Nonnull
+    @NotNull
     private Long id;
 
     /**
@@ -35,14 +35,14 @@ public class UserToken extends Model {
      */
     @WhenCreated
     @Column(name = "create_date")
-    @Nonnull
+    @NotNull
     private Instant createDate;
 
     /**
      * Token uuid value.
      */
     @Column(name = "token")
-    @Nonnull
+    @NotNull
     private UUID token;
 
     /**
@@ -50,7 +50,7 @@ public class UserToken extends Model {
      */
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
-    @Nonnull
+    @NotNull
     private User user;
 
     /**
@@ -65,6 +65,6 @@ public class UserToken extends Model {
      */
     @SoftDelete
     @Column(name = "is_deleted")
-    @Nonnull
+    @NotNull
     private Boolean deleted;
 }

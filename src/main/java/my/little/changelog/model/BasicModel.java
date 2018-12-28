@@ -5,8 +5,8 @@ import io.ebean.annotation.WhenCreated;
 import io.ebean.annotation.WhenModified;
 import lombok.Getter;
 import lombok.Setter;
+import my.little.changelog.annotation.NotNull;
 
-import javax.annotation.Nonnull;
 import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
@@ -27,7 +27,7 @@ public class BasicModel extends Model {
      */
     @Id
     @Column(name = "id")
-    @Nonnull
+    @my.little.changelog.annotation.NotNull
     private Long id;
 
     /**
@@ -35,7 +35,7 @@ public class BasicModel extends Model {
      */
     @WhenCreated
     @Column(name = "create_date")
-    @Nonnull
+    @NotNull
     private Instant createDate;
 
     /**
@@ -43,14 +43,15 @@ public class BasicModel extends Model {
      */
     @WhenModified
     @Column(name = "update_date")
-    @Nonnull
+    @NotNull
     private Instant updateDate;
 
     /**
      * Inner version number.
+     * It avoid some bad situation, where OptimisticLock is raised.
      */
     @Version
     @Column(name = "v")
-    @Nonnull
+    @NotNull
     private Long v;
 }

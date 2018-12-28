@@ -1,12 +1,11 @@
 package my.little.changelog.model.project;
 
-import io.ebean.annotation.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import my.little.changelog.model.BasicModel;
+import my.little.changelog.annotation.NotNull;
+import my.little.changelog.annotation.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.persistence.*;
 import java.util.List;
 
@@ -25,7 +24,7 @@ public class Version extends BasicModel {
      * Can be like "12.3.412" or something like it, so it is not a number.
      */
     @Column(name = "num")
-    @Nonnull
+    @NotNull
     private String num;
 
     /**
@@ -33,7 +32,7 @@ public class Version extends BasicModel {
      * Project starts with version 0, each version increments order by 1.
      */
     @Column(name = "internal_order")
-    @Nonnull
+    @NotNull
     private Long internalOrder;
 
     /**
@@ -55,6 +54,6 @@ public class Version extends BasicModel {
      * Child changelogs of this timeslice.
      */
     @OneToMany(mappedBy = "version", cascade = {CascadeType.REMOVE})
-    @Nonnull
+    @NotNull
     private List<Changelog> changelogs;
 }

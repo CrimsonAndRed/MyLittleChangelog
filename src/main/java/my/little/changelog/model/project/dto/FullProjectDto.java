@@ -4,9 +4,9 @@ import lombok.Getter;
 import lombok.Setter;
 import my.little.changelog.json.JsonDto;
 import my.little.changelog.model.auth.dto.MinimalisticUserDto;
+import my.little.changelog.annotation.NotNull;
+import my.little.changelog.annotation.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -20,13 +20,13 @@ public class FullProjectDto implements JsonDto {
     /**
      * Project identifier.
      */
-    @Nonnull
+    @NotNull
     private Long id;
 
     /**
      * Project name.
      */
-    @Nonnull
+    @NotNull
     private String name;
 
     /**
@@ -38,18 +38,18 @@ public class FullProjectDto implements JsonDto {
     /**
      * Inner version.
      */
-    @Nonnull
+    @NotNull
     private Long v;
 
     /**
      * Owner of project.
      */
-    @Nonnull
+    @NotNull
     private MinimalisticUserDto createUser;
 
     /**
      * Several versions for project.
      */
-    @Nonnull
+    @NotNull
     private List<MinimalisticVersionDto> versions;
 }

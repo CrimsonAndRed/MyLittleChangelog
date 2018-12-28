@@ -3,6 +3,8 @@ package my.little.changelog.model.project;
 import lombok.Getter;
 import lombok.Setter;
 import my.little.changelog.model.BasicModel;
+import my.little.changelog.annotation.NotNull;
+import my.little.changelog.annotation.Nullable;
 
 import javax.persistence.*;
 
@@ -21,6 +23,7 @@ public class Route extends BasicModel {
      * Should be like "/root/something1/something2..."
      */
     @Column(name = "name")
+    @Nullable
     private String name;
 
     /**
@@ -28,5 +31,6 @@ public class Route extends BasicModel {
      */
     @ManyToOne
     @JoinColumn(name = "project_id", referencedColumnName = "id")
+    @NotNull
     private Project project;
 }

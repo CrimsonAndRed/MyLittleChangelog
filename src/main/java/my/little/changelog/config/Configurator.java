@@ -43,7 +43,7 @@ public class Configurator {
     public static final String DATABASE_DRIVER = "datasource.db.databaseDriver";
     /** Token header name. */
     public static final String TOKEN_HEADER = "My-Little-Token";
-    /** Default logger level. */
+    /** Logger level name. */
     private static final String LOGGER_LEVEL_PARAM = "logger.level";
 
     //#################################

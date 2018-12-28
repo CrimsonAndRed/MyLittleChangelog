@@ -3,8 +3,8 @@ package my.little.changelog.model.project.dto;
 import lombok.Getter;
 import lombok.Setter;
 import my.little.changelog.json.JsonDto;
+import my.little.changelog.annotation.NotNull;
 
-import javax.annotation.Nonnull;
 import java.util.List;
 
 /**
@@ -18,24 +18,24 @@ public class RouteDto implements JsonDto {
     /**
      * Identifier of route.
      */
-    @Nonnull
+    @NotNull
     private Long id;
 
     /**
      * Name of route.
      */
-    @Nonnull
+    @NotNull
     private String name;
 
     /**
      * Inner version of model.
      */
-    @Nonnull
+    @NotNull
     private Long v;
 
     /**
      * List of child changelogs.
      */
-    @Nonnull
+    @NotNull
     private List<ChangelogDto> changelogs;
 }

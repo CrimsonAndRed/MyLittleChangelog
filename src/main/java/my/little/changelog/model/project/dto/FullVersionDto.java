@@ -3,9 +3,9 @@ package my.little.changelog.model.project.dto;
 import lombok.Getter;
 import lombok.Setter;
 import my.little.changelog.json.JsonDto;
+import my.little.changelog.annotation.NotNull;
+import my.little.changelog.annotation.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -19,13 +19,13 @@ public class FullVersionDto implements JsonDto {
     /**
      * Identifier of version.
      */
-    @Nonnull
+    @NotNull
     private Long id;
 
     /**
      * Version number.
      */
-    @Nonnull
+    @NotNull
     private String num;
 
     /**
@@ -37,19 +37,19 @@ public class FullVersionDto implements JsonDto {
     /**
      * Internal order.
      */
-    @Nonnull
+    @NotNull
     private Long internalOrder;
 
     /**
      * Child routes.
      */
-    @Nonnull
+    @NotNull
     private List<RouteDto> routes;
 
     /**
      * Inner version.
      */
-    @Nonnull
+    @NotNull
     private Long v;
 
     /**

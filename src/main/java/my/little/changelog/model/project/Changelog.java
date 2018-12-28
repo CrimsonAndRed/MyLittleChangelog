@@ -3,9 +3,9 @@ package my.little.changelog.model.project;
 import lombok.Getter;
 import lombok.Setter;
 import my.little.changelog.model.BasicModel;
+import my.little.changelog.annotation.NotNull;
+import my.little.changelog.annotation.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.persistence.*;
 
 /**
@@ -25,7 +25,7 @@ public class Changelog extends BasicModel {
      * Feature that introduced in version 1 and changed in 1.1 has different changelog ids but same vids.
      */
     @Column(name = "vid")
-    @Nonnull
+    @NotNull
     private Long vid;
 
     /**
@@ -40,7 +40,7 @@ public class Changelog extends BasicModel {
      */
     @ManyToOne
     @JoinColumn(name = "version_id", referencedColumnName = "id")
-    @Nonnull
+    @NotNull
     private Version version;
 
     /**
@@ -48,13 +48,13 @@ public class Changelog extends BasicModel {
      */
     @ManyToOne
     @JoinColumn(name = "route_id", referencedColumnName = "id")
-    @Nonnull
+    @NotNull
     private Route route;
 
     /**
      * Endpoint flag of changelog.
      */
     @Column(name = "is_deleted")
-    @Nonnull
+    @NotNull
     private Boolean deleted;
 }

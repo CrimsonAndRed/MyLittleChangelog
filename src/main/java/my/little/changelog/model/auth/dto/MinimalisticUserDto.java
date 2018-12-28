@@ -3,8 +3,7 @@ package my.little.changelog.model.auth.dto;
 import lombok.Getter;
 import lombok.Setter;
 import my.little.changelog.json.JsonDto;
-
-import javax.annotation.Nonnull;
+import my.little.changelog.annotation.NotNull;
 
 /**
  * User model with minimal information.
@@ -17,12 +16,12 @@ public class MinimalisticUserDto implements JsonDto {
     /**
      * User identifier.
      */
-    @Nonnull
+    @NotNull
     private Long id;
 
     /**
      * Username.
      */
-    @Nonnull
+    @NotNull
     private String name;
 }

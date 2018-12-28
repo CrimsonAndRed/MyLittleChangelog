@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import my.little.changelog.json.JsonDto;
+import my.little.changelog.annotation.Nullable;
 
 /**
  * DTO for user login page.
@@ -18,10 +19,12 @@ public class LoginDto implements JsonDto {
     /**
      * User login name.
      */
+    @Nullable
     private String login;
 
     /**
      * User password.
      */
+    @Nullable
     private String password;
 }

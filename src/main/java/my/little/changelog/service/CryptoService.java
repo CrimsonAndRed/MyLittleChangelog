@@ -4,8 +4,7 @@ import com.google.common.hash.Hashing;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import my.little.changelog.global.GlobalParams;
-
-import javax.annotation.Nonnull;
+import my.little.changelog.annotation.NotNull;
 
 /**
  * Service that does crypto things.
@@ -21,8 +20,8 @@ public class CryptoService {
      * @param password user password.
      * @return Sha-256 salted hash.
      */
-    @Nonnull
-    public byte[] hashPassword(@Nonnull byte[] password) {
+    @NotNull
+    public byte[] hashPassword(@NotNull byte[] password) {
         return Hashing.sha256().hashBytes(password).asBytes();
     }
 }

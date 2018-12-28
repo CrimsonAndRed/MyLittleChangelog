@@ -2,26 +2,27 @@ package my.little.changelog.model.auth.dto;
 
 import lombok.Getter;
 import lombok.Setter;
+import my.little.changelog.annotation.NotNull;
 
 import java.util.UUID;
 
 /**
  * Response for user logging in.
  */
+@Getter
+@Setter
 public class LoginResponseDto {
 
     /**
      * New token.
      */
-    @Getter
-    @Setter
+    @NotNull
     private UUID token;
 
     /**
      * Username.
      */
-    @Getter
-    @Setter
+    @NotNull
     private String username;
 
     /**
@@ -35,7 +36,7 @@ public class LoginResponseDto {
      * @param token token.
      * @param username username.
      */
-    public LoginResponseDto(UUID token, String username) {
+    public LoginResponseDto(@NotNull UUID token, @NotNull String username) {
         this.token = token;
         this.username = username;
     }

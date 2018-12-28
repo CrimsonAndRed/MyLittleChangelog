@@ -8,8 +8,8 @@ import my.little.changelog.error.Errorable;
 import my.little.changelog.model.auth.User;
 import my.little.changelog.model.project.Project;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import my.little.changelog.annotation.Nullable;
+import my.little.changelog.annotation.NotNull;
 import java.util.List;
 
 /**
@@ -25,7 +25,7 @@ public class ProjectService {
      * TODO delete this because it cant be good in distance.
      * @return list of projects.
      */
-    @Nonnull
+    @NotNull
     public List<Project> getMinimalisticAll() {
         List<Project> result = Ebean.find(Project.class)
                 .select("id, name")
@@ -40,7 +40,7 @@ public class ProjectService {
      * @param user owner of projects.
      * @return list of user's projects.
      */
-    @Nonnull
+    @NotNull
     public List<Project> getMinimalisticByUser(User user) {
         List<Project> result = Ebean.find(Project.class)
                 .select("id, name")

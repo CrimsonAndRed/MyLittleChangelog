@@ -3,9 +3,8 @@ package my.little.changelog.model.project.dto;
 import lombok.Getter;
 import lombok.Setter;
 import my.little.changelog.json.JsonDto;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import my.little.changelog.annotation.NotNull;
+import my.little.changelog.annotation.Nullable;
 
 /**
  * Dto for changelog unit.
@@ -17,13 +16,13 @@ public class ChangelogDto implements JsonDto {
     /**
      * Identifier of changelog.
      */
-    @Nonnull
+    @NotNull
     private Long id;
 
     /**
      * Virtual identifier of changelog.
      */
-    @Nonnull
+    @NotNull
     private Long vid;
 
     /**
@@ -35,12 +34,12 @@ public class ChangelogDto implements JsonDto {
     /**
      * Deleted flag.
      */
-    @Nonnull
+    @NotNull
     private Boolean deleted;
 
     /**
      * Inner version.
      */
-    @Nonnull
+    @NotNull
     private Long v;
 }

@@ -4,9 +4,9 @@ import com.google.common.collect.Lists;
 import lombok.Getter;
 import lombok.Setter;
 import my.little.changelog.json.JsonDto;
+import my.little.changelog.annotation.NotNull;
+import my.little.changelog.annotation.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -24,7 +24,7 @@ public class Errorable implements JsonDto {
      */
     @Getter
     @Setter
-    @Nonnull
+    @NotNull
     private List<CustomError> errors = Collections.emptyList();
 
     /**
@@ -54,7 +54,7 @@ public class Errorable implements JsonDto {
      * @param data data.
      * @param errors errors list.
      */
-    public Errorable(@Nullable Object data, @Nonnull List<CustomError> errors) {
+    public Errorable(@Nullable Object data, @NotNull List<CustomError> errors) {
         this.errors = errors;
         this.data = data;
     }
@@ -64,7 +64,7 @@ public class Errorable implements JsonDto {
      * @param data data.
      * @param error the only error.
      */
-    public Errorable(@Nullable Object data, @Nonnull CustomError error) {
+    public Errorable(@Nullable Object data, @NotNull CustomError error) {
         this.errors = Lists.newArrayList(error);
         this.data = data;
     }
@@ -74,7 +74,7 @@ public class Errorable implements JsonDto {
      * @param data data.
      * @param error error as string.
      */
-    public Errorable(@Nullable Object data, @Nonnull String error) {
+    public Errorable(@Nullable Object data, @NotNull String error) {
         this.errors = Lists.newArrayList(new CustomError(error));
         this.data = data;
     }

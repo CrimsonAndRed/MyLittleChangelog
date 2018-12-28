@@ -9,8 +9,8 @@ import my.little.changelog.model.auth.User;
 import my.little.changelog.model.auth.UserToken;
 import my.little.changelog.model.auth.dto.LoginDto;
 import my.little.changelog.model.auth.dto.LoginResponseDto;
+import my.little.changelog.annotation.NotNull;
 
-import javax.annotation.Nonnull;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
@@ -117,7 +117,7 @@ public class AuthService {
      * In any case.
      * @param token user's token.
      */
-    public void logout(@Nonnull String token) {
+    public void logout(@NotNull String token) {
         List<UserToken> tokens = Ebean.find(UserToken.class)
                 .where()
                 .eq("token", UUID.fromString(token))
