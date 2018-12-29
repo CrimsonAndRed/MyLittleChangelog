@@ -16,7 +16,6 @@ public class MinimalisticVersionDto implements JsonDto {
 
     /**
      * Comparator for DTOs by internal number.
-     * TODO alphanumeric instead of natural.
      */
     public static final Comparator<MinimalisticVersionDto> COMPARATOR_BY_INTERNAL_ORDER = Comparator.comparing(MinimalisticVersionDto::getInternalOrder, Comparator.naturalOrder());
 

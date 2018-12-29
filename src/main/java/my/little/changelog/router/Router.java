@@ -8,7 +8,6 @@ import lombok.extern.log4j.Log4j2;
 import my.little.changelog.controller.*;
 import my.little.changelog.global.GlobalParams;
 import my.little.changelog.router.decor.*;
-import my.little.changelog.service.ChangelogService;
 import spark.Request;
 import spark.Response;
 import spark.Route;

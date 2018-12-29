@@ -41,7 +41,7 @@ public class Project extends BasicModel {
      */
     @ManyToOne
     @JoinColumn(name = "create_user", referencedColumnName = "id")
-    @my.little.changelog.annotation.NotNull
+    @NotNull
     private User createUser;
 
     /**

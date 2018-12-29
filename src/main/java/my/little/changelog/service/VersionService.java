@@ -8,7 +8,11 @@ import lombok.extern.log4j.Log4j2;
 import my.little.changelog.error.ErrorMessage;
 import my.little.changelog.error.Errorable;
 import my.little.changelog.model.auth.User;
+import my.little.changelog.model.project.Project;
 import my.little.changelog.model.project.Version;
+import my.little.changelog.model.project.dto.CreateVersionDto;
+
+import java.util.Objects;
 
 /**
  * Versions-related service.
@@ -29,22 +33,28 @@ public class VersionService {
 
     /**
      * Creates version from user inputs.
-     * @param version user input.
-     * @param projectId project's identifier.
+     * @param versionDto user's input.
+     * @param user user, that send request.
      * @return saved entity of {@link Version}.
      */
-    public Errorable createVersion(Version version, User user, Long projectId) {
+    public Errorable createVersion(CreateVersionDto versionDto, User user) {
 
-        boolean isOwner = projectService.checkUserIsOwner(projectId, user.getId());
-        if (!isOwner) {
-            return new Errorable(null, ErrorMessage.userNotAllowed());
+        Long projectId = versionDto.getProjectId();
+        Project project = Ebean.find(Project.class)
+                .fetch("createUser")
+                .where()
+                .eq("id", projectId)
+                .findOne();
+
+        // Project has beed deleted?
+        if (project == null) {
+            return new Errorable(null, ErrorMessage.genericError());
         }
 
-        Ebean.find(Version.class)
-                .fetch("project", "id")
-                .where()
-                .eq("project.id", projectId)
-                .findOne();
+        if (!Objects.equals(project.getCreateUser().getId(), user.getId())) {
+            return new Errorable(null, ErrorMessage.userNotAllowed());
+        }
+        // TODO This is error-prone, because not synchronised
         SqlRow max = Ebean.createSqlQuery(QUERY_MAX_VERSION_ID).setParameter("projectId", projectId).findOne();
 
         Long currentOrder = 0L;
@@ -54,7 +64,11 @@ public class VersionService {
                 currentOrder = maxOrder + 1;
             }
         }
+
+        Version version = new Version();
         version.setInternalOrder(currentOrder);
+        version.setProject(project);
+        version.setNum(versionDto.getNum());
         version.save();
 
         return new Errorable(version);

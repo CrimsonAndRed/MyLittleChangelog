@@ -13,6 +13,7 @@ import my.little.changelog.error.Errorable;
 import my.little.changelog.global.OrikaMapper;
 import my.little.changelog.model.auth.UserToken;
 import my.little.changelog.model.project.Version;
+import my.little.changelog.model.project.dto.CreateVersionDto;
 import my.little.changelog.model.project.dto.MinimalisticVersionDto;
 import my.little.changelog.service.VersionService;
 import spark.Request;
@@ -46,10 +47,7 @@ public class VersionController {
     @SneakyThrows
     public Errorable createVersion(Request req, Response res) {
         JsonNode node = mapper.readTree(req.body());
-        MinimalisticVersionDto dto = mapper.treeToValue(node, MinimalisticVersionDto.class);
-        long projectId = node.get("projectId").asLong();
-
-        Version model = beanMapper.map(dto, Version.class);
+        CreateVersionDto dto = mapper.treeToValue(node, CreateVersionDto.class);
 
         String token = req.headers(Configurator.TOKEN_HEADER);
         UserToken userToken = Ebean.find(UserToken.class)
@@ -64,9 +62,9 @@ public class VersionController {
             return new Errorable(null, ErrorMessage.genericError());
         }
 
-        Errorable result = versionService.createVersion(model, userToken.getUser(), projectId);
+        Errorable result = versionService.createVersion(dto, userToken.getUser());
         if (result.getData() != null) {
-            result.setData(mapper.writeValueAsString(result.getData()));
+            result.setData(beanMapper.map(result.getData(), MinimalisticVersionDto.class));
         }
         return result;
     }

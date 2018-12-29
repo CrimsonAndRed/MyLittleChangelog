@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import * as qry from '../../../../services/query';
 
 import VerticalFormField from '../../../form/VerticalFormField';
 
@@ -12,7 +11,6 @@ class VersionNew extends Component {
     super(props);
 
     this.handleNum = this.handleNum.bind(this);
-    this.createVersion = this.createVersion.bind(this);
 
     this.state = {
       num: ''
@@ -21,21 +19,6 @@ class VersionNew extends Component {
 
   handleNum(e) {
     this.setState({num: e.target.value});
-  }
-
-  createVersion(e) {
-    e.preventDefault();
-    qry.post('version', (result) => {
-      if (result.data) {
-
-        // redux login
-        this.props.login(result.data.username);
-        this.props.onClose();
-      } else {
-        result.errors.forEach(err => window.toaster.addToast({text: err.text, type: 'error'}));
-        this.setState({wrongCredentials: true});
-      }
-    }, {num: this.state.num})
   }
 
   render() {

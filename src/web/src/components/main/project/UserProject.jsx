@@ -15,7 +15,7 @@ class UserProject extends Component {
       project: {versions: []},
       mode: 'view',
       rollbackCopy: {},
-      showAddVerionModal: false
+      showAddVersionModal: false
     };
     
     this.editForm = this.editForm.bind(this);
@@ -92,16 +92,20 @@ class UserProject extends Component {
 
   // Add version modal
   addVersion() {
-    this.setState({showAddVerionModal: true}); 
+    this.setState({showAddVersionModal: true});
   }
 
   dismissAddVersion() {
-    this.setState({showAddVerionModal: false});
+    this.setState({showAddVersionModal: false});
   }
 
   submitAddVersion(newVersion) {
      qry.post('version', (data) => {
       if (data.errors.length === 0) {
+        let newProject = _.assign({}, this.state.project);
+        newProject.versions = [...this.state.project.versions, data.data];
+        this.setState({project: newProject});
+        this.dismissAddVersion();
         window.toaster.addToast({text: 'Version added successfully', type: 'success'});
       } else {
         data.errors.forEach(error => window.toaster.addToast(error));
@@ -110,13 +114,12 @@ class UserProject extends Component {
       num: newVersion.num,
       projectId: this.state.project.id
     });
-    console.log(newVersion);
   }
 
   render() {
     return (
         <div className="project-container content-container-5">
-          { this.state.showAddVerionModal && (
+          { this.state.showAddVersionModal && (
             <Modal onClose={this.dismissAddVersion} sizeClass="login-modal">
               <VersionNew project={this.state.project} onClose={this.dismissAddVersion} onSubmit={this.submitAddVersion}/>
             </Modal>
