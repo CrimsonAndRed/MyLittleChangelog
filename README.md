@@ -20,4 +20,3 @@ To make production files:
 ##TODO
 * Cant run frontend from scratch, sass is not compiled to css by default, only on watcher trigger
 * Cant use node 11, only 10
-* concurrently is not in package.json
