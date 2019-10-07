@@ -7,7 +7,7 @@ import spark.Response;
 import spark.Route;
 
 /**
- * Decorator for Spark's {@link Route} to run custom functional on each route.
+ * Decorator for Spark's {@link Route} to run custom function on each route.
  * This is sort of overkill due to {@link spark.Spark#before(Filter...)}, {@link spark.Spark#after(Filter...)} etc.
  * But i just wanted to try my own way.
  */

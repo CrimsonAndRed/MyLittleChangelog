@@ -22,7 +22,7 @@ import java.util.function.BiFunction;
 @Singleton
 public class Router {
 
-    /** Parameter for application port ot use. */
+    /** Parameter for application port to use. */
     public static final String PORT_PARAM = "web.port";
 
     /** Default value for application port. */
@@ -104,8 +104,8 @@ public class Router {
         Spark.post("/project", Router.Builder.createDefault(projectController::createProject));
         Spark.put("/project", Router.Builder.createDefault(projectController::updateProject));
         Spark.delete("/project", Router.Builder.createDefault(projectController::deleteProject));
-        Spark.get("/project/min/:id", Router.Builder.createDefaultUnauth(projectController::getMinimalProjectById));
-        Spark.get("/project/full/:id", Router.Builder.createDefaultUnauth(projectController::getFullProjectById));
+        Spark.get("/project/:id/minimal", Router.Builder.createDefaultUnauth(projectController::getMinimalProjectById));
+        Spark.get("/project/:id/full", Router.Builder.createDefaultUnauth(projectController::getFullProjectById));
 
         Spark.get("/version/:id", Router.Builder.createDefaultUnauth(changelogController::getFullVersion));
         Spark.post("/version", Router.Builder.createDefault(versionController::createVersion));

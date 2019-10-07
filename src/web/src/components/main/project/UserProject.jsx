@@ -36,7 +36,7 @@ class UserProject extends Component {
   }
 
   init() {
-    qry.get(`project/full/${this.props.match.params.id}`, (data) => {
+    qry.get(`project/${this.props.match.params.id}/full`, (data) => {
       if (data.errors.length === 0) {
         this.setState({project: data.data});
       } else {

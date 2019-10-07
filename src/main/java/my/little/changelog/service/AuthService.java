@@ -83,7 +83,7 @@ public class AuthService {
         token.setDeleted(false);
 
         // Doing it in case uuid collisions.
-        // Anyway will be unlocked because this method call is wrapped in transaction BEGIN - COMMIT - ROLLBACK.
+        // Anyway will be unlocked because this method call is wrapped in transaction BEGIN - COMMIT/ROLLBACK.
         Ebean.createSqlUpdate(LOCK_TOKENS_TABLE).execute();
         UUID randomUuid;
         // Defending myself from collisions, lets be secure at least in this particular little feature

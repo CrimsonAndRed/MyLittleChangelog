@@ -29,6 +29,7 @@ public class Errorable implements JsonDto {
 
     /**
      * Any data.
+     * TODO this should be generic?
      */
     @Getter
     @Setter
