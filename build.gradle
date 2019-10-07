@@ -42,8 +42,8 @@ dependencies {
     compile('com.google.inject:guice:4.2.2')
 }
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+sourceCompatibility = 1.12
+targetCompatibility = 1.12
 
 compileJava.options.encoding = "UTF-8"
 compileTestJava.options.encoding = "UTF-8"

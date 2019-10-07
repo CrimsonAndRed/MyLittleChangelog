@@ -8,6 +8,7 @@ To try running server locally:
 
 To run jar file:
 * Build jar via `gradle clean jar`
+* Go to ./build/libs
 * Run it as `java -jar <FileName>.jar -env=prod`
 
 ## Frontend
@@ -17,6 +18,6 @@ To try running server locally:
 To make production files:
 * In directory src/web run `npm run build`
 
-##TODO
+## TODO
 * Cant run frontend from scratch, sass is not compiled to css by default, only on watcher trigger
 * Cant use node 11, only 10

@@ -13,24 +13,24 @@ var SCSS_DEST = './src/assets/css'
 
 gulp.task('compile_scss', function() {
 
-	gulp.src(SCSS_SRC)
+	return gulp.src(SCSS_SRC, { allowEmpty: true })
 	.pipe(sass().on('error', sass.logError))
 	.pipe(minifyCSS())
 	.pipe(rename({suffix: '.min'}))
 	// Cannot handle imports :(
 //	.pipe(changed(SCSS_DEST))
-	.pipe(gulp.dest(SCSS_DEST));
+	.pipe(gulp.dest(SCSS_DEST, { allowEmpty: true }));
 });
 
 gulp.task('build_scss', function() {
-    gulp.src(SCSS_DEST)
+    gulp.src(SCSS_DEST, { allowEmpty: true })
         .pipe(clean());
 
-    gulp.start('compile_scss')
+    return gulp.task('compile_scss')();
 });
 
 gulp.task('watch_scss', function() {
-	gulp.watch(SCSS_SRC, ['compile_scss']);
+	return gulp.watch(SCSS_SRC, gulp.series('compile_scss'));
 });
 
-gulp.task('default', ['watch_scss'])
+gulp.task('default', gulp.series('build_scss', 'watch_scss'));

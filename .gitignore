@@ -4,6 +4,7 @@
 /logs
 /out
 /gradle
+/db
 
 gradlew
 gradlew.bat
