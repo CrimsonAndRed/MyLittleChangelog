@@ -68,4 +68,17 @@ public class VersionController {
         }
         return result;
     }
+
+    @SneakyThrows
+    public MinimalisticVersionDto moveVersion(Request req, Response res) {
+        JsonNode node = mapper.readTree(req.body());
+        MinimalisticVersionDto dto = mapper.treeToValue(node, MinimalisticVersionDto.class);
+
+        Long newOrder = Long.parseLong(req.params("newOrder"));
+        Version version = beanMapper.map(dto, Version.class);
+
+
+        MinimalisticVersionDto updatedDto = beanMapper.map(versionService.moveVersion(newOrder, version), MinimalisticVersionDto.class);
+        return updatedDto;
+    }
 }

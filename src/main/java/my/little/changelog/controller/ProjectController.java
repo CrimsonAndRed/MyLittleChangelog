@@ -184,10 +184,7 @@ public class ProjectController {
                 .findOne();
 
         Errorable result = projectService.update(model, userToken.getUser());
-        if (result.getData() != null) {
-            result.setData(mapper.writeValueAsString(result.getData()));
-        }
-        return result;
+        return result.toPrimitiveErrorable();
     }
 
     /**

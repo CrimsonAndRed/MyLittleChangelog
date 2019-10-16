@@ -109,6 +109,8 @@ public class Router {
 
         Spark.get("/version/:id", Router.Builder.createDefaultUnauth(changelogController::getFullVersion));
         Spark.post("/version", Router.Builder.createDefault(versionController::createVersion));
+
+        Spark.post("/version/order/:newOrder", Router.Builder.createDefault(versionController::moveVersion));
     }
 
     /**

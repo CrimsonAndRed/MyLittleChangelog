@@ -104,4 +104,14 @@ public class Errorable implements JsonDto {
             this.errors.addAll(errorsList);
         }
     }
+
+    /**
+     * Construct new {@link Errorable} with:
+     * - only errors if there are errors in this object
+     * - only empty data if there are no errors in this object.
+     * @return new more primitive {@link Errorable}.
+     */
+    public Errorable toPrimitiveErrorable() {
+        return new Errorable(null, this.errors);
+    }
 }

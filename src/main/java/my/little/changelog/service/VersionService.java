@@ -2,8 +2,7 @@ package my.little.changelog.service;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import io.ebean.Ebean;
-import io.ebean.SqlRow;
+import io.ebean.*;
 import lombok.extern.log4j.Log4j2;
 import my.little.changelog.error.ErrorMessage;
 import my.little.changelog.error.Errorable;
@@ -11,7 +10,9 @@ import my.little.changelog.model.auth.User;
 import my.little.changelog.model.project.Project;
 import my.little.changelog.model.project.Version;
 import my.little.changelog.model.project.dto.CreateVersionDto;
+import my.little.changelog.model.project.dto.MinimalisticVersionDto;
 
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -72,5 +73,63 @@ public class VersionService {
         version.save();
 
         return new Errorable(version);
+    }
+
+    /**
+     * Moves version up or down in all project's version list.
+     * This manipulates {@link Version#internalOrder} field.
+     * @param newOrder new order number for current version.
+     * @param versionModel current version.
+     * @return saved entity of {@link Version}
+     */
+    public Version moveVersion(Long newOrder, Version versionModel) {
+
+        Long id = versionModel.getId();
+        Long currentOrder = versionModel.getInternalOrder();
+
+        Version currentVersion = Ebean.find(Version.class)
+                .fetch("project", "id")
+                .where()
+                .idEq(id)
+                .findOne();
+
+        if (currentVersion == null) {
+            throw new IllegalArgumentException("Could not find version by id " + id);
+        }
+
+        ExpressionList<Version> expression = Ebean.find(Version.class)
+                .where()
+                .eq("project.id", currentVersion.getProject().getId());
+
+        if (newOrder > versionModel.getInternalOrder()) {
+            List<Version> toUpdate = expression
+                    .le("internalOrder", newOrder)
+                    .gt("internalOrder", currentOrder)
+                    .findList();
+
+
+            versionModel.setInternalOrder(newOrder);
+            Ebean.update(versionModel);
+
+            for (Version version : toUpdate) {
+                version.setInternalOrder(version.getInternalOrder() - 1);
+                Ebean.save(version);
+            }
+        } else {
+            List<Version> toUpdate = expression
+                    .lt("internalOrder", currentOrder)
+                    .ge("internalOrder", newOrder)
+                    .findList();
+            versionModel.setInternalOrder(newOrder);
+            Ebean.update(versionModel);
+
+            for (Version version : toUpdate) {
+                version.setInternalOrder(version.getInternalOrder() + 1);
+                Ebean.save(version);
+            }
+        }
+
+
+        return versionModel;
     }
 }

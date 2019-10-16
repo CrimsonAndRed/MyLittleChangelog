@@ -5,6 +5,7 @@ import Modal from '../../util/modal/Modal'
 import VerticalFormField from '../../form/VerticalFormField'
 
 import VersionNew from './version/VersionNew';
+import ProjectNavigation from './ProjectNavigation';
 
 class UserProject extends Component {
 
@@ -124,12 +125,7 @@ class UserProject extends Component {
               <VersionNew project={this.state.project} onClose={this.dismissAddVersion} onSubmit={this.submitAddVersion}/>
             </Modal>
           )}
-          <div className="project-nav">
-            Navigation
-            <ul>
-              { this.state.project.versions.map(vers => <li key={vers.id} onClick={() => this.props.history.push(`/version/${vers.id}`)}> {vers.num} </li> )}
-            </ul>
-          </div>
+          <ProjectNavigation versions={this.state.project.versions}/>
           <div className="content-container-5 form-content main-centered project-main">
             <div className="new-project-container">
               <div className="new-project-img">

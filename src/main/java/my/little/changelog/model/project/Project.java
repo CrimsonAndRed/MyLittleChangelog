@@ -14,7 +14,7 @@ import java.util.List;
  * Project is a most generic unit.
  * It contains several versions ("timeslices" of project state).
  * Project is owned by one user.
- * TODO user should be able to give permission to change his project by some other users.
+ * TODO user should be able to give permission to change his project to some other users.
  */
 @Entity
 @Table(name = "project")

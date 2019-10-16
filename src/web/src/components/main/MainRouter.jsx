@@ -8,7 +8,7 @@ import MenuHeader from './MenuHeader';
 import UserProjects from './project/UserProjects';
 import UserProject from './project/UserProject';
 import UserProjectNew from './project/UserProjectNew';
-import Version from './project/Version';
+import Version from './project/version/Version';
 
 // Main router
 // Add routes to <Switch> block to make them wrapped in header-wrap.

@@ -27,7 +27,7 @@ public class BasicModel extends Model {
      */
     @Id
     @Column(name = "id")
-    @my.little.changelog.annotation.NotNull
+    @NotNull
     private Long id;
 
     /**
