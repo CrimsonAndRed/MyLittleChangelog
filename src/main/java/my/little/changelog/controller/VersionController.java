@@ -14,6 +14,7 @@ import my.little.changelog.global.OrikaMapper;
 import my.little.changelog.model.auth.UserToken;
 import my.little.changelog.model.project.Version;
 import my.little.changelog.model.project.dto.CreateVersionDto;
+import my.little.changelog.model.project.dto.FullVersionDto;
 import my.little.changelog.model.project.dto.MinimalisticVersionDto;
 import my.little.changelog.service.VersionService;
 import spark.Request;
@@ -80,5 +81,22 @@ public class VersionController {
 
         MinimalisticVersionDto updatedDto = beanMapper.map(versionService.moveVersion(newOrder, version), MinimalisticVersionDto.class);
         return updatedDto;
+    }
+
+    @SneakyThrows
+    public Errorable deleteVersion(Request req, Response res) {
+        JsonNode node = mapper.readTree(req.body());
+        FullVersionDto dto = mapper.treeToValue(node, FullVersionDto.class);
+        String token = req.headers(Configurator.TOKEN_HEADER);
+        // Route is authorized before, so userToken should not be null (unless user was deleted in between queries)
+        UserToken userToken = Ebean.find(UserToken.class)
+                .select("id, createDate")
+                .fetch("user", "id, name, deleted")
+                .where()
+                .eq("token", UUID.fromString(token))
+                .eq("deleted", false)
+                .findOne();
+        Errorable result = versionService.deleteVersion(dto, userToken.getUser());
+        return result.toPrimitiveErrorable();
     }
 }

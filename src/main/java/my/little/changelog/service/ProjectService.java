@@ -120,7 +120,7 @@ public class ProjectService {
     public Errorable delete(Project project, User user) {
         if (this.checkUserIsOwner(project.getId(), user.getId())) {
             project.delete();
-            return new Errorable(null);
+            return new Errorable();
         } else {
             return new Errorable(null, "You are not permitted to update this project");
         }

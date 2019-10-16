@@ -2,15 +2,18 @@ package my.little.changelog.service;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import io.ebean.*;
+import io.ebean.Ebean;
+import io.ebean.ExpressionList;
+import io.ebean.SqlRow;
 import lombok.extern.log4j.Log4j2;
+import my.little.changelog.error.CustomError;
 import my.little.changelog.error.ErrorMessage;
 import my.little.changelog.error.Errorable;
 import my.little.changelog.model.auth.User;
 import my.little.changelog.model.project.Project;
 import my.little.changelog.model.project.Version;
 import my.little.changelog.model.project.dto.CreateVersionDto;
-import my.little.changelog.model.project.dto.MinimalisticVersionDto;
+import my.little.changelog.model.project.dto.FullVersionDto;
 
 import java.util.List;
 import java.util.Objects;
@@ -34,8 +37,9 @@ public class VersionService {
 
     /**
      * Creates version from user inputs.
+     *
      * @param versionDto user's input.
-     * @param user user, that send request.
+     * @param user       user, that send request.
      * @return saved entity of {@link Version}.
      */
     public Errorable createVersion(CreateVersionDto versionDto, User user) {
@@ -78,7 +82,8 @@ public class VersionService {
     /**
      * Moves version up or down in all project's version list.
      * This manipulates {@link Version#internalOrder} field.
-     * @param newOrder new order number for current version.
+     *
+     * @param newOrder     new order number for current version.
      * @param versionModel current version.
      * @return saved entity of {@link Version}
      */
@@ -131,5 +136,51 @@ public class VersionService {
 
 
         return versionModel;
+    }
+
+    /**
+     * Deletes version and moves all other versions interanl order.
+     * @param version version object
+     * @param user user, who requested deletion.
+     * @return error text or nothing.
+     */
+    public Errorable deleteVersion(FullVersionDto version, User user) {
+        if (version == null) {
+            return new Errorable(null, new CustomError("Missed version"));
+        }
+
+        Long internalOrder = version.getInternalOrder();
+
+        if (user == null) {
+            return new Errorable(null, new CustomError("Missed user"));
+        }
+
+        Project project = Ebean.find(Project.class)
+                .where()
+                .eq("versions.id", version.getId())
+                .findOne();
+
+        if (project == null) {
+            return new Errorable(null, new CustomError("Missed project"));
+        }
+
+        if (!Objects.equals(project.getCreateUser().getId(), user.getId())) {
+            return new Errorable(null, "User is not an owned of the project");
+        }
+        int rowsCount = Ebean.delete(Version.class, version.getId());
+
+        if (rowsCount == 0) {
+            return new Errorable(null, new CustomError("Missed version identifier"));
+        }
+        List<Version> toUpdate = Ebean.find(Version.class)
+                .where()
+                .eq("project.id", project.getId())
+                .gt("internalOrder", internalOrder)
+                .findList();
+        for (Version vers : toUpdate) {
+            vers.setInternalOrder(vers.getInternalOrder() - 1);
+            Ebean.update(vers);
+        }
+        return new Errorable();
     }
 }

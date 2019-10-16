@@ -19,5 +19,4 @@ To make production files:
 * In directory src/web run `npm run build`
 
 ## TODO
-* Cant run frontend from scratch, sass is not compiled to css by default, only on watcher trigger
-* Cant use node 11, only 10
+* Backend should rely only on any model id, then merge updated field in case of update.

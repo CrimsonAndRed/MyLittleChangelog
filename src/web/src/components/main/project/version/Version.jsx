@@ -56,11 +56,11 @@ class Version extends Component {
     qry.del('version', (res) => {
         if (res.errors.length === 0) {
           window.toaster.addToast({text: 'Version deleted successfully', type: 'success'});
-          this.props.history.push('/projects')
+          this.props.history.push(`/project/${this.state.version.project.id}`)
         } else {
           res.errors.forEach((err) => window.toaster.addToast(err));
         }
-      }, this.state.project);
+      }, this.state.version);
   }
 
   addRoute() {
