@@ -2,6 +2,8 @@ import React, { Component, Fragment } from 'react';
 import * as qry from '../../../../services/query';
 import Route from './Route';
 import VersionNavigation from './VersionNavigation';
+import Modal from '../../../util/modal/Modal'
+import RouteNew from './RouteNew'
 
 class Version extends Component {
 
@@ -10,7 +12,8 @@ class Version extends Component {
     this.state = {
       version: {routes: []},
       mode: 'view',
-      rollbackCopy: {}
+      rollbackCopy: {},
+      showAddRouteModal: false
     };
     
     qry.get(`version/${this.props.match.params.id}`, (data) => {
@@ -25,6 +28,8 @@ class Version extends Component {
     this.viewVersion = this.viewVersion.bind(this);
     this.saveVersion = this.saveVersion.bind(this);
     this.deleteVersion = this.deleteVersion.bind(this);
+    this.dismissAddRoute = this.dismissAddRoute.bind(this);
+    this.submitAddRoute = this.submitAddRoute.bind(this);
     this.addRoute = this.addRoute.bind(this);
   }
 
@@ -64,9 +69,15 @@ class Version extends Component {
   }
 
   addRoute() {
+    this.setState({showAddRouteModal: true});
+  }
 
-    console.log(this.state);
-    var dto = {name: '1111', projectId: this.state.version.project.id};
+  dismissAddRoute() {
+    this.setState({showAddRouteModal: false});
+  }
+
+  submitAddRoute(st) {
+    var dto = {name: st.name, projectId: this.state.version.project.id};
 
     qry.post('route', (res) => {
       if (res.errors.length === 0) {
@@ -74,7 +85,7 @@ class Version extends Component {
 
         this.setState(prevState => {
           let routesUpd = prevState.version.routes.concat(res.data);
-          return {...prevState, version: {...prevState.version, routes: routesUpd}};
+          return {version: {...prevState.version, routes: routesUpd}};
         });
       } else {
         res.errors.forEach((err) => window.toaster.addToast(err));
@@ -85,6 +96,11 @@ class Version extends Component {
   render() {
     return (
         <div className="version-container content-container-5">
+          { this.state.showAddRouteModal && (
+            <Modal onClose={this.dismissAddRoute} sizeClass="login-modal">
+              <RouteNew project={this.state.project} onClose={this.dismissAddRoute} onSubmit={this.submitAddRoute}/>
+            </Modal>
+          )}
           <VersionNavigation routes={this.state.version.routes}/>
           <div className="content-container-5 form-content main-centered version-main">
             <div className="header slightly-bigger-text">
@@ -100,9 +116,9 @@ class Version extends Component {
           </div>
           <div className="version-act content-container-5">
             <button className="btn btn-text btn-light-red" onClick={this.deleteVersion} > Delete </button>
+            <button className="btn btn-text mg-top-10" onClick={this.addRoute}> Add route </button>
             { this.state.mode === 'edit' && (
               <Fragment>
-                <button className="btn btn-text mg-top-10" onClick={this.addRoute}> Add route </button>
                 <button className="btn btn-text btn-light-red" onClick={this.viewVersion} > Cancel </button>
                 <button className="btn btn-text btn-light-green" onClick={this.saveVersion} > Save </button>
               </Fragment>

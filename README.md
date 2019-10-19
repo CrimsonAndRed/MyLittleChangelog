@@ -20,3 +20,4 @@ To make production files:
 
 ## TODO
 * Backend should rely only on any model id, then merge updated field in case of update.
+* Frontend login-modal css class is not about login - generalize it  

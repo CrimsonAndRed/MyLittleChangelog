@@ -122,7 +122,7 @@ class UserProject extends Component {
         <div className="project-container content-container-5">
           { this.state.showAddVersionModal && (
             <Modal onClose={this.dismissAddVersion} sizeClass="login-modal">
-              <VersionNew project={this.state.project} onClose={this.dismissAddVersion} onSubmit={this.submitAddVersion}/>
+              <VersionNew onClose={this.dismissAddVersion} onSubmit={this.submitAddVersion}/>
             </Modal>
           )}
           <ProjectNavigation versions={this.state.project.versions}/>

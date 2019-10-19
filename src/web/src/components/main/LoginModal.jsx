@@ -59,8 +59,6 @@ class LoginModal extends Component {
               <VerticalFormField val={this.state.login} change={this.handleLogin} error={this.state.wrongCredentials} name="Login"/>
             </div>
             <div className="login-modal-form-row mg-auto">
-              
-
               <div className="mg-bottom-5 block mg-left-5">
                 Password
               </div>
@@ -72,9 +70,7 @@ class LoginModal extends Component {
             <button type="button" className="btn btn-text btn-light-red" onClick={this.props.onClose}>
               Cancel
             </button>
-            <input type="submit" value="Submit" className="btn btn-text btn-light-green flex-item-end" onClick={this.sendQry}>
-              
-            </input>
+            <input type="submit" value="Submit" className="btn btn-text btn-light-green flex-item-end" onClick={this.sendQry}/>
           </div>
         </form>
     );
