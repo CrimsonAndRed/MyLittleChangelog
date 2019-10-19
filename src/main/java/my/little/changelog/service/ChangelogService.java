@@ -19,6 +19,8 @@ import my.little.changelog.model.project.dto.RouteDto;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * Changelog-related things service.
@@ -41,8 +43,9 @@ public class ChangelogService {
     public Version getFullVersionById(Long id) {
         Version result = Ebean.find(Version.class)
                 .fetch("changelogs", new FetchConfig().query())
+                .fetch("project")
+                .fetch("project.routes", new FetchConfig().query())
                 .fetch("changelogs.route", new FetchConfig().query())
-                .fetch("project", new FetchConfig().query())
                 .fetch("project.createUser")
                 .where()
                 .eq("id", id)
@@ -76,22 +79,19 @@ public class ChangelogService {
         List<Changelog> changelogs = version.getChangelogs();
 
         // Map<Route id, route dto>
-        Map<Long, RouteDto> routeDtoById = Maps.newHashMap();
+        Map<Long, RouteDto> routeDtoById = version.getProject().getRoutes()
+                .stream()
+                .map(item -> beanMapper.map(item, RouteDto.class))
+                .collect(
+                    Collectors.toMap(
+                            item -> item.getId(),
+                            item -> item
+                    )
+                );
         for (Changelog changelog : changelogs) {
             Route currentRoute = changelog.getRoute();
             Long routeId = currentRoute.getId();
             RouteDto route = routeDtoById.get(routeId);
-            // Add route to map in case of absence
-            if (route == null) {
-                RouteDto newRoute = new RouteDto();
-                newRoute.setId(currentRoute.getId());
-                newRoute.setName(currentRoute.getName());
-                newRoute.setV(currentRoute.getV());
-                newRoute.setChangelogs(Lists.newArrayList());
-
-                routeDtoById.put(routeId, newRoute);
-                route = newRoute;
-            }
 
             ChangelogDto changelogDto = beanMapper.map(changelog, ChangelogDto.class);
             route.getChangelogs().add(changelogDto);

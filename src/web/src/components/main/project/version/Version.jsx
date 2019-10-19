@@ -64,10 +64,22 @@ class Version extends Component {
   }
 
   addRoute() {
-    this.setState(prevState => {
-      let routesUpd = prevState.version.routes.concat({name: '111', changelogs: []});
-      return {...prevState, version: {routes: routesUpd}};
-    });
+
+    console.log(this.state);
+    var dto = {name: '1111', projectId: this.state.version.project.id};
+
+    qry.post('route', (res) => {
+      if (res.errors.length === 0) {
+        window.toaster.addToast({text: 'Route created successfully', type: 'success'});
+
+        this.setState(prevState => {
+          let routesUpd = prevState.version.routes.concat(res.data);
+          return {...prevState, version: {...prevState.version, routes: routesUpd}};
+        });
+      } else {
+        res.errors.forEach((err) => window.toaster.addToast(err));
+      }
+    }, dto);
   }
 
   render() {
@@ -75,8 +87,8 @@ class Version extends Component {
         <div className="version-container content-container-5">
           <VersionNavigation routes={this.state.version.routes}/>
           <div className="content-container-5 form-content main-centered version-main">
-            <div>
-              {this.state.version.num}
+            <div className="header slightly-bigger-text">
+              You are {this.state.mode === 'view' ? "viewing" : "editing"} version {this.state.version.num}
             </div>
             <div>
               {this.state.version.description}

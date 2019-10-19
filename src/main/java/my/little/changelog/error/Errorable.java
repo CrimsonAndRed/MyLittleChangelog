@@ -10,13 +10,14 @@ import my.little.changelog.annotation.Nullable;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Function;
 
 /**
  * Result of any kind of operation, that is error-prone by business logic.
  * Database is down - not business logic (error code 500).
  * Form validation - business logic (returns Errorable with code 200).
  */
-public class Errorable implements JsonDto {
+public class Errorable<T> implements JsonDto {
 
     /**
      * List of errors, that happened during user request process.
@@ -34,7 +35,7 @@ public class Errorable implements JsonDto {
     @Getter
     @Setter
     @Nullable
-    private Object data;
+    private T data;
 
     /**
      * Empty errorable (valid).
@@ -46,7 +47,7 @@ public class Errorable implements JsonDto {
      * Errorable with data (valid).
      * @param data data
      */
-    public Errorable(@Nullable Object data) {
+    public Errorable(@Nullable T data) {
         this.data = data;
     }
 
@@ -55,7 +56,7 @@ public class Errorable implements JsonDto {
      * @param data data.
      * @param errors errors list.
      */
-    public Errorable(@Nullable Object data, @NotNull List<CustomError> errors) {
+    public Errorable(@Nullable T data, @NotNull List<CustomError> errors) {
         this.errors = errors;
         this.data = data;
     }
@@ -65,7 +66,7 @@ public class Errorable implements JsonDto {
      * @param data data.
      * @param error the only error.
      */
-    public Errorable(@Nullable Object data, @NotNull CustomError error) {
+    public Errorable(@Nullable T data, @NotNull CustomError error) {
         this.errors = Lists.newArrayList(error);
         this.data = data;
     }
@@ -75,7 +76,7 @@ public class Errorable implements JsonDto {
      * @param data data.
      * @param error error as string.
      */
-    public Errorable(@Nullable Object data, @NotNull String error) {
+    public Errorable(@Nullable T data, @NotNull String error) {
         this.errors = Lists.newArrayList(new CustomError(error));
         this.data = data;
     }
@@ -111,7 +112,16 @@ public class Errorable implements JsonDto {
      * - only empty data if there are no errors in this object.
      * @return new more primitive {@link Errorable}.
      */
-    public Errorable toPrimitiveErrorable() {
-        return new Errorable(null, this.errors);
+    public Errorable<Void> toPrimitiveErrorable() {
+        return new Errorable<>(null, this.errors);
+    }
+
+    /**
+     * Maps result to a new type.
+     * @param mapFunc function, applied to data, if it is not null.
+     * @return errorable of new type.
+     */
+    public <R> Errorable<R> map(Function<? super T, ? extends R> mapFunc) {
+        return new Errorable<>(mapFunc.apply(this.data), this.errors);
     }
 }

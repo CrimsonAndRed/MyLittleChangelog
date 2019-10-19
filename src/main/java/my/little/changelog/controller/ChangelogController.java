@@ -34,23 +34,23 @@ public class ChangelogController {
      * @param res default Spark response.
      * @return Errorable with one version data {@link my.little.changelog.model.project.dto.FullVersionDto}.
      */
-    public Errorable getFullVersion(Request req, Response res) {
+    public Errorable<FullVersionDto> getFullVersion(Request req, Response res) {
         String paramId = req.params("id");
         Long id;
         if (paramId == null) {
-            return new Errorable(null, "Request error: could not read id");
+            return new Errorable<>(null, "Request error: could not read id");
         } else {
             try {
                 id = Long.valueOf(paramId);
             } catch (NumberFormatException e) {
                 log.error(Throwables.getStackTraceAsString(e));
-                return new Errorable(null, "Request error: could not parse number from " + paramId);
+                return new Errorable<>(null, "Request error: could not parse number from " + paramId);
             }
         }
         Version version = changelogService.getFullVersionById(id);
         // Converter logic
         // Too complicated to do it with orika.
         FullVersionDto result = changelogService.createVersionDtoByVersion(version);
-        return new Errorable(result);
+        return new Errorable<>(result);
     }
 }

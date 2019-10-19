@@ -7,7 +7,9 @@ import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import my.little.changelog.config.Configurator;
 import my.little.changelog.error.Errorable;
+import my.little.changelog.json.JsonDto;
 import my.little.changelog.model.auth.dto.LoginDto;
+import my.little.changelog.model.auth.dto.LoginResponseDto;
 import my.little.changelog.service.AuthService;
 import spark.Request;
 import spark.Response;
@@ -33,7 +35,7 @@ public class AuthController {
      * @return User token or error.
      */
     @SneakyThrows
-    public Errorable login(Request req, Response res) {
+    public Errorable<LoginResponseDto> login(Request req, Response res) {
 
         String body = req.body();
         LoginDto loginDto = mapper.readValue(body, LoginDto.class);
@@ -48,10 +50,10 @@ public class AuthController {
      * @param res default Spark response.
      * @return Success string.
      */
-    public Object logout(Request req, Response res) {
+    public Errorable<Void> logout(Request req, Response res) {
         String token = req.headers(Configurator.TOKEN_HEADER);
 
         authService.logout(token);
-        return new Errorable("Success");
+        return new Errorable<>(null);
     }
 }

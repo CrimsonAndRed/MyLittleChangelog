@@ -5,6 +5,7 @@ import lombok.Setter;
 import my.little.changelog.json.JsonDto;
 import my.little.changelog.annotation.NotNull;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -37,5 +38,5 @@ public class RouteDto implements JsonDto {
      * List of child changelogs.
      */
     @NotNull
-    private List<ChangelogDto> changelogs;
+    private List<ChangelogDto> changelogs = new ArrayList<>();
 }

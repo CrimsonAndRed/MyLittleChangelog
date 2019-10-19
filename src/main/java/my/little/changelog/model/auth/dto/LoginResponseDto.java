@@ -3,6 +3,7 @@ package my.little.changelog.model.auth.dto;
 import lombok.Getter;
 import lombok.Setter;
 import my.little.changelog.annotation.NotNull;
+import my.little.changelog.json.JsonDto;
 
 import java.util.UUID;
 
@@ -11,7 +12,7 @@ import java.util.UUID;
  */
 @Getter
 @Setter
-public class LoginResponseDto {
+public class LoginResponseDto implements JsonDto {
 
     /**
      * New token.

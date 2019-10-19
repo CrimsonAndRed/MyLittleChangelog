@@ -5,6 +5,7 @@ import io.ebean.Ebean;
 import io.ebean.FetchConfig;
 import lombok.extern.log4j.Log4j2;
 import my.little.changelog.error.Errorable;
+import my.little.changelog.json.JsonDto;
 import my.little.changelog.model.auth.User;
 import my.little.changelog.model.project.Project;
 
@@ -101,13 +102,13 @@ public class ProjectService {
      * Checks user rights to manipulate with this project.
      * @param project project object.
      * @return Errorable with the same saved project.
-     */
-    public Errorable update(Project project, User user) {
+   <  */
+    public Errorable<Project> update(Project project, User user) {
         if (this.checkUserIsOwner(project.getId(), user.getId())) {
             project.update();
-            return new Errorable(project);
+            return new Errorable<>(project);
         } else {
-            return new Errorable(null, "You are not permitted to update this project");
+            return new Errorable<>(null, "You are not permitted to update this project");
         }
     }
 
@@ -117,12 +118,12 @@ public class ProjectService {
      * @param project project object.
      * @return Errorable with null data.
      */
-    public Errorable delete(Project project, User user) {
+    public Errorable<Void> delete(Project project, User user) {
         if (this.checkUserIsOwner(project.getId(), user.getId())) {
             project.delete();
-            return new Errorable();
+            return new Errorable<>();
         } else {
-            return new Errorable(null, "You are not permitted to update this project");
+            return new Errorable<>(null, "You are not permitted to update this project");
         }
     }
 

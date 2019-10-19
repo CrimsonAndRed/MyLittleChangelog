@@ -43,9 +43,9 @@ public class AuthService {
      * @param loginDto user's credentials.
      * @return errorable with {@link LoginResponseDto} inside (or null in error case).
      */
-    public Errorable login(LoginDto loginDto) {
+    public Errorable<LoginResponseDto> login(LoginDto loginDto) {
         if (loginDto == null || loginDto.getLogin() == null || loginDto.getPassword() == null) {
-            return new Errorable(null, REJECT_USER_MESSAGE);
+            return new Errorable<>(null, REJECT_USER_MESSAGE);
         }
         String login = loginDto.getLogin();
 
@@ -57,7 +57,7 @@ public class AuthService {
                 .findOne();
         if (user == null) {
             log.debug("Could not find user by login \"{}\"", login);
-            return new Errorable(null, "Login or password is wrong.");
+            return new Errorable<>(null, "Login or password is wrong.");
         }
 
         byte[] password = loginDto.getPassword().getBytes();
@@ -73,7 +73,7 @@ public class AuthService {
 
         if (!Arrays.equals(user.getPassword(), saltedHash)) {
             log.debug("User's \"{}\" password does not match database one", login);
-            return new Errorable(null, "Login or password is wrong.");
+            return new Errorable<>(null, "Login or password is wrong.");
         }
 
         log.debug("Successfully logged in user \"{}\"", login);
@@ -109,7 +109,7 @@ public class AuthService {
 
         // Returning new token and username
         LoginResponseDto response = new LoginResponseDto(randomUuid, user.getName());
-        return new Errorable(response);
+        return new Errorable<>(response);
     }
 
     /**

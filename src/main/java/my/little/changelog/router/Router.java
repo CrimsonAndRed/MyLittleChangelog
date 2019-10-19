@@ -50,6 +50,9 @@ public class Router {
     private VersionController versionController;
 
     @Inject
+    private RouteController routeController;
+
+    @Inject
     private Injector injector;
 
     /** Utility class constructor. */
@@ -112,6 +115,7 @@ public class Router {
         Spark.delete("/version", Router.Builder.createDefault(versionController::deleteVersion));
 
         Spark.post("/version/order/:newOrder", Router.Builder.createDefault(versionController::moveVersion));
+        Spark.post("/route", Router.Builder.createDefault(routeController::createRoute));
     }
 
     /**

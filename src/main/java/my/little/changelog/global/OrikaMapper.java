@@ -2,10 +2,12 @@ package my.little.changelog.global;
 
 import ma.glasnost.orika.MapperFactory;
 import ma.glasnost.orika.impl.ConfigurableMapper;
+import ma.glasnost.orika.metadata.Property;
 import my.little.changelog.model.auth.User;
 import my.little.changelog.model.auth.dto.MinimalisticUserDto;
 import my.little.changelog.model.project.Changelog;
 import my.little.changelog.model.project.Project;
+import my.little.changelog.model.project.Route;
 import my.little.changelog.model.project.Version;
 import my.little.changelog.model.project.dto.*;
 
@@ -27,6 +29,10 @@ public class OrikaMapper extends ConfigurableMapper {
                 .register();
 
         factory.classMap(Changelog.class, ChangelogDto.class)
+                .byDefault()
+                .register();
+
+        factory.classMap(Route.class, RouteDto.class)
                 .byDefault()
                 .register();
 

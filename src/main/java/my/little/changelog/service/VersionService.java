@@ -14,6 +14,7 @@ import my.little.changelog.model.project.Project;
 import my.little.changelog.model.project.Version;
 import my.little.changelog.model.project.dto.CreateVersionDto;
 import my.little.changelog.model.project.dto.FullVersionDto;
+import my.little.changelog.model.project.dto.MinimalisticVersionDto;
 
 import java.util.List;
 import java.util.Objects;
@@ -42,7 +43,7 @@ public class VersionService {
      * @param user       user, that send request.
      * @return saved entity of {@link Version}.
      */
-    public Errorable createVersion(CreateVersionDto versionDto, User user) {
+    public Errorable<Version> createVersion(CreateVersionDto versionDto, User user) {
 
         Long projectId = versionDto.getProjectId();
         Project project = Ebean.find(Project.class)
@@ -53,11 +54,11 @@ public class VersionService {
 
         // Project has beed deleted?
         if (project == null) {
-            return new Errorable(null, ErrorMessage.genericError());
+            return new Errorable<>(null, ErrorMessage.genericError());
         }
 
         if (!Objects.equals(project.getCreateUser().getId(), user.getId())) {
-            return new Errorable(null, ErrorMessage.userNotAllowed());
+            return new Errorable<>(null, ErrorMessage.userNotAllowed());
         }
         // TODO This is error-prone, because not synchronised
         SqlRow max = Ebean.createSqlQuery(QUERY_MAX_VERSION_ID).setParameter("projectId", projectId).findOne();
@@ -76,7 +77,7 @@ public class VersionService {
         version.setNum(versionDto.getNum());
         version.save();
 
-        return new Errorable(version);
+        return new Errorable<>(version);
     }
 
     /**
@@ -144,15 +145,15 @@ public class VersionService {
      * @param user user, who requested deletion.
      * @return error text or nothing.
      */
-    public Errorable deleteVersion(FullVersionDto version, User user) {
+    public Errorable<Void> deleteVersion(FullVersionDto version, User user) {
         if (version == null) {
-            return new Errorable(null, new CustomError("Missed version"));
+            return new Errorable<>(null, new CustomError("Missed version"));
         }
 
         Long internalOrder = version.getInternalOrder();
 
         if (user == null) {
-            return new Errorable(null, new CustomError("Missed user"));
+            return new Errorable<>(null, new CustomError("Missed user"));
         }
 
         Project project = Ebean.find(Project.class)
@@ -161,16 +162,16 @@ public class VersionService {
                 .findOne();
 
         if (project == null) {
-            return new Errorable(null, new CustomError("Missed project"));
+            return new Errorable<>(null, new CustomError("Missed project"));
         }
 
         if (!Objects.equals(project.getCreateUser().getId(), user.getId())) {
-            return new Errorable(null, "User is not an owned of the project");
+            return new Errorable<>(null, "User is not an owned of the project");
         }
         int rowsCount = Ebean.delete(Version.class, version.getId());
 
         if (rowsCount == 0) {
-            return new Errorable(null, new CustomError("Missed version identifier"));
+            return new Errorable<>(null, new CustomError("Missed version identifier"));
         }
         List<Version> toUpdate = Ebean.find(Version.class)
                 .where()
@@ -181,6 +182,6 @@ public class VersionService {
             vers.setInternalOrder(vers.getInternalOrder() - 1);
             Ebean.update(vers);
         }
-        return new Errorable();
+        return new Errorable<>();
     }
 }

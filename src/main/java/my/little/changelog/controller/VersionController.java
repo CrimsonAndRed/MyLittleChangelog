@@ -46,7 +46,7 @@ public class VersionController {
      * @return Errorable with the same version.
      */
     @SneakyThrows
-    public Errorable createVersion(Request req, Response res) {
+    public Errorable<MinimalisticVersionDto> createVersion(Request req, Response res) {
         JsonNode node = mapper.readTree(req.body());
         CreateVersionDto dto = mapper.treeToValue(node, CreateVersionDto.class);
 
@@ -60,7 +60,7 @@ public class VersionController {
                 .findOne();
         if (userToken == null) {
             log.error("Could not find user by token " + token);
-            return new Errorable(null, ErrorMessage.genericError());
+            return new Errorable<>(null, ErrorMessage.genericError());
         }
 
         Errorable result = versionService.createVersion(dto, userToken.getUser());

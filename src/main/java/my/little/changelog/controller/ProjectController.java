@@ -10,6 +10,7 @@ import lombok.extern.log4j.Log4j2;
 import my.little.changelog.config.Configurator;
 import my.little.changelog.error.Errorable;
 import my.little.changelog.global.OrikaMapper;
+import my.little.changelog.json.JsonDto;
 import my.little.changelog.model.auth.UserToken;
 import my.little.changelog.model.project.Project;
 import my.little.changelog.model.project.dto.FullProjectDto;
@@ -86,22 +87,22 @@ public class ProjectController {
      * @param res default Spark response.
      * @return Errorable with one project data {@link MinimalisticProjectDto}.
      */
-    public Errorable getMinimalProjectById(Request req, Response res) {
+    public Errorable<MinimalisticProjectDto> getMinimalProjectById(Request req, Response res) {
         String paramId = req.params("id");
         Long id;
         if (paramId == null) {
-            return new Errorable(null, "Request error: could not read id");
+            return new Errorable<>(null, "Request error: could not read id");
         } else {
             try {
                 id = Long.valueOf(paramId);
             } catch (NumberFormatException e) {
                 log.error(Throwables.getStackTraceAsString(e));
-                return new Errorable(null, "Request error: could not parse number from " + paramId);
+                return new Errorable<>(null, "Request error: could not parse number from " + paramId);
             }
         }
         Project project = projectService.getMinimalisticById(id);
         MinimalisticProjectDto result = beanMapper.map(project, MinimalisticProjectDto.class);
-        return new Errorable(result);
+        return new Errorable<>(result);
     }
 
     /**
@@ -113,17 +114,17 @@ public class ProjectController {
      * @param res default Spark response.
      * @return Errorable with one project data {@link my.little.changelog.model.project.dto.FullProjectDto}.
      */
-    public Errorable getFullProjectById(Request req, Response res) {
+    public Errorable<FullProjectDto> getFullProjectById(Request req, Response res) {
         String paramId = req.params("id");
         Long id;
         if (paramId == null) {
-            return new Errorable(null, "Request error: could not read id");
+            return new Errorable<>(null, "Request error: could not read id");
         } else {
             try {
                 id = Long.valueOf(paramId);
             } catch (NumberFormatException e) {
                 log.error(Throwables.getStackTraceAsString(e));
-                return new Errorable(null, "Request error: could not parse number from " + paramId);
+                return new Errorable<>(null, "Request error: could not parse number from " + paramId);
             }
         }
         Project project = projectService.getMinimalisticById(id);
@@ -131,7 +132,7 @@ public class ProjectController {
         if (result != null) {
             result.getVersions().sort(MinimalisticVersionDto.COMPARATOR_BY_INTERNAL_ORDER);
         }
-        return new Errorable(result);
+        return new Errorable<>(result);
     }
 
     /**
@@ -139,10 +140,10 @@ public class ProjectController {
      * Contains {@link MinimalisticProjectDto} in request body.
      * @param req default Spark request.
      * @param res default Spark response.
-     * @return Errorable with "success" string.
+     * @return Errorable with null.
      */
     @SneakyThrows
-    public Errorable createProject(Request req, Response res) {
+    public Errorable<Void> createProject(Request req, Response res) {
         String token = req.headers(Configurator.TOKEN_HEADER);
         UserToken userToken = Ebean.find(UserToken.class)
                 .select("id, createDate")
@@ -153,12 +154,12 @@ public class ProjectController {
                 .findOne();
         if (userToken == null) {
             log.error("Could not find user by token " + token);
-            return new Errorable(null, "Server error happened");
+            return new Errorable<>(null, "Server error happened");
         }
         MinimalisticProjectDto dto = mapper.readValue(req.body(), MinimalisticProjectDto.class);
         Project model = beanMapper.map(dto, Project.class);
         projectService.create(model, userToken.getUser());
-        return new Errorable("success");
+        return new Errorable<>(null);
     }
 
     /**
@@ -167,10 +168,10 @@ public class ProjectController {
      * Does not update related entities to {@link Project}.
      * @param req default Spark request.
      * @param res default Spark response.
-     * @return Errorable with the same project.
+     * @return Errorable with null.
      */
     @SneakyThrows
-    public Errorable updateProject(Request req, Response res) {
+    public Errorable<Void> updateProject(Request req, Response res) {
         MinimalisticProjectDto dto = mapper.readValue(req.body(), MinimalisticProjectDto.class);
         Project model = beanMapper.map(dto, Project.class);
         // Route is authorized before, so userToken is not null
@@ -183,7 +184,7 @@ public class ProjectController {
                 .eq("deleted", false)
                 .findOne();
 
-        Errorable result = projectService.update(model, userToken.getUser());
+        Errorable<Project> result = projectService.update(model, userToken.getUser());
         return result.toPrimitiveErrorable();
     }
 
@@ -193,10 +194,10 @@ public class ProjectController {
      * Things are hard deleted.
      * @param req default Spark request.
      * @param res default Spark response.
-     * @return Errorable with the same project.
+     * @return Errorable with null.
      */
     @SneakyThrows
-    public Errorable deleteProject(Request req, Response res) {
+    public Errorable<Void> deleteProject(Request req, Response res) {
         MinimalisticProjectDto dto = mapper.readValue(req.body(), MinimalisticProjectDto.class);
         Project model = beanMapper.map(dto, Project.class);
         String token = req.headers(Configurator.TOKEN_HEADER);
@@ -209,9 +210,6 @@ public class ProjectController {
                 .eq("deleted", false)
                 .findOne();
         Errorable result = projectService.delete(model, userToken.getUser());
-        if (result.getData() != null) {
-            result.setData(mapper.writeValueAsString(result.getData()));
-        }
         return result;
     }
 }

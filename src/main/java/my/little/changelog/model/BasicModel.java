@@ -48,7 +48,7 @@ public class BasicModel extends Model {
 
     /**
      * Inner version number.
-     * It avoid some bad situation, where OptimisticLock is raised.
+     * It avoids some bad situation, where OptimisticLock is raised.
      */
     @Version
     @Column(name = "v")
