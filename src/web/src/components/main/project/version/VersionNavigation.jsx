@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { withRouter } from "react-router-dom";
+import RouteNavigationLink from './RouteNavigationLink';
 
 // Navigation bar
 // Has props:
@@ -13,10 +14,10 @@ class VersionNavigation extends Component {
   render() {
     return (
         <div className="version-nav">
+          <div className="header mg-bottom-10">
             Navigation
-            <ul>
-              { this.props.routes.map((route, index) => <li key={index}> {route.name} </li> )}
-            </ul>
+          </div>
+          { this.props.routes.map((route, index) => <RouteNavigationLink key={index} route={route} index={index}/> )}
         </div>
     );
   };

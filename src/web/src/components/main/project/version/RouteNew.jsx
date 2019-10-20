@@ -30,7 +30,7 @@ class RouteNew extends Component {
 
           <div className="form-content">
             <div className="login-modal-form-row mg-auto mg-bottom-10">
-              <VerticalFormField val={this.state.num} change={this.handleName} error={this.state.duplicateNum} name="Version number"/>
+              <VerticalFormField val={this.state.num} change={this.handleName} name="Route name"/>
             </div>
             <div className="login-modal-form-row mg-auto"/>
           </div>

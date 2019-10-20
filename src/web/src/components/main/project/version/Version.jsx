@@ -31,6 +31,7 @@ class Version extends Component {
     this.dismissAddRoute = this.dismissAddRoute.bind(this);
     this.submitAddRoute = this.submitAddRoute.bind(this);
     this.addRoute = this.addRoute.bind(this);
+    this.addChangelog = this.addChangelog.bind(this);
   }
 
   editVersion() {
@@ -85,12 +86,20 @@ class Version extends Component {
 
         this.setState(prevState => {
           let routesUpd = prevState.version.routes.concat(res.data);
-          return {version: {...prevState.version, routes: routesUpd}};
+          return {version: {...prevState.version, routes: routesUpd}, showAddRouteModal: false};
         });
       } else {
         res.errors.forEach((err) => window.toaster.addToast(err));
       }
     }, dto);
+  }
+
+  addChangelog(index) {
+    this.setState(prevState => {
+      let routesUpd = prevState.version.routes; 
+      routesUpd[index].changelogs = routesUpd[index].changelogs.concat({text: 'aaaa'});
+      return {version: {...prevState.version, routes: routesUpd}, showAddRouteModal: false};
+    });
   }
 
   render() {
@@ -103,15 +112,21 @@ class Version extends Component {
           )}
           <VersionNavigation routes={this.state.version.routes}/>
           <div className="content-container-5 form-content main-centered version-main">
-            <div className="header slightly-bigger-text">
+            <div className="header slightly-bigger-text mg-bottom-10">
               You are {this.state.mode === 'view' ? "viewing" : "editing"} version {this.state.version.num}
             </div>
             <div>
               {this.state.version.description}
             </div>
-            <p>Routes:</p>
             <div>
-              { this.state.version.routes.map((item, index) => <Route key={index} route={item} />) }
+              { this.state.version.routes.map((item, index) => 
+                <Route key={index} 
+                    route={item} 
+                    mode={this.state.mode} 
+                    addChangelog={this.addChangelog}
+                    index={index}
+                />
+              )}
             </div>
           </div>
           <div className="version-act content-container-5">
