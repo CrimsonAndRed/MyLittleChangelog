@@ -8,6 +8,7 @@ import io.ebean.Ebean;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import my.little.changelog.config.Configurator;
+import my.little.changelog.error.ErrorMessage;
 import my.little.changelog.error.Errorable;
 import my.little.changelog.global.OrikaMapper;
 import my.little.changelog.json.JsonDto;
@@ -91,13 +92,13 @@ public class ProjectController {
         String paramId = req.params("id");
         Long id;
         if (paramId == null) {
-            return new Errorable<>(null, "Request error: could not read id");
+            return new Errorable<>(null, ErrorMessage.couldNotParse("id", "null"));
         } else {
             try {
                 id = Long.valueOf(paramId);
             } catch (NumberFormatException e) {
                 log.error(Throwables.getStackTraceAsString(e));
-                return new Errorable<>(null, "Request error: could not parse number from " + paramId);
+                return new Errorable<>(null, ErrorMessage.couldNotParse("id", paramId));
             }
         }
         Project project = projectService.getMinimalisticById(id);
@@ -118,13 +119,13 @@ public class ProjectController {
         String paramId = req.params("id");
         Long id;
         if (paramId == null) {
-            return new Errorable<>(null, "Request error: could not read id");
+            return new Errorable<>(null, ErrorMessage.couldNotParse("id", "null"));
         } else {
             try {
                 id = Long.valueOf(paramId);
             } catch (NumberFormatException e) {
                 log.error(Throwables.getStackTraceAsString(e));
-                return new Errorable<>(null, "Request error: could not parse number from " + paramId);
+                return new Errorable<>(null, ErrorMessage.couldNotParse("id", paramId));
             }
         }
         Project project = projectService.getMinimalisticById(id);
@@ -154,7 +155,7 @@ public class ProjectController {
                 .findOne();
         if (userToken == null) {
             log.error("Could not find user by token " + token);
-            return new Errorable<>(null, "Server error happened");
+            return new Errorable<>(null, ErrorMessage.userNotAllowed());
         }
         MinimalisticProjectDto dto = mapper.readValue(req.body(), MinimalisticProjectDto.class);
         Project model = beanMapper.map(dto, Project.class);
@@ -184,6 +185,10 @@ public class ProjectController {
                 .eq("deleted", false)
                 .findOne();
 
+        if (userToken == null) {
+            log.error("Could not find user by token " + token);
+            return new Errorable<>(null, ErrorMessage.genericError());
+        }
         Errorable<Project> result = projectService.update(model, userToken.getUser());
         return result.toPrimitiveErrorable();
     }

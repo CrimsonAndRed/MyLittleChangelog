@@ -1,0 +1,1 @@
+ALTER TABLE changelog DROP COLUMN is_deleted;

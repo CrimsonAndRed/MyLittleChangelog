@@ -3,7 +3,7 @@ package my.little.changelog.error;
 /**
  * Set of messages to user in case of any errors happened.
  */
-public class ErrorMessage {
+public abstract class ErrorMessage {
 
     /**
      * Message to tell user that they can't modify project's data.

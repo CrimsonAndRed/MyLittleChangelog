@@ -4,6 +4,7 @@ import Route from './Route';
 import VersionNavigation from './VersionNavigation';
 import Modal from '../../../util/modal/Modal'
 import RouteNew from './RouteNew'
+import _ from 'lodash';
 
 class Version extends Component {
 
@@ -15,15 +16,10 @@ class Version extends Component {
       rollbackCopy: {},
       showAddRouteModal: false
     };
-    
-    qry.get(`version/${this.props.match.params.id}`, (data) => {
-      if (data.errors.length !== 0) {
-        data.errors.forEach(error => window.toaster.addToast(error))
-      } else {
-        this.setState({version: data.data});
-      }
-    });
+  
+    this.init = this.init.bind(this);
 
+    this.saveVersion = this.saveVersion.bind(this);
     this.editVersion = this.editVersion.bind(this);
     this.viewVersion = this.viewVersion.bind(this);
     this.saveVersion = this.saveVersion.bind(this);
@@ -32,34 +28,42 @@ class Version extends Component {
     this.submitAddRoute = this.submitAddRoute.bind(this);
     this.addRoute = this.addRoute.bind(this);
     this.addChangelog = this.addChangelog.bind(this);
+    this.init();
   }
 
-  editVersion() {
-    this.setState({mode: 'edit', rollbackCopy: this.state.project});
-  }
-
-  viewVersion() {
-    this.setState({mode: 'view', project: this.state.rollbackCopy});
+  init() {
+    qry.get(`version/${this.props.match.params.id}`, (data) => {
+      if (data.errors.length !== 0) {
+        data.errors.forEach(error => window.toaster.addToast(error))
+      } else {
+        this.setState({version: data.data});
+      }
+    });
   }
 
   saveVersion() {
-    if (!this.state.project.name) {
-      window.toaster.addToast({text: 'Project name is empty'});
-    } else {
-      qry.put('version', (res) => {
-        if (res.errors.length === 0) {
-          window.toaster.addToast({text: 'Version updated successfully', type: 'success'});
-          this.init();
-          this.setState({mode: 'view'});
-        } else {
-          res.errors.forEach((err) => window.toaster.addToast(err));
-        }
-      }, this.state.version);
-    }
+    qry.put(`version/${this.state.version.id}`, (res) => {
+      if (res.errors.length === 0) {
+        window.toaster.addToast({text: 'Version updated successfully', type: 'success'});
+        this.init();
+        this.setState({mode: 'view'});
+      } else {
+        res.errors.forEach((err) => window.toaster.addToast(err));
+      }
+    }, this.state.version);
+  }
+
+
+  editVersion() {
+    this.setState({mode: 'edit', rollbackCopy: _.cloneDeep(this.state.version)});
+  }
+
+  viewVersion() {
+    this.setState({mode: 'view', version: this.state.rollbackCopy});
   }
 
   deleteVersion() {
-    qry.del('version', (res) => {
+    qry.del(`version/${this.state.version.id}`, (res) => {
         if (res.errors.length === 0) {
           window.toaster.addToast({text: 'Version deleted successfully', type: 'success'});
           this.props.history.push(`/project/${this.state.version.project.id}`)

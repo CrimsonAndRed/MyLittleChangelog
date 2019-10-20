@@ -16,12 +16,20 @@ class Route extends Component {
   render() {
     return (
         <div className="content-container-5 route mg-bottom-10" id={`route-${this.props.index}-${this.props.route.name}`} >
-          <p> Route { this.props.route.name } </p>
+          <div className="flex-container">
+            <div>
+              <p> Route { this.props.route.name } </p>
+            </div>
+            { this.props.mode === 'edit' && (<div className="flex-item-end">
+              <button className="btn btn-text" onClick={() => this.props.addChangelog(this.props.index)} > Add changelog </button>
+            </div>
+            )}
+          </div>
           <p>Changelogs:</p>
           <div>
             { this.props.route.changelogs.map((item, index) => <Changelog key={index} changelog={item} mode={this.props.mode}/>) }
           </div>
-          <button className="btn btn-text" onClick={() => this.props.addChangelog(this.props.index)} > Add changelog </button>
+          
         </div>
     );
   };

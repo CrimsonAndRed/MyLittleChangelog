@@ -8,6 +8,7 @@ import io.ebean.Ebean;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import my.little.changelog.config.Configurator;
+import my.little.changelog.error.ErrorMessage;
 import my.little.changelog.error.Errorable;
 import my.little.changelog.global.OrikaMapper;
 import my.little.changelog.model.auth.UserToken;
@@ -50,7 +51,8 @@ public class RouteController {
                 .findOne();
 
         if (userToken == null) {
-            return new Errorable<>(null, "You are not permitted to update this project");
+            log.error("Could not find user by token " + token);
+            return new Errorable<>(null, ErrorMessage.genericError());
         }
 
         JsonNode node = mapper.readTree(req.body());

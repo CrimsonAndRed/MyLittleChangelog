@@ -52,8 +52,8 @@ public class AuthController {
      */
     public Errorable<Void> logout(Request req, Response res) {
         String token = req.headers(Configurator.TOKEN_HEADER);
-
         authService.logout(token);
+
         return new Errorable<>(null);
     }
 }

@@ -44,9 +44,6 @@ public class Router {
     private ProjectController projectController;
 
     @Inject
-    private ChangelogController changelogController;
-
-    @Inject
     private VersionController versionController;
 
     @Inject
@@ -110,9 +107,10 @@ public class Router {
         Spark.get("/project/:id/minimal", Router.Builder.createDefaultUnauth(projectController::getMinimalProjectById));
         Spark.get("/project/:id/full", Router.Builder.createDefaultUnauth(projectController::getFullProjectById));
 
-        Spark.get("/version/:id", Router.Builder.createDefaultUnauth(changelogController::getFullVersion));
+        Spark.get("/version/:id", Router.Builder.createDefaultUnauth(versionController::getFullVersion));
+        Spark.put("/version/:id", Router.Builder.createDefault(versionController::saveVersion));
         Spark.post("/version", Router.Builder.createDefault(versionController::createVersion));
-        Spark.delete("/version", Router.Builder.createDefault(versionController::deleteVersion));
+        Spark.delete("/version/:id", Router.Builder.createDefault(versionController::deleteVersion));
 
         Spark.post("/version/order/:newOrder", Router.Builder.createDefault(versionController::moveVersion));
         Spark.post("/route", Router.Builder.createDefault(routeController::createRoute));

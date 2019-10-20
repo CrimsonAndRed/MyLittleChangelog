@@ -50,11 +50,4 @@ public class Changelog extends BasicModel {
     @JoinColumn(name = "route_id", referencedColumnName = "id")
     @NotNull
     private Route route;
-
-    /**
-     * Endpoint flag of changelog.
-     */
-    @Column(name = "is_deleted")
-    @NotNull
-    private Boolean deleted;
 }
