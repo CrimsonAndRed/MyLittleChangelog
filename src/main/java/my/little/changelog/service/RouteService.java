@@ -19,7 +19,7 @@ public class RouteService {
 
     /**
      * Creates new route in project.
-     * Checks user rights to manipulate with this project.
+     * Checks user rights to manipulate with this project and for unique name.
      * @param dto route object.
      * @return route object with id.
      */
@@ -28,9 +28,20 @@ public class RouteService {
             return new Errorable<>(null, "You are not permitted to update this project");
         }
 
+        Project project = Ebean.find(Project.class).setId(dto.getProjectId()).findOne();
+        int count = Ebean.find(Route.class)
+                .where()
+                .eq("name", dto.getName())
+                .eq("project.id", project.getId())
+                .findCount();
+
+        if (count > 0) {
+            return new Errorable<>(null, "Name " + dto.getName() + " is not unique");
+        }
+
         Route route = new Route();
         route.setName(dto.getName());
-        route.setProject(Ebean.find(Project.class).setId(dto.getProjectId()).findOne());
+        route.setProject(project);
         route.save();
         return new Errorable<>(route);
     }

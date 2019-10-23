@@ -17,7 +17,7 @@ class VersionNavigation extends Component {
           <div className="header mg-bottom-10">
             Navigation
           </div>
-          { this.props.routes.map((route, index) => <RouteNavigationLink key={index} route={route} index={index}/> )}
+          { this.props.routes.filter(i => i.isVisible).map((route, index) => <RouteNavigationLink key={index} route={route} index={index}/> )}
         </div>
     );
   };

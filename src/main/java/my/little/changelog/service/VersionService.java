@@ -21,9 +21,7 @@ import my.little.changelog.model.project.dto.*;
 import my.little.changelog.validator.VersionValidator;
 
 import javax.annotation.Nullable;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -51,6 +49,16 @@ public class VersionService {
      * - project id - id of project.
      */
     private static final String QUERY_MAX_VERSION_ID = "SELECT MAX(internal_order) AS max_order FROM project_version v WHERE v.project_id = :projectId";
+
+    /**
+     * Compares RouteDto in appearing order.
+     */
+    private static final Comparator<RouteDto> ROUTE_DTO_COMPARATOR = Comparator.comparing(r1 -> r1.getId(), Comparator.nullsLast(Comparator.naturalOrder()));
+
+    /**
+     * Compares ChangelogDto in appearing order.
+     */
+    private static final Comparator<ChangelogDto> CHANGELOG_DTO_COMPARATOR = Comparator.comparing(r1 -> r1.getId(), Comparator.nullsLast(Comparator.naturalOrder()));
 
     /**
      * Find one version by id.
@@ -116,7 +124,13 @@ public class VersionService {
             route.getChangelogs().add(changelogDto);
         }
 
-        result.setRoutes(Lists.newArrayList(routeDtoById.values()));
+        List<RouteDto> routes = Lists.newArrayList(routeDtoById.values());
+        routes.sort(ROUTE_DTO_COMPARATOR);
+        for (RouteDto route : routes) {
+            route.getChangelogs().sort(CHANGELOG_DTO_COMPARATOR);
+        }
+
+        result.setRoutes(routes);
         return result;
     }
 

@@ -11,3 +11,5 @@ gradlew.bat
 
 *.ipr
 *.iws
+
+start.sh

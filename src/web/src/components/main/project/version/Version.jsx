@@ -28,6 +28,7 @@ class Version extends Component {
     this.submitAddRoute = this.submitAddRoute.bind(this);
     this.addRoute = this.addRoute.bind(this);
     this.addChangelog = this.addChangelog.bind(this);
+    this.hideUnused = this.hideUnused.bind(this);
     this.init();
   }
 
@@ -36,6 +37,7 @@ class Version extends Component {
       if (data.errors.length !== 0) {
         data.errors.forEach(error => window.toaster.addToast(error))
       } else {
+        data.data.routes.forEach(r => r.isVisible = r.changelogs.length > 0);
         this.setState({version: data.data});
       }
     });
@@ -77,25 +79,43 @@ class Version extends Component {
     this.setState({showAddRouteModal: true});
   }
 
+  hideUnused() {
+    this.setState(prevState => {
+      prevState.version.routes.forEach(r => r.isVisible = r.changelogs.length > 0);
+      return prevState;
+    });
+  }
+
   dismissAddRoute() {
     this.setState({showAddRouteModal: false});
   }
 
   submitAddRoute(st) {
-    var dto = {name: st.name, projectId: this.state.version.project.id};
 
-    qry.post('route', (res) => {
-      if (res.errors.length === 0) {
-        window.toaster.addToast({text: 'Route created successfully', type: 'success'});
 
-        this.setState(prevState => {
-          let routesUpd = prevState.version.routes.concat(res.data);
-          return {version: {...prevState.version, routes: routesUpd}, showAddRouteModal: false};
-        });
-      } else {
-        res.errors.forEach((err) => window.toaster.addToast(err));
-      }
-    }, dto);
+    let toShow = _.findIndex(this.state.version.routes, {name: st});
+    if (toShow >= 0) {
+      this.setState(prevState => {
+        prevState.version.routes[toShow].isVisible = true;
+        return {...prevState, showAddRouteModal: false};
+      });
+    } else {
+      var dto = {name: st, projectId: this.state.version.project.id};
+
+      qry.post('route', (res) => {
+        if (res.errors.length === 0) {
+          window.toaster.addToast({text: 'Route created successfully', type: 'success'});
+
+          res.data.isVisible = true;
+          this.setState(prevState => {
+            let routesUpd = prevState.version.routes.concat(res.data);
+            return {version: {...prevState.version, routes: routesUpd}, showAddRouteModal: false};
+          });
+        } else {
+          res.errors.forEach((err) => window.toaster.addToast(err));
+        }
+      }, dto);
+    }
   }
 
   addChangelog(index) {
@@ -111,7 +131,7 @@ class Version extends Component {
         <div className="version-container content-container-5">
           { this.state.showAddRouteModal && (
             <Modal onClose={this.dismissAddRoute} sizeClass="login-modal">
-              <RouteNew project={this.state.project} onClose={this.dismissAddRoute} onSubmit={this.submitAddRoute}/>
+              <RouteNew version={this.state.version} onClose={this.dismissAddRoute} onSubmit={this.submitAddRoute}/>
             </Modal>
           )}
           <VersionNavigation routes={this.state.version.routes}/>
@@ -123,7 +143,12 @@ class Version extends Component {
               {this.state.version.description}
             </div>
             <div>
-              { this.state.version.routes.map((item, index) => 
+              { this.state.mode === 'view' && <div className="mg-top-10 mg-bottom-10">
+                  <button className="btn btn-text" onClick={this.addRoute}> Add route </button>
+                  <button className="btn btn-text" onClick={this.hideUnused}> Hide unused </button>
+                </div>
+              }
+              { this.state.version.routes.filter(i => i.isVisible).map((item, index) => 
                 <Route key={index} 
                     route={item} 
                     mode={this.state.mode} 
@@ -135,7 +160,6 @@ class Version extends Component {
           </div>
           <div className="version-act content-container-5">
             <button className="btn btn-text btn-light-red" onClick={this.deleteVersion} > Delete </button>
-            <button className="btn btn-text mg-top-10" onClick={this.addRoute}> Add route </button>
             { this.state.mode === 'edit' && (
               <Fragment>
                 <button className="btn btn-text btn-light-red" onClick={this.viewVersion} > Cancel </button>
