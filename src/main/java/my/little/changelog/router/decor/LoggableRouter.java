@@ -25,9 +25,9 @@ public class LoggableRouter extends RouterDecorator {
      */
     @Override
     public Object handle(Request req, Response res) throws Exception {
-        log.info("Handling request to path \"{}\" by user \"{}\"", req.uri(), req.ip());
+        log.info("Handling request to path {} \"{}\" by user \"{}\"", req.requestMethod(), req.uri(), req.ip());
         Object result = super.handle(req, res);
-        log.info("Request to path \"{}\" by user \"{}\" has finished", req.uri(), req.ip());
+        log.info("Request to path {} \"{}\" by user \"{}\" has finished", req.requestMethod(), req.uri(), req.ip());
         return result;
     }
 }

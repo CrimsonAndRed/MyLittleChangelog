@@ -13,7 +13,14 @@ class Changelog extends Component {
   render() {
     return (
         <div className="main-centered content-container-5">
-          { this.props.changelog.text }
+          <div>
+            { this.props.changelog.text }
+          </div>
+          {this.props.mode === 'edit' && this.props.changelog.id == this.props.changelog.vid && (
+          <div>
+            <button className="btn btn-text" onClick={this.props.onChangelogDelete} > Delete changelog </button>
+          </div>
+          )}
         </div>
     );
   };

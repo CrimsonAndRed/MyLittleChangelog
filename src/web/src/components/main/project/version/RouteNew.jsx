@@ -14,7 +14,7 @@ class RouteNew extends Component {
 
     this.state = {
       name: '',
-      suggestedRoutes: []
+      suggestedRoutes: this.props.version.routes.filter(i => !i.isVisible)
     }
   }
 
@@ -36,8 +36,17 @@ class RouteNew extends Component {
             </div>
             <div className="login-modal-form-row mg-auto"/>
           </div>
+          <div>
+            This is "innovative" dropdown list.
+          </div>
           <div className="form-content">
-            { this.state.suggestedRoutes.map((item, index) => <div key={index}> { item.name } </div>) }
+            { this.state.suggestedRoutes.map((item, index) => 
+            <div className="as-link" key={index} onClick={() => {
+              this.props.onSubmit(item.name);
+            }}> 
+              { item.name } 
+            </div>
+          )}
           </div>
 
           <div className="login-modal-footer login-modal-form-row flex-container">

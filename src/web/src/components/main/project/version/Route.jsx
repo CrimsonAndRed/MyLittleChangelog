@@ -27,7 +27,10 @@ class Route extends Component {
           </div>
           <p>Changelogs:</p>
           <div>
-            { this.props.route.changelogs.map((item, index) => <Changelog key={index} changelog={item} mode={this.props.mode}/>) }
+            { this.props.route.changelogs.map((item, index) => 
+              <Changelog key={index} changelog={item} mode={this.props.mode} onChangelogDelete={() => this.props.onChangelogDelete(this.props.index, index)
+              }/>
+            )}
           </div>
           
         </div>

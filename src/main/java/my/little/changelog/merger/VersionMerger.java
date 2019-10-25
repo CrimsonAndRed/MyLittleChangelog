@@ -14,9 +14,7 @@ import my.little.changelog.model.project.dto.FullVersionDto;
 import my.little.changelog.model.project.dto.RouteDto;
 import my.little.changelog.service.VersionService;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -61,6 +59,8 @@ public class VersionMerger {
                 item -> item
         ));
 
+        Set<Long> keepIds = new HashSet<>();
+
         for (RouteDto route : dto.getRoutes()) {
             for (ChangelogDto changelog : route.getChangelogs()) {
 
@@ -79,6 +79,7 @@ public class VersionMerger {
                     changelogModel.setVersion(model);
                     model.getChangelogs().add(changelogModel);
                 } else {
+                    keepIds.add(changelog.getId());
                     changelogModel = dbChangelogs.get(changelog.getId());
                     if (changelogModel == null) {
                         String error = "Missed changelog by id " + id + " in version " + model.getId();
@@ -93,6 +94,13 @@ public class VersionMerger {
             }
         }
 
+        Iterator<Changelog> it = model.getChangelogs().iterator();
+        while (it.hasNext()) {
+            Changelog changelog = it.next();
+            if (changelog.getId() != null && !keepIds.contains(changelog.getId())) {
+                it.remove();
+            }
+        }
         return new Errorable<>(model, errors);
     }
 }

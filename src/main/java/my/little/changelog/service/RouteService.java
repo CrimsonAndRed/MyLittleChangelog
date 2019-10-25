@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import io.ebean.Ebean;
 import lombok.extern.log4j.Log4j2;
+import my.little.changelog.error.ErrorMessage;
 import my.little.changelog.error.Errorable;
 import my.little.changelog.model.auth.User;
 import my.little.changelog.model.project.Project;
@@ -25,7 +26,7 @@ public class RouteService {
      */
     public Errorable<Route> create(CreateRouteDto dto, User user) {
         if (!projectService.checkUserIsOwner(dto.getProjectId(), user.getId())) {
-            return new Errorable<>(null, "You are not permitted to update this project");
+            return new Errorable<>(null, ErrorMessage.userNotAllowed());
         }
 
         Project project = Ebean.find(Project.class).setId(dto.getProjectId()).findOne();

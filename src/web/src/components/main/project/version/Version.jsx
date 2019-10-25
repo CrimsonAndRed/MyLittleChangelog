@@ -29,6 +29,7 @@ class Version extends Component {
     this.addRoute = this.addRoute.bind(this);
     this.addChangelog = this.addChangelog.bind(this);
     this.hideUnused = this.hideUnused.bind(this);
+    this.deleteChangelog = this.deleteChangelog.bind(this);
     this.init();
   }
 
@@ -126,6 +127,15 @@ class Version extends Component {
     });
   }
 
+  deleteChangelog(ri, ci) {
+    console.log('111');
+    this.setState(prevState => {
+      let routesUpd = prevState.version.routes;
+      routesUpd[ri].changelogs.splice(ci, 1)
+      return {version: {...prevState.version, routes: routesUpd}};
+    });
+  }
+
   render() {
     return (
         <div className="version-container content-container-5">
@@ -154,6 +164,7 @@ class Version extends Component {
                     mode={this.state.mode} 
                     addChangelog={this.addChangelog}
                     index={index}
+                    onChangelogDelete={this.deleteChangelog}
                 />
               )}
             </div>
