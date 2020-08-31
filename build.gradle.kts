@@ -17,9 +17,10 @@ plugins {
     java
 //    jacoco
     kotlin("jvm")
+    id("com.github.johnrengelman.shadow")
 }
 
-val ktorVersion = "1.3.2"
+val ktorVersion = "1.4.0"
 val logbackVersion = "1.2.3"
 
 dependencies {
