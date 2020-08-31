@@ -13,11 +13,10 @@ application {
 }
 
 plugins {
-    val kotlinVersion = "1.4.0"
     application
     java
 //    jacoco
-    kotlin("jvm") version kotlinVersion
+    kotlin("jvm")
 }
 
 val ktorVersion = "1.3.2"
