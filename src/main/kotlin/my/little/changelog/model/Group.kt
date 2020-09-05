@@ -11,7 +11,7 @@ class Group(id: EntityID<Int>) : IntEntity(id) {
     companion object : IntEntityClass<Group>(Groups)
 
     var vid by Groups.vid
-    val version by Version referencedOn Groups.version
+    var version by Version referencedOn Groups.version
     var name by Groups.name
     var parentVid by Groups.parentVid
 }

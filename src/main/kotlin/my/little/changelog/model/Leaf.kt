@@ -14,7 +14,7 @@ class Leaf(id: EntityID<Int>) : IntEntity(id) {
     var name by Leaves.name
     var valueType by Leaves.valueType
     var value by Leaves.value
-    val version by Version referencedOn Leaves.version
+    var version by Version referencedOn Leaves.version
     var groupVid by Leaves.groupVid
 }
 
