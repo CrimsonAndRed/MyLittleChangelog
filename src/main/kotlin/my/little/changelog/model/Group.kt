@@ -1,13 +1,13 @@
 package my.little.changelog.model
 
-import org.jetbrains.exposed.sql.*
+import org.jetbrains.exposed.sql.Table
 
 data class Group(
-        val id: Int,
-        val vid: Int,
-        val name: String,
-        val parentVid: Int,
-        val version: Version
+    val id: Int,
+    val vid: Int,
+    val name: String,
+    val parentVid: Int,
+    val version: Version
 )
 
 object Groups : Table() {

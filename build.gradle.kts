@@ -28,11 +28,11 @@ val postgresVersion = "42.2.16"
 val flywayVersion = "6.5.5"
 
 dependencies {
-    implementation("io.ktor","ktor-server-netty", ktorVersion)
-    implementation("io.ktor","ktor-auth-jwt", ktorVersion)
-    implementation("io.ktor","ktor-jackson", ktorVersion)
-    implementation("io.ktor","ktor-server-sessions", ktorVersion)
-    implementation("ch.qos.logback","logback-classic", logbackVersion)
+    implementation("io.ktor", "ktor-server-netty", ktorVersion)
+    implementation("io.ktor", "ktor-auth-jwt", ktorVersion)
+    implementation("io.ktor", "ktor-jackson", ktorVersion)
+    implementation("io.ktor", "ktor-server-sessions", ktorVersion)
+    implementation("ch.qos.logback", "logback-classic", logbackVersion)
 
     // Database
     implementation("org.jetbrains.exposed", "exposed-core", exposedVersion)
@@ -69,6 +69,6 @@ tasks {
 tasks.test {
     useJUnitPlatform()
     testLogging {
-        events ("passed", "skipped", "failed")
+        events("passed", "skipped", "failed")
     }
 }

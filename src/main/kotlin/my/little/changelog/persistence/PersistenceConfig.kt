@@ -3,10 +3,8 @@ package my.little.changelog.persistence
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
 import io.ktor.application.Application
-
-import io.ktor.config.*
-import io.ktor.util.*
-
+import io.ktor.config.ApplicationConfig
+import io.ktor.util.KtorExperimentalAPI
 import org.flywaydb.core.Flyway
 import org.jetbrains.exposed.sql.Database
 import javax.sql.DataSource

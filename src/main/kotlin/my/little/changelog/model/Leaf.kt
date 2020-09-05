@@ -3,13 +3,13 @@ package my.little.changelog.model
 import org.jetbrains.exposed.sql.Table
 
 data class Leaf(
-        val id: Int,
-        val vid: Int,
-        val name: String,
-        val valueType: Int,
-        val value: String,
-        val version: Version,
-        val groupVid: Int
+    val id: Int,
+    val vid: Int,
+    val name: String,
+    val valueType: Int,
+    val value: String,
+    val version: Version,
+    val groupVid: Int
 )
 
 object Leafs : Table() {

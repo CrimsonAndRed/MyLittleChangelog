@@ -3,7 +3,7 @@ package my.little.changelog.model
 import org.jetbrains.exposed.sql.Table
 
 data class Version(
-        val id: Int,
+    val id: Int,
 )
 
 object Versions : Table() {
