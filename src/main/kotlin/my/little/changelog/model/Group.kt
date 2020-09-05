@@ -1,21 +1,24 @@
 package my.little.changelog.model
 
-import org.jetbrains.exposed.sql.Table
+import my.little.changelog.model.version.Version
+import my.little.changelog.model.version.Versions
+import org.jetbrains.exposed.dao.IntEntity
+import org.jetbrains.exposed.dao.IntEntityClass
+import org.jetbrains.exposed.dao.id.EntityID
+import org.jetbrains.exposed.dao.id.IntIdTable
 
-data class Group(
-    val id: Int,
-    val vid: Int,
-    val name: String,
-    val parentVid: Int,
-    val version: Version
-)
+class Group(id: EntityID<Int>) : IntEntity(id) {
+    companion object : IntEntityClass<Group>(Groups)
 
-object Groups : Table() {
-    val id = integer("id").autoIncrement()
+    var vid by Groups.vid
+    val version by Version referencedOn Groups.version
+    var name by Groups.name
+    var parentVid by Groups.parentVid
+}
+
+object Groups : IntIdTable() {
     val vid = integer("vid")
     val name = text("name")
     val parentVid = integer("parent_vid")
-    val version = (integer("version_id") references Versions.id).nullable()
-
-    override val primaryKey = PrimaryKey(id)
+    val version = reference("version_id", Versions)
 }

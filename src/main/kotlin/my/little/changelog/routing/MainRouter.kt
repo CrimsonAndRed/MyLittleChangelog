@@ -1,15 +1,33 @@
 package my.little.changelog.routing
 
 import io.ktor.application.Application
+import io.ktor.application.call
+import io.ktor.response.respond
 import io.ktor.routing.get
+import io.ktor.routing.post
 import io.ktor.routing.route
 import io.ktor.routing.routing
+import io.ktor.util.KtorExperimentalAPI
+import io.ktor.util.getOrFail
+import my.little.changelog.service.createVersion
+import my.little.changelog.service.getVersion
 
+@KtorExperimentalAPI
 fun Application.module() {
     routing {
         route("/") {
             get { throw RuntimeException() }
-//                call.respondText("HELLO WORLD!", contentType = ContentType.Text.Plain)
+        }
+
+        route("/version") {
+            post {
+                call.respond(createVersion())
+            }
+
+            get {
+                val idParam = call.parameters.getOrFail("id")
+                call.respond(getVersion(idParam.toInt()))
+            }
         }
     }
 }

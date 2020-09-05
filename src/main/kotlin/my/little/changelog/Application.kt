@@ -18,6 +18,7 @@ import io.ktor.request.path
 import io.ktor.response.respond
 import io.ktor.sessions.Sessions
 import io.ktor.sessions.cookie
+import io.ktor.util.error
 import org.slf4j.event.Level
 import kotlin.collections.set
 
@@ -61,6 +62,7 @@ fun Application.module(testing: Boolean = false) {
 
     install(StatusPages) {
         exception<Throwable> {
+            environment.log.error(it)
             call.respond(HttpStatusCode.InternalServerError)
         }
     }
