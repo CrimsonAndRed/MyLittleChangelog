@@ -1,3 +1,3 @@
-create table VERSIONS (
-    ID int primary key
+CREATE TABLE versions (
+    id INT PRIMARY KEY
 );

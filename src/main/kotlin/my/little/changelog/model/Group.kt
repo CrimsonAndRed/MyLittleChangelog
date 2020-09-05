@@ -15,6 +15,7 @@ object Groups : Table() {
     val vid = integer("vid")
     val name = text("name")
     val parentVid = integer("parent_vid")
+    val version = (integer("version_id") references Versions.id).nullable()
 
     override val primaryKey = PrimaryKey(id)
 }

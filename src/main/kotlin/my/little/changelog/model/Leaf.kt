@@ -12,7 +12,7 @@ data class Leaf(
     val groupVid: Int
 )
 
-object Leafs : Table() {
+object Leaves : Table() {
     val id = integer("id").autoIncrement()
     val vid = integer("vid")
     val name = text("name")
