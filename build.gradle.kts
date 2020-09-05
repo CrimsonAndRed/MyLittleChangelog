@@ -27,6 +27,7 @@ val hikariVersion: String by project
 val postgresVersion: String by project
 val flywayVersion: String by project
 val jupiterVersion: String by project
+val testContainersVersion: String by project
 
 dependencies {
     implementation("io.ktor", "ktor-server-netty", ktorVersion)
@@ -47,6 +48,11 @@ dependencies {
         exclude("junit")
     }
     testImplementation("org.junit.jupiter", "junit-jupiter", jupiterVersion)
+    testImplementation("org.testcontainers", "junit-jupiter", testContainersVersion)
+    testImplementation("org.testcontainers", "postgresql", testContainersVersion)
+    testImplementation("org.testcontainers", "testcontainers", testContainersVersion) {
+        exclude("junit")
+    }
 }
 
 tasks {
