@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+#  changelog:
+#    image: changelog-service:latest-dev
+#    ports:
+#      - 8080:8080
+#      - 5005:5005
+  database:
+    image: postgres:13
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=postgres
