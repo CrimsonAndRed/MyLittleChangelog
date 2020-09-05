@@ -51,6 +51,9 @@ tasks {
             freeCompilerArgs = listOf("-Xjsr305=strict")
         }
     }
+    shadowJar {
+        archiveVersion.set("")
+    }
 //    jacocoTestCoverageVerification {
 //        violationRules {
 //            rule {

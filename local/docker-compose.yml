@@ -1,11 +1,11 @@
 version: '3.8'
 
 services:
-#  changelog:
-#    image: changelog-service:latest-dev
-#    ports:
-#      - 8080:8080
-#      - 5005:5005
+  changelog:
+    image: changelog-service:latest-dev
+    ports:
+      - 8080:8080
+      - 5005:5005
   database:
     image: postgres:13
     ports:
