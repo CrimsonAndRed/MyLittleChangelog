@@ -12,12 +12,8 @@ import io.ktor.routing.routing
 fun Application.module() {
     routing {
         route("/") {
-            get {
-                call.respond {
-                    throw RuntimeException()
-                }
+            get { throw RuntimeException() }
 //                call.respondText("HELLO WORLD!", contentType = ContentType.Text.Plain)
-            }
         }
     }
 }

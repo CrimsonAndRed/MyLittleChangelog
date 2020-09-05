@@ -56,7 +56,6 @@ fun Application.module(testing: Boolean = false) {
     }
 
     install(StatusPages) {
-        exceptions
         exception<Throwable> {
             call.respond(HttpStatusCode.InternalServerError)
         }
