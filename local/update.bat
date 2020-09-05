@@ -6,7 +6,7 @@ cd local
 pause
 
 cd ..
-call docker build --target dev -t changelog:latest-dev .
+call docker build --target dev -t changelog-service:latest-dev .
 cd local
 
 call docker-compose up -d changelog

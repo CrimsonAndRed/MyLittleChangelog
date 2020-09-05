@@ -17,6 +17,7 @@ plugins {
 //    jacoco
     kotlin("jvm")
     id("com.github.johnrengelman.shadow")
+    id("org.jlleitschuh.gradle.ktlint")
 }
 
 val ktorVersion = "1.4.0"
