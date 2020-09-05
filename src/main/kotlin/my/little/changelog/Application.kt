@@ -2,20 +2,17 @@ package my.little.changelog
 
 
 import com.fasterxml.jackson.databind.SerializationFeature
-import io.ktor.application.Application
-import io.ktor.application.call
-import io.ktor.application.install
-import io.ktor.auth.Authentication
+import io.ktor.application.*
+import io.ktor.auth.*
 import io.ktor.features.*
-import io.ktor.http.HttpHeaders
-import io.ktor.http.HttpMethod
-import io.ktor.http.HttpStatusCode
-import io.ktor.jackson.jackson
-import io.ktor.request.path
-import io.ktor.response.respond
-import io.ktor.sessions.Sessions
-import io.ktor.sessions.cookie
+import io.ktor.http.*
+import io.ktor.jackson.*
+import io.ktor.request.*
+import io.ktor.response.*
+import io.ktor.sessions.*
 import org.slf4j.event.Level
+import kotlin.collections.set
+import org.flywaydb.core.Flyway;
 
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 

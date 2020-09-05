@@ -24,6 +24,7 @@ val logbackVersion = "1.2.3"
 val exposedVersion = "0.24.1"
 val hikariVersion = "3.4.5"
 val postgresVersion = "42.2.16"
+val flywayVersion = "6.5.5"
 
 dependencies {
     implementation("io.ktor","ktor-server-netty", ktorVersion)
@@ -37,6 +38,7 @@ dependencies {
     implementation("org.jetbrains.exposed", "exposed-dao", exposedVersion)
     implementation("org.jetbrains.exposed", "exposed-jdbc", exposedVersion)
     implementation("com.zaxxer", "HikariCP", hikariVersion)
+    implementation("org.flywaydb", "flyway-core", flywayVersion)
     runtimeOnly("org.postgresql", "postgresql", postgresVersion)
 
     testImplementation("io.ktor:ktor-server-tests:$ktorVersion")
