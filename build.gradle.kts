@@ -20,12 +20,13 @@ plugins {
     id("org.jlleitschuh.gradle.ktlint")
 }
 
-val ktorVersion = "1.4.0"
-val logbackVersion = "1.2.3"
-val exposedVersion = "0.24.1"
-val hikariVersion = "3.4.5"
-val postgresVersion = "42.2.16"
-val flywayVersion = "6.5.5"
+val ktorVersion: String by project
+val logbackVersion: String by project
+val exposedVersion: String by project
+val hikariVersion: String by project
+val postgresVersion: String by project
+val flywayVersion: String by project
+val jupiterVersion: String by project
 
 dependencies {
     implementation("io.ktor", "ktor-server-netty", ktorVersion)
@@ -42,7 +43,10 @@ dependencies {
     implementation("org.flywaydb", "flyway-core", flywayVersion)
     runtimeOnly("org.postgresql", "postgresql", postgresVersion)
 
-    testImplementation("io.ktor:ktor-server-tests:$ktorVersion")
+    testImplementation("io.ktor", "ktor-server-tests", ktorVersion) {
+        exclude("junit")
+    }
+    testImplementation("org.junit.jupiter", "junit-jupiter", jupiterVersion)
 }
 
 tasks {
