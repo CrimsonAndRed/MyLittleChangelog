@@ -20,6 +20,9 @@ fun createVersion(): VersionDto {
     }.toDto()
 }
 
+/**
+ *
+ */
 fun getWholeVersion(id: Int): WholeVersion = transaction {
     val version = Version[id]
     val leaves = Leaf.find { Leaves.version eq version.id.value }

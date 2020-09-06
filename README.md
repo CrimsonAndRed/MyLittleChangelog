@@ -168,3 +168,17 @@ id: 1
 ----
 TODO
 - Не генерируется VID
+
+----------
+Запросы:
+
+WITH RECURSIVE tmp_groups AS (
+		SELECT * FROM groups 
+		WHERE (vid in (SELECT group_vid FROM leaves where version_id = 2)) or 
+				(vid in (SELECT vid FROM groups where version_id = 2))
+	UNION
+		SELECT g.* FROM groups AS g JOIN tmp_groups ON g.vid=tmp_groups.parent_vid
+) SELECT * FROM tmp_groups;
+
+SELECT grouped.* FROM (SELECT g.*, max(version_id) OVER (PARTITION BY vid) FROM groups AS g) as grouped
+WHERE grouped.version_id=grouped.max;

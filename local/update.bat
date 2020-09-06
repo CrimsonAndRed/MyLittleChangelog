@@ -1,7 +1,7 @@
 @echo off
 cd ..
 
-call ./gradlew -x test clean build
+call ./gradlew -x test -x ktlintMainSourceSetCheck -x ktlintTestSourceSetCheck clean build
 cd local
 pause
 
