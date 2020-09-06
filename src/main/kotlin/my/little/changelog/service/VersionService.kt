@@ -1,7 +1,6 @@
 package my.little.changelog.service
 
 import my.little.changelog.model.group.Group
-import my.little.changelog.model.group.Groups
 import my.little.changelog.model.group.dto.GroupDto
 import my.little.changelog.model.leaf.Leaf
 import my.little.changelog.model.leaf.Leaves
@@ -10,7 +9,8 @@ import my.little.changelog.model.version.Version
 import my.little.changelog.model.version.WholeVersion
 import my.little.changelog.model.version.dto.VersionDto
 import my.little.changelog.model.version.toDto
-import org.jetbrains.exposed.sql.or
+import my.little.changelog.persistence.group.GroupsRepo
+import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 import org.jetbrains.exposed.sql.transactions.transaction
 
 fun createVersion(): VersionDto {
@@ -23,16 +23,12 @@ fun createVersion(): VersionDto {
 /**
  *
  */
-fun getWholeVersion(id: Int): WholeVersion = transaction {
+suspend fun getWholeVersion(id: Int): WholeVersion = newSuspendedTransaction {
     val version = Version[id]
+
     val leaves = Leaf.find { Leaves.version eq version.id.value }
-    val groupVids = leaves.map {
-        it.groupVid
-    }
-    val groups = Group.find {
-        // TODO неверный вариант выбора групп
-        (Groups.version eq version.id.value) or (Groups.vid inList groupVids)
-    }
+    val groups = GroupsRepo.findGroupAffectedByVersion(version)
+
     createDtosRecursive(
         groups.groupBy({ it.parentVid }) { it },
         leaves.groupBy({ it.groupVid }) { it }
@@ -48,30 +44,13 @@ private fun createDtosRecursive(
 ): Pair<List<GroupDto>, List<LeafDto>> {
     val rootGroupDtos = groupsMap[value]?.map {
         val pair = createDtosRecursive(groupsMap, leavesMap, it.vid)
-
-        GroupDto(
-            id = it.id.value,
-            vid = it.vid,
-            version = it.version.id.value,
-            name = it.name,
-            groupContent = pair.first,
-            leafContent = pair.second,
-        )
+        GroupDto(it.id.value, it.vid, it.version.id.value, it.name, pair.first, pair.second)
     } ?: emptyList()
 
     val rootLeafDtos = leavesMap[value]?.map {
-        LeafDto(
-            id = it.id.value,
-            vid = it.vid,
-            name = it.name,
-            valueType = it.valueType,
-            value = it.value,
-        )
+        LeafDto(it.id.value, it.vid, it.name, it.valueType, it.value)
     } ?: emptyList()
 
-    return Pair(
-        rootGroupDtos,
-        rootLeafDtos
-    )
+    return rootGroupDtos to rootLeafDtos
 }
 

@@ -13,8 +13,6 @@ import my.little.changelog.model.leaf.Leaf
 import my.little.changelog.model.leaf.dto.LeafDto
 import my.little.changelog.model.version.Version
 import my.little.changelog.model.version.WholeVersion
-import my.little.changelog.model.version.dto.VersionDto
-import my.little.changelog.model.version.toDto
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
