@@ -20,49 +20,28 @@ fun createVersion(): VersionDto {
     }.toDto()
 }
 
-fun getWholeVersion(id: Int): WholeVersion {
-    val version = transaction {
-        val version = Version[id]
-
-        val leaves = Leaf.find { Leaves.version eq version.id.value }
-        val groupVids = leaves.map {
-            it.groupVid
-        }
-
-        val groups = Group.find {
-            // TODO неверный вариант выбора групп
-            (Groups.version eq version.id.value) or (Groups.vid inList groupVids)
-        }
-
-        val groupsByParentVid: MutableMap<Int?, MutableList<Group>> = mutableMapOf()
-        groups.map {
-            groupsByParentVid.compute(it.parentVid) { _, v ->
-                v?.apply { add(it) } ?: mutableListOf(it)
-            }
-        }
-
-        val leavesByGroupVid: MutableMap<Int?, MutableList<Leaf>> = mutableMapOf()
-        leaves.forEach {
-            leavesByGroupVid.compute(it.groupVid) { _, v ->
-                v?.apply { add(it) } ?: mutableListOf(it)
-            }
-        }
-
-        val groupsAndLeaves = createDtosRecursive(groupsByParentVid, leavesByGroupVid, null)
-
-        WholeVersion(
-            id = version.id.value,
-            groupContent = groupsAndLeaves.first,
-            leafContent = groupsAndLeaves.second,
-        )
+fun getWholeVersion(id: Int): WholeVersion = transaction {
+    val version = Version[id]
+    val leaves = Leaf.find { Leaves.version eq version.id.value }
+    val groupVids = leaves.map {
+        it.groupVid
     }
-    return version
+    val groups = Group.find {
+        // TODO неверный вариант выбора групп
+        (Groups.version eq version.id.value) or (Groups.vid inList groupVids)
+    }
+    createDtosRecursive(
+        groups.groupBy({ it.parentVid }) { it },
+        leaves.groupBy({ it.groupVid }) { it }
+    ).let {
+        WholeVersion(version.id.value, it.first, it.second)
+    }
 }
 
 private fun createDtosRecursive(
-    groupsMap: Map<Int?, MutableList<Group>>,
-    leavesMap: MutableMap<Int?, MutableList<Leaf>>,
-    value: Int?
+    groupsMap: Map<Int?, List<Group>>,
+    leavesMap: Map<Int, List<Leaf>>,
+    value: Int? = null
 ): Pair<List<GroupDto>, List<LeafDto>> {
     val rootGroupDtos = groupsMap[value]?.map {
         val pair = createDtosRecursive(groupsMap, leavesMap, it.vid)
