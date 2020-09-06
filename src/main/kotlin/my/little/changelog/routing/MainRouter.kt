@@ -10,7 +10,7 @@ import io.ktor.routing.routing
 import io.ktor.util.KtorExperimentalAPI
 import io.ktor.util.getOrFail
 import my.little.changelog.service.createVersion
-import my.little.changelog.service.getVersion
+import my.little.changelog.service.getWholeVersion
 
 @KtorExperimentalAPI
 fun Application.module() {
@@ -26,7 +26,7 @@ fun Application.module() {
 
             get {
                 val idParam = call.parameters.getOrFail("id")
-                call.respond(getVersion(idParam.toInt()))
+                call.respond(getWholeVersion(idParam.toInt()))
             }
         }
     }

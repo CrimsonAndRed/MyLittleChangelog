@@ -1,6 +1,5 @@
 package my.little.changelog
 
-import com.fasterxml.jackson.databind.SerializationFeature
 import io.ktor.application.Application
 import io.ktor.application.call
 import io.ktor.application.install
@@ -10,15 +9,17 @@ import io.ktor.features.CallLogging
 import io.ktor.features.ContentNegotiation
 import io.ktor.features.DefaultHeaders
 import io.ktor.features.StatusPages
+import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
-import io.ktor.jackson.jackson
 import io.ktor.request.path
 import io.ktor.response.respond
+import io.ktor.serialization.json
 import io.ktor.sessions.Sessions
 import io.ktor.sessions.cookie
 import io.ktor.util.error
+import my.little.changelog.configuration.Json
 import org.slf4j.event.Level
 import kotlin.collections.set
 
@@ -29,10 +30,12 @@ fun Application.module(testing: Boolean = false) {
     }
 
     install(ContentNegotiation) {
-        jackson {
-            enable(SerializationFeature.INDENT_OUTPUT)
-        }
+        json(
+            Json,
+            ContentType.Application.Json
+        )
     }
+
 
     install(Sessions) {
         cookie<MySession>("MY_SESSION") {

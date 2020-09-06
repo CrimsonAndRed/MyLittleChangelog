@@ -7,6 +7,7 @@ pluginManagement {
     plugins {
         application
         kotlin("jvm") version kotlinVersion
+        kotlin("plugin.serialization") version kotlinVersion
         id("com.github.johnrengelman.shadow") version shadowVersion
         id("org.jlleitschuh.gradle.ktlint") version ktlintVersion
     }

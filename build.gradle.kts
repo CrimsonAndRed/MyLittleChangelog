@@ -16,6 +16,7 @@ plugins {
     application
 //    jacoco
     kotlin("jvm")
+    kotlin("plugin.serialization")
     id("com.github.johnrengelman.shadow")
     id("org.jlleitschuh.gradle.ktlint")
 }
@@ -32,8 +33,8 @@ val testContainersVersion: String by project
 dependencies {
     implementation("io.ktor", "ktor-server-netty", ktorVersion)
     implementation("io.ktor", "ktor-auth-jwt", ktorVersion)
-    implementation("io.ktor", "ktor-jackson", ktorVersion)
     implementation("io.ktor", "ktor-server-sessions", ktorVersion)
+    implementation("io.ktor", "ktor-serialization", ktorVersion)
     implementation("ch.qos.logback", "logback-classic", logbackVersion)
 
     // Database
