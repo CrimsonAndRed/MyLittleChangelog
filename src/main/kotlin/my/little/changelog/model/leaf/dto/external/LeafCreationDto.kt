@@ -1,11 +1,9 @@
-package my.little.changelog.model.leaf.dto
+package my.little.changelog.model.leaf.dto.external
 
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class LeafDto(
-    val id: Int,
-    val vid: Int,
+data class LeafCreationDto(
     val name: String,
     val valueType: Int,
     val value: String,

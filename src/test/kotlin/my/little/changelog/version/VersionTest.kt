@@ -5,12 +5,11 @@ import io.ktor.http.HttpStatusCode
 import io.ktor.server.testing.handleRequest
 import io.ktor.util.KtorExperimentalAPI
 import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.encodeToString
 import my.little.changelog.configuration.Json
 import my.little.changelog.model.group.Group
 import my.little.changelog.model.group.dto.GroupDto
 import my.little.changelog.model.leaf.Leaf
-import my.little.changelog.model.leaf.dto.LeafDto
+import my.little.changelog.model.leaf.dto.external.LeafDto
 import my.little.changelog.model.version.Version
 import my.little.changelog.model.version.WholeVersion
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -37,6 +36,7 @@ class VersionTest : AbstractIntegrationTest() {
     fun testGetWholeVersion() {
         testApplication {
             val version = transaction {
+
                 val version = Version.new {}
                 val group1 = Group.new {
                     this.vid = 1
@@ -60,7 +60,6 @@ class VersionTest : AbstractIntegrationTest() {
                     this.version = version
                     this.groupVid = 1
                 }
-
 
 
                 val group2Dto = GroupDto(
@@ -95,6 +94,7 @@ class VersionTest : AbstractIntegrationTest() {
                     leafContent = emptyList(),
                 )
             }
+
 
             with(handleRequest(HttpMethod.Get, "/version?id=${version.id}")) {
                 assertEquals(HttpStatusCode.OK, response.status())

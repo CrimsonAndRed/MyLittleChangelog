@@ -17,7 +17,7 @@ class Group(id: EntityID<Int>) : IntEntity(id) {
 }
 
 object Groups : IntIdTable() {
-    val vid = integer("vid")
+    val vid = integer("vid").autoIncrement("groups_vid_seq")
     val name = text("name")
     val parentVid = integer("parent_vid").nullable()
     val version = reference("version_id", Versions)

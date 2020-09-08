@@ -1,6 +1,6 @@
 cd ..
 
-./gradlew clean build
+./gradlew -x test -x ktlintMainSourceSetCheck -x ktlintTestSourceSetCheck clean build
 cd local || exit
 read -r -p "Press enter to continue"
 

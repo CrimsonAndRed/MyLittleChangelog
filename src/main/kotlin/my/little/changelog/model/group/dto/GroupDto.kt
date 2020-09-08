@@ -1,7 +1,7 @@
 package my.little.changelog.model.group.dto
 
 import kotlinx.serialization.Serializable
-import my.little.changelog.model.leaf.dto.LeafDto
+import my.little.changelog.model.leaf.dto.external.LeafDto
 
 @Serializable
 data class GroupDto(

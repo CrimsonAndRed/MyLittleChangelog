@@ -1,5 +1,6 @@
 package my.little.changelog.model.leaf
 
+import my.little.changelog.model.group.Groups.autoIncrement
 import my.little.changelog.model.version.Version
 import my.little.changelog.model.version.Versions
 import org.jetbrains.exposed.dao.IntEntity
@@ -19,7 +20,7 @@ class Leaf(id: EntityID<Int>) : IntEntity(id) {
 }
 
 object Leaves : IntIdTable() {
-    val vid = integer("vid")
+    val vid = integer("vid").autoIncrement("leaves_vid_seq")
     val name = text("name")
     val valueType = integer("value_type")
     val value = text("value")

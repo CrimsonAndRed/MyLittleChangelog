@@ -1,0 +1,18 @@
+package my.little.changelog.service
+
+import my.little.changelog.model.leaf.Leaf
+import my.little.changelog.model.leaf.dto.service.LeafCreationDto
+import my.little.changelog.model.leaf.dto.service.toRepo
+import my.little.changelog.persistence.group.GroupRepo
+import my.little.changelog.persistence.group.LeafRepo
+import my.little.changelog.persistence.group.VersionRepo
+import org.jetbrains.exposed.sql.transactions.transaction
+
+object LeafService {
+
+    fun createLeaf(leaf: LeafCreationDto): Leaf = transaction {
+        val version = VersionRepo.findVersionById(leaf.versionId)
+        val group = GroupRepo.findGroupById(leaf.groupId)
+        LeafRepo.createLeaf(leaf.toRepo(version, group))
+    }
+}

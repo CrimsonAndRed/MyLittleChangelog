@@ -1,9 +1,8 @@
 ![Alt text](ActionSchema.png?raw=true "Schema")
 
-----
+----------
 TODO
-- Не генерируется VID
-
+- https://ktor.io/servers/features/locations.html
 ----------
 Запросы:
 
