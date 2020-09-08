@@ -23,7 +23,9 @@ fun initDb(conf: ApplicationConfig): DataSource {
         password = conf.property("password").getString()
     }
     val hikariDataSource = HikariDataSource(hikariConfig)
-    Database.connect(hikariDataSource)
+    Database.connect(hikariDataSource).apply {
+        useNestedTransactions = true
+    }
     return hikariDataSource
 }
 
