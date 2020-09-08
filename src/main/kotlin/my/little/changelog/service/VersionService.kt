@@ -51,4 +51,3 @@ object VersionService {
         return rootGroupDtos to rootLeafDtos
     }
 }
-

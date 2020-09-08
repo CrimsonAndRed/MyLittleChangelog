@@ -36,7 +36,6 @@ fun Application.module(testing: Boolean = false) {
         )
     }
 
-
     install(Sessions) {
         cookie<MySession>("MY_SESSION") {
             cookie.extensions["SameSite"] = "lax"

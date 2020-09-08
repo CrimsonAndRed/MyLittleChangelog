@@ -8,4 +8,3 @@ fun LeafCreationDto.toInternal(groupId: Int, versionId: Int): my.little.changelo
         groupId = groupId,
         versionId = versionId,
     )
-

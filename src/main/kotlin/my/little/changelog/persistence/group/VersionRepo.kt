@@ -5,8 +5,8 @@ import org.jetbrains.exposed.sql.transactions.transaction
 
 object VersionRepo {
 
-    fun createVersion(): Version = transaction{
-        Version.new {  }
+    fun createVersion(): Version = transaction {
+        Version.new { }
     }
 
     fun findVersionById(id: Int): Version = transaction {

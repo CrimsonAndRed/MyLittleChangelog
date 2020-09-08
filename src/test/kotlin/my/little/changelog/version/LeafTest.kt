@@ -38,10 +38,12 @@ class LeafTest : AbstractIntegrationTest() {
                 "Значение1"
             )
 
-            with(handleRequest(HttpMethod.Post, "/version/${version.id}/group/${group.id}/leaf") {
-                addHeader("Content-Type", "application/json")
-                setBody(Json.encodeToString(dto))
-            }) {
+            with(
+                handleRequest(HttpMethod.Post, "/version/${version.id}/group/${group.id}/leaf") {
+                    addHeader("Content-Type", "application/json")
+                    setBody(Json.encodeToString(dto))
+                }
+            ) {
 
                 assertEquals(io.ktor.http.HttpStatusCode.OK, response.status())
                 val json: LeafDto = Json.decodeFromString(response.content!!)
@@ -50,6 +52,5 @@ class LeafTest : AbstractIntegrationTest() {
                 assertEquals(json.valueType, dto.valueType)
             }
         }
-
     }
 }

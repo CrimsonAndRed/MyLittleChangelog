@@ -61,7 +61,6 @@ class VersionTest : AbstractIntegrationTest() {
                     this.groupVid = 1
                 }
 
-
                 val group2Dto = GroupDto(
                     id = group2.id.value,
                     vid = group2.vid,
@@ -94,7 +93,6 @@ class VersionTest : AbstractIntegrationTest() {
                     leafContent = emptyList(),
                 )
             }
-
 
             with(handleRequest(HttpMethod.Get, "/version?id=${version.id}")) {
                 assertEquals(HttpStatusCode.OK, response.status())

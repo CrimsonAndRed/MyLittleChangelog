@@ -3,13 +3,12 @@ package my.little.changelog.persistence.group
 import my.little.changelog.model.group.Group
 import my.little.changelog.model.version.Version
 import org.jetbrains.exposed.sql.statements.jdbc.iterate
-import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
-import org.jetbrains.exposed.sql.transactions.inTopLevelTransaction
 import org.jetbrains.exposed.sql.transactions.transaction
 
 object GroupRepo {
 
-    private const val FIND_GROUPS_AFFECTED_BY_VERSION_QUERY = """
+    private const val FIND_GROUPS_AFFECTED_BY_VERSION_QUERY =
+        """
         WITH RECURSIVE tmp_groups AS (
         		SELECT * FROM groups_latest 
         		WHERE (vid in (SELECT group_vid FROM leaves where version_id = ?)) or 
@@ -26,7 +25,7 @@ object GroupRepo {
                 set(2, version.id.value)
             }
             .executeQuery().iterate { getInt("id") }.let { Group.forIds(it) }
-            .also { Version.new {  } }
+            .also { Version.new { } }
     }
 
     fun findGroupById(id: Int): Group = transaction {
