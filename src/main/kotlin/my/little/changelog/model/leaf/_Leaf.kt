@@ -2,7 +2,7 @@ package my.little.changelog.model.leaf
 
 import my.little.changelog.model.leaf.dto.external.LeafDto
 
-fun Leaf.toExternal(): LeafDto = LeafDto(
+fun Leaf.toExternalDto() = LeafDto(
     id = id.value,
     vid = vid,
     name = name,

@@ -1,7 +1,7 @@
 package my.little.changelog.service
 
 import my.little.changelog.model.group.Group
-import my.little.changelog.model.group.dto.GroupDto
+import my.little.changelog.model.group.dto.external.GroupDto
 import my.little.changelog.model.leaf.Leaf
 import my.little.changelog.model.leaf.Leaves
 import my.little.changelog.model.leaf.dto.external.LeafDto

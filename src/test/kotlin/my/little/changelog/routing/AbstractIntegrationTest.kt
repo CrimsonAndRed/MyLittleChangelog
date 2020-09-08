@@ -1,4 +1,4 @@
-package my.little.changelog.version
+package my.little.changelog.routing
 
 import io.ktor.config.MapApplicationConfig
 import io.ktor.server.testing.TestApplicationEngine

@@ -1,6 +1,5 @@
 package my.little.changelog.model.leaf
 
-import my.little.changelog.model.group.Groups.autoIncrement
 import my.little.changelog.model.version.Version
 import my.little.changelog.model.version.Versions
 import org.jetbrains.exposed.dao.IntEntity

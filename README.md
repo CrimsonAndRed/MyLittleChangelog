@@ -2,7 +2,6 @@
 
 ----------
 TODO
-- https://ktor.io/servers/features/locations.html
 ----------
 Запросы:
 

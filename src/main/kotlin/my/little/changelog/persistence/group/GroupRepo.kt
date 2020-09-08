@@ -1,6 +1,7 @@
 package my.little.changelog.persistence.group
 
 import my.little.changelog.model.group.Group
+import my.little.changelog.model.group.dto.repo.GroupCreationDto
 import my.little.changelog.model.version.Version
 import org.jetbrains.exposed.sql.statements.jdbc.iterate
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -30,5 +31,13 @@ object GroupRepo {
 
     fun findGroupById(id: Int): Group = transaction {
         Group[id]
+    }
+
+    fun createGroup(group: GroupCreationDto): Group = transaction {
+        Group.new {
+            name = group.name
+            parentVid = group.parentVid
+            version = group.version
+        }
     }
 }
