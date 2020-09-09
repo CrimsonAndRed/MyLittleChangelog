@@ -41,4 +41,8 @@ object GroupRepo {
             version = group.version
         }
     }
+
+    fun updateGroup(group: Group): Group = transaction {
+        group.apply { flush() }
+    }
 }

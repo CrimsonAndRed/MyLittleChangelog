@@ -7,3 +7,10 @@ fun GroupCreationDto.toServiceDto(versionId: Int) =
         parentId = parentId,
         versionId = versionId,
     )
+
+fun GroupUpdateDto.toServiceDto(groupId: Int) =
+    my.little.changelog.model.group.dto.service.GroupUpdateDto(
+        name = name,
+        parentId = parentId,
+        id = groupId,
+    )

@@ -10,7 +10,8 @@ import kotlinx.serialization.encodeToString
 import my.little.changelog.configuration.Json
 import my.little.changelog.model.group.Group
 import my.little.changelog.model.group.dto.external.GroupCreationDto
-import my.little.changelog.model.group.dto.external.NewGroupDto
+import my.little.changelog.model.group.dto.external.GroupUpdateDto
+import my.little.changelog.model.group.dto.external.ReturnedGroupDto
 import my.little.changelog.model.version.Version
 import my.little.changelog.routing.AbstractIntegrationTest
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -39,7 +40,7 @@ internal class GroupIntegrationTest : AbstractIntegrationTest() {
             ) {
                 assertEquals(HttpStatusCode.OK, response.status())
 
-                val response: NewGroupDto = Json.decodeFromString(response.content!!)
+                val response: ReturnedGroupDto = Json.decodeFromString(response.content!!)
                 assertEquals(dto.name, response.name)
                 assertNull(response.parentId)
             }
@@ -68,7 +69,7 @@ internal class GroupIntegrationTest : AbstractIntegrationTest() {
             ) {
                 assertEquals(HttpStatusCode.OK, response.status())
 
-                val response: NewGroupDto = Json.decodeFromString(response.content!!)
+                val response: ReturnedGroupDto = Json.decodeFromString(response.content!!)
                 assertEquals(dto.name, response.name)
                 assertEquals(dto.parentId, response.parentId)
             }
@@ -97,7 +98,7 @@ internal class GroupIntegrationTest : AbstractIntegrationTest() {
                 ) {
                     assertEquals(HttpStatusCode.OK, response.status())
 
-                    val response: NewGroupDto = Json.decodeFromString(response.content!!)
+                    val response: ReturnedGroupDto = Json.decodeFromString(response.content!!)
                     assertEquals(dto.name, response.name)
                     assertEquals(dto.parentId, response.parentId)
                     assertEquals(dto.vid, response.vid)
@@ -107,4 +108,68 @@ internal class GroupIntegrationTest : AbstractIntegrationTest() {
         }
     }
 
+    @Test
+    fun testGroupUpdateName() {
+        testApplication {
+            transaction {
+                val version = Version.new { }
+                val group = Group.new {
+                    this.version = version
+                    this.name = "Тестовая Базовая Группа"
+                }
+
+                commit()
+
+                val dto = GroupUpdateDto("Тестовая Базовая Группа 2", null)
+
+                with(
+                    handleRequest(HttpMethod.Put, "/version/${version.id}/group/${group.id}") {
+                        addHeader("Content-Type", "application/json")
+                        setBody(Json.encodeToString(dto))
+                    }
+                ) {
+                    assertEquals(HttpStatusCode.OK, response.status())
+
+                    val response: ReturnedGroupDto = Json.decodeFromString(response.content!!)
+                    assertEquals(dto.name, response.name)
+                    assertEquals(dto.parentId, response.parentId)
+                }
+            }
+        }
+    }
+
+    @Test
+    fun testGroupUpdateParent() {
+        testApplication {
+            transaction {
+                val version = Version.new { }
+                val groupRoot = Group.new {
+                    this.version = version
+                    this.name = "Тестовая Базовая Группа"
+                }
+
+                val groupSub = Group.new {
+                    this.version = version
+                    this.name = "Тестовая Нижняя Группа"
+                }
+
+                commit()
+
+                val dto = GroupUpdateDto("Тестовая Базовая Группа 2", groupRoot.id.value)
+
+                with(
+                    handleRequest(HttpMethod.Put, "/version/${version.id}/group/${groupSub.id}") {
+                        addHeader("Content-Type", "application/json")
+                        setBody(Json.encodeToString(dto))
+                    }
+                ) {
+                    assertEquals(HttpStatusCode.OK, response.status())
+
+                    val response: ReturnedGroupDto = Json.decodeFromString(response.content!!)
+                    assertEquals(dto.name, response.name)
+                    assertEquals(dto.parentId, response.parentId)
+                }
+            }
+        }
+    }
 }
