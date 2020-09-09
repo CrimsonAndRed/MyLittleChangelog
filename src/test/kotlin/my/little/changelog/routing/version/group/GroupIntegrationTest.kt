@@ -16,6 +16,7 @@ import my.little.changelog.routing.AbstractIntegrationTest
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
+import kotlin.test.assertNotEquals
 import kotlin.test.assertNull
 
 @KtorExperimentalAPI
@@ -57,7 +58,7 @@ internal class GroupIntegrationTest : AbstractIntegrationTest() {
                 version to group
             }
 
-            val dto = GroupCreationDto("Тестовая Группа", group.id.value)
+            val dto = GroupCreationDto("Тестовая Группа", parentId = group.id.value)
 
             with(
                 handleRequest(HttpMethod.Post, "/version/${version.id}/group") {
@@ -73,4 +74,37 @@ internal class GroupIntegrationTest : AbstractIntegrationTest() {
             }
         }
     }
+
+    @Test
+    fun `Test Group Append to New Version`() {
+        testApplication {
+            transaction {
+                val version1 = Version.new { }
+                val version2 = Version.new { }
+                val group = Group.new {
+                    this.version = version1
+                    this.name = "Тестовая Группа"
+                }
+                commit()
+
+                val dto = GroupCreationDto(group.name, vid = group.vid)
+
+                with(
+                    handleRequest(HttpMethod.Post, "/version/${version2.id}/group") {
+                        addHeader("Content-Type", "application/json")
+                        setBody(Json.encodeToString(dto))
+                    }
+                ) {
+                    assertEquals(HttpStatusCode.OK, response.status())
+
+                    val response: NewGroupDto = Json.decodeFromString(response.content!!)
+                    assertEquals(dto.name, response.name)
+                    assertEquals(dto.parentId, response.parentId)
+                    assertEquals(dto.vid, response.vid)
+                    assertNotEquals(group.id.value, response.id)
+                }
+            }
+        }
+    }
+
 }

@@ -4,6 +4,7 @@ import io.ktor.application.call
 import io.ktor.request.receive
 import io.ktor.response.respond
 import io.ktor.routing.Routing
+import io.ktor.routing.optionalParam
 import io.ktor.routing.post
 import io.ktor.routing.route
 import io.ktor.util.KtorExperimentalAPI
@@ -22,5 +23,6 @@ fun Routing.groupRouting() {
             val group = GroupService.createGroup(dto.toServiceDto(versionId))
             call.respond(group)
         }
+        
     }
 }
