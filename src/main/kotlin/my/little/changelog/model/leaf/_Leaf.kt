@@ -1,8 +1,8 @@
 package my.little.changelog.model.leaf
 
-import my.little.changelog.model.leaf.dto.external.LeafDto
+import my.little.changelog.model.leaf.dto.service.LeafReturnedDto
 
-fun Leaf.toExternalDto() = LeafDto(
+fun Leaf.toReturnedDto() = LeafReturnedDto(
     id = id.value,
     vid = vid,
     name = name,

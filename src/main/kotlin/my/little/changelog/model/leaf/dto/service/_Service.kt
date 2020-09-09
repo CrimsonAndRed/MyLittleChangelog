@@ -11,3 +11,11 @@ fun LeafCreationDto.toRepoDto(version: Version, group: Group) =
         group = group,
         version = version,
     )
+
+fun LeafReturnedDto.toExternalDto() = my.little.changelog.model.leaf.dto.external.LeafReturnedDto(
+    id = id,
+    vid = vid,
+    name = name,
+    valueType = valueType,
+    value = value,
+)

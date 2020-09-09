@@ -1,25 +1,23 @@
 package my.little.changelog.service
 
 import my.little.changelog.model.group.Group
-import my.little.changelog.model.group.dto.external.GroupDto
+import my.little.changelog.model.group.dto.external.WholeGroupDto
 import my.little.changelog.model.leaf.Leaf
 import my.little.changelog.model.leaf.Leaves
-import my.little.changelog.model.leaf.dto.external.LeafDto
-import my.little.changelog.model.version.Version
-import my.little.changelog.model.version.WholeVersion
+import my.little.changelog.model.leaf.dto.external.WholeLeafDto
+import my.little.changelog.model.version.dto.external.WholeVersion
+import my.little.changelog.model.version.dto.service.ReturnedVersionDto
+import my.little.changelog.model.version.toReturnedDto
 import my.little.changelog.persistence.repo.GroupRepo
 import my.little.changelog.persistence.repo.VersionRepo
 import org.jetbrains.exposed.sql.transactions.transaction
 
 object VersionService {
 
-    fun createVersion(): Version = transaction {
-        VersionRepo.create()
+    fun createVersion(): ReturnedVersionDto = transaction {
+        VersionRepo.create().toReturnedDto()
     }
 
-    /**
-     *
-     */
     fun getWholeVersion(id: Int): WholeVersion = transaction {
         val version = VersionRepo.findById(id)
 
@@ -38,14 +36,14 @@ object VersionService {
         groupsMap: Map<Int?, List<Group>>,
         leavesMap: Map<Int?, List<Leaf>>,
         value: Int? = null
-    ): Pair<List<GroupDto>, List<LeafDto>> {
+    ): Pair<List<WholeGroupDto>, List<WholeLeafDto>> {
         val rootGroupDtos = groupsMap[value]?.map {
             val pair = createDtosRecursive(groupsMap, leavesMap, it.vid)
-            GroupDto(it.id.value, it.vid, it.version.id.value, it.name, pair.first, pair.second)
+            WholeGroupDto(it.id.value, it.vid, it.version.id.value, it.name, pair.first, pair.second)
         } ?: emptyList()
 
         val rootLeafDtos = leavesMap[value]?.map {
-            LeafDto(it.id.value, it.vid, it.name, it.valueType, it.value)
+            WholeLeafDto(it.id.value, it.vid, it.name, it.valueType, it.value)
         } ?: emptyList()
 
         return rootGroupDtos to rootLeafDtos

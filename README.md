@@ -5,7 +5,5 @@ TODO
 - Валидация
 - Исправить transaction в тестах 
 - Наименования тестов через ``
-- в GroupService createGroup не то вернули
-- в LeafService updateLeaf не то вернули
-- GroupDto в группа значит не то же самое что и LeafDto в лифах
 - несколько commit в тестах
+- WholeVersion не соответствут идеалам разработки, ну и ладно

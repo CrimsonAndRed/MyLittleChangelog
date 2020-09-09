@@ -11,8 +11,8 @@ import my.little.changelog.configuration.Json
 import my.little.changelog.model.group.Group
 import my.little.changelog.model.leaf.Leaf
 import my.little.changelog.model.leaf.dto.external.LeafCreationDto
-import my.little.changelog.model.leaf.dto.external.LeafDto
 import my.little.changelog.model.leaf.dto.external.LeafUpdateDto
+import my.little.changelog.model.leaf.dto.external.WholeLeafDto
 import my.little.changelog.model.version.Version
 import my.little.changelog.routing.AbstractIntegrationTest
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -51,7 +51,7 @@ internal class LeafIntegrationTest : AbstractIntegrationTest() {
             ) {
 
                 assertEquals(HttpStatusCode.OK, response.status())
-                val response: LeafDto = Json.decodeFromString(response.content!!)
+                val response: WholeLeafDto = Json.decodeFromString(response.content!!)
                 assertEquals(dto.name, response.name)
                 assertEquals(dto.value, response.value)
                 assertEquals(dto.valueType, response.valueType)
@@ -96,7 +96,7 @@ internal class LeafIntegrationTest : AbstractIntegrationTest() {
                 ) {
 
                     assertEquals(HttpStatusCode.OK, response.status())
-                    val response: LeafDto = Json.decodeFromString(response.content!!)
+                    val response: WholeLeafDto = Json.decodeFromString(response.content!!)
                     assertEquals(leaf.id.value, response.id)
                     assertEquals(leaf.vid, response.vid)
                     assertEquals(dto.name, response.name)
@@ -142,7 +142,7 @@ internal class LeafIntegrationTest : AbstractIntegrationTest() {
                 ) {
                     assertEquals(HttpStatusCode.OK, response.status())
 
-                    val response: LeafDto = Json.decodeFromString(response.content!!)
+                    val response: WholeLeafDto = Json.decodeFromString(response.content!!)
                     assertEquals(leaf.id.value, response.id)
                     assertEquals(leaf.vid, response.vid)
                     assertEquals(dto.name, response.name)

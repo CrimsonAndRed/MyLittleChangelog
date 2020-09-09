@@ -9,3 +9,10 @@ fun GroupCreationDto.toRepoDto(version: Version, parent: Group?) = my.little.cha
     parentVid = parent?.vid,
     version = version,
 )
+
+fun ReturnedGroupDto.toExternalDto() = my.little.changelog.model.group.dto.external.ReturnedGroupDto(
+    id = id,
+    vid = vid,
+    name = name,
+    parentId = parent?.id,
+)

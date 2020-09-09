@@ -7,11 +7,11 @@ import io.ktor.util.KtorExperimentalAPI
 import kotlinx.serialization.decodeFromString
 import my.little.changelog.configuration.Json
 import my.little.changelog.model.group.Group
-import my.little.changelog.model.group.dto.external.GroupDto
+import my.little.changelog.model.group.dto.external.WholeGroupDto
 import my.little.changelog.model.leaf.Leaf
-import my.little.changelog.model.leaf.dto.external.LeafDto
+import my.little.changelog.model.leaf.dto.external.WholeLeafDto
 import my.little.changelog.model.version.Version
-import my.little.changelog.model.version.WholeVersion
+import my.little.changelog.model.version.dto.external.WholeVersion
 import my.little.changelog.routing.AbstractIntegrationTest
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -62,7 +62,7 @@ internal class VersionIntegrationTest : AbstractIntegrationTest() {
                     this.groupVid = 1
                 }
 
-                val group2Dto = GroupDto(
+                val group2Dto = WholeGroupDto(
                     id = group2.id.value,
                     vid = group2.vid,
                     version = group2.version.id.value,
@@ -71,7 +71,7 @@ internal class VersionIntegrationTest : AbstractIntegrationTest() {
                     leafContent = emptyList(),
                 )
 
-                val leafDto = LeafDto(
+                val leafDto = WholeLeafDto(
                     id = leaf.id.value,
                     vid = leaf.vid,
                     name = leaf.name,
@@ -79,7 +79,7 @@ internal class VersionIntegrationTest : AbstractIntegrationTest() {
                     value = leaf.value,
                 )
 
-                val group1Dto = GroupDto(
+                val group1Dto = WholeGroupDto(
                     id = group1.id.value,
                     vid = group1.vid,
                     version = group1.version.id.value,
