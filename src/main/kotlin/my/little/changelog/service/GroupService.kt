@@ -22,8 +22,10 @@ object GroupService {
         val group = GroupRepo.findGroupById(groupUpdate.id)
         val parentGroup = groupUpdate.parentId?.let { GroupRepo.findGroupById(it) }
 
-        group.name = groupUpdate.name
-        group.parentVid = parentGroup?.vid
+        group.apply {
+            name = groupUpdate.name
+            parentVid = parentGroup?.vid
+        }
 
         GroupRepo.updateGroup(group)
             .toReturnedGroupDto(parentGroup?.id?.value)

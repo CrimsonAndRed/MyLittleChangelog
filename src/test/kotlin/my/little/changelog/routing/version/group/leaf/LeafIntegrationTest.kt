@@ -117,6 +117,7 @@ internal class LeafIntegrationTest : AbstractIntegrationTest() {
                     this.name = "Группа1"
                     this.parentVid = null
                 }
+                commit()
 
                 val leaf = Leaf.new {
                     this.valueType = 1
@@ -125,7 +126,6 @@ internal class LeafIntegrationTest : AbstractIntegrationTest() {
                     this.name = "Лиф1"
                     this.groupVid = group.vid
                 }
-
                 commit()
 
                 val dto = LeafUpdateDto(
@@ -140,8 +140,8 @@ internal class LeafIntegrationTest : AbstractIntegrationTest() {
                         setBody(Json.encodeToString(dto))
                     }
                 ) {
-
                     assertEquals(HttpStatusCode.OK, response.status())
+
                     val response: LeafDto = Json.decodeFromString(response.content!!)
                     assertEquals(leaf.id.value, response.id)
                     assertEquals(leaf.vid, response.vid)

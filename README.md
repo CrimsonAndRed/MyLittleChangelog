@@ -5,7 +5,6 @@ TODO
 - Валидация
 - Исправить transaction в тестах 
 - Наименования тестов через ``
-- из лифа в лиф через = в extension
 - в репозитории не абстрактно
 - в GroupService createGroup не то вернули
 - в LeafService updateLeaf не то вернули

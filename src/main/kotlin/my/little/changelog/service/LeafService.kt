@@ -21,12 +21,13 @@ object LeafService {
         val leaf = LeafRepo.findLeafById(leafUpdate.id)
         val parentGroup = leafUpdate.parentId?.let { GroupRepo.findGroupById(it) }
 
-        leaf.name = leafUpdate.name
-        leaf.value = leafUpdate.value
-        leaf.valueType = leafUpdate.valueType
-        leaf.groupVid = parentGroup?.vid
+        leaf.apply {
+            name = leafUpdate.name
+            value = leafUpdate.value
+            valueType = leafUpdate.valueType
+            groupVid = parentGroup?.vid
+        }
 
         LeafRepo.updateLeaf(leaf)
-        leaf
     }
 }
