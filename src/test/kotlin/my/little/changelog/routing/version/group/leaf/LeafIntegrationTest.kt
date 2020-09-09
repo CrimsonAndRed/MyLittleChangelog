@@ -28,7 +28,7 @@ internal class LeafIntegrationTest : AbstractIntegrationTest() {
             val (version, group) = transaction {
                 val version = Version.new {}
                 val group = Group.new {
-                    //TODO почему 1
+                    // TODO почему 1
                     this.vid = 1
                     this.version = version
                     this.name = "Группа1"

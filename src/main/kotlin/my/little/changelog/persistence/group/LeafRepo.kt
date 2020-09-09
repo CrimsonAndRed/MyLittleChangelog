@@ -6,7 +6,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 
 object LeafRepo {
 
-    fun findLeafById(id: Int): Leaf  = transaction {
+    fun findLeafById(id: Int): Leaf = transaction {
         Leaf[id]
     }
 
@@ -19,7 +19,6 @@ object LeafRepo {
             groupVid = leaf.group.vid
         }
     }
-
 
     fun updateLeaf(leaf: Leaf): Leaf = transaction {
         leaf.apply { flush() }

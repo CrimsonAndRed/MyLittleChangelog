@@ -25,7 +25,6 @@ object GroupService {
         group.name = groupUpdate.name
         group.parentVid = parentGroup?.vid
 
-
         GroupRepo.updateGroup(group)
             .toReturnedGroupDto(parentGroup?.id?.value)
     }
