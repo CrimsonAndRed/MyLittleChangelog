@@ -1,4 +1,4 @@
-package my.little.changelog.persistence.group
+package my.little.changelog.persistence
 
 import my.little.changelog.model.RepoCreationDto
 import org.jetbrains.exposed.dao.Entity

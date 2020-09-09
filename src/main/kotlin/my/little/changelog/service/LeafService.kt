@@ -4,9 +4,9 @@ import my.little.changelog.model.leaf.Leaf
 import my.little.changelog.model.leaf.dto.service.LeafCreationDto
 import my.little.changelog.model.leaf.dto.service.LeafUpdateDto
 import my.little.changelog.model.leaf.dto.service.toRepoDto
-import my.little.changelog.persistence.group.GroupRepo
-import my.little.changelog.persistence.group.LeafRepo
-import my.little.changelog.persistence.group.VersionRepo
+import my.little.changelog.persistence.repo.GroupRepo
+import my.little.changelog.persistence.repo.LeafRepo
+import my.little.changelog.persistence.repo.VersionRepo
 import org.jetbrains.exposed.sql.transactions.transaction
 
 object LeafService {

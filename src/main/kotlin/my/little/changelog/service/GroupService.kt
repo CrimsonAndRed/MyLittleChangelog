@@ -5,8 +5,8 @@ import my.little.changelog.model.group.dto.service.GroupCreationDto
 import my.little.changelog.model.group.dto.service.GroupUpdateDto
 import my.little.changelog.model.group.dto.service.toRepoDto
 import my.little.changelog.model.group.toReturnedGroupDto
-import my.little.changelog.persistence.group.GroupRepo
-import my.little.changelog.persistence.group.VersionRepo
+import my.little.changelog.persistence.repo.GroupRepo
+import my.little.changelog.persistence.repo.VersionRepo
 import org.jetbrains.exposed.sql.transactions.transaction
 
 object GroupService {
