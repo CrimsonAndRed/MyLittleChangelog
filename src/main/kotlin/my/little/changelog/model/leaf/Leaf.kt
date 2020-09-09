@@ -24,5 +24,5 @@ object Leaves : IntIdTable() {
     val valueType = integer("value_type")
     val value = text("value")
     val version = reference("version_id", Versions)
-    val groupVid = integer("group_vid")
+    val groupVid = integer("group_vid").nullable()
 }

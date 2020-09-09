@@ -36,7 +36,7 @@ object VersionService {
 
     private fun createDtosRecursive(
         groupsMap: Map<Int?, List<Group>>,
-        leavesMap: Map<Int, List<Leaf>>,
+        leavesMap: Map<Int?, List<Leaf>>,
         value: Int? = null
     ): Pair<List<GroupDto>, List<LeafDto>> {
         val rootGroupDtos = groupsMap[value]?.map {

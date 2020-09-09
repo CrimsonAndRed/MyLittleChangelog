@@ -131,6 +131,8 @@ internal class GroupIntegrationTest : AbstractIntegrationTest() {
                     assertEquals(HttpStatusCode.OK, response.status())
 
                     val response: ReturnedGroupDto = Json.decodeFromString(response.content!!)
+                    assertEquals(group.id.value, response.id)
+                    assertEquals(group.vid, response.vid)
                     assertEquals(dto.name, response.name)
                     assertEquals(dto.parentId, response.parentId)
                 }
@@ -166,6 +168,8 @@ internal class GroupIntegrationTest : AbstractIntegrationTest() {
                     assertEquals(HttpStatusCode.OK, response.status())
 
                     val response: ReturnedGroupDto = Json.decodeFromString(response.content!!)
+                    assertEquals(groupSub.id.value, response.id)
+                    assertEquals(groupSub.vid, response.vid)
                     assertEquals(dto.name, response.name)
                     assertEquals(dto.parentId, response.parentId)
                 }

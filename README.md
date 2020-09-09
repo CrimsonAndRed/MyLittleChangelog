@@ -3,13 +3,11 @@
 ----------
 TODO
 - Валидация
-----------
-Запросы:
-
-WITH RECURSIVE tmp_groups AS (
-		SELECT * FROM groups_latest 
-		WHERE (vid in (SELECT group_vid FROM leaves where version_id = 2)) or 
-				(vid in (SELECT vid FROM groups where version_id = 2))
-	UNION
-		SELECT g.* FROM groups_latest AS g JOIN tmp_groups ON g.vid=tmp_groups.parent_vid
-) SELECT * FROM tmp_groups;
+- Исправить transaction в тестах 
+- Наименования тестов через ``
+- из лифа в лиф через = в extension
+- в репозитории не абстрактно
+- в GroupService createGroup не то вернули
+- в LeafService updateLeaf не то вернули
+- GroupDto в группа значит не то же самое что и LeafDto в лифах
+- несколько commit в тестах
