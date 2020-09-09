@@ -12,14 +12,14 @@ import org.jetbrains.exposed.sql.transactions.transaction
 object LeafService {
 
     fun createLeaf(leaf: LeafCreationDto): Leaf = transaction {
-        val version = VersionRepo.findVersionById(leaf.versionId)
-        val group = GroupRepo.findGroupById(leaf.groupId)
-        LeafRepo.createLeaf(leaf.toRepoDto(version, group))
+        val version = VersionRepo.findById(leaf.versionId)
+        val group = GroupRepo.findById(leaf.groupId)
+        LeafRepo.create(leaf.toRepoDto(version, group))
     }
 
     fun updateLeaf(leafUpdate: LeafUpdateDto): Leaf = transaction {
-        val leaf = LeafRepo.findLeafById(leafUpdate.id)
-        val parentGroup = leafUpdate.parentId?.let { GroupRepo.findGroupById(it) }
+        val leaf = LeafRepo.findById(leafUpdate.id)
+        val parentGroup = leafUpdate.parentId?.let { GroupRepo.findById(it) }
 
         leaf.apply {
             name = leafUpdate.name
@@ -28,6 +28,6 @@ object LeafService {
             groupVid = parentGroup?.vid
         }
 
-        LeafRepo.updateLeaf(leaf)
+        LeafRepo.update(leaf)
     }
 }

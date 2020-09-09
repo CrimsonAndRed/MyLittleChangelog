@@ -1,12 +1,11 @@
 package my.little.changelog.persistence.group
 
 import my.little.changelog.model.group.Group
-import my.little.changelog.model.group.dto.repo.GroupCreationDto
 import my.little.changelog.model.version.Version
 import org.jetbrains.exposed.sql.statements.jdbc.iterate
 import org.jetbrains.exposed.sql.transactions.transaction
 
-object GroupRepo {
+object GroupRepo : AbstractCrudRepository<Group, Int>(Group) {
 
     private const val FIND_GROUPS_AFFECTED_BY_VERSION_QUERY =
         """
@@ -27,22 +26,5 @@ object GroupRepo {
             }
             .executeQuery().iterate { getInt("id") }.let { Group.forIds(it) }
             .also { Version.new { } }
-    }
-
-    fun findGroupById(id: Int): Group = transaction {
-        Group[id]
-    }
-
-    fun createGroup(group: GroupCreationDto): Group = transaction {
-        Group.new {
-            name = group.name
-            group.vid?.let { vid = it }
-            parentVid = group.parentVid
-            version = group.version
-        }
-    }
-
-    fun updateGroup(group: Group): Group = transaction {
-        group.apply { flush() }
     }
 }

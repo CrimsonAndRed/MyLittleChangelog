@@ -14,14 +14,14 @@ import org.jetbrains.exposed.sql.transactions.transaction
 object VersionService {
 
     fun createVersion(): Version = transaction {
-        VersionRepo.createVersion()
+        VersionRepo.create()
     }
 
     /**
      *
      */
     fun getWholeVersion(id: Int): WholeVersion = transaction {
-        val version = VersionRepo.findVersionById(id)
+        val version = VersionRepo.findById(id)
 
         val leaves = Leaf.find { Leaves.version eq version.id.value }
         val groups = GroupRepo.findGroupAffectedByVersion(version)
