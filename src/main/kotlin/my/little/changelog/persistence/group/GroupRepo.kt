@@ -36,6 +36,7 @@ object GroupRepo {
     fun createGroup(group: GroupCreationDto): Group = transaction {
         Group.new {
             name = group.name
+            group.vid?.let { vid = it }
             parentVid = group.parentVid
             version = group.version
         }
