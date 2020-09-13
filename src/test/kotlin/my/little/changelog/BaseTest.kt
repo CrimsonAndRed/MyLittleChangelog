@@ -1,4 +1,3 @@
 package my.little.changelog
 
-abstract class BaseTest {
-}
+abstract class BaseTest

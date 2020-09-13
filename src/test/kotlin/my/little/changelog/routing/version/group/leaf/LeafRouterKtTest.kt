@@ -2,13 +2,10 @@ package my.little.changelog.routing.version.group.leaf
 
 import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
-import io.ktor.server.testing.handleRequest
-import io.ktor.server.testing.setBody
 import io.ktor.util.KtorExperimentalAPI
 import io.mockk.every
 import io.mockk.mockkObject
 import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.encodeToString
 import my.little.changelog.configuration.Json
 import my.little.changelog.model.leaf.dto.external.LeafCreationDto
 import my.little.changelog.model.leaf.dto.external.LeafReturnedDto
@@ -29,7 +26,7 @@ internal class LeafRouterKtTest : AbstractRouterTest({
     }
 
     private val baseVgl = VersionGroupLeaf(0, 0, 0)
-    private val baseUrl: (Int, Int) -> String = { v, g -> "version/${v}/group/${g}/leaf"}
+    private val baseUrl: (Int, Int) -> String = { v, g -> "version/$v/group/$g/leaf" }
 
     @Test
     fun `Test Leaf Creation`() {
@@ -59,5 +56,4 @@ internal class LeafRouterKtTest : AbstractRouterTest({
     }
 
     data class VersionGroupLeaf(val v: Int, val g: Int, val l: Int)
-
 }
