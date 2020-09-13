@@ -7,6 +7,7 @@ import io.mockk.every
 import io.mockk.mockkObject
 import kotlinx.serialization.decodeFromString
 import my.little.changelog.configuration.Json
+import my.little.changelog.model.exception.VersionIsNotLatestException
 import my.little.changelog.model.leaf.dto.external.LeafCreationDto
 import my.little.changelog.model.leaf.dto.external.LeafReturnedDto
 import my.little.changelog.model.leaf.dto.external.LeafUpdateDto
@@ -15,6 +16,7 @@ import my.little.changelog.routing.AbstractRouterTest
 import my.little.changelog.service.LeafService
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertNull
 
 @KtorExperimentalAPI
 internal class LeafRouterKtTest : AbstractRouterTest({
@@ -29,7 +31,7 @@ internal class LeafRouterKtTest : AbstractRouterTest({
     private val baseUrl: (Int, Int) -> String = { v, g -> "version/$v/group/$g/leaf" }
 
     @Test
-    fun `Test Leaf Creation`() {
+    fun `Test Leaf Creation Success`() {
         val dto = LeafCreationDto("Имя1", 1, "Значение1")
         val serviceReturnedDto = my.little.changelog.model.leaf.dto.service.LeafReturnedDto(baseVgl.l, baseVgl.l, dto.name, dto.valueType, dto.value)
 
@@ -43,7 +45,21 @@ internal class LeafRouterKtTest : AbstractRouterTest({
     }
 
     @Test
-    fun `Test Leaf Update`() {
+    fun `Test Leaf Creation Exception`() {
+        val dto = LeafCreationDto("Имя1", 1, "Значение1")
+
+        testExceptions(
+            constructRequest(HttpMethod.Post, baseUrl(baseVgl.v, baseVgl.g), dto),
+            listOf { LeafService.createLeaf(allAny()) },
+            listOf(
+                { RuntimeException() } to HttpStatusCode.InternalServerError,
+                { VersionIsNotLatestException() } to HttpStatusCode.InternalServerError
+            )
+        )
+    }
+
+    @Test
+    fun `Test Leaf Update Success`() {
         val dto = LeafUpdateDto("Имя1", 1, "Значение1", 0)
         val serviceReturnedDto = my.little.changelog.model.leaf.dto.service.LeafReturnedDto(baseVgl.l, baseVgl.l, dto.name, dto.valueType, dto.value)
 
@@ -54,6 +70,39 @@ internal class LeafRouterKtTest : AbstractRouterTest({
             assertEquals(serviceReturnedDto.toExternalDto(), response)
         }
     }
+
+    @Test
+    fun `Test Leaf Update Exception`() {
+        val dto = LeafUpdateDto("Имя1", 1, "Значение1", 0)
+
+        testExceptions(
+            constructRequest(HttpMethod.Put, "${baseUrl(baseVgl.v, baseVgl.g)}/${baseVgl.l}", dto),
+            listOf { LeafService.updateLeaf(allAny()) },
+            listOf(
+                { RuntimeException() } to HttpStatusCode.InternalServerError,
+                { VersionIsNotLatestException() } to HttpStatusCode.InternalServerError
+            )
+        )
+    }
+
+    @Test
+    fun `Test Leaf Delete Success`() {
+        every { LeafService.deleteLeaf(allAny()) } returns Unit
+        testRoute(HttpMethod.Delete, "${baseUrl(baseVgl.v, baseVgl.g)}/${baseVgl.l}") {
+            assertEquals(HttpStatusCode.NoContent, response.status())
+            assertNull(response.content)
+        }
+    }
+
+    @Test
+    fun `Test Leaf Delete Exceptions`() = testExceptions(
+        constructRequest(HttpMethod.Delete, "${baseUrl(baseVgl.v, baseVgl.g)}/${baseVgl.l}"),
+        listOf { LeafService.deleteLeaf(allAny()) },
+        listOf(
+            { RuntimeException() } to HttpStatusCode.InternalServerError,
+            { VersionIsNotLatestException() } to HttpStatusCode.InternalServerError
+        )
+    )
 
     data class VersionGroupLeaf(val v: Int, val g: Int, val l: Int)
 }
