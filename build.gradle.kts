@@ -29,6 +29,7 @@ val postgresVersion: String by project
 val flywayVersion: String by project
 val jupiterVersion: String by project
 val testContainersVersion: String by project
+val mockkVersion: String by project
 
 dependencies {
     implementation("io.ktor", "ktor-server-netty", ktorVersion)
@@ -49,6 +50,7 @@ dependencies {
         exclude("junit")
     }
     testImplementation("org.junit.jupiter", "junit-jupiter", jupiterVersion)
+    testImplementation("io.mockk", "mockk", mockkVersion)
     testImplementation("org.testcontainers", "junit-jupiter", testContainersVersion)
     testImplementation("org.testcontainers", "postgresql", testContainersVersion)
     testImplementation("org.testcontainers", "testcontainers", testContainersVersion) {
