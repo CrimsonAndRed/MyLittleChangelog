@@ -15,9 +15,11 @@ import my.little.changelog.model.leaf.dto.external.LeafUpdateDto
 import my.little.changelog.model.leaf.dto.external.WholeLeafDto
 import my.little.changelog.model.version.Version
 import my.little.changelog.routing.AbstractIntegrationTest
+import org.jetbrains.exposed.dao.exceptions.EntityNotFoundException
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 
 @KtorExperimentalAPI
 internal class LeafIntegrationTest : AbstractIntegrationTest() {
@@ -149,6 +151,37 @@ internal class LeafIntegrationTest : AbstractIntegrationTest() {
                     assertEquals(dto.value, response.value)
                     assertEquals(dto.valueType, response.valueType)
                 }
+            }
+        }
+    }
+
+    @Test
+    fun `Test Delete Leaf`() {
+        testApplication {
+            transaction {
+                val version = Version.new {}
+                val group = Group.new {
+                    this.version = version
+                    this.name = "Группа1"
+                    this.parentVid = null
+                }
+                commit()
+
+                val leaf = Leaf.new {
+                    this.valueType = 1
+                    this.value = "Значение1"
+                    this.version = version
+                    this.name = "Лиф1"
+                    this.groupVid = group.vid
+                }
+                commit()
+
+                with(
+                    handleRequest(HttpMethod.Delete, "/version/${version.id}/group/${group.id}/leaf/${leaf.id}")
+                ) {
+                    assertEquals(HttpStatusCode.NoContent, response.status())
+                }
+                assertThrows<EntityNotFoundException> { Leaf[leaf.id] }
             }
         }
     }

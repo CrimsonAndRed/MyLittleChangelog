@@ -26,6 +26,5 @@ object GroupRepo : AbstractCrudRepository<Group, Int>(Group) {
                 set(2, version.id.value)
             }
             .executeQuery().iterate { getInt("id") }.let { Group.forIds(it) }
-            .also { Version.new { } }
     }
 }

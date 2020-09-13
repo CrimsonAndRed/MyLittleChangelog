@@ -1,6 +1,8 @@
 package my.little.changelog.service
 
+import my.little.changelog.model.exception.VersionIsNotLatestException
 import my.little.changelog.model.leaf.dto.service.LeafCreationDto
+import my.little.changelog.model.leaf.dto.service.LeafDeletionDto
 import my.little.changelog.model.leaf.dto.service.LeafReturnedDto
 import my.little.changelog.model.leaf.dto.service.LeafUpdateDto
 import my.little.changelog.model.leaf.dto.service.toRepoDto
@@ -30,5 +32,13 @@ object LeafService {
         }
 
         LeafRepo.update(leaf).toReturnedDto()
+    }
+
+    fun deleteLeaf(leafDeletionDto: LeafDeletionDto) = transaction {
+        val leaf = LeafRepo.findById(leafDeletionDto.id)
+        if (leaf.version.id != VersionRepo.findLatest().id) {
+            throw VersionIsNotLatestException()
+        }
+        LeafRepo.delete(leaf)
     }
 }
