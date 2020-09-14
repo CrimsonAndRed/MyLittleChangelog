@@ -19,7 +19,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertNull
 
 @KtorExperimentalAPI
-internal class LeafRouterKtTest : AbstractRouterTest({
+internal class LeafRouterTest : AbstractRouterTest({
     leafRouting()
 }) {
 

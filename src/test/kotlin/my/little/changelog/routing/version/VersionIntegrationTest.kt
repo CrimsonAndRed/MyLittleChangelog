@@ -27,7 +27,7 @@ internal class VersionIntegrationTest : AbstractIntegrationTest() {
                 Version.new {}
             }
 
-            with(handleRequest(HttpMethod.Get, "/version?id=${version.id}")) {
+            with(handleRequest(HttpMethod.Get, "/version/${version.id}")) {
                 assertEquals(HttpStatusCode.OK, response.status())
             }
         }
@@ -95,7 +95,7 @@ internal class VersionIntegrationTest : AbstractIntegrationTest() {
                 )
             }
 
-            with(handleRequest(HttpMethod.Get, "/version?id=${version.id}")) {
+            with(handleRequest(HttpMethod.Get, "/version/${version.id}")) {
                 assertEquals(HttpStatusCode.OK, response.status())
                 val json: WholeVersion = Json.decodeFromString(response.content!!)
                 assertEquals(json, version)

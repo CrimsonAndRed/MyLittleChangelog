@@ -17,9 +17,11 @@ fun Routing.versionRouting() {
         post {
             call.respond(VersionService.createVersion().toExternalDto())
         }
+    }
 
+    route("/version/{versionId}") {
         get {
-            val idParam = call.request.queryParameters.getOrFail("id")
+            val idParam = call.parameters.getOrFail("versionId")
             call.respond(VersionService.getWholeVersion(idParam.toInt()))
         }
     }
