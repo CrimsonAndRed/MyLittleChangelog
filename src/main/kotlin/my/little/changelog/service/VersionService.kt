@@ -3,12 +3,12 @@ package my.little.changelog.service
 import my.little.changelog.model.group.Group
 import my.little.changelog.model.group.dto.external.WholeGroupDto
 import my.little.changelog.model.leaf.Leaf
-import my.little.changelog.model.leaf.Leaves
 import my.little.changelog.model.leaf.dto.external.WholeLeafDto
 import my.little.changelog.model.version.dto.external.WholeVersion
 import my.little.changelog.model.version.dto.service.ReturnedVersionDto
 import my.little.changelog.model.version.toReturnedDto
 import my.little.changelog.persistence.repo.GroupRepo
+import my.little.changelog.persistence.repo.LeafRepo
 import my.little.changelog.persistence.repo.VersionRepo
 import org.jetbrains.exposed.sql.transactions.transaction
 
@@ -21,7 +21,7 @@ object VersionService {
     fun getWholeVersion(id: Int): WholeVersion = transaction {
         val version = VersionRepo.findById(id)
 
-        val leaves = Leaf.find { Leaves.version eq version.id.value }
+        val leaves = LeafRepo.findByVersion(version)
         val groups = GroupRepo.findGroupAffectedByVersion(version)
 
         createDtosRecursive(
@@ -39,7 +39,7 @@ object VersionService {
     ): Pair<List<WholeGroupDto>, List<WholeLeafDto>> {
         val rootGroupDtos = groupsMap[value]?.map {
             val pair = createDtosRecursive(groupsMap, leavesMap, it.vid)
-            WholeGroupDto(it.id.value, it.vid, it.version.id.value, it.name, pair.first, pair.second)
+            WholeGroupDto(it.id.value, it.vid, it.name, pair.first, pair.second)
         } ?: emptyList()
 
         val rootLeafDtos = leavesMap[value]?.map {

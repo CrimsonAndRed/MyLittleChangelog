@@ -65,7 +65,6 @@ internal class VersionIntegrationTest : AbstractIntegrationTest() {
                 val group2Dto = WholeGroupDto(
                     id = group2.id.value,
                     vid = group2.vid,
-                    version = group2.version.id.value,
                     name = group2.name,
                     groupContent = emptyList(),
                     leafContent = emptyList(),
@@ -82,7 +81,6 @@ internal class VersionIntegrationTest : AbstractIntegrationTest() {
                 val group1Dto = WholeGroupDto(
                     id = group1.id.value,
                     vid = group1.vid,
-                    version = group1.version.id.value,
                     name = group1.name,
                     groupContent = listOf(group2Dto),
                     leafContent = listOf(leafDto),

@@ -53,7 +53,7 @@ internal class VersionRouterTest : AbstractRouterTest(
 
         every { VersionService.getWholeVersion(any()) } returns dto
 
-        testRoute(HttpMethod.Get, "${baseUrl}/${dto.id}") {
+        testRoute(HttpMethod.Get, "$baseUrl/${dto.id}") {
             assertEquals(HttpStatusCode.OK, response.status())
             val resp = Json.decodeFromString<WholeVersion>(response.content!!)
             assertEquals(dto.id, resp.id)
@@ -64,7 +64,7 @@ internal class VersionRouterTest : AbstractRouterTest(
 
     @Test
     fun `Test Version Read Exception`() = testExceptions(
-        constructRequest(HttpMethod.Get, "${baseUrl}/${0}"),
+        constructRequest(HttpMethod.Get, "$baseUrl/$0"),
         listOf { VersionService.getWholeVersion(any()) },
         listOf(
             { RuntimeException() } to HttpStatusCode.InternalServerError,

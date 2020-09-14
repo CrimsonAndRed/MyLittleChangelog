@@ -7,7 +7,6 @@ import my.little.changelog.model.leaf.dto.external.WholeLeafDto
 data class WholeGroupDto(
     val id: Int,
     val vid: Int,
-    val version: Int,
     val name: String,
     val groupContent: List<WholeGroupDto>,
     val leafContent: List<WholeLeafDto>,

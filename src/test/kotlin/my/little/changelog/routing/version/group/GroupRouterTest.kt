@@ -22,7 +22,7 @@ internal class GroupRouterTest : AbstractRouterTest(
 ) {
 
     private val vg = VersionGroup(0, 0)
-    private val baseUrl: (Int) -> String = { v -> "version/${v}/group" }
+    private val baseUrl: (Int) -> String = { v -> "version/$v/group" }
 
     init {
         mockkObject(GroupService)
@@ -30,7 +30,7 @@ internal class GroupRouterTest : AbstractRouterTest(
 
     @Test
     fun `Test Create Group Success`() {
-        val dto = GroupCreationDto( "Test")
+        val dto = GroupCreationDto("Test")
         val serviceDto = my.little.changelog.model.group.dto.service.ReturnedGroupDto(0, 0, "Test")
 
         every { GroupService.createGroup(any()) } returns serviceDto
