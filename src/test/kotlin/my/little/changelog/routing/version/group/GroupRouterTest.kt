@@ -12,7 +12,7 @@ import my.little.changelog.model.group.dto.external.GroupCreationDto
 import my.little.changelog.model.group.dto.external.GroupUpdateDto
 import my.little.changelog.model.group.dto.external.ReturnedGroupDto
 import my.little.changelog.routing.AbstractRouterTest
-import my.little.changelog.service.GroupService
+import my.little.changelog.service.group.GroupService
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 

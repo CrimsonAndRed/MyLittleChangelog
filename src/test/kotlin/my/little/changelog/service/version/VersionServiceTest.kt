@@ -13,7 +13,6 @@ import my.little.changelog.model.version.Versions
 import my.little.changelog.persistence.repo.GroupRepo
 import my.little.changelog.persistence.repo.LeafRepo
 import my.little.changelog.persistence.repo.VersionRepo
-import my.little.changelog.service.VersionService
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.sql.ResultRow
 import org.junit.jupiter.api.Test

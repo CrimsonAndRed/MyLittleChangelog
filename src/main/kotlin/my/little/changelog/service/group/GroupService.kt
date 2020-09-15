@@ -1,4 +1,4 @@
-package my.little.changelog.service
+package my.little.changelog.service.group
 
 import my.little.changelog.model.group.dto.service.GroupCreationDto
 import my.little.changelog.model.group.dto.service.GroupUpdateDto

@@ -13,7 +13,7 @@ import my.little.changelog.model.leaf.dto.external.LeafReturnedDto
 import my.little.changelog.model.leaf.dto.external.LeafUpdateDto
 import my.little.changelog.model.leaf.dto.service.toExternalDto
 import my.little.changelog.routing.AbstractRouterTest
-import my.little.changelog.service.LeafService
+import my.little.changelog.service.leaf.LeafService
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull

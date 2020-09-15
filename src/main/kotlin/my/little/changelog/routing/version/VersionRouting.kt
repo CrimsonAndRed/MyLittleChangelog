@@ -9,7 +9,7 @@ import io.ktor.routing.route
 import io.ktor.util.KtorExperimentalAPI
 import io.ktor.util.getOrFail
 import my.little.changelog.model.version.dto.service.toExternalDto
-import my.little.changelog.service.VersionService
+import my.little.changelog.service.version.VersionService
 
 @KtorExperimentalAPI
 fun Routing.versionRouting() {

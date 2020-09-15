@@ -16,7 +16,7 @@ import my.little.changelog.model.leaf.dto.external.LeafDeletionDto
 import my.little.changelog.model.leaf.dto.external.LeafUpdateDto
 import my.little.changelog.model.leaf.dto.external.toServiceDto
 import my.little.changelog.model.leaf.dto.service.toExternalDto
-import my.little.changelog.service.LeafService
+import my.little.changelog.service.leaf.LeafService
 
 @KtorExperimentalAPI
 fun Routing.leafRouting() {

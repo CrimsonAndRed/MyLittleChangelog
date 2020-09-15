@@ -13,7 +13,7 @@ import my.little.changelog.model.group.dto.external.GroupCreationDto
 import my.little.changelog.model.group.dto.external.GroupUpdateDto
 import my.little.changelog.model.group.dto.external.toServiceDto
 import my.little.changelog.model.group.dto.service.toExternalDto
-import my.little.changelog.service.GroupService
+import my.little.changelog.service.group.GroupService
 
 @KtorExperimentalAPI
 fun Routing.groupRouting() {
