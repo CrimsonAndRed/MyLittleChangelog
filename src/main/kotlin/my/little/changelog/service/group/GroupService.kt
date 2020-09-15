@@ -1,5 +1,6 @@
 package my.little.changelog.service.group
 
+import my.little.changelog.model.exception.VersionIsNotLatestException
 import my.little.changelog.model.group.dto.service.GroupCreationDto
 import my.little.changelog.model.group.dto.service.GroupUpdateDto
 import my.little.changelog.model.group.dto.service.ReturnedGroupDto
@@ -13,6 +14,9 @@ object GroupService {
 
     fun createGroup(group: GroupCreationDto): ReturnedGroupDto = transaction {
         val version = VersionRepo.findById(group.versionId)
+        if (version.id != VersionRepo.findLatest().id) {
+            throw VersionIsNotLatestException()
+        }
         val parentGroup = group.parentId?.let { GroupRepo.findById(it) }
         GroupRepo.create(group.toRepoDto(version, parentGroup))
             .toReturnedDto(parentGroup?.toReturnedDto())

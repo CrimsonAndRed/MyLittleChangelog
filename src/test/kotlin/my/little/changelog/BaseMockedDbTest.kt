@@ -3,7 +3,13 @@ package my.little.changelog
 import io.ktor.util.KtorExperimentalAPI
 import io.mockk.every
 import io.mockk.mockk
+import my.little.changelog.model.group.Group
+import my.little.changelog.model.group.Groups
+import my.little.changelog.model.version.Version
+import my.little.changelog.model.version.Versions
+import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.sql.Database
+import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.Transaction
 import org.jetbrains.exposed.sql.transactions.TransactionManager
 import org.junit.jupiter.api.AfterEach
@@ -21,6 +27,24 @@ abstract class BaseMockedDbTest : BaseTest() {
     fun unmockDb() {
         unmockDatabase()
     }
+
+    protected fun createVersion(id: Int) = Version(EntityID(id, Versions)).apply {
+        this._readValues = ResultRow.createAndFillValues(emptyMap())
+    }
+
+    protected fun createGroup(id: Int, vid: Int, version: Version, name: String, parentVid: Int?) = Group(
+        EntityID(id, Groups)
+    ).apply {
+        this._readValues = ResultRow.createAndFillValues(
+            mapOf(
+                Groups.vid to vid,
+                Groups.version to version,
+                Groups.name to name,
+                Groups.parentVid to parentVid,
+            )
+        )
+    }
+
 }
 
 class TestTransactionManager : TransactionManager {
