@@ -1,34 +1,58 @@
 package my.little.changelog
 
-import io.ktor.config.MapApplicationConfig
-import io.ktor.server.testing.TestApplicationEngine
-import io.ktor.server.testing.withTestApplication
 import io.ktor.util.KtorExperimentalAPI
-import org.testcontainers.containers.PostgreSQLContainer
-import org.testcontainers.junit.jupiter.Container
-import org.testcontainers.junit.jupiter.Testcontainers
-import my.little.changelog.persistence.module as persistenceModule
+import io.mockk.every
+import io.mockk.mockk
+import org.jetbrains.exposed.sql.Database
+import org.jetbrains.exposed.sql.Transaction
+import org.jetbrains.exposed.sql.transactions.TransactionManager
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeEach
 
 @KtorExperimentalAPI
-@Testcontainers
 abstract class BaseMockedDbTest : BaseTest() {
 
-    companion object Static {
-        @Container
-        val postgres = PostgreSQLContainer<Nothing>("postgres:13")
+    @BeforeEach
+    fun mockDb() {
+        mockDatabase()
     }
 
-    protected fun testApplication(test: TestApplicationEngine.() -> Unit) {
-        withTestApplication(
-            {
-                (environment.config as MapApplicationConfig).apply {
-                    put("database.url", postgres.jdbcUrl)
-                    put("database.username", postgres.username)
-                    put("database.password", postgres.password)
-                }
-                persistenceModule()
-            },
-            test
-        )
+    @AfterEach
+    fun unmockDb() {
+        unmockDatabase()
     }
 }
+
+class TestTransactionManager : TransactionManager {
+    override var defaultIsolationLevel = 0
+    override var defaultRepetitionAttempts = 0
+    private val mockedDatabase: Database = mockk(relaxed = true)
+
+    override fun currentOrNull(): Transaction? {
+        return transaction()
+    }
+
+    private fun transaction(): Transaction {
+        return mockk(relaxed = true) {
+            every { db } returns mockedDatabase
+        }
+    }
+
+    override fun newTransaction(isolation: Int, outerTransaction: Transaction?): Transaction {
+        return transaction()
+    }
+
+    fun apply() {
+        TransactionManager.registerManager(mockedDatabase, this@TestTransactionManager)
+        Database.connect({ mockk(relaxed = true) }, { this })
+    }
+
+    fun reset() {
+        TransactionManager.resetCurrent(null)
+        TransactionManager.closeAndUnregister(mockedDatabase)
+    }
+}
+
+val manager = TestTransactionManager()
+fun mockDatabase() = manager.apply()
+fun unmockDatabase() = manager.reset()

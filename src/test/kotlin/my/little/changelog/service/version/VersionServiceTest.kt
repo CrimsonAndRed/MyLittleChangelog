@@ -2,12 +2,12 @@ package my.little.changelog.service.version
 
 import io.ktor.util.KtorExperimentalAPI
 import io.mockk.every
-import io.mockk.mockk
 import io.mockk.mockkObject
-import io.mockk.mockkStatic
 import my.little.changelog.BaseMockedDbTest
 import my.little.changelog.model.group.Group
+import my.little.changelog.model.group.Groups
 import my.little.changelog.model.leaf.Leaf
+import my.little.changelog.model.leaf.Leaves
 import my.little.changelog.model.version.Version
 import my.little.changelog.model.version.Versions
 import my.little.changelog.persistence.repo.GroupRepo
@@ -15,9 +15,7 @@ import my.little.changelog.persistence.repo.LeafRepo
 import my.little.changelog.persistence.repo.VersionRepo
 import my.little.changelog.service.VersionService
 import org.jetbrains.exposed.dao.id.EntityID
-import org.jetbrains.exposed.sql.Transaction
-import org.jetbrains.exposed.sql.transactions.transaction
-import org.junit.experimental.categories.Category
+import org.jetbrains.exposed.sql.ResultRow
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import kotlin.test.assertEquals
@@ -29,16 +27,10 @@ internal class VersionServiceTest : BaseMockedDbTest() {
         mockkObject(VersionRepo)
         mockkObject(GroupRepo)
         mockkObject(LeafRepo)
-
-        mockkStatic("org.jetbrains.exposed.sql.transactions.ThreadLocalTransactionManagerKt")
-        every { transaction(mockk(relaxed = true), any<Transaction.() -> List<Category>>()) } answers {
-            val execFunction: Transaction.() -> List<Category> = secondArg()
-            mockk<Transaction>(relaxed = true).execFunction()
-        }
     }
 
     @Test
-    fun `Test Create Version Success`() = testApplication {
+    fun `Test Create Version Success`() {
         val model = Version(id = EntityID(0, Versions))
         every { VersionRepo.create(any()) } returns model
 
@@ -48,7 +40,7 @@ internal class VersionServiceTest : BaseMockedDbTest() {
     }
 
     @Test
-    fun `Test Create Version Exception`() = testApplication {
+    fun `Test Create Version Exception`() {
         every { VersionRepo.create(any()) } throws RuntimeException()
 
         assertThrows<RuntimeException> {
@@ -57,53 +49,60 @@ internal class VersionServiceTest : BaseMockedDbTest() {
     }
 
     @Test
-    fun `Test Get WholeVersion 1`() = testApplication {
-        transaction {
+    fun `Test Get WholeVersion 1`() {
 
-            val version1 = Version.new {}
-
-            val group1 = Group.new {
-                this.vid = 0
-                this.version = version1
-                this.name = "Test 1"
-                this.parentVid = null
-            }
-
-            val leaf1 = Leaf.new {
-                this.vid = 0
-                this.name = "Test 1"
-                this.valueType = 1
-                this.value = "Значение 1"
-                this.groupVid = group1.vid
-            }
-
-            commit()
-
-            every { VersionRepo.findById(any()) } returns version1
-            every { LeafRepo.findByVersion(any()) } returns listOf(leaf1)
-            every { GroupRepo.findGroupAffectedByVersion(any()) } returns listOf(group1)
-
-            val wv = VersionService.getWholeVersion(version1.id.value)
-
-            assertEquals(version1.id.value, wv.id)
-            assertEquals(1, wv.groupContent.size)
-            val subgroup = wv.groupContent[0]
-
-            assertEquals(group1.id.value, subgroup.id)
-            assertEquals(group1.vid, subgroup.vid)
-            assertEquals(group1.name, subgroup.name)
-            assertEquals(0, subgroup.groupContent.size)
-            assertEquals(1, subgroup.leafContent.size)
-
-            val leaf = subgroup.leafContent[0]
-
-            assertEquals(leaf1.id.value, leaf.id)
-            assertEquals(leaf1.vid, leaf.vid)
-            assertEquals(leaf1.name, leaf.name)
-            assertEquals(leaf1.value, leaf.value)
-            assertEquals(leaf1.valueType, leaf.valueType)
-
-            assertEquals(0, wv.leafContent.size)
+        val version1 = Version(EntityID(0, Versions)).apply {
+            this._readValues = ResultRow.createAndFillValues(mapOf())
         }
+
+        val group1 = Group(EntityID(0, Groups)).apply {
+            this._readValues = ResultRow.createAndFillValues(
+                mapOf(
+                    Groups.vid to 0,
+                    Groups.version to version1,
+                    Groups.name to "Test 1",
+                    Groups.parentVid to null,
+                )
+            )
+        }
+
+        val leaf1 = Leaf(EntityID(0, Leaves)).apply {
+            this._readValues = ResultRow.createAndFillValues(
+                mapOf(
+                    Leaves.vid to 0,
+                    Leaves.version to version1,
+                    Leaves.name to "Test 1",
+                    Leaves.groupVid to group1.vid,
+                    Leaves.valueType to 1,
+                    Leaves.value to "Значение 1",
+                )
+            )
+        }
+
+        every { VersionRepo.findById(allAny()) } returns version1
+        every { LeafRepo.findByVersion(allAny()) } returns listOf(leaf1)
+        every { GroupRepo.findGroupAffectedByVersion(allAny()) } returns listOf(group1)
+
+        val wv = VersionService.getWholeVersion(version1.id.value)
+
+        assertEquals(version1.id.value, wv.id)
+        assertEquals(1, wv.groupContent.size)
+        val subgroup = wv.groupContent[0]
+
+        assertEquals(group1.id.value, subgroup.id)
+        assertEquals(group1.vid, subgroup.vid)
+        assertEquals(group1.name, subgroup.name)
+        assertEquals(0, subgroup.groupContent.size)
+        assertEquals(1, subgroup.leafContent.size)
+
+        val leaf = subgroup.leafContent[0]
+
+        assertEquals(leaf1.id.value, leaf.id)
+        assertEquals(leaf1.vid, leaf.vid)
+        assertEquals(leaf1.name, leaf.name)
+        assertEquals(leaf1.value, leaf.value)
+        assertEquals(leaf1.valueType, leaf.valueType)
+
+        assertEquals(0, wv.leafContent.size)
     }
 }
