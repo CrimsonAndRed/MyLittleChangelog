@@ -1,15 +1,18 @@
 package my.little.changelog.routing.version.group
 
 import io.ktor.application.call
+import io.ktor.http.HttpStatusCode
 import io.ktor.request.receive
 import io.ktor.response.respond
 import io.ktor.routing.Routing
+import io.ktor.routing.delete
 import io.ktor.routing.post
 import io.ktor.routing.put
 import io.ktor.routing.route
 import io.ktor.util.KtorExperimentalAPI
 import io.ktor.util.getOrFail
 import my.little.changelog.model.group.dto.external.GroupCreationDto
+import my.little.changelog.model.group.dto.external.GroupDeletionDto
 import my.little.changelog.model.group.dto.external.GroupUpdateDto
 import my.little.changelog.model.group.dto.external.toServiceDto
 import my.little.changelog.model.group.dto.service.toExternalDto
@@ -34,6 +37,13 @@ fun Routing.groupRouting() {
 
             val group = GroupService.updateGroup(dto.toServiceDto(groupId))
             call.respond(group.toExternalDto())
+        }
+
+        delete {
+            val groupId = call.parameters.getOrFail("groupId").toInt()
+
+            GroupService.deleteGroup(GroupDeletionDto(groupId))
+            call.response.status(HttpStatusCode.NoContent)
         }
     }
 }

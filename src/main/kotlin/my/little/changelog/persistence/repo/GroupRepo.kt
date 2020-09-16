@@ -1,8 +1,10 @@
 package my.little.changelog.persistence.repo
 
 import my.little.changelog.model.group.Group
+import my.little.changelog.model.group.Groups
 import my.little.changelog.model.version.Version
 import my.little.changelog.persistence.AbstractCrudRepository
+import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.statements.jdbc.iterate
 import org.jetbrains.exposed.sql.transactions.transaction
 
@@ -26,5 +28,9 @@ object GroupRepo : AbstractCrudRepository<Group, Int>(Group) {
                 set(2, version.id.value)
             }
             .executeQuery().iterate { getInt("id") }.let { Group.forIds(it) }
+    }
+
+    fun findSubgroups(group: Group): Iterable<Group> = transaction {
+        Group.find { (Groups.version eq group.version.id.value) and (Groups.parentVid eq group.vid) }
     }
 }

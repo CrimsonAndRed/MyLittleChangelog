@@ -5,9 +5,11 @@ import io.mockk.every
 import io.mockk.mockkObject
 import my.little.changelog.BaseMockedDbTest
 import my.little.changelog.model.exception.VersionIsNotLatestException
+import my.little.changelog.model.group.dto.external.GroupDeletionDto
 import my.little.changelog.model.group.dto.service.GroupCreationDto
 import my.little.changelog.model.group.dto.service.GroupUpdateDto
 import my.little.changelog.persistence.repo.GroupRepo
+import my.little.changelog.persistence.repo.LeafRepo
 import my.little.changelog.persistence.repo.VersionRepo
 import org.junit.jupiter.api.Test
 
@@ -20,6 +22,7 @@ internal class GroupServiceTest : BaseMockedDbTest() {
     init {
         mockkObject(GroupRepo)
         mockkObject(VersionRepo)
+        mockkObject(LeafRepo)
     }
 
     @Test
@@ -112,7 +115,7 @@ internal class GroupServiceTest : BaseMockedDbTest() {
         assertThrows<VersionIsNotLatestException> { GroupService.createGroup(dto) }
     }
 
-    // TODO В сервисе мутируется Group, на этом мок ломается
+    // TODO(#1) В сервисе мутируется Group, на этом мок ломается
     // @Test
     // fun `Test Update Group Without Parent Update Success`() {
     //     val version = createVersion(0)
@@ -127,5 +130,25 @@ internal class GroupServiceTest : BaseMockedDbTest() {
     //
     //     val res = GroupService.updateGroup(dto)
     // }
+
+    // TODO(#2) В group нельзя обратиться к version
+//    @Test
+//    fun `Test Group Deletion Success`() {
+//        val version1 = createVersion(0)
+//        val group = createGroup(0, 0, version1,"Тестовая группа", null)
+//
+//        val dto = GroupDeletionDto(
+//            id = group.id.value
+//        )
+//
+//        every { GroupRepo.findById(allAny()) } returns group
+//        every { VersionRepo.findLatest() } returns version1
+//        every { LeafRepo.findCurrentGroupLeaves(allAny()) } returns emptyList()
+//        every { GroupRepo.findSubgroups(allAny()) } returns emptyList()
+//
+//        assertDoesNotThrow {
+//            GroupService.deleteGroup(dto)
+//        }
+//    }
 
 }
