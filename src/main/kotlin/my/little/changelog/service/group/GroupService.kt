@@ -28,6 +28,10 @@ object GroupService {
         val group = GroupRepo.findById(groupUpdate.id)
         val parentGroup = groupUpdate.parentId?.let { GroupRepo.findById(it) }
 
+        if (group.version.id != VersionRepo.findLatest().id) {
+            throw VersionIsNotLatestException()
+        }
+
         group.apply {
             name = groupUpdate.name
             parentVid = parentGroup?.vid
