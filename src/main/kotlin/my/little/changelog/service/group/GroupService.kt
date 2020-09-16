@@ -53,7 +53,7 @@ object GroupService {
         }
 
         val subgroups = GroupRepo.findSubgroups(group)
-        subgroups.forEach {g ->
+        subgroups.forEach { g ->
             deleteGroup(GroupDeletionDto(g.id.value))
         }
 

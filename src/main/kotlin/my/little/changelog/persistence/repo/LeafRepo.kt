@@ -14,6 +14,6 @@ object LeafRepo : AbstractCrudRepository<Leaf, Int>(Leaf) {
     }
 
     fun findCurrentGroupLeaves(group: Group): Iterable<Leaf> {
-        return Leaf.find { (Leaves.version eq group.version.id.value) and (Leaves.groupVid eq group.vid)}
+        return Leaf.find { (Leaves.version eq group.version.id.value) and (Leaves.groupVid eq group.vid) }
     }
 }

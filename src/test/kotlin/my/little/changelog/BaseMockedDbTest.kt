@@ -44,7 +44,6 @@ abstract class BaseMockedDbTest : BaseTest() {
             )
         )
     }
-
 }
 
 class TestTransactionManager : TransactionManager {

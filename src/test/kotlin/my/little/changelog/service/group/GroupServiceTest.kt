@@ -5,16 +5,13 @@ import io.mockk.every
 import io.mockk.mockkObject
 import my.little.changelog.BaseMockedDbTest
 import my.little.changelog.model.exception.VersionIsNotLatestException
-import my.little.changelog.model.group.dto.external.GroupDeletionDto
 import my.little.changelog.model.group.dto.service.GroupCreationDto
-import my.little.changelog.model.group.dto.service.GroupUpdateDto
 import my.little.changelog.persistence.repo.GroupRepo
 import my.little.changelog.persistence.repo.LeafRepo
 import my.little.changelog.persistence.repo.VersionRepo
 import org.junit.jupiter.api.Test
-
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.assertThrows
+import kotlin.test.assertEquals
 
 @KtorExperimentalAPI
 internal class GroupServiceTest : BaseMockedDbTest() {
@@ -73,7 +70,7 @@ internal class GroupServiceTest : BaseMockedDbTest() {
     @Test
     fun `Test Create Group in New Version Success`() {
         val version1 = createVersion(0)
-        val group = createGroup(0, 0, version1,"Тестовая группа", null)
+        val group = createGroup(0, 0, version1, "Тестовая группа", null)
         val version2 = createVersion(1)
 
         val dto = GroupCreationDto(
@@ -150,5 +147,4 @@ internal class GroupServiceTest : BaseMockedDbTest() {
 //            GroupService.deleteGroup(dto)
 //        }
 //    }
-
 }
