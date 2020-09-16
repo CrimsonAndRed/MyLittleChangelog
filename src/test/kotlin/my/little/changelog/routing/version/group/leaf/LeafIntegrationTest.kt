@@ -27,7 +27,7 @@ import kotlin.test.assertNotNull
 internal class LeafIntegrationTest : AbstractIntegrationTest() {
 
     @Test
-    fun testCreateLeaf() {
+    fun `Test Create Leaf Success`() {
         testApplication {
             val (version, group) = transaction {
                 val version = Version.new {}
@@ -64,7 +64,7 @@ internal class LeafIntegrationTest : AbstractIntegrationTest() {
     }
 
     @Test
-    fun testUpdateLeafWithoutGroupVid() {
+    fun `Test Update Leaf Without Group Vid`() {
         testApplication {
             transaction {
                 val version = Version.new {}
@@ -112,7 +112,7 @@ internal class LeafIntegrationTest : AbstractIntegrationTest() {
     }
 
     @Test
-    fun testUpdateLeafWithGroupVid() {
+    fun `Test Update Leaf With Group Vid`() {
         testApplication {
             transaction {
                 val version = Version.new {}

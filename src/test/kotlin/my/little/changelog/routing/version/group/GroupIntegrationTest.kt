@@ -24,7 +24,7 @@ import kotlin.test.assertNull
 internal class GroupIntegrationTest : AbstractIntegrationTest() {
 
     @Test
-    fun testRootGroupCreation() {
+    fun `Test Root Group Creation Success`() {
         testApplication {
             val version = transaction {
                 Version.new { }
@@ -48,7 +48,7 @@ internal class GroupIntegrationTest : AbstractIntegrationTest() {
     }
 
     @Test
-    fun testSubGroupCreation() {
+    fun `Test Subgroup Creation Success`() {
         testApplication {
             val (version, group) = transaction {
                 val version = Version.new { }
@@ -109,7 +109,7 @@ internal class GroupIntegrationTest : AbstractIntegrationTest() {
     }
 
     @Test
-    fun testGroupUpdateName() {
+    fun `Test Group Update Name`() {
         testApplication {
             transaction {
                 val version = Version.new { }
@@ -141,7 +141,7 @@ internal class GroupIntegrationTest : AbstractIntegrationTest() {
     }
 
     @Test
-    fun testGroupUpdateParent() {
+    fun `Test Group Update Parent`() {
         testApplication {
             transaction {
                 val version = Version.new { }

@@ -21,7 +21,7 @@ import org.junit.jupiter.api.Test
 internal class VersionIntegrationTest : AbstractIntegrationTest() {
 
     @Test
-    fun test1() {
+    fun `Test Create Version Success`() {
         testApplication {
             val version = transaction {
                 Version.new {}
@@ -34,7 +34,7 @@ internal class VersionIntegrationTest : AbstractIntegrationTest() {
     }
 
     @Test
-    fun testGetWholeVersion() {
+    fun `Test Get Version Success`() {
         testApplication {
             val version = transaction {
 
