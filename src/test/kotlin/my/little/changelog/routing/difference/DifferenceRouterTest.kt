@@ -22,9 +22,9 @@ internal class DifferenceRouterTest : AbstractRouterTest(
     }
 
     private val baseUrl: (Int, Int) -> String = { from, to ->
-        "difference?from=${from}&to=${to}"
+        "difference?from=$from&to=$to"
     }
-    private val difference = Difference(0 ,1)
+    private val difference = Difference(0, 1)
 
     @Test
     fun `Test Difference Read Success`() {

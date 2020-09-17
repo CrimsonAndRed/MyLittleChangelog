@@ -22,7 +22,6 @@ object GroupRepo : AbstractCrudRepository<Group, Int>(Group) {
         ) SELECT id FROM tmp_groups;
         """
 
-
     private const val FIND_GROUPS_AFFECTED_BY_SUBLATEST_LEAVES_QUERY =
         """
             WITH RECURSIVE sublatest AS (
@@ -60,7 +59,7 @@ object GroupRepo : AbstractCrudRepository<Group, Int>(Group) {
         if (groupVids.isEmpty()) {
             emptyList()
         } else {
-             connection.prepareStatement(FIND_GROUPS_AFFECTED_BY_SUBLATEST_LEAVES_QUERY.format(groupVids.joinToString(", ")), arrayOf("id"))
+            connection.prepareStatement(FIND_GROUPS_AFFECTED_BY_SUBLATEST_LEAVES_QUERY.format(groupVids.joinToString(", ")), arrayOf("id"))
                 .apply {
                     set(1, version.id.value)
                 }

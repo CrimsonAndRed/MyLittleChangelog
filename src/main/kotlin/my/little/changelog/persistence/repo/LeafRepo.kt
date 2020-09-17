@@ -11,7 +11,8 @@ import org.jetbrains.exposed.sql.transactions.transaction
 
 object LeafRepo : AbstractCrudRepository<Leaf, Int>(Leaf) {
 
-    private const val DIFFERENTIAL_LEAVES_QUERY = """
+    private const val DIFFERENTIAL_LEAVES_QUERY =
+        """
         select id from (
         	select *, max(leaves.version_id) over (partition by leaves.vid) max_version
         	from leaves
@@ -19,7 +20,8 @@ object LeafRepo : AbstractCrudRepository<Leaf, Int>(Leaf) {
         ) sub where sub.version_id  = sub.max_version
     """
 
-    private const val PREDIFFERENTIAL_LEAVES_QUERY = """
+    private const val PREDIFFERENTIAL_LEAVES_QUERY =
+        """
         select id from (
         	select *, max(leaves.version_id) over (partition by leaves.vid) max_version
         	from leaves

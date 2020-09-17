@@ -9,16 +9,14 @@ fun LeafCreationDto.toServiceDto(groupId: Int, versionId: Int) =
         versionId = versionId,
     )
 
-fun LeafUpdateDto.toServiceDto(leafId: Int) =
-    my.little.changelog.model.leaf.dto.service.LeafUpdateDto(
-        id = leafId,
-        name = name,
-        valueType = valueType,
-        value = value,
-        parentId = parentId,
-    )
+fun LeafUpdateDto.toServiceDto(leafId: Int) = my.little.changelog.model.leaf.dto.service.LeafUpdateDto(
+    id = leafId,
+    name = name,
+    valueType = valueType,
+    value = value,
+    parentId = parentId,
+)
 
-fun LeafDeletionDto.toServiceDto() =
-    my.little.changelog.model.leaf.dto.service.LeafDeletionDto(
-        id = id
-    )
+fun LeafDeletionDto.toServiceDto() = my.little.changelog.model.leaf.dto.service.LeafDeletionDto(
+    id = id
+)

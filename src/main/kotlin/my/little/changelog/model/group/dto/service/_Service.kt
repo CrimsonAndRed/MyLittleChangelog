@@ -1,7 +1,6 @@
 package my.little.changelog.model.group.dto.service
 
 import my.little.changelog.model.group.Group
-import my.little.changelog.model.leaf.dto.external.LeafDifferenceDto
 import my.little.changelog.model.leaf.dto.service.toExternalDto
 import my.little.changelog.model.version.Version
 
@@ -23,6 +22,6 @@ fun GroupDifferenceDto.toExternalDto(): my.little.changelog.model.group.dto.exte
     id = id,
     vid = vid,
     name = name,
-    groupContent = this.groupContent.map{ it.toExternalDto() },
+    groupContent = this.groupContent.map { it.toExternalDto() },
     leafContent = this.leafContent.map { it.toExternalDto() }
 )
