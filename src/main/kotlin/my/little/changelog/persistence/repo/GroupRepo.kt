@@ -2,6 +2,7 @@ package my.little.changelog.persistence.repo
 
 import my.little.changelog.model.group.Group
 import my.little.changelog.model.group.Groups
+import my.little.changelog.model.leaf.Leaf
 import my.little.changelog.model.version.Version
 import my.little.changelog.persistence.AbstractCrudRepository
 import org.jetbrains.exposed.sql.and
@@ -19,9 +20,26 @@ object GroupRepo : AbstractCrudRepository<Group, Int>(Group) {
         	UNION
         		SELECT g.* FROM groups_latest AS g JOIN tmp_groups ON g.vid=tmp_groups.parent_vid
         ) SELECT id FROM tmp_groups;
-    """
+        """
 
-    fun findGroupAffectedByVersion(version: Version): Iterable<Group> = transaction {
+
+    private const val FIND_GROUPS_AFFECTED_BY_SUBLATEST_LEAVES_QUERY =
+        """
+            WITH RECURSIVE sublatest AS (
+                SELECT grouped.* FROM (
+                    SELECT g.*, max(version_id) OVER (PARTITION BY vid) FROM groups AS g
+                    WHERE g.version_id <= ?
+                ) as grouped
+                WHERE grouped.version_id=grouped.max
+            ),  tmp_groups AS (
+                    SELECT * FROM sublatest 
+                    WHERE (vid in (%s))
+                UNION
+                    SELECT g.* FROM sublatest AS g JOIN tmp_groups ON g.vid=tmp_groups.parent_vid
+            ) SELECT id FROM tmp_groups
+        """
+
+    fun findGroupsAffectedByVersion(version: Version): Iterable<Group> = transaction {
         connection.prepareStatement(FIND_GROUPS_AFFECTED_BY_VERSION_QUERY, arrayOf("id"))
             .apply {
                 set(1, version.id.value)
@@ -32,5 +50,21 @@ object GroupRepo : AbstractCrudRepository<Group, Int>(Group) {
 
     fun findSubgroups(group: Group): Iterable<Group> = transaction {
         Group.find { (Groups.version eq group.version.id.value) and (Groups.parentVid eq group.vid) }
+    }
+
+    fun findGroupsAffectedByLeaves(leaves: Iterable<Leaf>, version: Version): Iterable<Group> = transaction {
+        val groupVids: List<Int?> = leaves.map {
+            it.groupVid
+        }.distinct()
+
+        if (groupVids.isEmpty()) {
+            emptyList()
+        } else {
+             connection.prepareStatement(FIND_GROUPS_AFFECTED_BY_SUBLATEST_LEAVES_QUERY.format(groupVids.joinToString(", ")), arrayOf("id"))
+                .apply {
+                    set(1, version.id.value)
+                }
+                .executeQuery().iterate { getInt("id") }.let { Group.forIds(it) }
+        }
     }
 }

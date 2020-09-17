@@ -80,7 +80,7 @@ internal class VersionServiceTest : BaseMockedDbTest() {
 
         every { VersionRepo.findById(allAny()) } returns version1
         every { LeafRepo.findByVersion(allAny()) } returns listOf(leaf1)
-        every { GroupRepo.findGroupAffectedByVersion(allAny()) } returns listOf(group1)
+        every { GroupRepo.findGroupsAffectedByVersion(allAny()) } returns listOf(group1)
 
         val wv = VersionService.getWholeVersion(version1.id.value)
 

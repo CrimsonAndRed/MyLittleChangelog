@@ -22,7 +22,7 @@ object VersionService {
         val version = VersionRepo.findById(id)
 
         val leaves = LeafRepo.findByVersion(version)
-        val groups = GroupRepo.findGroupAffectedByVersion(version)
+        val groups = GroupRepo.findGroupsAffectedByVersion(version)
 
         createDtosRecursive(
             groups.groupBy({ it.parentVid }) { it },
