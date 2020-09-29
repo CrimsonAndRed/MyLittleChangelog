@@ -1,14 +1,25 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { HeroesComponent } from './heroes/heroes.component';
-import { DashboardComponent } from './dashboard/dashboard.component';
-import { HeroDetailComponent } from './hero-detail/hero-detail.component';
+import { VersionsListComponent } from './version/versions-list/versions-list.component';
+import { WholeVersionComponent } from './version/whole-version/whole-version.component';
+import { VersionsResolver } from './resolver/versions.resolver';
+import { WholeVersionResolver } from './resolver/whole-version.resolver';
 
 const routes: Routes = [
-  { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
-  { path: 'heroes', component: HeroesComponent },
-  { path: 'detail/:id', component: HeroDetailComponent },
-  { path: 'dashboard', component: DashboardComponent },
+  {
+    path: '',
+    component: VersionsListComponent,
+    resolve: {
+      versions: VersionsResolver
+    },
+  },
+  {
+    path: 'version/:id',
+    component: WholeVersionComponent,
+    resolve: {
+      version: WholeVersionResolver
+    }
+  },
 ];
 
 @NgModule({
