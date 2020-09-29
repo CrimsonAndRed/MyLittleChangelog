@@ -11,6 +11,7 @@ import my.little.changelog.model.group.dto.external.WholeGroupDto
 import my.little.changelog.model.leaf.Leaf
 import my.little.changelog.model.leaf.dto.external.WholeLeafDto
 import my.little.changelog.model.version.Version
+import my.little.changelog.model.version.dto.external.ReturnedVersionDto
 import my.little.changelog.model.version.dto.external.WholeVersion
 import my.little.changelog.routing.AbstractIntegrationTest
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -97,6 +98,22 @@ internal class VersionIntegrationTest : AbstractIntegrationTest() {
                 assertEquals(HttpStatusCode.OK, response.status())
                 val json: WholeVersion = Json.decodeFromString(response.content!!)
                 assertEquals(json, version)
+            }
+        }
+    }
+
+    @Test
+    fun `Test Get Versions Success`() {
+        testApplication {
+            transaction {
+                Version.new {}
+                Version.new {}
+            }
+
+            with(handleRequest(HttpMethod.Get, "/version")) {
+                assertEquals(HttpStatusCode.OK, response.status())
+                val jsonList: List<ReturnedVersionDto> = Json.decodeFromString(response.content!!)
+                assertEquals(2, jsonList.size)
             }
         }
     }

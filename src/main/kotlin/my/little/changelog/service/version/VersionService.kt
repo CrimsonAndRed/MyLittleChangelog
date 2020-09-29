@@ -14,6 +14,12 @@ import org.jetbrains.exposed.sql.transactions.transaction
 
 object VersionService {
 
+    fun getVersions(): List<ReturnedVersionDto> = transaction {
+        VersionRepo.findAll().map {
+            it.toReturnedDto()
+        }
+    }
+
     fun createVersion(): ReturnedVersionDto = transaction {
         VersionRepo.create().toReturnedDto()
     }

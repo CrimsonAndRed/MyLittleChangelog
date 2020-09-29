@@ -14,6 +14,10 @@ import my.little.changelog.service.version.VersionService
 @KtorExperimentalAPI
 fun Routing.versionRouting() {
     route("/version") {
+        get {
+            call.respond(VersionService.getVersions().map { it.toExternalDto() })
+        }
+
         post {
             call.respond(VersionService.createVersion().toExternalDto())
         }

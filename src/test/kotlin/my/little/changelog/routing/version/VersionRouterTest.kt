@@ -71,4 +71,25 @@ internal class VersionRouterTest : AbstractRouterTest(
             { VersionIsNotLatestException() } to HttpStatusCode.InternalServerError
         )
     )
+
+    @Test
+    fun `Test Versions Get Success`() {
+        val dto = ReturnedVersionDto(0)
+
+        every { VersionService.getVersions() } returns listOf(dto)
+
+        testRoute(HttpMethod.Get, baseUrl) {
+            assertEquals(HttpStatusCode.OK, response.status())
+        }
+    }
+
+    @Test
+    fun `Test Versions Get Exception`() = testExceptions(
+        constructRequest(HttpMethod.Get, baseUrl),
+        listOf { VersionService.getVersions() },
+        listOf(
+            { RuntimeException() } to HttpStatusCode.InternalServerError,
+            { VersionIsNotLatestException() } to HttpStatusCode.InternalServerError
+        )
+    )
 }
