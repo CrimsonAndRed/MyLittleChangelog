@@ -14,4 +14,9 @@ export class Http {
   get<T>(url: string): Observable<T> {
     return this.httpClient.get<T>(url);
   }
+
+  post<T>(url: string, body: string = null): Observable<T> {
+      return this.httpClient.post<T>(url, body);
+  }
+
 }

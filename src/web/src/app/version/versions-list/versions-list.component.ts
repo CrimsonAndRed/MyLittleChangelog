@@ -24,4 +24,8 @@ export class VersionsListComponent implements OnInit {
   gotoVersionPage(version: Version): string {
     return `version/${version.id}`;
   }
+
+  onNewVersionCreated(version: Version): void {
+    this.versions.push(version);
+  }
 }

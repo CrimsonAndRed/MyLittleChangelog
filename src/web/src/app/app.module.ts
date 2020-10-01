@@ -6,6 +6,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { VersionsListComponent } from './version/versions-list/versions-list.component';
 import { WholeVersionComponent } from './version/whole-version/whole-version.component';
+import { NewVersionComponent } from './version/new-version/new-version.component';
 
 import { HttpClientModule } from '@angular/common/http';
 
@@ -14,6 +15,7 @@ import { HttpClientModule } from '@angular/common/http';
     AppComponent,
     VersionsListComponent,
     WholeVersionComponent,
+    NewVersionComponent,
   ],
   imports: [
     BrowserModule,
