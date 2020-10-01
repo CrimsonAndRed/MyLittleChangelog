@@ -1,29 +1,26 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-
-import { AppRoutingModule } from './app-routing.module';
-import { AppComponent } from './app.component';
-import { VersionsListComponent } from './version/versions-list/versions-list.component';
-import { WholeVersionComponent } from './version/whole-version/whole-version.component';
-import { NewVersionComponent } from './version/new-version/new-version.component';
-
 import { HttpClientModule } from '@angular/common/http';
+import { VersionsListModule } from './versions-list/versions-list.module';
+import { AppRoutingModule } from './app-routing.module';
+
+import { AppComponent } from './app.component';
+import { WholeVersionComponent } from './whole-version/whole-version.component';
+
 
 @NgModule({
   declarations: [
     AppComponent,
-    VersionsListComponent,
     WholeVersionComponent,
-    NewVersionComponent,
   ],
   imports: [
+    VersionsListModule,
     BrowserModule,
     AppRoutingModule,
     FormsModule,
     HttpClientModule,
   ],
-  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

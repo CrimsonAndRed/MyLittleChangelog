@@ -1,0 +1,8 @@
+<new-version (onNewVersion)="onNewVersionCreated($event)"></new-version>
+<div>
+  <ul>
+    <li *ngFor="let version of versions">
+      <a [routerLink]="gotoVersionPage(version)">{{version.id}}</a>
+    </li>
+  </ul>
+</div>

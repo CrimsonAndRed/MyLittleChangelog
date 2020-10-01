@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { VersionsListComponent } from './version/versions-list/versions-list.component';
-import { WholeVersionComponent } from './version/whole-version/whole-version.component';
+import { VersionsListComponent } from './versions-list/versions-list.component';
+import { WholeVersionComponent } from './whole-version/whole-version.component';
 import { VersionsResolver } from './resolver/versions.resolver';
 import { WholeVersionResolver } from './resolver/whole-version.resolver';
 
