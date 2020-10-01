@@ -1,12 +1,5 @@
 @echo off
-cd ..
-
-call ./gradlew -x test -x ktlintMainSourceSetCheck -x ktlintTestSourceSetCheck clean build
-cd local
+call ../gradlew clean build -x test -p ../
 pause
-
-cd ..
-call docker build --target dev -t changelog-service:latest-dev .
-cd local
-
+call docker build -f ../Dockerfile --target dev -t changelog-service:latest-dev ../
 call docker-compose up -d changelog
