@@ -6,16 +6,16 @@ import { VersionsListModule } from './versions-list/versions-list.module';
 import { AppRoutingModule } from './app-routing.module';
 
 import { AppComponent } from './app.component';
-import { WholeVersionComponent } from './whole-version/whole-version.component';
+import { WholeVersionModule } from './whole-version/whole-version.module';
 
 
 @NgModule({
   declarations: [
     AppComponent,
-    WholeVersionComponent,
   ],
   imports: [
     VersionsListModule,
+    WholeVersionModule,
     BrowserModule,
     AppRoutingModule,
     FormsModule,

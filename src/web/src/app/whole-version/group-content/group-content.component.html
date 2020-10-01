@@ -1,0 +1,7 @@
+<div>
+  <label>{{ groupContent.name }}</label>
+  <leaf-content *ngFor="let leafContent of groupContent.leafContent"
+                [leafContent]="leafContent"></leaf-content>
+  <group-content *ngFor="let groupContent of groupContent.groupContent"
+                 [groupContent]="groupContent"></group-content>
+</div>

@@ -17,8 +17,6 @@ export class VersionsListComponent implements OnInit {
 
   ngOnInit() {
     this.versions = this.route.snapshot.data.versions;
-    //this.http.get<Version[]>('http://localhost:8080/version')
-    // .subscribe(model => this.versions = model)
   }
 
   gotoVersionPage(version: Version): string {

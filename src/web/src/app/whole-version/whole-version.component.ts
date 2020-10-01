@@ -17,8 +17,28 @@ export class WholeVersionComponent implements OnInit {
 
   ngOnInit() {
     this.version = this.route.snapshot.data.version;
-    //const versionId = this.router.snapshot.paramMap.get('id');
-    //this.http.get<WholeVersion>(`http://localhost:8080/version/${versionId}`)
-    //  .subscribe(model => this.version = model);
+    this.version.groupContent = [{
+      id: 1,
+      vid: 1,
+      name: 'Group content name',
+      groupContent: [
+        {
+          id: 2,
+          vid: 2,
+          name: 'Group content name 2',
+          groupContent: [],
+          leafContent: [],
+        }
+      ],
+      leafContent: [
+        {
+          id: 3,
+          vid: 3,
+          name: 'Leaf Content name 3',
+          valueType: 0,
+          value: 'Leaf Content Value 3',
+        }
+      ],
+    }];
   }
 }
