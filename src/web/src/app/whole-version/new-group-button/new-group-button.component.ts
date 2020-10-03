@@ -1,6 +1,10 @@
 import { Component, Output } from '@angular/core';
 
 import { GroupContent } from 'app/model/group-content';
+import { Http } from 'app/http/http.service';
+import { NewGroupWithId, NewGroup} from 'app/model/new-group';
+import { ActivatedRoute } from '@angular/router';
+import { EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'new-group-button',
@@ -9,9 +13,20 @@ import { GroupContent } from 'app/model/group-content';
 })
 export class NewGroupButtonComponent {
 
-  @Output() groupContent: GroupContent;
+  @Output() onNewGroup = new EventEmitter<NewGroupWithId>();
 
-  constructor() {
+  constructor(private http: Http, private route: ActivatedRoute) {
+  }
+
+  onNewGroupButtonClick() {
+    const versionId = this.route.snapshot.data.version.id;
+    const newGroup: NewGroup = {
+      vid: null,
+      parentId: null,
+      name: "11",
+    }
+    this.http.post<NewGroupWithId>(`http://localhost:8080/version/${versionId}/group`, newGroup)
+      .subscribe(newGroup =>this.onNewGroup.emit(newGroup) );
   }
 
 }
