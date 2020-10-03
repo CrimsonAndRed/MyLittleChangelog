@@ -7,6 +7,7 @@ import { AppRoutingModule } from './app-routing.module';
 
 import { AppComponent } from './app.component';
 import { WholeVersionModule } from './whole-version/whole-version.module';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 
 @NgModule({
@@ -20,6 +21,7 @@ import { WholeVersionModule } from './whole-version/whole-version.module';
     AppRoutingModule,
     FormsModule,
     HttpClientModule,
+    NoopAnimationsModule,
   ],
   bootstrap: [AppComponent]
 })
