@@ -7,6 +7,7 @@ import { WholeVersionComponent } from './whole-version.component';
 import { GroupContentComponent } from './group-content/group-content.component';
 import { LeafContentComponent } from './leaf-content/leaf-content.component';
 import { NewGroupButtonComponent } from './new-group-button/new-group-button.component';
+import { NewLeafButtonComponent } from './new-leaf-button/new-leaf-button.component';
 
 import { HttpClientModule } from '@angular/common/http';
 
@@ -16,6 +17,7 @@ import { HttpClientModule } from '@angular/common/http';
     GroupContentComponent,
     LeafContentComponent,
     NewGroupButtonComponent,
+    NewLeafButtonComponent,
   ],
   imports: [
     BrowserModule,

@@ -1,4 +1,4 @@
-import { Component, Output } from '@angular/core';
+import { Component, Input, Output } from '@angular/core';
 
 import { GroupContent } from 'app/model/group-content';
 import { Http } from 'app/http/http.service';
@@ -15,14 +15,18 @@ export class NewGroupButtonComponent {
 
   @Output() onNewGroup = new EventEmitter<NewGroupWithId>();
 
+  @Input() groupContent: GroupContent;
+
   constructor(private http: Http, private route: ActivatedRoute) {
   }
 
   onNewGroupButtonClick() {
     const versionId = this.route.snapshot.data.version.id;
+    const parentId = this.groupContent === null ? null : this.groupContent.id;
+
     const newGroup: NewGroup = {
       vid: null,
-      parentId: null,
+      parentId: parentId,
       name: "11",
     }
     this.http.post<NewGroupWithId>(`http://localhost:8080/version/${versionId}/group`, newGroup)
