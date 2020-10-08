@@ -25,8 +25,11 @@ export class Http {
       return this.httpClient.post<T>(url, body, jsonHttpOptions);
   }
 
+  put<T>(url: string, body: any = null): Observable<T> {
+      return this.httpClient.put<T>(url, body, jsonHttpOptions);
+  }
+
   delete<T>(url: string): Observable<T> {
     return this.httpClient.delete<T>(url);
   }
-
 }

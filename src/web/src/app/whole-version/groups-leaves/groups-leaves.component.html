@@ -6,6 +6,8 @@
     <group-content *ngFor="let groupContent of groups"
                    [groupContent]="groupContent"></group-content>
     <leaf-content *ngFor="let leafContent of leaves"
-                  [leafContent]="leafContent"></leaf-content>
+                  [leafContent]="leafContent"
+                  (onUpdateLeaf)="onUpdateLeaf($event)"
+                  [groupId]="parentGroup?.id"></leaf-content>
   </div>
 </div>

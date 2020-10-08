@@ -11,6 +11,7 @@ import { NewGroupButtonComponent } from './new-group-button/new-group-button.com
 import { NewLeafButtonComponent } from './new-leaf-button/new-leaf-button.component';
 import { NewGroupModalComponent } from './new-group-button/new-group-modal/new-group-modal.component';
 import { NewLeafModalComponent } from './new-leaf-button/new-leaf-modal/new-leaf-modal.component';
+import { EditLeafModalComponent } from './leaf-content/edit-leaf-modal/edit-leaf-modal.component';
 import { MatDialogModule } from '@angular/material/dialog';
 
 import { HttpClientModule } from '@angular/common/http';
@@ -25,6 +26,7 @@ import { HttpClientModule } from '@angular/common/http';
     NewLeafButtonComponent,
     NewGroupModalComponent,
     NewLeafModalComponent,
+    EditLeafModalComponent,
   ],
   imports: [
     BrowserModule,

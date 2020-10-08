@@ -1,0 +1,17 @@
+<mat-dialog-content>
+  <div>
+    <div>
+      <label>Name</label><input [(ngModel)]="_leaf.name"/>
+    </div>
+    <div>
+      <label>Value</label><input [(ngModel)]="_leaf.value"/>
+    </div>
+    <div>
+      <label>Value type</label><input [(ngModel)]="_leaf.valueType"/>
+    </div>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button [mat-dialog-close]="null">Cancel</button>
+  <button [mat-dialog-close]="_leaf">Save</button>
+</mat-dialog-actions>
