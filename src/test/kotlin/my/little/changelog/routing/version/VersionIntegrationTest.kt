@@ -126,8 +126,8 @@ internal class VersionIntegrationTest : AbstractIntegrationTest() {
     fun `Test Delete Version Success`() {
         testApplication {
             val latestVersion = transaction {
-                Version.new {  }
-                val latestVersion = Version.new {  }
+                Version.new { }
+                val latestVersion = Version.new { }
                 Group.new {
                     name = "Test Group 1"
                     version = latestVersion
@@ -156,8 +156,8 @@ internal class VersionIntegrationTest : AbstractIntegrationTest() {
     fun `Test Delete Version Failure`() {
         testApplication {
             val firstVersion = transaction {
-                val firstVersion = Version.new {  }
-                val latestVersion = Version.new {  }
+                val firstVersion = Version.new { }
+                val latestVersion = Version.new { }
                 Group.new {
                     name = "Test Group 1"
                     version = latestVersion
