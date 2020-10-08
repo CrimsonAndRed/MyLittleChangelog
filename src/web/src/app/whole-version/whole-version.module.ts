@@ -9,6 +9,7 @@ import { LeafContentComponent } from './leaf-content/leaf-content.component';
 import { NewGroupButtonComponent } from './new-group-button/new-group-button.component';
 import { NewLeafButtonComponent } from './new-leaf-button/new-leaf-button.component';
 import { NewGroupModalComponent } from './new-group-button/new-group-modal/new-group-modal.component';
+import { NewLeafModalComponent } from './new-leaf-button/new-leaf-modal/new-leaf-modal.component';
 import { MatDialogModule } from '@angular/material/dialog';
 
 import { HttpClientModule } from '@angular/common/http';
@@ -21,6 +22,7 @@ import { HttpClientModule } from '@angular/common/http';
     NewGroupButtonComponent,
     NewLeafButtonComponent,
     NewGroupModalComponent,
+    NewLeafModalComponent,
   ],
   imports: [
     BrowserModule,

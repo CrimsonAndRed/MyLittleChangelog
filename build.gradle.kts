@@ -14,7 +14,6 @@ application {
 
 plugins {
     application
-//    jacoco
     kotlin("jvm")
     kotlin("plugin.serialization")
     id("com.github.johnrengelman.shadow")
@@ -68,15 +67,6 @@ tasks {
     shadowJar {
         archiveVersion.set("")
     }
-//    jacocoTestCoverageVerification {
-//        violationRules {
-//            rule {
-//                limit {
-//                    minimum = "0.75".toBigDecimal()
-//                }
-//            }
-//        }
-//    }
 }
 
 tasks.test {
