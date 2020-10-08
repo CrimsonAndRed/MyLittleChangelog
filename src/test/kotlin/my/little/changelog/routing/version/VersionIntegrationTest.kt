@@ -13,9 +13,13 @@ import my.little.changelog.model.leaf.dto.external.WholeLeafDto
 import my.little.changelog.model.version.Version
 import my.little.changelog.model.version.dto.external.ReturnedVersionDto
 import my.little.changelog.model.version.dto.external.WholeVersion
+import my.little.changelog.persistence.repo.GroupRepo
+import my.little.changelog.persistence.repo.LeafRepo
+import my.little.changelog.persistence.repo.VersionRepo
 import my.little.changelog.routing.AbstractIntegrationTest
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNotEquals
 import org.junit.jupiter.api.Test
 
 @KtorExperimentalAPI
@@ -114,6 +118,66 @@ internal class VersionIntegrationTest : AbstractIntegrationTest() {
                 assertEquals(HttpStatusCode.OK, response.status())
                 val jsonList: List<ReturnedVersionDto> = Json.decodeFromString(response.content!!)
                 assertEquals(2, jsonList.size)
+            }
+        }
+    }
+
+    @Test
+    fun `Test Delete Version Success`() {
+        testApplication {
+            val latestVersion = transaction {
+                Version.new {  }
+                val latestVersion = Version.new {  }
+                Group.new {
+                    name = "Test Group 1"
+                    version = latestVersion
+                }
+                Leaf.new {
+                    name = "Test Leaf 1"
+                    value = "Test Value 1"
+                    valueType = 0
+                    version = latestVersion
+                }
+                latestVersion
+            }
+
+            with(handleRequest(HttpMethod.Delete, "/version/${latestVersion.id.value}")) {
+                transaction {
+                    assertEquals(HttpStatusCode.NoContent, response.status())
+                    assertNotEquals(latestVersion, VersionRepo.findLatest())
+                    assertEquals(0, GroupRepo.findAll().count())
+                    assertEquals(0, LeafRepo.findAll().count())
+                }
+            }
+        }
+    }
+
+    @Test
+    fun `Test Delete Version Failure`() {
+        testApplication {
+            val firstVersion = transaction {
+                val firstVersion = Version.new {  }
+                val latestVersion = Version.new {  }
+                Group.new {
+                    name = "Test Group 1"
+                    version = latestVersion
+                }
+                Leaf.new {
+                    name = "Test Leaf 1"
+                    value = "Test Value 1"
+                    valueType = 0
+                    version = latestVersion
+                }
+                firstVersion
+            }
+
+            with(handleRequest(HttpMethod.Delete, "/version/${firstVersion.id.value}")) {
+                transaction {
+                    assertEquals(HttpStatusCode.InternalServerError, response.status())
+                    assertNotEquals(firstVersion, VersionRepo.findLatest())
+                    assertEquals(1, GroupRepo.findAll().count())
+                    assertEquals(1, LeafRepo.findAll().count())
+                }
             }
         }
     }

@@ -38,6 +38,10 @@ object GroupRepo : AbstractCrudRepository<Group, Int>(Group) {
             ) SELECT id FROM tmp_groups
         """
 
+    fun findByVersion(version: Version): Iterable<Group> = transaction {
+        Group.find { Groups.version eq version.id }
+    }
+
     fun findGroupsAffectedByVersion(version: Version): Iterable<Group> = transaction {
         connection.prepareStatement(FIND_GROUPS_AFFECTED_BY_VERSION_QUERY, arrayOf("id"))
             .apply {

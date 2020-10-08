@@ -29,12 +29,12 @@ object LeafRepo : AbstractCrudRepository<Leaf, Int>(Leaf) {
         ) sub where sub.version_id  = sub.max_version
     """
 
-    fun findByVersion(version: Version): Iterable<Leaf> {
-        return Leaf.find { Leaves.version eq version.id.value }
+    fun findByVersion(version: Version): Iterable<Leaf> = transaction {
+        Leaf.find { Leaves.version eq version.id.value }
     }
 
-    fun findCurrentGroupLeaves(group: Group): Iterable<Leaf> {
-        return Leaf.find { (Leaves.version eq group.version.id.value) and (Leaves.groupVid eq group.vid) }
+    fun findCurrentGroupLeaves(group: Group): Iterable<Leaf> = transaction {
+        Leaf.find { (Leaves.version eq group.version.id.value) and (Leaves.groupVid eq group.vid) }
     }
 
     fun findDifferentialLeaves(fromVersion: Version, toVersion: Version): Iterable<Leaf> = transaction {
