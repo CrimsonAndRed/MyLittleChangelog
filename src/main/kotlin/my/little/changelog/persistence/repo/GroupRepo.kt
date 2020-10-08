@@ -38,8 +38,8 @@ object GroupRepo : AbstractCrudRepository<Group, Int>(Group) {
             ) SELECT id FROM tmp_groups
         """
 
-    fun findByVersion(version: Version): Iterable<Group> = transaction {
-        Group.find { Groups.version eq version.id }
+    fun findRootGroupsByVersion(version: Version): Iterable<Group> = transaction {
+        Group.find { (Groups.version eq version.id) and (Groups.parentVid eq null) }
     }
 
     fun findGroupsAffectedByVersion(version: Version): Iterable<Group> = transaction {
