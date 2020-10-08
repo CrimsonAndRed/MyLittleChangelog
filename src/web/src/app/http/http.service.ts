@@ -25,4 +25,8 @@ export class Http {
       return this.httpClient.post<T>(url, body, jsonHttpOptions);
   }
 
+  delete<T>(url: string): Observable<T> {
+    return this.httpClient.delete<T>(url);
+  }
+
 }

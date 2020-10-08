@@ -26,4 +26,9 @@ export class VersionsListComponent implements OnInit {
   onNewVersionCreated(version: Version): void {
     this.versions.push(version);
   }
+
+  onVersionDelete(version: Version): void {
+    this.http.delete(`http://localhost:8080/version/${version.id}`)
+        .subscribe(() => this.versions = this.versions.filter(v => v.id !== version.id));
+  }
 }

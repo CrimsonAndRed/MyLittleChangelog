@@ -3,6 +3,7 @@
   <ul>
     <li *ngFor="let version of versions">
       <a [routerLink]="gotoVersionPage(version)">{{version.id}}</a>
+      <button *ngIf="version.id === versions[versions.length - 1].id" (click)="onVersionDelete(version)">Удалить версию</button>
     </li>
   </ul>
 </div>
