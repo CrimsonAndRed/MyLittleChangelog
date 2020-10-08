@@ -128,9 +128,17 @@ internal class VersionIntegrationTest : AbstractIntegrationTest() {
             val latestVersion = transaction {
                 Version.new { }
                 val latestVersion = Version.new { }
-                Group.new {
+                val g1 = Group.new {
                     name = "Test Group 1"
                     version = latestVersion
+                }
+
+                commit()
+
+                Group.new {
+                    name = "Test Group 2"
+                    version = latestVersion
+                    parentVid = g1.vid
                 }
                 Leaf.new {
                     name = "Test Leaf 1"
