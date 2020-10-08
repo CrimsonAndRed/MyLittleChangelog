@@ -12,6 +12,3 @@ export interface UpdatedLeaf {
   valueType: number,
   value: string,
 }
-
-export interface ReturnedUpdatedLeaf extends UpdatedLeaf {
-}

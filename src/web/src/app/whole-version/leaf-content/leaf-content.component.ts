@@ -4,7 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Http } from 'app/http/http.service'
 
 import { LeafContent } from 'app/model/leaf-content';
-import { UpdatedLeaf, LeafToUpdate, ReturnedUpdatedLeaf } from 'app/model/update-leaf';
+import { UpdatedLeaf, LeafToUpdate } from 'app/model/update-leaf';
 import { EditLeafModalComponent } from './edit-leaf-modal/edit-leaf-modal.component'
 
 @Component({
@@ -49,7 +49,7 @@ export class LeafContentComponent {
       value: leaf.value,
       parentId: groupId,
     }
-    this.http.put<ReturnedUpdatedLeaf>(`http://localhost:8080/version/${versionId}/group/${groupId}/leaf/${leafId}`, leafToUpdate)
+    this.http.put<UpdatedLeaf>(`http://localhost:8080/version/${versionId}/group/${groupId}/leaf/${leafId}`, leafToUpdate)
           .subscribe(updatedLeaf => this.onUpdateLeaf.emit(updatedLeaf));
   }
 }
