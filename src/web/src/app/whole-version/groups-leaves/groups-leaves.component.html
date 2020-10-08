@@ -1,0 +1,11 @@
+<div>
+  <new-group-button (onNewGroup)="onNewGroupCreated($event)" [groupContent]="parentGroup"></new-group-button>
+  <new-leaf-button (onNewLeaf)="onNewLeafCreated($event)" [groupContent]="parentGroup"></new-leaf-button>
+  <button (click)="switchShowed()">{{ isContentShowed ? '∨' : '>' }}</button>
+  <div *ngIf="isContentShowed">
+    <group-content *ngFor="let groupContent of groups"
+                   [groupContent]="groupContent"></group-content>
+    <leaf-content *ngFor="let leafContent of leaves"
+                  [leafContent]="leafContent"></leaf-content>
+  </div>
+</div>

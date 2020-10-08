@@ -44,7 +44,7 @@ export class NewGroupButtonComponent {
       name: name,
     }
     this.http.post<NewGroupWithId>(`http://localhost:8080/version/${versionId}/group`, newGroup)
-      .subscribe(newGroup =>this.onNewGroup.emit(newGroup) );
+      .subscribe(newGroup => this.onNewGroup.emit(newGroup) );
   }
 
 }

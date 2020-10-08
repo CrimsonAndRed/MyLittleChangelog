@@ -1,9 +1,6 @@
 <div class="group-content">
   <label>{{ groupContent.name }}</label>
-  <new-group-button (onNewGroup)="onNewGroupCreated($event)" [groupContent]="groupContent"></new-group-button>
-  <new-leaf-button (onNewLeaf)="onNewLeafCreated($event)" [groupContent]="groupContent"></new-leaf-button>
-  <group-content *ngFor="let groupContent of groupContent.groupContent"
-                 [groupContent]="groupContent"></group-content>
-  <leaf-content *ngFor="let leafContent of groupContent.leafContent"
-                [leafContent]="leafContent"></leaf-content>
+  <groups-leaves [parentGroup]="groupContent"
+                 [groups]="groupContent.groupContent"
+                 [leaves]="groupContent.leafContent"></groups-leaves>
 </div>

@@ -1,8 +1,5 @@
 <div>
   <p> Version {{version.id}}</p>
-  <new-group-button (onNewGroup)="onNewGroupCreated($event)" [groupContent]="null"></new-group-button>
-  <group-content *ngFor="let groupContent of version.groupContent"
-                 [groupContent]="groupContent"></group-content>
-  <leaf-content *ngFor="let leafContent of version.leafContent"
-                [leafContent]="leafContent"></leaf-content>
+  <groups-leaves [groups]="version.groupContent"
+                 [leaves]="version.leafContent"></groups-leaves>
 </div>
