@@ -55,12 +55,16 @@ export class GroupsLeavesComponent {
     this.isContentShowed = !this.isContentShowed;
   }
 
-  onUpdateLeaf(updatedLeaf: UpdatedLeaf) {
+  onLeafUpdate(updatedLeaf: UpdatedLeaf) {
     const leafContent = this.leaves.find(leaf => leaf.id === updatedLeaf.id);
 
     leafContent.name = updatedLeaf.name;
     leafContent.valueType = updatedLeaf.valueType;
     leafContent.value = updatedLeaf.value;
+  }
+
+  onLeafDelete(deletedLeaf: LeafContent) {
+    this.leaves = this.leaves.filter(leaf => leaf.id !== deletedLeaf.id);
   }
 
 }

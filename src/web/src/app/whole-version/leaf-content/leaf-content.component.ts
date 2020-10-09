@@ -13,17 +13,16 @@ import { EditLeafModalComponent } from './edit-leaf-modal/edit-leaf-modal.compon
 })
 export class LeafContentComponent {
 
-  @Output() onUpdateLeaf = new EventEmitter<UpdatedLeaf>();
+  @Output() onLeafUpdate = new EventEmitter<UpdatedLeaf>();
+  @Output() onLeafDelete = new EventEmitter<LeafContent>();
 
   @Input() leafContent: LeafContent;
-
-  @Input() parentId: number
-
+  @Input() parentId: number;
 
   constructor(private http: Http, private route: ActivatedRoute, private dialog: MatDialog) {
   }
 
-  onEditLeafButtonClick() {
+  onEditButtonClick() {
     const dialogRef = this.dialog.open(EditLeafModalComponent, {
       hasBackdrop: true,
       data: this.leafContent
@@ -35,6 +34,15 @@ export class LeafContentComponent {
       }
     });
 
+  }
+
+  onDeleteButtonClick() {
+    const versionId = this.route.snapshot.data.version.id;
+    const groupId = this.parentId;
+    const leafId = this.leafContent.id;
+
+    this.http.delete(`http://localhost:8080/version/${versionId}/group/${groupId}/leaf/${leafId}`)
+      .subscribe(() => this.onLeafDelete.emit(this.leafContent));
   }
 
   updateLeaf(leaf: LeafContent) {
@@ -49,6 +57,7 @@ export class LeafContentComponent {
       parentId: parentId,
     }
     this.http.put<UpdatedLeaf>(`http://localhost:8080/version/${versionId}/group/${parentId}/leaf/${leafId}`, leafToUpdate)
-          .subscribe(updatedLeaf => this.onUpdateLeaf.emit(updatedLeaf));
+          .subscribe(updatedLeaf => this.onLeafUpdate.emit(updatedLeaf));
   }
+
 }
