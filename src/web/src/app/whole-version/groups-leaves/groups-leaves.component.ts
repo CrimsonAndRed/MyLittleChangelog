@@ -30,6 +30,16 @@ export class GroupsLeavesComponent {
     this.groups.push(newGroup);
   }
 
+  onGroupUpdate(updatedGroup: UpdatedGroup) {
+    const groupContent = this.groups.find(group => group.id === updatedGroup.id);
+
+    groupContent.name = updatedGroup.name;
+  }
+
+  onGroupDelete(deletedGroup: GroupContent) {
+    this.groups = this.groups.filter(group => group.id !== deletedGroup.id);
+  }
+
   onNewLeafCreated(newLeafWithId: NewLeafWithId) {
     const newLeaf: LeafContent = {
       id: newLeafWithId.id,
@@ -53,10 +63,5 @@ export class GroupsLeavesComponent {
     leafContent.value = updatedLeaf.value;
   }
 
-  onGroupUpdate(updatedGroup: UpdatedGroup) {
-    const groupContent = this.groups.find(group => group.id === updatedGroup.id);
-
-    groupContent.name = updatedGroup.name;
-  }
 }
 

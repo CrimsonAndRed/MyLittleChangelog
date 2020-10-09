@@ -15,13 +15,14 @@ import { EditGroupModalComponent } from './edit-group-modal/edit-group-modal.com
 export class GroupContentComponent {
 
   @Output() onGroupUpdate = new EventEmitter<UpdatedGroup>();
+  @Output() onGroupDelete = new EventEmitter<GroupContent>();
   @Input() groupContent: GroupContent;
   @Input() parentId: number;
 
   constructor(private http: Http, private route: ActivatedRoute, private dialog: MatDialog) {
   }
 
-  onEditLeafButtonClick() {
+  onEditButtonClick() {
     const dialogRef = this.dialog.open(EditGroupModalComponent, {
           hasBackdrop: true,
           data: this.groupContent
@@ -32,6 +33,14 @@ export class GroupContentComponent {
             this.updateGroup(result);
           }
         });
+  }
+
+  onDeleteButtonClick() {
+    const versionId = this.route.snapshot.data.version.id;
+    const groupId = this.groupContent.id;
+
+    this.http.delete(`http://localhost:8080/version/${versionId}/group/${groupId}`)
+      .subscribe(() => this.onGroupDelete.emit(this.groupContent));
   }
 
   updateGroup(group: GroupContent) {
