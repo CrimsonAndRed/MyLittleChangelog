@@ -28,6 +28,7 @@ export class GroupsLeavesComponent {
       leafContent: [],
     };
     this.groups.push(newGroup);
+    this.isContentShowed = true;
   }
 
   onGroupUpdate(updatedGroup: UpdatedGroup) {
@@ -49,6 +50,7 @@ export class GroupsLeavesComponent {
       value: newLeafWithId.value,
     }
     this.leaves.push(newLeaf);
+    this.isContentShowed = true;
   }
 
   switchShowed() {
@@ -66,6 +68,4 @@ export class GroupsLeavesComponent {
   onLeafDelete(deletedLeaf: LeafContent) {
     this.leaves = this.leaves.filter(leaf => leaf.id !== deletedLeaf.id);
   }
-
 }
-
