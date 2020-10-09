@@ -1,8 +1,7 @@
 import { Component, Input, Output } from '@angular/core';
 
-import { GroupContent } from 'app/model/group-content';
+import { GroupContent, NewGroupWithId, NewGroup } from 'app/model/group-content';
 import { Http } from 'app/http/http.service';
-import { NewGroupWithId, NewGroup} from 'app/model/new-group';
 import { ActivatedRoute } from '@angular/router';
 import { EventEmitter } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';

@@ -1,12 +1,11 @@
 import { Component, Input, Output } from '@angular/core';
 
-import { GroupContent } from 'app/model/group-content';
+import { GroupContent, NewGroupWithId, NewGroup } from 'app/model/group-content';
 import { Http } from 'app/http/http.service';
-import { NewGroupWithId, NewGroup} from 'app/model/new-group';
 import { ActivatedRoute } from '@angular/router';
 import { EventEmitter } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { NewGroupModalComponent } from './new-group-modal/new-group-modal.component';
+import { NewGroupModalComponent } from 'app/whole-version/group-content/new-group-modal/new-group-modal.component';
 
 @Component({
   selector: 'new-group-button',

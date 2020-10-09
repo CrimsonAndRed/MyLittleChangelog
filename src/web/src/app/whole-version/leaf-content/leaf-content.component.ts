@@ -3,8 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { Http } from 'app/http/http.service'
 
-import { LeafContent } from 'app/model/leaf-content';
-import { UpdatedLeaf, LeafToUpdate } from 'app/model/update-leaf';
+import { LeafContent, UpdatedLeaf, LeafToUpdate } from 'app/model/leaf-content';
 import { EditLeafModalComponent } from './edit-leaf-modal/edit-leaf-modal.component'
 
 @Component({

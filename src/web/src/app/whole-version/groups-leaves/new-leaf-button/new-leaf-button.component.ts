@@ -2,12 +2,12 @@ import { Component, Input, Output } from '@angular/core';
 
 import { GroupContent } from 'app/model/group-content';
 import { Http } from 'app/http/http.service';
-import { NewLeafWithId, NewLeaf} from 'app/model/new-leaf';
+import { NewLeafWithId, NewLeaf} from 'app/model/leaf-content';
 import { ActivatedRoute } from '@angular/router';
 import { EventEmitter } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 
-import { NewLeafModalComponent } from './new-leaf-modal/new-leaf-modal.component';
+import { NewLeafModalComponent } from 'app/whole-version/leaf-content/new-leaf-modal/new-leaf-modal.component';
 
 @Component({
   selector: 'new-leaf-button',

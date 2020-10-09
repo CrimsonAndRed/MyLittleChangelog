@@ -7,3 +7,25 @@ export interface GroupContent {
   groupContent: GroupContent[];
   leafContent: LeafContent[];
 }
+
+export interface NewGroup {
+    name: string;
+    vid: number;
+    parentId: number;
+}
+
+export interface NewGroupWithId extends NewGroup {
+    id: number;
+}
+
+export interface GroupToUpdate {
+  name: string;
+  parentId: number;
+}
+
+export interface UpdatedGroup {
+  id: number;
+  vid: number;
+  name: string;
+  parentId: number;
+}

@@ -2,11 +2,8 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 
-import { GroupContent } from 'app/model/group-content';
-import { LeafContent } from 'app/model/leaf-content';
-import { NewGroupWithId } from 'app/model/new-group';
-import { NewLeafWithId } from 'app/model/new-leaf';
-import { GroupToUpdate, UpdatedGroup } from 'app/model/update-group';
+import { GroupContent, NewGroupWithId, GroupToUpdate, UpdatedGroup } from 'app/model/group-content';
+import { LeafContent, NewLeafWithId } from 'app/model/leaf-content';
 import { Http } from 'app/http/http.service';
 import { EditGroupModalComponent } from './edit-group-modal/edit-group-modal.component'
 

@@ -2,8 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { WholeVersion } from 'app/model/whole-version';
 import { ActivatedRoute } from '@angular/router'
 import { Http } from 'app/http/http.service'
-import { NewGroupWithId } from 'app/model/new-group';
-import { GroupContent } from 'app/model/group-content';
+import { GroupContent, NewGroupWithId } from 'app/model/group-content';
 
 @Component({
   selector: 'whole-version',

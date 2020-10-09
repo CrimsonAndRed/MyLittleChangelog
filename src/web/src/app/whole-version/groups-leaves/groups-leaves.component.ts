@@ -1,11 +1,7 @@
 import { Component, Input } from '@angular/core';
 
-import { GroupContent } from 'app/model/group-content';
-import { LeafContent } from 'app/model/leaf-content';
-import { NewGroupWithId } from 'app/model/new-group';
-import { NewLeafWithId } from 'app/model/new-leaf';
-import { UpdatedLeaf } from 'app/model/update-leaf';
-import { UpdatedGroup } from 'app/model/update-group';
+import { GroupContent, NewGroupWithId, UpdatedGroup } from 'app/model/group-content';
+import { LeafContent, NewLeafWithId, UpdatedLeaf } from 'app/model/leaf-content';
 
 @Component({
   selector: 'groups-leaves',
