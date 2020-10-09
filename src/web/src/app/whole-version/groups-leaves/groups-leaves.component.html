@@ -4,10 +4,12 @@
   <button (click)="switchShowed()">{{ isContentShowed ? '∨' : '>' }}</button>
   <div [hidden]="!isContentShowed">
     <group-content *ngFor="let groupContent of groups"
-                   [groupContent]="groupContent"></group-content>
+                   [parentId]="parentGroup?.id"
+                   [groupContent]="groupContent"
+                   (onGroupUpdate)="onGroupUpdate($event)"></group-content>
     <leaf-content *ngFor="let leafContent of leaves"
+                  [parentId]="parentGroup?.id"
                   [leafContent]="leafContent"
-                  (onUpdateLeaf)="onUpdateLeaf($event)"
-                  [groupId]="parentGroup?.id"></leaf-content>
+                  (onUpdateLeaf)="onUpdateLeaf($event)"></leaf-content>
   </div>
 </div>

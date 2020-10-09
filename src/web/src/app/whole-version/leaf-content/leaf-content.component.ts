@@ -18,7 +18,7 @@ export class LeafContentComponent {
 
   @Input() leafContent: LeafContent;
 
-  @Input() groupId: number
+  @Input() parentId: number
 
 
   constructor(private http: Http, private route: ActivatedRoute, private dialog: MatDialog) {
@@ -40,16 +40,16 @@ export class LeafContentComponent {
 
   updateLeaf(leaf: LeafContent) {
     const versionId = this.route.snapshot.data.version.id;
-    const groupId = this.groupId;
+    const parentId = this.parentId;
     const leafId = leaf.id;
 
     const leafToUpdate: LeafToUpdate = {
       name: leaf.name,
       valueType: leaf.valueType,
       value: leaf.value,
-      parentId: groupId,
+      parentId: parentId,
     }
-    this.http.put<UpdatedLeaf>(`http://localhost:8080/version/${versionId}/group/${groupId}/leaf/${leafId}`, leafToUpdate)
+    this.http.put<UpdatedLeaf>(`http://localhost:8080/version/${versionId}/group/${parentId}/leaf/${leafId}`, leafToUpdate)
           .subscribe(updatedLeaf => this.onUpdateLeaf.emit(updatedLeaf));
   }
 }

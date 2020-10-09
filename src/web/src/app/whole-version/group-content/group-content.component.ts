@@ -1,9 +1,14 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
 
 import { GroupContent } from 'app/model/group-content';
 import { LeafContent } from 'app/model/leaf-content';
 import { NewGroupWithId } from 'app/model/new-group';
 import { NewLeafWithId } from 'app/model/new-leaf';
+import { GroupToUpdate, UpdatedGroup } from 'app/model/update-group';
+import { Http } from 'app/http/http.service';
+import { EditGroupModalComponent } from './edit-group-modal/edit-group-modal.component'
 
 @Component({
   selector: 'group-content',
@@ -12,31 +17,36 @@ import { NewLeafWithId } from 'app/model/new-leaf';
 })
 export class GroupContentComponent {
 
+  @Output() onGroupUpdate = new EventEmitter<UpdatedGroup>();
   @Input() groupContent: GroupContent;
+  @Input() parentId: number;
 
-  constructor() {
+  constructor(private http: Http, private route: ActivatedRoute, private dialog: MatDialog) {
   }
 
-  onNewGroupCreated(newGroupWithId: NewGroupWithId) {
-    const newGroup: GroupContent = {
-      id: newGroupWithId.id,
-      name: newGroupWithId.name,
-      vid: newGroupWithId.vid,
-      groupContent: [],
-      leafContent: [],
-    };
-    this.groupContent.groupContent.push(newGroup);
+  onEditLeafButtonClick() {
+    const dialogRef = this.dialog.open(EditGroupModalComponent, {
+          hasBackdrop: true,
+          data: this.groupContent
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+          if (result) {
+            this.updateGroup(result);
+          }
+        });
   }
 
-  onNewLeafCreated(newLeafWithId: NewLeafWithId) {
-    const newLeaf: LeafContent = {
-      id: newLeafWithId.id,
-      name: newLeafWithId.name,
-      vid: newLeafWithId.vid,
-      valueType: newLeafWithId.valueType,
-      value: newLeafWithId.value,
+  updateGroup(group: GroupContent) {
+    const versionId = this.route.snapshot.data.version.id;
+    const groupId = group.id;
+
+    const groupToUpdate: GroupToUpdate = {
+      name: group.name,
+      parentId: this.parentId
     }
-    this.groupContent.leafContent.push(newLeaf);
+    this.http.put<UpdatedGroup>(`http://localhost:8080/version/${versionId}/group/${groupId}`, groupToUpdate)
+      .subscribe(updatedGroup => this.onGroupUpdate.emit(updatedGroup))
   }
 
 }

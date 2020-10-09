@@ -1,5 +1,6 @@
 <div class="group-content">
   <label>{{ groupContent.name }}</label>
+  <button (click)="onEditLeafButtonClick()">Edit Group</button>
   <groups-leaves [parentGroup]="groupContent"
                  [groups]="groupContent.groupContent"
                  [leaves]="groupContent.leafContent"></groups-leaves>

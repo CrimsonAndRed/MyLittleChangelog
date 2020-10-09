@@ -5,6 +5,7 @@ import { LeafContent } from 'app/model/leaf-content';
 import { NewGroupWithId } from 'app/model/new-group';
 import { NewLeafWithId } from 'app/model/new-leaf';
 import { UpdatedLeaf } from 'app/model/update-leaf';
+import { UpdatedGroup } from 'app/model/update-group';
 
 @Component({
   selector: 'groups-leaves',
@@ -49,11 +50,17 @@ export class GroupsLeavesComponent {
   }
 
   onUpdateLeaf(updatedLeaf: UpdatedLeaf) {
-    const leafContent = this.leaves.find(leaf => leaf.id == updatedLeaf.id);
+    const leafContent = this.leaves.find(leaf => leaf.id === updatedLeaf.id);
 
     leafContent.name = updatedLeaf.name;
     leafContent.valueType = updatedLeaf.valueType;
     leafContent.value = updatedLeaf.value;
+  }
+
+  onGroupUpdate(updatedGroup: UpdatedGroup) {
+    const groupContent = this.groups.find(group => group.id === updatedGroup.id);
+
+    groupContent.name = updatedGroup.name;
   }
 }
 
