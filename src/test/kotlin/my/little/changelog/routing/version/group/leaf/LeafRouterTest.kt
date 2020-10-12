@@ -32,7 +32,7 @@ internal class LeafRouterTest : AbstractRouterTest({
 
     @Test
     fun `Test Leaf Creation Success`() {
-        val dto = LeafCreationDto("Имя1", 1, "Значение1")
+        val dto = LeafCreationDto(null, "Имя1", 1, "Значение1")
         val serviceReturnedDto = my.little.changelog.model.leaf.dto.service.LeafReturnedDto(baseVgl.l, baseVgl.l, dto.name, dto.valueType, dto.value)
 
         every { LeafService.createLeaf(allAny()) } returns serviceReturnedDto
@@ -46,7 +46,7 @@ internal class LeafRouterTest : AbstractRouterTest({
 
     @Test
     fun `Test Leaf Creation Exception`() {
-        val dto = LeafCreationDto("Имя1", 1, "Значение1")
+        val dto = LeafCreationDto(null, "Имя1", 1, "Значение1")
 
         testExceptions(
             constructRequest(HttpMethod.Post, baseUrl(baseVgl.v, baseVgl.g), dto),

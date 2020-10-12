@@ -2,6 +2,7 @@ package my.little.changelog.model.leaf.dto.external
 
 fun LeafCreationDto.toServiceDto(groupId: Int, versionId: Int) =
     my.little.changelog.model.leaf.dto.service.LeafCreationDto(
+        vid = vid,
         name = name,
         valueType = valueType,
         value = value,

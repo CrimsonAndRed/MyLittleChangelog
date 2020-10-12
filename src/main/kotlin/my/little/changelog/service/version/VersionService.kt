@@ -2,16 +2,21 @@ package my.little.changelog.service.version
 
 import my.little.changelog.model.exception.VersionIsNotLatestException
 import my.little.changelog.model.group.Group
+import my.little.changelog.model.group.GroupLatest
 import my.little.changelog.model.group.dto.external.GroupDeletionDto
 import my.little.changelog.model.group.dto.external.WholeGroupDto
 import my.little.changelog.model.leaf.Leaf
+import my.little.changelog.model.leaf.LeafLatest
 import my.little.changelog.model.leaf.dto.external.WholeLeafDto
 import my.little.changelog.model.leaf.dto.service.LeafDeletionDto
+import my.little.changelog.model.version.dto.external.PreviousVersionsDTO
 import my.little.changelog.model.version.dto.external.WholeVersion
 import my.little.changelog.model.version.dto.service.ReturnedVersionDto
 import my.little.changelog.model.version.dto.service.VersionDeletionDto
 import my.little.changelog.model.version.toReturnedDto
+import my.little.changelog.persistence.repo.GroupLatestRepo
 import my.little.changelog.persistence.repo.GroupRepo
+import my.little.changelog.persistence.repo.LeafLatestRepo
 import my.little.changelog.persistence.repo.LeafRepo
 import my.little.changelog.persistence.repo.VersionRepo
 import my.little.changelog.service.group.GroupService
@@ -56,6 +61,36 @@ object VersionService {
         ).let {
             WholeVersion(version.id.value, it.first, it.second)
         }
+    }
+
+    fun getPreviousVersions(): PreviousVersionsDTO = transaction {
+        val groups = GroupLatestRepo.findAll()
+        val leaves = LeafLatestRepo.findAll()
+
+        createLatestDtosRecursive(
+            groups.groupBy({ it.parentVid }) { it },
+            leaves.groupBy({ it.groupVid }) { it }
+        ).let {
+            PreviousVersionsDTO(it.first, it.second)
+        }
+    }
+
+    // TODO duplication
+    private fun createLatestDtosRecursive(
+        groupsMap: Map<Int?, List<GroupLatest>>,
+        leavesMap: Map<Int?, List<LeafLatest>>,
+        value: Int? = null
+    ): Pair<List<WholeGroupDto>, List<WholeLeafDto>> {
+        val rootGroupDtos = groupsMap[value]?.map {
+            val pair = createLatestDtosRecursive(groupsMap, leavesMap, it.vid)
+            WholeGroupDto(it.id.value, it.vid, it.name, pair.first, pair.second)
+        } ?: emptyList()
+
+        val rootLeafDtos = leavesMap[value]?.map {
+            WholeLeafDto(it.id.value, it.vid, it.name, it.valueType, it.value)
+        } ?: emptyList()
+
+        return rootGroupDtos to rootLeafDtos
     }
 
     private fun createDtosRecursive(

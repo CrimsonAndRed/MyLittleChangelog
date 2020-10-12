@@ -5,6 +5,7 @@ import my.little.changelog.model.version.Version
 
 fun LeafCreationDto.toRepoDto(version: Version, group: Group) =
     my.little.changelog.model.leaf.dto.repo.LeafCreationDto(
+        vid = vid,
         name = name,
         valueType = valueType,
         value = value,

@@ -8,6 +8,7 @@ import io.mockk.mockkObject
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import my.little.changelog.model.exception.VersionIsNotLatestException
+import my.little.changelog.model.version.dto.external.PreviousVersionsDTO
 import my.little.changelog.model.version.dto.external.WholeVersion
 import my.little.changelog.model.version.dto.service.ReturnedVersionDto
 import my.little.changelog.routing.AbstractRouterTest
@@ -87,6 +88,27 @@ internal class VersionRouterTest : AbstractRouterTest(
     fun `Test Versions Get Exception`() = testExceptions(
         constructRequest(HttpMethod.Get, baseUrl),
         listOf { VersionService.getVersions() },
+        listOf(
+            { RuntimeException() } to HttpStatusCode.InternalServerError,
+            { VersionIsNotLatestException() } to HttpStatusCode.InternalServerError
+        )
+    )
+
+    @Test
+    fun `Test Previous Versions Get Success`() {
+        val dto = PreviousVersionsDTO(emptyList(), emptyList())
+
+        every { VersionService.getPreviousVersions() } returns dto
+
+        testRoute(HttpMethod.Get, "$baseUrl/previous") {
+            assertEquals(HttpStatusCode.OK, response.status())
+        }
+    }
+
+    @Test
+    fun `Test Previous Versions Get Exception`() = testExceptions(
+        constructRequest(HttpMethod.Get, "$baseUrl/previous"),
+        listOf { VersionService.getPreviousVersions() },
         listOf(
             { RuntimeException() } to HttpStatusCode.InternalServerError,
             { VersionIsNotLatestException() } to HttpStatusCode.InternalServerError

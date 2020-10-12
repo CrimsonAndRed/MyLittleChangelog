@@ -6,6 +6,7 @@ import my.little.changelog.model.leaf.Leaf
 import my.little.changelog.model.version.Version
 
 data class LeafCreationDto(
+    val vid: Int?,
     val name: String,
     val valueType: Int,
     val value: String,
@@ -13,6 +14,7 @@ data class LeafCreationDto(
     val version: Version,
 ) : RepoCreationDto<Leaf> {
     override fun convertToEntity(): Leaf.() -> Unit = {
+        this@LeafCreationDto.vid?.let { vid = it }
         name = this@LeafCreationDto.name
         valueType = this@LeafCreationDto.valueType
         value = this@LeafCreationDto.value

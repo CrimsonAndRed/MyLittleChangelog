@@ -1,0 +1,17 @@
+<div class="group-content">
+  <div>
+    <input type="radio" name="past-groups-leaves" value="{{groupContent.id}}"
+           (click)="onRadioButtonClick()">
+    <label>{{ groupContent.name }}</label>
+  </div>
+  <past-group *ngFor="let groupContentChild of groupContent.groupContent"
+              (onRadioChange)="onSubRadioChange($event)"
+              [parentId]="groupContent.id"
+              [groupContent]="groupContentChild">
+  </past-group>
+  <past-leaf *ngFor="let leafContent of groupContent.leafContent"
+             (onRadioChange)="onSubRadioChange($event)"
+             [parentId]="groupContent.id"
+             [leafContent]="leafContent">
+  </past-leaf>
+</div>

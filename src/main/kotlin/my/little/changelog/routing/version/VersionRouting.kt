@@ -24,6 +24,12 @@ fun Routing.versionRouting() {
         post {
             call.respond(VersionService.createVersion().toExternalDto())
         }
+
+        route("/previous") {
+            get {
+                call.respond(VersionService.getPreviousVersions())
+            }
+        }
     }
 
     route("/version/{versionId}") {

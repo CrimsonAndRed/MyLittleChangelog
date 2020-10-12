@@ -11,6 +11,7 @@ import my.little.changelog.model.group.dto.external.WholeGroupDto
 import my.little.changelog.model.leaf.Leaf
 import my.little.changelog.model.leaf.dto.external.WholeLeafDto
 import my.little.changelog.model.version.Version
+import my.little.changelog.model.version.dto.external.PreviousVersionsDTO
 import my.little.changelog.model.version.dto.external.ReturnedVersionDto
 import my.little.changelog.model.version.dto.external.WholeVersion
 import my.little.changelog.persistence.repo.GroupRepo
@@ -185,6 +186,54 @@ internal class VersionIntegrationTest : AbstractIntegrationTest() {
                     assertNotEquals(firstVersion, VersionRepo.findLatest())
                     assertEquals(1, GroupRepo.findAll().count())
                     assertEquals(1, LeafRepo.findAll().count())
+                }
+            }
+        }
+    }
+
+    @Test
+    fun `Test Get Previous Version Success`() {
+        testApplication {
+
+            lateinit var group: Group
+            lateinit var leaf: Leaf
+
+            transaction {
+                val latestVersion = Version.new { }
+                group = Group.new {
+                    name = "Test Group 1"
+                    version = latestVersion
+                }
+                leaf = Leaf.new {
+                    name = "Test Leaf 1"
+                    value = "Test Value 1"
+                    valueType = 0
+                    version = latestVersion
+                }
+            }
+
+            with(handleRequest(HttpMethod.Get, "/version/previous")) {
+                transaction {
+                    assertEquals(HttpStatusCode.OK, response.status())
+                    val json: PreviousVersionsDTO = Json.decodeFromString(response.content!!)
+                    assertEquals(1, json.groupContent.size)
+                    assertEquals(1, json.leafContent.size)
+
+                    val groupContent = json.groupContent[0]
+
+                    assertEquals(groupContent.id, group.id.value)
+                    assertEquals(groupContent.vid, group.vid)
+                    assertEquals(groupContent.name, group.name)
+                    assertEquals(groupContent.groupContent.size, 0)
+                    assertEquals(groupContent.leafContent.size, 0)
+
+                    val leafContent = json.leafContent[0]
+
+                    assertEquals(leafContent.id, leaf.id.value)
+                    assertEquals(leafContent.vid, leaf.vid)
+                    assertEquals(leafContent.name, leaf.name)
+                    assertEquals(leafContent.valueType, leaf.valueType)
+                    assertEquals(leafContent.value, leaf.value)
                 }
             }
         }

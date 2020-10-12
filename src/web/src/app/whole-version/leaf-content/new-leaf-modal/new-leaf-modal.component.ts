@@ -16,7 +16,8 @@ export class NewLeafModalComponent {
   leaf: NewLeaf = {
     name: null,
     valueType: null,
-    value: null
+    value: null,
+    vid: null
   };
 
   constructor(private dialogRef: MatDialogRef<NewLeafModalComponent>) {

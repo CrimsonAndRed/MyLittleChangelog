@@ -3,7 +3,6 @@ import { ActivatedRoute } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 
 import { GroupContent, NewGroupWithId, GroupToUpdate, UpdatedGroup } from 'app/model/group-content';
-import { LeafContent, NewLeafWithId } from 'app/model/leaf-content';
 import { Http } from 'app/http/http.service';
 import { EditGroupModalComponent } from './edit-group-modal/edit-group-modal.component'
 

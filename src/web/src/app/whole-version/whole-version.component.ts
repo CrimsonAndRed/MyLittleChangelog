@@ -31,4 +31,11 @@ export class WholeVersionComponent implements OnInit {
   ngOnInit() {
     this.version = this.route.snapshot.data.version;
   }
+
+  onRefresh() {
+    const versionId = this.route.snapshot.params.id;
+
+    this.http.get<WholeVersion>(`http://localhost:8080/version/${versionId}`)
+      .subscribe(result => this.version = result);
+  }
 }
