@@ -63,6 +63,23 @@ object VersionService {
         }
     }
 
+    private fun createDtosRecursive(
+        groupsMap: Map<Int?, List<Group>>,
+        leavesMap: Map<Int?, List<Leaf>>,
+        value: Int? = null
+    ): Pair<List<WholeGroupDto>, List<WholeLeafDto>> {
+        val rootGroupDtos = groupsMap[value]?.map {
+            val pair = createDtosRecursive(groupsMap, leavesMap, it.vid)
+            WholeGroupDto(it.id.value, it.vid, it.name, pair.first, pair.second)
+        } ?: emptyList()
+
+        val rootLeafDtos = leavesMap[value]?.map {
+            WholeLeafDto(it.id.value, it.vid, it.name, it.valueType, it.value)
+        } ?: emptyList()
+
+        return rootGroupDtos to rootLeafDtos
+    }
+
     fun getPreviousVersions(): PreviousVersionsDTO = transaction {
         val groups = GroupLatestRepo.findAll()
         val leaves = LeafLatestRepo.findAll()
@@ -83,23 +100,6 @@ object VersionService {
     ): Pair<List<WholeGroupDto>, List<WholeLeafDto>> {
         val rootGroupDtos = groupsMap[value]?.map {
             val pair = createLatestDtosRecursive(groupsMap, leavesMap, it.vid)
-            WholeGroupDto(it.id.value, it.vid, it.name, pair.first, pair.second)
-        } ?: emptyList()
-
-        val rootLeafDtos = leavesMap[value]?.map {
-            WholeLeafDto(it.id.value, it.vid, it.name, it.valueType, it.value)
-        } ?: emptyList()
-
-        return rootGroupDtos to rootLeafDtos
-    }
-
-    private fun createDtosRecursive(
-        groupsMap: Map<Int?, List<Group>>,
-        leavesMap: Map<Int?, List<Leaf>>,
-        value: Int? = null
-    ): Pair<List<WholeGroupDto>, List<WholeLeafDto>> {
-        val rootGroupDtos = groupsMap[value]?.map {
-            val pair = createDtosRecursive(groupsMap, leavesMap, it.vid)
             WholeGroupDto(it.id.value, it.vid, it.name, pair.first, pair.second)
         } ?: emptyList()
 
