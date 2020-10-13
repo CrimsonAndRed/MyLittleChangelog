@@ -6,6 +6,15 @@ export interface LeafContent {
   value: string;
 }
 
+export interface PastLeafContent {
+  id: number;
+  vid: number;
+  name: string;
+  valueType: number;
+  value: string;
+  inCurrentVersion: boolean;
+}
+
 export interface NewLeaf {
     name: string,
     valueType: number,

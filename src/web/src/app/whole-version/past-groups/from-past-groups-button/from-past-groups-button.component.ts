@@ -4,6 +4,7 @@ import { GroupContent } from 'app/model/group-content';
 import { Http } from 'app/http/http.service';
 import { NewLeaf, NewLeafWithId } from 'app/model/leaf-content';
 import { NewGroup, NewGroupWithId } from 'app/model/group-content';
+import { WholeVersion } from 'app/model/whole-version';
 import { ActivatedRoute } from '@angular/router';
 import { EventEmitter } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
@@ -19,16 +20,39 @@ export class FromPastGroupsButton {
 
   @Output() onRefresh = new EventEmitter<void>();
 
-  @Input() groupContent: GroupContent;
+  @Input() version: WholeVersion;
 
   constructor(private http: Http, private route: ActivatedRoute, private dialog: MatDialog) {
   }
 
+  calculateUsedIds(): [Set<number>, Set<number>] {
+    let groupIds: Set<number> = new Set();
+    let leafIds: Set<number> = new Set();
+
+    for (let group of this.version.groupContent) {
+      this.addUsedIdsRecursive(group, groupIds, leafIds);
+    }
+
+    return [groupIds, leafIds];
+  }
+
+  addUsedIdsRecursive(group: GroupContent, groupIds: Set<number>, leafIds: Set<number>) {
+    groupIds.add(group.id);
+    for (let leaf of group.leafContent) {
+      leafIds.add(leaf.id);
+    }
+    for (let groupInner of group.groupContent) {
+      this.addUsedIdsRecursive(groupInner, groupIds, leafIds);
+    }
+  }
+
   onAddGroupsFromPastClick() {
+    let sets: [Set<number>, Set<number>] = this.calculateUsedIds();
 
     const dialogRef = this.dialog.open(FromPastGroupsModal, {
       hasBackdrop: true,
-      minWidth: "80%"
+      minWidth: "80%",
+      data: sets,
     });
 
     dialogRef.afterClosed().subscribe(result => {

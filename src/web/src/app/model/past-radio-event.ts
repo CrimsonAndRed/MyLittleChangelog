@@ -1,8 +1,8 @@
-import { GroupContent } from './group-content'
-import { LeafContent } from './leaf-content'
+import { PastGroupContent } from './group-content'
+import { PastLeafContent } from './leaf-content'
 
 export interface PastRadioEvent {
-  value: GroupContent | LeafContent,
+  value: PastGroupContent | PastLeafContent,
   parentId: number
   kind: "leaf" | "group"
 }

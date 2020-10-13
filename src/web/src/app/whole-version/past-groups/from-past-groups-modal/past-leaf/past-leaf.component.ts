@@ -1,7 +1,7 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { PastRadioEvent } from 'app/model/past-radio-event'
 
-import { LeafContent } from 'app/model/leaf-content';
+import { PastLeafContent } from 'app/model/leaf-content';
 
 @Component({
   selector: 'past-leaf',
@@ -10,7 +10,7 @@ import { LeafContent } from 'app/model/leaf-content';
 })
 export class PastLeaf {
 
-  @Input() leafContent: LeafContent;
+  @Input() leafContent: PastLeafContent;
 
   @Input() parentId: number;
 

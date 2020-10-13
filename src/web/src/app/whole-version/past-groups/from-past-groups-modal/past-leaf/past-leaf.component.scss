@@ -1,5 +1,17 @@
-.leaf-content {
+.leaf-content-outer {
     border: 1px solid green;
-    padding: 5px 5px;
     margin: 10px 15px;
+    background-color: rgba(255, 255, 255, 1);
+}
+
+.leaf-content-inner {
+    padding: 5px 5px;
+}
+
+.in-use-leaf {
+  background-color: rgba(150, 150, 150, 0.1);
+}
+
+.not-in-use-leaf {
+  background-color: rgba(255, 255, 255, 1);
 }
