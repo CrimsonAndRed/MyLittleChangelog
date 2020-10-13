@@ -1,10 +1,13 @@
 <div class="group-content-outer">
   <div class="group-content-inner" [ngClass]="(isReal)?'real-group':'phantom-group'">
     <label>{{ groupContent.name }}</label>
-    <button *ngIf="isReal" (click)="onEditButtonClick()">Edit Group</button>
-    <button *ngIf="isReal" (click)="onDeleteButtonClick()">Delete Group</button>
+    <div *ngIf="canChange">
+      <button *ngIf="isReal" (click)="onEditButtonClick()">Edit Group</button>
+      <button *ngIf="isReal" (click)="onDeleteButtonClick()">Delete Group</button>
+    </div>
     <groups-leaves [parentGroup]="groupContent"
                    [groups]="groupContent.groupContent"
-                   [leaves]="groupContent.leafContent"></groups-leaves>
+                   [leaves]="groupContent.leafContent"
+                   [canChange]="canChange"></groups-leaves>
   </div>
 </div>

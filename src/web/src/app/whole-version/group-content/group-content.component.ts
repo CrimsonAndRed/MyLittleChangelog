@@ -15,8 +15,11 @@ export class GroupContentComponent implements OnInit {
 
   @Output() onGroupUpdate = new EventEmitter<UpdatedGroup>();
   @Output() onGroupDelete = new EventEmitter<GroupContent>();
+
   @Input() groupContent: GroupContent;
   @Input() parentId: number;
+  @Input() canChange: boolean;
+
   isReal: boolean;
 
   constructor(private http: Http, private route: ActivatedRoute, private dialog: MatDialog) {

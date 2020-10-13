@@ -1,6 +1,9 @@
 <div>
   <p> Version {{version.id}}</p>
-  <from-past-groups-button (onRefresh)="onRefresh()" [version]="version"></from-past-groups-button>
+  <div *ngIf="version.canChange">
+    <from-past-groups-button (onRefresh)="onRefresh()" [version]="version"></from-past-groups-button>
+  </div>
   <groups-leaves [groups]="version.groupContent"
-                 [leaves]="[]"></groups-leaves>
+                 [leaves]="[]"
+                 [canChange]="version.canChange"></groups-leaves>
 </div>

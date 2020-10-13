@@ -13,6 +13,7 @@ export class GroupsLeavesComponent {
   @Input() parentGroup: GroupContent = null;
   @Input() groups: GroupContent[];
   @Input() leaves: LeafContent[];
+  @Input() canChange: boolean;
 
   isContentShowed: boolean = false;
 

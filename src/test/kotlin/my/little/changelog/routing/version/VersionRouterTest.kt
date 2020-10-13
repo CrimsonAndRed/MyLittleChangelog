@@ -50,7 +50,7 @@ internal class VersionRouterTest : AbstractRouterTest(
 
     @Test
     fun `Test Version Read Success`() {
-        val dto = WholeVersion(0, emptyList())
+        val dto = WholeVersion(0, true, emptyList())
 
         every { VersionService.getWholeVersion(any()) } returns dto
 

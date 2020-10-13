@@ -51,6 +51,7 @@ object VersionService {
 
     fun getWholeVersion(id: Int): WholeVersion = transaction {
         val version = VersionRepo.findById(id)
+        val latestVersion = VersionRepo.findLatest()
 
         val leaves = LeafRepo.findByVersion(version)
         val groups = GroupRepo.findGroupsAffectedByVersion(version) // TODO(#4) - eager loading- работает, но ломает тест .toList().with(Group::version)
@@ -60,7 +61,7 @@ object VersionService {
             leaves.groupBy({ it.groupVid }) { it },
             version.id.value,
         ).let {
-            WholeVersion(version.id.value, it.first)
+            WholeVersion(version.id.value, version.id.value == latestVersion.id.value, it.first)
         }
     }
 

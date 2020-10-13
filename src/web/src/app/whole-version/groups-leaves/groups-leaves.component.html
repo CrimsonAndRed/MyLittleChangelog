@@ -1,17 +1,21 @@
 <div>
-  <new-group-button (onNewGroup)="onNewGroupCreated($event)" [groupContent]="parentGroup"></new-group-button>
-  <new-leaf-button *ngIf="parentGroup" (onNewLeaf)="onNewLeafCreated($event)" [groupContent]="parentGroup"></new-leaf-button>
+  <div *ngIf="canChange">
+    <new-group-button (onNewGroup)="onNewGroupCreated($event)" [groupContent]="parentGroup"></new-group-button>
+    <new-leaf-button *ngIf="parentGroup" (onNewLeaf)="onNewLeafCreated($event)" [groupContent]="parentGroup"></new-leaf-button>
+  </div>
   <button (click)="switchShowed()">{{ isContentShowed ? '∨' : '>' }}</button>
   <div [hidden]="!isContentShowed">
     <group-content *ngFor="let groupContent of groups"
                    [parentId]="parentGroup?.id"
                    [groupContent]="groupContent"
                    (onGroupUpdate)="onGroupUpdate($event)"
-                   (onGroupDelete)="onGroupDelete($event)"></group-content>
+                   (onGroupDelete)="onGroupDelete($event)"
+                   [canChange]="canChange"></group-content>
     <leaf-content *ngFor="let leafContent of leaves"
                   [parentId]="parentGroup?.id"
                   [leafContent]="leafContent"
                   (onLeafUpdate)="onLeafUpdate($event)"
-                  (onLeafDelete)="onLeafDelete($event)"></leaf-content>
+                  (onLeafDelete)="onLeafDelete($event)"
+                  [canChange]="canChange"></leaf-content>
   </div>
 </div>

@@ -18,6 +18,7 @@ export class LeafContentComponent {
 
   @Input() leafContent: LeafContent;
   @Input() parentId: number;
+  @Input() canChange: boolean;
 
   constructor(private http: Http, private route: ActivatedRoute, private dialog: MatDialog) {
   }
