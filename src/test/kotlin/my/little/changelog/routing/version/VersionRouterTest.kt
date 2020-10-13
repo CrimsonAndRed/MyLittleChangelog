@@ -50,7 +50,7 @@ internal class VersionRouterTest : AbstractRouterTest(
 
     @Test
     fun `Test Version Read Success`() {
-        val dto = WholeVersion(0, emptyList(), emptyList())
+        val dto = WholeVersion(0, emptyList())
 
         every { VersionService.getWholeVersion(any()) } returns dto
 
@@ -59,7 +59,6 @@ internal class VersionRouterTest : AbstractRouterTest(
             val resp = Json.decodeFromString<WholeVersion>(response.content!!)
             assertEquals(dto.id, resp.id)
             assertEquals(dto.groupContent, resp.groupContent)
-            assertEquals(dto.leafContent, resp.leafContent)
         }
     }
 
@@ -96,7 +95,7 @@ internal class VersionRouterTest : AbstractRouterTest(
 
     @Test
     fun `Test Previous Versions Get Success`() {
-        val dto = PreviousVersionsDTO(emptyList(), emptyList())
+        val dto = PreviousVersionsDTO(emptyList())
 
         every { VersionService.getPreviousVersions() } returns dto
 

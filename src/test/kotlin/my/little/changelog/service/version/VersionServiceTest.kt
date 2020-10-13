@@ -101,7 +101,5 @@ internal class VersionServiceTest : BaseMockedDbTest() {
         assertEquals(leaf1.name, leaf.name)
         assertEquals(leaf1.value, leaf.value)
         assertEquals(leaf1.valueType, leaf.valueType)
-
-        assertEquals(0, wv.leafContent.size)
     }
 }

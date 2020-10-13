@@ -7,12 +7,11 @@
     </past-group>
   </div>
 </mat-dialog-content>
+
 <mat-dialog-actions align="end">
   <div *ngIf="chosenPastElement">
-    <p>11</p>
-    <label>{{ chosenPastElement.name }}</label>
+    Выбран элемент: {{ chosenPastElement.value.name }}
   </div>
-
   <button [mat-dialog-close]="null">Cancel</button>
   <button [mat-dialog-close]="chosenPastElement">Save</button>
 </mat-dialog-actions>

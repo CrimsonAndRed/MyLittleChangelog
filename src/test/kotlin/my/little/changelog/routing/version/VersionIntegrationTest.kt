@@ -95,7 +95,6 @@ internal class VersionIntegrationTest : AbstractIntegrationTest() {
                 WholeVersion(
                     id = version.id.value,
                     groupContent = listOf(group1Dto),
-                    leafContent = emptyList(),
                 )
             }
 
@@ -204,11 +203,13 @@ internal class VersionIntegrationTest : AbstractIntegrationTest() {
                     name = "Test Group 1"
                     version = latestVersion
                 }
+                commit();
                 leaf = Leaf.new {
                     name = "Test Leaf 1"
                     value = "Test Value 1"
                     valueType = 0
                     version = latestVersion
+                    groupVid = group.vid
                 }
             }
 
@@ -217,7 +218,7 @@ internal class VersionIntegrationTest : AbstractIntegrationTest() {
                     assertEquals(HttpStatusCode.OK, response.status())
                     val json: PreviousVersionsDTO = Json.decodeFromString(response.content!!)
                     assertEquals(1, json.groupContent.size)
-                    assertEquals(1, json.leafContent.size)
+                    assertEquals(1, json.groupContent[0].leafContent.size)
 
                     val groupContent = json.groupContent[0]
 
@@ -225,9 +226,9 @@ internal class VersionIntegrationTest : AbstractIntegrationTest() {
                     assertEquals(groupContent.vid, group.vid)
                     assertEquals(groupContent.name, group.name)
                     assertEquals(groupContent.groupContent.size, 0)
-                    assertEquals(groupContent.leafContent.size, 0)
+                    assertEquals(groupContent.leafContent.size, 1)
 
-                    val leafContent = json.leafContent[0]
+                    val leafContent = json.groupContent[0].leafContent[0]
 
                     assertEquals(leafContent.id, leaf.id.value)
                     assertEquals(leafContent.vid, leaf.vid)

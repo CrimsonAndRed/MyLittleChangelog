@@ -59,7 +59,7 @@ object VersionService {
             groups.groupBy({ it.parentVid }) { it },
             leaves.groupBy({ it.groupVid }) { it }
         ).let {
-            WholeVersion(version.id.value, it.first, it.second)
+            WholeVersion(version.id.value, it.first)
         }
     }
 
@@ -88,7 +88,7 @@ object VersionService {
             groups.groupBy({ it.parentVid }) { it },
             leaves.groupBy({ it.groupVid }) { it }
         ).let {
-            PreviousVersionsDTO(it.first, it.second)
+            PreviousVersionsDTO(it.first)
         }
     }
 

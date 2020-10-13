@@ -17,7 +17,6 @@ export class FromPastGroupsModal {
   version: WholeVersion = {
     id: null,
     groupContent: [],
-    leafContent: []
   };
 
   chosenPastElement: PastRadioEvent = null
