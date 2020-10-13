@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 
@@ -11,27 +11,32 @@ import { EditGroupModalComponent } from './edit-group-modal/edit-group-modal.com
   templateUrl: './group-content.component.html',
   styleUrls: ['./group-content.component.scss']
 })
-export class GroupContentComponent {
+export class GroupContentComponent implements OnInit {
 
   @Output() onGroupUpdate = new EventEmitter<UpdatedGroup>();
   @Output() onGroupDelete = new EventEmitter<GroupContent>();
   @Input() groupContent: GroupContent;
   @Input() parentId: number;
+  isReal: boolean;
 
   constructor(private http: Http, private route: ActivatedRoute, private dialog: MatDialog) {
   }
 
+  ngOnInit() {
+    this.isReal = this.groupContent.realNode;
+  }
+
   onEditButtonClick() {
     const dialogRef = this.dialog.open(EditGroupModalComponent, {
-          hasBackdrop: true,
-          data: this.groupContent
-        });
+      hasBackdrop: true,
+      data: this.groupContent
+    });
 
-        dialogRef.afterClosed().subscribe(result => {
-          if (result) {
-            this.updateGroup(result);
-          }
-        });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.updateGroup(result);
+      }
+    });
   }
 
   onDeleteButtonClick() {
@@ -53,5 +58,4 @@ export class GroupContentComponent {
     this.http.put<UpdatedGroup>(`http://localhost:8080/version/${versionId}/group/${groupId}`, groupToUpdate)
       .subscribe(updatedGroup => this.onGroupUpdate.emit(updatedGroup))
   }
-
 }

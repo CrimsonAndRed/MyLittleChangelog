@@ -13,7 +13,6 @@ import my.little.changelog.model.leaf.Leaf
 import my.little.changelog.model.leaf.dto.external.LeafCreationDto
 import my.little.changelog.model.leaf.dto.external.LeafReturnedDto
 import my.little.changelog.model.leaf.dto.external.LeafUpdateDto
-import my.little.changelog.model.leaf.dto.external.WholeLeafDto
 import my.little.changelog.model.version.Version
 import my.little.changelog.routing.AbstractIntegrationTest
 import org.jetbrains.exposed.dao.exceptions.EntityNotFoundException
@@ -99,7 +98,7 @@ internal class LeafIntegrationTest : AbstractIntegrationTest() {
                 ) {
 
                     assertEquals(HttpStatusCode.OK, response.status())
-                    val response: WholeLeafDto = Json.decodeFromString(response.content!!)
+                    val response: LeafReturnedDto = Json.decodeFromString(response.content!!)
                     assertEquals(leaf.id.value, response.id)
                     assertEquals(leaf.vid, response.vid)
                     assertEquals(dto.name, response.name)
@@ -145,7 +144,7 @@ internal class LeafIntegrationTest : AbstractIntegrationTest() {
                 ) {
                     assertEquals(HttpStatusCode.OK, response.status())
 
-                    val response: WholeLeafDto = Json.decodeFromString(response.content!!)
+                    val response: LeafReturnedDto = Json.decodeFromString(response.content!!)
                     assertEquals(leaf.id.value, response.id)
                     assertEquals(leaf.vid, response.vid)
                     assertEquals(dto.name, response.name)

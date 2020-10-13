@@ -4,6 +4,7 @@ export interface GroupContent {
   id: number;
   vid: number;
   name: string;
+  realNode: boolean;
   groupContent: GroupContent[];
   leafContent: LeafContent[];
 }

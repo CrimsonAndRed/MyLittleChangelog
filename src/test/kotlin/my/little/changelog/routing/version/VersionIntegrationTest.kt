@@ -72,6 +72,7 @@ internal class VersionIntegrationTest : AbstractIntegrationTest() {
                     id = group2.id.value,
                     vid = group2.vid,
                     name = group2.name,
+                    realNode = true,
                     groupContent = emptyList(),
                     leafContent = emptyList(),
                 )
@@ -88,6 +89,7 @@ internal class VersionIntegrationTest : AbstractIntegrationTest() {
                     id = group1.id.value,
                     vid = group1.vid,
                     name = group1.name,
+                    realNode = true,
                     groupContent = listOf(group2Dto),
                     leafContent = listOf(leafDto),
                 )
@@ -203,7 +205,7 @@ internal class VersionIntegrationTest : AbstractIntegrationTest() {
                     name = "Test Group 1"
                     version = latestVersion
                 }
-                commit();
+                commit()
                 leaf = Leaf.new {
                     name = "Test Leaf 1"
                     value = "Test Value 1"

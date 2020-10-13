@@ -24,6 +24,7 @@ export class GroupsLeavesComponent {
       id: newGroupWithId.id,
       name: newGroupWithId.name,
       vid: newGroupWithId.vid,
+      realNode: true,
       groupContent: [],
       leafContent: [],
     };
