@@ -7,6 +7,7 @@ export interface GroupContent {
   realNode: boolean;
   groupContent: GroupContent[];
   leafContent: LeafContent[];
+  isContentShowed: boolean;
 }
 
 export interface PastGroupContent {

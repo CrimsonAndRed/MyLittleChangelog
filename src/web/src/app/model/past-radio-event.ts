@@ -3,6 +3,6 @@ import { PastLeafContent } from './leaf-content'
 
 export interface PastRadioEvent {
   value: PastGroupContent | PastLeafContent,
-  parentId: number
+  parentId: number,
   kind: "leaf" | "group"
 }

@@ -23,7 +23,8 @@ export class WholeVersionComponent implements OnInit {
       vid: newGroupWithId.vid,
       realNode: true,
       groupContent: [],
-      leafContent: []
+      leafContent: [],
+      isContentShowed: false
     };
 
     this.version.groupContent.push(newGroup);
