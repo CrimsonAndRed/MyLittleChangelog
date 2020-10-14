@@ -13,13 +13,19 @@ object GroupRepo : AbstractCrudRepository<Group, Int>(Group) {
 
     private const val FIND_GROUPS_AFFECTED_BY_VERSION_QUERY =
         """
-        WITH RECURSIVE tmp_groups AS (
-        		SELECT * FROM groups_latest 
+        WITH RECURSIVE sublatest AS (
+                SELECT grouped.* FROM (
+                    SELECT g.*, max(version_id) OVER (PARTITION BY vid) FROM groups AS g
+                    WHERE g.version_id <= ?
+                ) as grouped
+                WHERE grouped.version_id=grouped.max
+            ), tmp_groups AS (
+        		SELECT id, vid, parent_vid FROM sublatest 
         		WHERE (vid in (SELECT group_vid FROM leaves where version_id = ?)) or 
         				(vid in (SELECT vid FROM groups where version_id = ?))
         	UNION
-        		SELECT g.* FROM groups_latest AS g JOIN tmp_groups ON g.vid=tmp_groups.parent_vid
-        ) SELECT id FROM tmp_groups;
+        		SELECT g.id, g.vid, g.parent_vid FROM sublatest AS g JOIN tmp_groups ON g.vid=tmp_groups.parent_vid
+        ) SELECT id FROM tmp_groups
         """
 
     private const val FIND_GROUPS_AFFECTED_BY_SUBLATEST_LEAVES_QUERY =
@@ -47,6 +53,7 @@ object GroupRepo : AbstractCrudRepository<Group, Int>(Group) {
             .apply {
                 set(1, version.id.value)
                 set(2, version.id.value)
+                set(3, version.id.value)
             }
             .executeQuery().iterate { getInt("id") }.let { Group.forIds(it) }
     }
