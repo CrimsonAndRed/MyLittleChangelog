@@ -1,8 +1,8 @@
-import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 
-import { GroupContent, NewGroupWithId, GroupToUpdate, UpdatedGroup } from 'app/model/group-content';
+import { GroupContent, NewGroupWithId, GroupToUpdate, UpdatedGroup, NewGroup } from 'app/model/group-content';
 import { Http } from 'app/http/http.service';
 import { EditGroupModalComponent } from './edit-group-modal/edit-group-modal.component'
 
@@ -11,22 +11,18 @@ import { EditGroupModalComponent } from './edit-group-modal/edit-group-modal.com
   templateUrl: './group-content.component.html',
   styleUrls: ['./group-content.component.scss']
 })
-export class GroupContentComponent implements OnInit {
+export class GroupContentComponent {
 
   @Output() onGroupUpdate = new EventEmitter<UpdatedGroup>();
   @Output() onGroupDelete = new EventEmitter<GroupContent>();
+  @Output() onMakeGroupReal = new EventEmitter<NewGroupWithId>();
 
   @Input() groupContent: GroupContent;
   @Input() parentId: number;
   @Input() canChange: boolean;
 
-  isReal: boolean;
 
   constructor(private http: Http, private route: ActivatedRoute, private dialog: MatDialog) {
-  }
-
-  ngOnInit() {
-    this.isReal = this.groupContent.realNode;
   }
 
   onEditButtonClick() {
@@ -48,6 +44,20 @@ export class GroupContentComponent implements OnInit {
 
     this.http.delete(`http://localhost:8080/version/${versionId}/group/${groupId}`)
       .subscribe(() => this.onGroupDelete.emit(this.groupContent));
+  }
+
+  onMakeGroupRealButtonClick() {
+    const versionId = this.route.snapshot.data.version.id;
+    const groupId = this.groupContent.id;
+
+    const groupToCreate: NewGroup = {
+      name: this.groupContent.name,
+      vid: this.groupContent.vid,
+      parentId: this.parentId
+    }
+
+    this.http.post<NewGroupWithId>(`http://localhost:8080/version/${versionId}/group`, groupToCreate)
+      .subscribe(updatedGroup => this.onMakeGroupReal.emit(updatedGroup));
   }
 
   updateGroup(group: GroupContent) {

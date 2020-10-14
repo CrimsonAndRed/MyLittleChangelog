@@ -39,6 +39,14 @@ export class GroupsLeavesComponent {
     groupContent.name = updatedGroup.name;
   }
 
+  onMakeGroupReal(updatedGroup: NewGroupWithId) {
+    const groupContent = this.groups.find(group => group.vid === updatedGroup.vid);
+
+    groupContent.id = updatedGroup.id;
+    groupContent.name = updatedGroup.name;
+    groupContent.realNode = true;
+  }
+
   onGroupDelete(deletedGroup: GroupContent) {
     this.groups = this.groups.filter(group => group.id !== deletedGroup.id);
   }

@@ -10,6 +10,7 @@
                    [groupContent]="groupContent"
                    (onGroupUpdate)="onGroupUpdate($event)"
                    (onGroupDelete)="onGroupDelete($event)"
+                   (onMakeGroupReal)="onMakeGroupReal($event)"
                    [canChange]="canChange"></group-content>
     <leaf-content *ngFor="let leafContent of leaves"
                   [parentId]="parentGroup?.id"
