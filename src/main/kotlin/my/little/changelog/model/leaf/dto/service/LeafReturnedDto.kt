@@ -6,4 +6,5 @@ data class LeafReturnedDto(
     val name: String,
     val valueType: Int,
     val value: String,
+    val groupVid: Int,
 )

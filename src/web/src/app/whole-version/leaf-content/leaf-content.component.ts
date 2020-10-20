@@ -4,6 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Http } from 'app/http/http.service'
 
 import { LeafContent, UpdatedLeaf, LeafToUpdate } from 'app/model/leaf-content';
+import { GroupContent } from 'app/model/group-content';
 import { EditLeafModalComponent } from './edit-leaf-modal/edit-leaf-modal.component'
 
 @Component({
@@ -19,6 +20,7 @@ export class LeafContentComponent {
   @Input() leafContent: LeafContent;
   @Input() parentId: number;
   @Input() canChange: boolean;
+  @Input() groups: GroupContent[];
 
   constructor(private http: Http, private route: ActivatedRoute, private dialog: MatDialog) {
   }
@@ -26,7 +28,10 @@ export class LeafContentComponent {
   onEditButtonClick() {
     const dialogRef = this.dialog.open(EditLeafModalComponent, {
       hasBackdrop: true,
-      data: this.leafContent
+      data: {
+        leaf: this.leafContent,
+        groups: this.groups
+      }
     });
 
     dialogRef.afterClosed().subscribe(result => {

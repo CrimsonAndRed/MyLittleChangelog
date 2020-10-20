@@ -15,7 +15,7 @@ fun LeafUpdateDto.toServiceDto(leafId: Int) = my.little.changelog.model.leaf.dto
     name = name,
     valueType = valueType,
     value = value,
-    parentId = parentId,
+    parentVid = parentVid,
 )
 
 fun LeafDeletionDto.toServiceDto() = my.little.changelog.model.leaf.dto.service.LeafDeletionDto(

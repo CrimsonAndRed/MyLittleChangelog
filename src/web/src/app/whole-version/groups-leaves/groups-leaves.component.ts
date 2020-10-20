@@ -59,6 +59,7 @@ export class GroupsLeavesComponent {
       vid: newLeafWithId.vid,
       valueType: newLeafWithId.valueType,
       value: newLeafWithId.value,
+      groupVid: newLeafWithId.groupVid
     }
     this.leaves.push(newLeaf);
     this.isContentShowed = true;

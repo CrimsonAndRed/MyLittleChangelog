@@ -101,6 +101,7 @@ internal class LeafIntegrationTest : AbstractIntegrationTest() {
                     val response: LeafReturnedDto = Json.decodeFromString(response.content!!)
                     assertEquals(leaf.id.value, response.id)
                     assertEquals(leaf.vid, response.vid)
+                    assertEquals(leaf.groupVid, response.groupVid)
                     assertEquals(dto.name, response.name)
                     assertEquals(dto.value, response.value)
                     assertEquals(dto.valueType, response.valueType)
@@ -133,7 +134,8 @@ internal class LeafIntegrationTest : AbstractIntegrationTest() {
                 val dto = LeafUpdateDto(
                     "Лиф1",
                     1,
-                    "Значение1"
+                    "Значение1",
+                    group.vid
                 )
 
                 with(
@@ -147,9 +149,63 @@ internal class LeafIntegrationTest : AbstractIntegrationTest() {
                     val response: LeafReturnedDto = Json.decodeFromString(response.content!!)
                     assertEquals(leaf.id.value, response.id)
                     assertEquals(leaf.vid, response.vid)
+                    assertEquals(leaf.groupVid, response.groupVid)
                     assertEquals(dto.name, response.name)
                     assertEquals(dto.value, response.value)
                     assertEquals(dto.valueType, response.valueType)
+                }
+            }
+        }
+    }
+
+    @Test
+    fun `Test Update Leaf With Changing Group`() {
+        testApplication {
+            transaction {
+                val version = Version.new {}
+                val group1 = Group.new {
+                    this.version = version
+                    this.name = "Группа1"
+                    this.parentVid = null
+                }
+                val group2 = Group.new {
+                    this.version = version
+                    this.name = "Группа2"
+                    this.parentVid = null
+                }
+                commit()
+
+                val leaf = Leaf.new {
+                    this.valueType = 1
+                    this.value = "Значение1"
+                    this.version = version
+                    this.name = "Лиф1"
+                    this.groupVid = group1.vid
+                }
+                commit()
+
+                val dto = LeafUpdateDto(
+                    name = leaf.name,
+                    valueType = leaf.valueType,
+                    value = leaf.value,
+                    parentVid = group2.vid,
+                )
+
+                with(
+                    handleRequest(HttpMethod.Put, "/version/${version.id}/group/${group1.id}/leaf/${leaf.id}") {
+                        addHeader("Content-Type", "application/json")
+                        setBody(Json.encodeToString(dto))
+                    }
+                ) {
+                    assertEquals(HttpStatusCode.OK, response.status())
+
+                    val response: LeafReturnedDto = Json.decodeFromString(response.content!!)
+                    assertEquals(leaf.id.value, response.id)
+                    assertEquals(leaf.vid, response.vid)
+                    assertEquals(dto.name, response.name)
+                    assertEquals(dto.value, response.value)
+                    assertEquals(dto.valueType, response.valueType)
+                    assertEquals(dto.parentVid, response.groupVid)
                 }
             }
         }

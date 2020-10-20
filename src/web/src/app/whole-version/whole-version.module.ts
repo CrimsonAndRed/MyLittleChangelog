@@ -14,6 +14,7 @@ import { NewLeafModalComponent } from './leaf-content/new-leaf-modal/new-leaf-mo
 import { EditLeafModalComponent } from './leaf-content/edit-leaf-modal/edit-leaf-modal.component';
 import { EditGroupModalComponent } from './group-content/edit-group-modal/edit-group-modal.component';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatSelectModule } from '@angular/material/select';
 import { FromPastGroupsButton } from './past-groups/from-past-groups-button/from-past-groups-button.component';
 import { FromPastGroupsModal } from './past-groups/from-past-groups-modal/from-past-groups-modal.component';
 import { PastGroup } from './past-groups/from-past-groups-modal/past-group/past-group.component';
@@ -44,6 +45,7 @@ import { HttpClientModule } from '@angular/common/http';
     HttpClientModule,
     RouterModule,
     MatDialogModule,
+    MatSelectModule,
   ],
 })
 export class WholeVersionModule { }

@@ -77,4 +77,8 @@ object GroupRepo : AbstractCrudRepository<Group, Int>(Group) {
                 .executeQuery().iterate { getInt("id") }.let { Group.forIds(it) }
         }
     }
+
+    fun findLatestGroupByVidAndVersion(vid: Int, version: Version): Group = transaction {
+        Group.find { (Groups.vid eq vid) and (Groups.version eq version.id.value) }.single()
+    }
 }

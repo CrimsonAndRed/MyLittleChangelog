@@ -61,6 +61,7 @@ export class FromPastGroupsModal {
         valueType: leafContent.valueType,
         value: leafContent.value,
         inCurrentVersion: this.sets[1].has(leafContent.id),
+        groupVid: leafContent.groupVid
       }
 
       g.leafContent.push(leaf);

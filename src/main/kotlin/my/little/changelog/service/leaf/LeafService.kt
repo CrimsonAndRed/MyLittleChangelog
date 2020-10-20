@@ -25,7 +25,7 @@ object LeafService {
 
     fun updateLeaf(leafUpdate: LeafUpdateDto): LeafReturnedDto = transaction {
         val leaf = LeafRepo.findById(leafUpdate.id)
-        val parentGroup = leafUpdate.parentId?.let { GroupRepo.findById(it) }
+        val newParentGroup = GroupRepo.findLatestGroupByVidAndVersion(leafUpdate.parentVid, leaf.version)
         if (leaf.version.id != VersionRepo.findLatest().id) {
             throw VersionIsNotLatestException()
         }
@@ -33,9 +33,8 @@ object LeafService {
             name = leafUpdate.name
             value = leafUpdate.value
             valueType = leafUpdate.valueType
-            groupVid = parentGroup?.vid
+            groupVid = newParentGroup.vid
         }
-
         LeafRepo.update(leaf).toReturnedDto()
     }
 

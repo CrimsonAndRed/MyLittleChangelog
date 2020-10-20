@@ -7,5 +7,5 @@ data class LeafUpdateDto(
     val name: String,
     val valueType: Int,
     val value: String,
-    val parentId: Int? = null
+    val parentVid: Int
 )

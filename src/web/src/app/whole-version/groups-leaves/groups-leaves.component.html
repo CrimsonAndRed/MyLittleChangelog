@@ -16,6 +16,7 @@
     <leaf-content *ngFor="let leafContent of leaves"
                   [parentId]="parentGroup?.id"
                   [leafContent]="leafContent"
+                  [groups]="groups"
                   (onLeafUpdate)="onLeafUpdate($event)"
                   (onLeafDelete)="onLeafDelete($event)"
                   [canChange]="canChange"></leaf-content>

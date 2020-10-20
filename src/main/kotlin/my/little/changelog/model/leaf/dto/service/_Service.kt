@@ -19,6 +19,7 @@ fun LeafReturnedDto.toExternalDto() = my.little.changelog.model.leaf.dto.externa
     name = name,
     valueType = valueType,
     value = value,
+    groupVid = groupVid,
 )
 
 fun Pair<LeafDifferenceDto?, LeafDifferenceDto>.toExternalDto() = my.little.changelog.model.leaf.dto.external.LeafDifferenceDto(
