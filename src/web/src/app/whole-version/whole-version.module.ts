@@ -7,8 +7,8 @@ import { WholeVersionComponent } from './whole-version.component';
 import { GroupContentComponent } from './group-content/group-content.component';
 import { LeafContentComponent } from './leaf-content/leaf-content.component';
 import { GroupsLeavesComponent } from './groups-leaves/groups-leaves.component';
-import { NewGroupButtonComponent } from './groups-leaves/new-group-button/new-group-button.component';
-import { NewLeafButtonComponent } from './groups-leaves/new-leaf-button/new-leaf-button.component';
+import { NewGroupButtonComponent } from './new-group-button/new-group-button.component';
+import { NewLeafButtonComponent } from './new-leaf-button/new-leaf-button.component';
 import { NewGroupModalComponent } from './group-content/new-group-modal/new-group-modal.component';
 import { NewLeafModalComponent } from './leaf-content/new-leaf-modal/new-leaf-modal.component';
 import { EditLeafModalComponent } from './leaf-content/edit-leaf-modal/edit-leaf-modal.component';
@@ -21,6 +21,9 @@ import { PastGroup } from './past-groups/from-past-groups-modal/past-group/past-
 import { PastLeaf } from './past-groups/from-past-groups-modal/past-leaf/past-leaf.component';
 
 import { HttpClientModule } from '@angular/common/http';
+
+import { GroupsSecModule } from 'app/groups-sec/groups-sec.module';
+import { VersionHeaderComponent } from './version-header/version-header.component'
 
 @NgModule({
   declarations: [
@@ -38,6 +41,7 @@ import { HttpClientModule } from '@angular/common/http';
     FromPastGroupsButton,
     PastGroup,
     PastLeaf,
+    VersionHeaderComponent,
   ],
   imports: [
     BrowserModule,
@@ -46,6 +50,7 @@ import { HttpClientModule } from '@angular/common/http';
     RouterModule,
     MatDialogModule,
     MatSelectModule,
+    GroupsSecModule,
   ],
 })
 export class WholeVersionModule { }

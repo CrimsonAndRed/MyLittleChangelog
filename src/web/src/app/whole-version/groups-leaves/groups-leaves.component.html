@@ -3,9 +3,9 @@
     <new-group-button (onNewGroup)="onNewGroupCreated($event)" [groupContent]="parentGroup"></new-group-button>
     <new-leaf-button *ngIf="parentGroup" (onNewLeaf)="onNewLeafCreated($event)" [groupContent]="parentGroup"></new-leaf-button>
   </div>
-  <button *ngIf="!isContentShowed" (click)="switchShowedDeeply()">>></button>
-  <button (click)="switchShowed()">{{ isContentShowed ? '∨' : '>' }}</button>
-  <div [hidden]="!isContentShowed">
+<!--  <button *ngIf="!isContentShowed" (click)="switchShowedDeeply()">>></button>-->
+<!--  <button (click)="switchShowed()">{{ isContentShowed ? '∨' : '>' }}</button>-->
+<!--  <div [hidden]="!isContentShowed">-->
     <group-content *ngFor="let groupContent of groups"
                    [parentId]="parentGroup?.id"
                    [groupContent]="groupContent"
@@ -20,5 +20,5 @@
                   (onLeafUpdate)="onLeafUpdate($event)"
                   (onLeafDelete)="onLeafDelete($event)"
                   [canChange]="canChange"></leaf-content>
-  </div>
+<!--  </div>-->
 </div>

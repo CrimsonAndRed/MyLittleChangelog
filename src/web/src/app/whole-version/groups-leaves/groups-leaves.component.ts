@@ -15,7 +15,7 @@ export class GroupsLeavesComponent {
   @Input() leaves: LeafContent[];
   @Input() canChange: boolean;
 
-  @Input() isContentShowed: boolean = false;
+  // @Input() isContentShowed: boolean = false;
 
   constructor() {
   }
@@ -28,10 +28,9 @@ export class GroupsLeavesComponent {
       realNode: true,
       groupContent: [],
       leafContent: [],
-      isContentShowed: false,
     };
     this.groups.push(newGroup);
-    this.isContentShowed = true;
+//    this.isContentShowed = true;
   }
 
   onGroupUpdate(updatedGroup: UpdatedGroup) {
@@ -62,26 +61,25 @@ export class GroupsLeavesComponent {
       groupVid: newLeafWithId.groupVid
     }
     this.leaves.push(newLeaf);
-    this.isContentShowed = true;
+//    this.isContentShowed = true;
   }
 
-  switchShowed() {
-    if (this.isContentShowed) {
-      this.switchShowedDeeply();
-    } else {
-      this.isContentShowed = !this.isContentShowed;
-    }
-  }
+//  switchShowed() {
+//    if (this.isContentShowed) {
+//      this.switchShowedDeeply();
+//    } else {
+//      this.isContentShowed = !this.isContentShowed;
+//    }
+//  }
 
   switchShowedDeeply() {
-    this.isContentShowed = !this.isContentShowed;
+//    this.isContentShowed = !this.isContentShowed;
     for (let group of this.groups) {
       this.updateContentForGroupRecursive(group);
     }
   }
 
   updateContentForGroupRecursive(groupContent: GroupContent) {
-    groupContent.isContentShowed = this.isContentShowed;
     for (let group of groupContent.groupContent) {
       this.updateContentForGroupRecursive(group);
     }

@@ -16,18 +16,8 @@ export class WholeVersionComponent implements OnInit {
   constructor(private http: Http, private route: ActivatedRoute) {
   }
 
-  onNewGroupCreated(newGroupWithId: NewGroupWithId): void {
-    const newGroup: GroupContent = {
-      id: newGroupWithId.id,
-      name: newGroupWithId.name,
-      vid: newGroupWithId.vid,
-      realNode: true,
-      groupContent: [],
-      leafContent: [],
-      isContentShowed: false
-    };
-
-    this.version.groupContent.push(newGroup);
+  handleNewGroup(group: GroupContent) {
+    this.version.groupContent.push(group);
   }
 
   ngOnInit() {

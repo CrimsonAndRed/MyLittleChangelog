@@ -1,10 +1,9 @@
-import { Component, Input, Output } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 
 import { GroupContent } from 'app/model/group-content';
 import { Http } from 'app/http/http.service';
 import { NewLeafWithId, NewLeaf} from 'app/model/leaf-content';
 import { ActivatedRoute } from '@angular/router';
-import { EventEmitter } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 
 import { NewLeafModalComponent } from 'app/whole-version/leaf-content/new-leaf-modal/new-leaf-modal.component';
@@ -18,7 +17,7 @@ export class NewLeafButtonComponent {
 
   @Output() onNewLeaf = new EventEmitter<NewLeafWithId>();
 
-  @Input() groupContent: GroupContent;
+  @Input() groupId: number;
 
   constructor(private http: Http, private route: ActivatedRoute, private dialog: MatDialog) {
   }
@@ -39,7 +38,7 @@ export class NewLeafButtonComponent {
 
   createNewLeaf(newLeaf: NewLeaf) {
     const versionId = this.route.snapshot.data.version.id;
-    const groupId = this.groupContent === null ? null : this.groupContent.id;
+    const groupId = this.groupId;
 
     this.http.post<NewLeafWithId>(`http://localhost:8080/version/${versionId}/group/${groupId}/leaf`, newLeaf)
           .subscribe(newLeaf =>this.onNewLeaf.emit(newLeaf));

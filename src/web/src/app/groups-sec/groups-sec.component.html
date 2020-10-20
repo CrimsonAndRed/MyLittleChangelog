@@ -1,0 +1,6 @@
+<ng-content select="[global-header]"></ng-content>
+
+<group-leaves-sec *ngFor="let group of groups"
+                   [group]="group">
+  <ng-content select="[group-header]"></ng-content>
+</group-leaves-sec>
