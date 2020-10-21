@@ -1,8 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Type } from '@angular/core';
 import { WholeVersion } from 'app/model/whole-version';
 import { ActivatedRoute } from '@angular/router'
 import { Http } from 'app/http/http.service'
 import { GroupContent, NewGroupWithId } from 'app/model/group-content';
+import { GroupHeader } from 'app/groups-sec/groups-sec.model';
+
+import { GroupHeaderComponent } from './group-header/group-header.component';
 
 @Component({
   selector: 'whole-version',
@@ -12,6 +15,7 @@ import { GroupContent, NewGroupWithId } from 'app/model/group-content';
 export class WholeVersionComponent implements OnInit {
 
   version: WholeVersion;
+  groupHeaderRef:Type<GroupHeader> = GroupHeaderComponent;
 
   constructor(private http: Http, private route: ActivatedRoute) {
   }

@@ -24,6 +24,7 @@ import { HttpClientModule } from '@angular/common/http';
 
 import { GroupsSecModule } from 'app/groups-sec/groups-sec.module';
 import { VersionHeaderComponent } from './version-header/version-header.component'
+import { GroupHeaderComponent } from './group-header/group-header.component'
 
 @NgModule({
   declarations: [
@@ -42,6 +43,7 @@ import { VersionHeaderComponent } from './version-header/version-header.componen
     PastGroup,
     PastLeaf,
     VersionHeaderComponent,
+    GroupHeaderComponent,
   ],
   imports: [
     BrowserModule,

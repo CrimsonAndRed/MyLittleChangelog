@@ -1,6 +1,7 @@
 <div>
   <p> Version {{version.id}}</p>
-  <groups-sec [groups]="version.groupContent">
+  <groups-sec [groups]="version.groupContent"
+              [groupHeaderRef]="groupHeaderRef">
     <version-header global-header (onNewGroup)="handleNewGroup($event)"></version-header>
   </groups-sec>
 <!--  <div *ngIf="version.canChange">-->

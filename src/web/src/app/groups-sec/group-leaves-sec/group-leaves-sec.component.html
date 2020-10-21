@@ -1,6 +1,6 @@
 <div class="group-leaves">
-  <ng-content select="[group-header]"></ng-content>
   <group-content-sec [group]="group"></group-content-sec>
+  <ng-template group-header></ng-template>
   <!--  <div *ngIf="canChange">-->
   <!--    <button *ngIf="groupContent.realNode" (click)="onEditButtonClick()">Edit Group</button>-->
   <!--    <button *ngIf="!groupContent.realNode" (click)="onMakeGroupRealButtonClick()">Add group to this version</button>-->
@@ -8,9 +8,8 @@
   <!--  </div>-->
   <group-leaves-sec *ngFor="let _group of group.groupContent"
                     [group]="_group"
-                    [leaves]="_group.leaves">
-    <ng-content select="[group-header]"></ng-content>
-  </group-leaves-sec>
+                    [leaves]="_group.leaves"
+                    [groupHeaderRef]="groupHeaderRef"></group-leaves-sec>
   <ng-container *ngIf="group.leafContent">
     <leaf-content-sec *ngFor="let leaf of group.leafContent"
                       [leafContent]="leaf"></leaf-content-sec>

@@ -1,6 +1,8 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, Type } from '@angular/core';
 import { GroupContent } from 'app/model/group-content';
 import { LeafContent } from 'app/model/leaf-content';
+
+import { GroupHeader } from './groups-sec.model';
 
 @Component({
   selector: 'groups-sec',
@@ -10,6 +12,7 @@ import { LeafContent } from 'app/model/leaf-content';
 export class GroupsSecComponent implements OnInit {
 
   @Input() groups: GroupContent[];
+  @Input() groupHeaderRef: Type<GroupHeader> = null;
 
   constructor() {};
 
