@@ -4,7 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 
 import { GroupContent, NewGroupWithId, GroupToUpdate, UpdatedGroup, NewGroup } from 'app/model/group-content';
 import { Http } from 'app/http/http.service';
-import { EditGroupModalComponent } from './edit-group-modal/edit-group-modal.component'
+import { EditGroupModalComponent } from '../edit-group-button/edit-group-modal/edit-group-modal.component'
 
 @Component({
   selector: 'group-content',

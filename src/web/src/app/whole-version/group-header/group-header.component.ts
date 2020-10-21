@@ -1,7 +1,7 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { GroupContent, NewGroupWithId } from 'app/model/group-content';
+import { GroupContent, NewGroupWithId, UpdatedGroup } from 'app/model/group-content';
 import { LeafContent, NewLeafWithId, UpdatedLeaf } from 'app/model/leaf-content';
-import { GroupHeader } from 'app/groups-sec/groups-sec.model';
+import { GroupHeader, ParentGroupListChangeFn } from 'app/groups-sec/groups-sec.model';
 
 @Component({
   selector: 'group-header',
@@ -10,8 +10,10 @@ import { GroupHeader } from 'app/groups-sec/groups-sec.model';
 })
 export class GroupHeaderComponent implements GroupHeader {
 
-  onGroupChange = new EventEmitter<GroupContent>();
   group: GroupContent = null;
+  parentGroup: GroupContent = null;
+  onGroupChange = new EventEmitter<GroupContent>();
+  onParentGroupsChange = new EventEmitter<ParentGroupListChangeFn>();
 
   constructor() { };
 
@@ -38,6 +40,15 @@ export class GroupHeaderComponent implements GroupHeader {
       groupVid: newLeafWithId.groupVid
     }
     this.group.leafContent.push(newLeaf);
+    this.onGroupChange.emit(this.group);
+  }
+
+  handleDeleteGroup() {
+    this.onParentGroupsChange.emit(gl => gl.filter(g => g.id !== this.group.id));
+  }
+
+  handleUpdateGroup(group: UpdatedGroup) {
+    this.group.name = group.name;
     this.onGroupChange.emit(this.group);
   }
 

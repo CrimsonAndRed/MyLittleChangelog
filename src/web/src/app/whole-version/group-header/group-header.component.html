@@ -1,4 +1,6 @@
 <div class="group-header">
-  <new-group-button (onNewGroup)="handleNewGroup($event)" [parentGroupId]="group.id"></new-group-button>
-  <new-leaf-button (onNewLeaf)="handleNewLeaf($event)" [groupId]="group.id"></new-leaf-button>
+  <new-group-button [parentGroupId]="group.id" (onNewGroup)="handleNewGroup($event)"></new-group-button>
+  <new-leaf-button [groupId]="group.id" (onNewLeaf)="handleNewLeaf($event)"></new-leaf-button>
+  <delete-group-button [groupId]="group.id" (onDeleteGroup)="handleDeleteGroup()"></delete-group-button>
+  <edit-group-button [group]="group" [parentGroupId]="parentGroup?.id" (onUpdateGroup)="handleUpdateGroup($event)"></edit-group-button>
 </div>

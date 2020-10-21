@@ -2,7 +2,7 @@ import { Component, Input, OnInit, Type } from '@angular/core';
 import { GroupContent } from 'app/model/group-content';
 import { LeafContent } from 'app/model/leaf-content';
 
-import { GroupHeader } from './groups-sec.model';
+import { GroupHeader, ParentGroupListChangeFn } from './groups-sec.model';
 
 @Component({
   selector: 'groups-sec',
@@ -17,6 +17,10 @@ export class GroupsSecComponent implements OnInit {
   constructor() {};
 
   ngOnInit() {
+  }
+
+  onGroupListChange(fn: ParentGroupListChangeFn) {
+    this.groups = fn(this.groups);
   }
 
 }

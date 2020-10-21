@@ -1,17 +1,19 @@
 import {
   Component,
   Input,
+  Output,
   ViewChild,
   ElementRef,
   ComponentFactoryResolver,
   Type,
   OnInit,
+  EventEmitter,
 } from '@angular/core';
 import { GroupContent } from 'app/model/group-content';
 import { LeafContent } from 'app/model/leaf-content';
 import { GroupHeaderDr } from '../groups-sec.directive';
 
-import { GroupHeader } from '../groups-sec.model';
+import { GroupHeader, ParentGroupListChangeFn } from '../groups-sec.model';
 
 @Component({
   selector: 'group-leaves-sec',
@@ -21,8 +23,10 @@ import { GroupHeader } from '../groups-sec.model';
 export class GroupLeavesSec implements OnInit {
 
   @Input() group: GroupContent;
+  @Input() parentGroup: GroupContent = null;
   @Input() leaves: LeafContent[] = null;
   @Input() groupHeaderRef: Type<GroupHeader> = null;
+  @Output() onParentChange = new EventEmitter<ParentGroupListChangeFn>();
 
   @ViewChild(GroupHeaderDr, {static: true}) header: GroupHeaderDr;
 
@@ -34,8 +38,14 @@ export class GroupLeavesSec implements OnInit {
       const viewContainerRef = this.header.viewContainerRef;
       const componentRef = viewContainerRef.createComponent<GroupHeader>(factory);
       componentRef.instance.group = this.group;
+      componentRef.instance.parentGroup = this.parentGroup;
       componentRef.instance.onGroupChange.subscribe(g => this.group = g);
+      componentRef.instance.onParentGroupsChange.subscribe(fn => this.onParentChange.emit(fn));
     }
+  }
+
+  onGroupListChange(fn: ParentGroupListChangeFn) {
+    this.group.groupContent = fn(this.group.groupContent);
   }
 
 }

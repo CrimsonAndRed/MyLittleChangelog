@@ -12,7 +12,7 @@ import { NewLeafButtonComponent } from './new-leaf-button/new-leaf-button.compon
 import { NewGroupModalComponent } from './group-content/new-group-modal/new-group-modal.component';
 import { NewLeafModalComponent } from './leaf-content/new-leaf-modal/new-leaf-modal.component';
 import { EditLeafModalComponent } from './leaf-content/edit-leaf-modal/edit-leaf-modal.component';
-import { EditGroupModalComponent } from './group-content/edit-group-modal/edit-group-modal.component';
+import { EditGroupModalComponent } from './edit-group-button/edit-group-modal/edit-group-modal.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatSelectModule } from '@angular/material/select';
 import { FromPastGroupsButton } from './past-groups/from-past-groups-button/from-past-groups-button.component';
@@ -23,8 +23,10 @@ import { PastLeaf } from './past-groups/from-past-groups-modal/past-leaf/past-le
 import { HttpClientModule } from '@angular/common/http';
 
 import { GroupsSecModule } from 'app/groups-sec/groups-sec.module';
-import { VersionHeaderComponent } from './version-header/version-header.component'
-import { GroupHeaderComponent } from './group-header/group-header.component'
+import { VersionHeaderComponent } from './version-header/version-header.component';
+import { GroupHeaderComponent } from './group-header/group-header.component';
+import { DeleteGroupButtonComponent } from './delete-group-button/delete-group-button.component';
+import { EditGroupButtonComponent } from './edit-group-button/edit-group-button.component';
 
 @NgModule({
   declarations: [
@@ -42,8 +44,11 @@ import { GroupHeaderComponent } from './group-header/group-header.component'
     FromPastGroupsButton,
     PastGroup,
     PastLeaf,
+
     VersionHeaderComponent,
     GroupHeaderComponent,
+    DeleteGroupButtonComponent,
+    EditGroupButtonComponent,
   ],
   imports: [
     BrowserModule,

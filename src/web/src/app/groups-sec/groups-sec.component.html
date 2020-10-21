@@ -1,5 +1,7 @@
 <ng-content select="[global-header]"></ng-content>
 <group-leaves-sec *ngFor="let group of groups"
                   [group]="group"
-                  [groupHeaderRef]="groupHeaderRef">
+                  [parentGroupsList]="groups"
+                  [groupHeaderRef]="groupHeaderRef"
+                  (onParentChange)="onGroupListChange($event)">
 </group-leaves-sec>
