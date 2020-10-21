@@ -9,16 +9,6 @@
     <div>
       <label>Value type</label><input [(ngModel)]="_leaf.valueType"/>
     </div>
-    <div>
-      <mat-form-field appearance="fill">
-        <mat-label>Parent Group</mat-label>
-        <mat-select>
-          <mat-option *ngFor="let group of _groups" [value]="group.vid">
-            {{group.name}}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-    </div>
   </div>
 </mat-dialog-content>
 <mat-dialog-actions align="end">

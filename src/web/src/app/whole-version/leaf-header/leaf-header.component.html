@@ -1,3 +1,6 @@
 <delete-leaf-button [groupId]="groupId"
                     [leafId]="leaf.id"
                     (onDeleteLeaf)="handleDeleteLeaf()"></delete-leaf-button>
+<edit-leaf-button [leaf]="leaf"
+                  [parentGroupId]="groupId"
+                  (onUpdateLeaf)="handleUpdateLeaf($event)"></edit-leaf-button>

@@ -5,7 +5,7 @@ import { Http } from 'app/http/http.service'
 
 import { LeafContent, UpdatedLeaf, LeafToUpdate } from 'app/model/leaf-content';
 import { GroupContent } from 'app/model/group-content';
-import { EditLeafModalComponent } from './edit-leaf-modal/edit-leaf-modal.component'
+import { EditLeafModalComponent } from '../edit-leaf-button/edit-leaf-modal/edit-leaf-modal.component'
 
 @Component({
   selector: 'leaf-content',
@@ -60,7 +60,7 @@ export class LeafContentComponent {
       name: leaf.name,
       valueType: leaf.valueType,
       value: leaf.value,
-      parentId: parentId,
+      parentVid: parentId,
     }
     this.http.put<UpdatedLeaf>(`http://localhost:8080/version/${versionId}/group/${parentId}/leaf/${leafId}`, leafToUpdate)
           .subscribe(updatedLeaf => this.onLeafUpdate.emit(updatedLeaf));

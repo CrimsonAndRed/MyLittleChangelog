@@ -33,7 +33,7 @@ export interface LeafToUpdate {
   name: string,
   valueType: number,
   value: string,
-  parentId: number
+  parentVid: number
 }
 
 export interface UpdatedLeaf {

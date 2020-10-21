@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { LeafHeader, GroupChangeFn } from 'app/groups-sec/groups-sec.model';
-import { LeafContent } from 'app/model/leaf-content';
+import { LeafContent, UpdatedLeaf } from 'app/model/leaf-content';
 
 @Component({
   selector: 'leaf-header',
@@ -21,6 +21,14 @@ export class LeafHeaderComponent implements LeafHeader {
       g.leafContent = g.leafContent.filter(l => l.id !== this.leaf.id);
       return g;
     });
+  }
+
+  handleUpdateLeaf(updatedLeaf: UpdatedLeaf) {
+    this.leaf.name = updatedLeaf.name;
+    this.leaf.valueType = updatedLeaf.valueType;
+    this.leaf.value = updatedLeaf.value;
+
+    this.onLeafChange.emit(this.leaf);
   }
 
 }

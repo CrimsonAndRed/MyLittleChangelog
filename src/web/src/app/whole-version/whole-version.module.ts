@@ -11,7 +11,7 @@ import { NewGroupButtonComponent } from './new-group-button/new-group-button.com
 import { NewLeafButtonComponent } from './new-leaf-button/new-leaf-button.component';
 import { NewGroupModalComponent } from './group-content/new-group-modal/new-group-modal.component';
 import { NewLeafModalComponent } from './leaf-content/new-leaf-modal/new-leaf-modal.component';
-import { EditLeafModalComponent } from './leaf-content/edit-leaf-modal/edit-leaf-modal.component';
+import { EditLeafModalComponent } from './edit-leaf-button/edit-leaf-modal/edit-leaf-modal.component';
 import { EditGroupModalComponent } from './edit-group-button/edit-group-modal/edit-group-modal.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatSelectModule } from '@angular/material/select';
@@ -30,6 +30,7 @@ import { EditGroupButtonComponent } from './edit-group-button/edit-group-button.
 
 import { LeafHeaderComponent } from './leaf-header/leaf-header.component';
 import { DeleteLeafButtonComponent } from './delete-leaf-button/delete-leaf-button.component';
+import { EditLeafButtonComponent } from './edit-leaf-button/edit-leaf-button.component';
 
 @NgModule({
   declarations: [
@@ -55,6 +56,7 @@ import { DeleteLeafButtonComponent } from './delete-leaf-button/delete-leaf-butt
 
     LeafHeaderComponent,
     DeleteLeafButtonComponent,
+    EditLeafButtonComponent,
   ],
   imports: [
     BrowserModule,
