@@ -1,18 +1,19 @@
 <div class="leaf-content">
+  <ng-template leaf-header></ng-template>
 <!--  <div *ngIf="canChange">-->
 <!--    <button (click)="onEditButtonClick()">Edit leaf</button>-->
 <!--    <button (click)="onDeleteButtonClick()">Delete leaf</button>-->
 <!--  </div>-->
   <div>
     <label>Name:</label>
-    <label>{{ leafContent.name }}</label>
+    <label>{{ leaf.name }}</label>
   </div>
   <div>
     <label>Value:</label>
-    <label>{{ leafContent.value }}</label>
+    <label>{{ leaf.value }}</label>
   </div>
   <div>
     <label>Value type:</label>
-    <label>{{ leafContent.valueType }}</label>
+    <label>{{ leaf.valueType }}</label>
   </div>
 </div>

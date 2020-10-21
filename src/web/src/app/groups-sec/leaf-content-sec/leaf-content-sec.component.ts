@@ -1,30 +1,45 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import {
+  Component,
+  Input,
+  Output,
+  EventEmitter,
+  OnInit,
+  Type,
+  ViewChild,
+  ComponentFactoryResolver,
+} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-// import { MatDialog } from '@angular/material/dialog';
-// import { Http } from 'app/http/http.service'
-//
-import { LeafContent, UpdatedLeaf, LeafToUpdate } from 'app/model/leaf-content';
-import { GroupContent } from 'app/model/group-content';
+import { LeafContent } from 'app/model/leaf-content';
+import { LeafHeader, GroupChangeFn } from '../groups-sec.model';
+import { LeafHeaderDr } from '../groups-sec.directive';
 
 @Component({
   selector: 'leaf-content-sec',
   templateUrl: './leaf-content-sec.component.html',
   styleUrls: ['./leaf-content-sec.component.scss']
 })
-export class LeafContentSecComponent {
+export class LeafContentSecComponent implements OnInit {
 
-  @Output() onLeafUpdate = new EventEmitter<UpdatedLeaf>();
-  @Output() onLeafDelete = new EventEmitter<LeafContent>();
+  @Input() leafHeaderRef: Type<LeafHeader> = null;
+  @Input() leaf: LeafContent;
+  @Input() groupId: number;
 
-  @Input() leafContent: LeafContent;
-  @Input() parentId: number = null;
-  @Input() canChange: boolean = false;
+  @Output() onParentChange = new EventEmitter<GroupChangeFn>();
 
-  constructor(
-//              private http: Http,
-              private route: ActivatedRoute,
-//              private dialog: MatDialog
-              ) {
+  @ViewChild(LeafHeaderDr, {static: true}) header: LeafHeaderDr;
+
+  constructor(private componentFactoryResolver: ComponentFactoryResolver) { }
+
+  ngOnInit() {
+    if (this.leafHeaderRef) {
+      const factory = this.componentFactoryResolver.resolveComponentFactory(this.leafHeaderRef);
+      const viewContainerRef = this.header.viewContainerRef;
+      const componentRef = viewContainerRef.createComponent<LeafHeader>(factory);
+      componentRef.instance.leaf = this.leaf;
+      componentRef.instance.groupId = this.groupId;
+      componentRef.instance.onLeafChange.subscribe(l => this.leaf = l);
+      componentRef.instance.onParentChange.subscribe(fn => this.onParentChange.emit(fn));
+    }
   }
 
 //  onEditButtonClick() {

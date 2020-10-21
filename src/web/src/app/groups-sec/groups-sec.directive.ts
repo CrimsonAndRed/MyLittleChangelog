@@ -12,3 +12,10 @@ export class GlobalHeader {
 export class GroupHeaderDr {
   constructor(public viewContainerRef: ViewContainerRef) { }
 }
+
+@Directive({
+  selector: '[leaf-header]'
+})
+export class LeafHeaderDr {
+  constructor(public viewContainerRef: ViewContainerRef) { }
+}

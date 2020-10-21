@@ -9,8 +9,9 @@ import { GroupsSecComponent } from './groups-sec.component';
 import { LeafContentSecComponent } from './leaf-content-sec/leaf-content-sec.component';
 import { GroupContentSecComponent } from './group-content-sec/group-content-sec.component';
 import { GroupLeavesSec } from './group-leaves-sec/group-leaves-sec.component';
-import { GroupHeaderDr } from './groups-sec.directive';
 import { GlobalHeader } from './groups-sec.directive';
+import { GroupHeaderDr } from './groups-sec.directive';
+import { LeafHeaderDr } from './groups-sec.directive';
 
 @NgModule({
   declarations: [
@@ -20,6 +21,7 @@ import { GlobalHeader } from './groups-sec.directive';
     GroupLeavesSec,
     GlobalHeader,
     GroupHeaderDr,
+    LeafHeaderDr,
   ],
   imports: [
     BrowserModule,
@@ -31,7 +33,6 @@ import { GlobalHeader } from './groups-sec.directive';
   exports: [
     GroupsSecComponent,
     GlobalHeader,
-    GroupHeaderDr,
   ]
 })
 export class GroupsSecModule { }

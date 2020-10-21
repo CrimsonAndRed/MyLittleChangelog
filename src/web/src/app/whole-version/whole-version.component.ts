@@ -3,9 +3,10 @@ import { WholeVersion } from 'app/model/whole-version';
 import { ActivatedRoute } from '@angular/router'
 import { Http } from 'app/http/http.service'
 import { GroupContent, NewGroupWithId } from 'app/model/group-content';
-import { GroupHeader } from 'app/groups-sec/groups-sec.model';
+import { GroupHeader, LeafHeader } from 'app/groups-sec/groups-sec.model';
 
 import { GroupHeaderComponent } from './group-header/group-header.component';
+import { LeafHeaderComponent } from './leaf-header/leaf-header.component';
 
 @Component({
   selector: 'whole-version',
@@ -16,6 +17,7 @@ export class WholeVersionComponent implements OnInit {
 
   version: WholeVersion;
   groupHeaderRef:Type<GroupHeader> = GroupHeaderComponent;
+  leafHeaderRef:Type<LeafHeader> = LeafHeaderComponent;
 
   constructor(private http: Http, private route: ActivatedRoute) {
   }

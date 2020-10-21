@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { GroupContent, NewGroupWithId, UpdatedGroup } from 'app/model/group-content';
-import { LeafContent, NewLeafWithId, UpdatedLeaf } from 'app/model/leaf-content';
+import { LeafContent, NewLeafWithId } from 'app/model/leaf-content';
 import { GroupHeader, ParentGroupListChangeFn } from 'app/groups-sec/groups-sec.model';
 
 @Component({

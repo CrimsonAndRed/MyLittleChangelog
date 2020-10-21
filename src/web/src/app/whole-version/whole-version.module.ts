@@ -28,6 +28,9 @@ import { GroupHeaderComponent } from './group-header/group-header.component';
 import { DeleteGroupButtonComponent } from './delete-group-button/delete-group-button.component';
 import { EditGroupButtonComponent } from './edit-group-button/edit-group-button.component';
 
+import { LeafHeaderComponent } from './leaf-header/leaf-header.component';
+import { DeleteLeafButtonComponent } from './delete-leaf-button/delete-leaf-button.component';
+
 @NgModule({
   declarations: [
     WholeVersionComponent,
@@ -49,6 +52,9 @@ import { EditGroupButtonComponent } from './edit-group-button/edit-group-button.
     GroupHeaderComponent,
     DeleteGroupButtonComponent,
     EditGroupButtonComponent,
+
+    LeafHeaderComponent,
+    DeleteLeafButtonComponent,
   ],
   imports: [
     BrowserModule,

@@ -13,6 +13,9 @@
                     (onParentChange)="onGroupListChange($event)"></group-leaves-sec>
   <ng-container *ngIf="group.leafContent">
     <leaf-content-sec *ngFor="let leaf of group.leafContent"
-                      [leafContent]="leaf"></leaf-content-sec>
+                      [leafHeaderRef]="leafHeaderRef"
+                      [leaf]="leaf"
+                      [groupId]="group.id"
+                      (onParentChange)="handleGroupChange($event)"></leaf-content-sec>
   </ng-container>
 </div>
