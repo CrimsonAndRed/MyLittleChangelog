@@ -27,12 +27,13 @@ export class GroupLeavesSecComponent implements OnInit {
   @Input() leaves: LeafContent[] = null;
   @Input() groupHeaderRef: Type<GroupHeader> = null;
   @Input() leafHeaderRef: Type<LeafHeader> = null;
-  @Input() isContentShowed: boolean = false;
 
   @Output() onParentChange = new EventEmitter<ParentGroupListChangeFn>();
 
   @ViewChild(GroupHeaderDr, {static: true}) header: GroupHeaderDr;
   @ViewChildren(GroupLeavesSecComponent) embeddedGroupLeaves: GroupLeavesSecComponent[];
+
+  isContentShowed: boolean = false;
 
   constructor(private componentFactoryResolver: ComponentFactoryResolver) { };
 

@@ -9,7 +9,7 @@
                         [group]="_group"
                         [leaves]="_group.leaves"
                         [groupHeaderRef]="groupHeaderRef"
-                        [isContentShowed]=""
+                        [leafHeaderRef]="leafHeaderRef"
                         (onParentChange)="onGroupListChange($event)"></group-leaves-sec>
       <ng-container *ngIf="group.leafContent">
         <leaf-content-sec *ngFor="let leaf of group.leafContent"
