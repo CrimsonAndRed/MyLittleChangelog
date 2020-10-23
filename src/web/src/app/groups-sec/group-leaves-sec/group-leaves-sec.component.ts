@@ -3,6 +3,7 @@ import {
   Input,
   Output,
   ViewChild,
+  ViewChildren,
   ComponentFactoryResolver,
   Type,
   OnInit,
@@ -19,16 +20,19 @@ import { GroupHeader, LeafHeader, ParentGroupListChangeFn, GroupChangeFn } from 
   templateUrl: './group-leaves-sec.component.html',
   styleUrls: ['./group-leaves-sec.component.scss']
 })
-export class GroupLeavesSec implements OnInit {
+export class GroupLeavesSecComponent implements OnInit {
 
   @Input() group: GroupContent;
   @Input() parentGroup: GroupContent = null;
   @Input() leaves: LeafContent[] = null;
   @Input() groupHeaderRef: Type<GroupHeader> = null;
   @Input() leafHeaderRef: Type<LeafHeader> = null;
+  @Input() isContentShowed: boolean = false;
+
   @Output() onParentChange = new EventEmitter<ParentGroupListChangeFn>();
 
   @ViewChild(GroupHeaderDr, {static: true}) header: GroupHeaderDr;
+  @ViewChildren(GroupLeavesSecComponent) embeddedGroupLeaves: GroupLeavesSecComponent[];
 
   constructor(private componentFactoryResolver: ComponentFactoryResolver) { };
 
@@ -50,6 +54,13 @@ export class GroupLeavesSec implements OnInit {
 
   handleGroupChange(fn: GroupChangeFn) {
     this.group = fn(this.group);
+  }
+
+  setContentShowed(value: boolean) {
+    this.isContentShowed = value;
+    if (value === true) {
+      this.embeddedGroupLeaves.forEach(egl => egl.setContentShowed(true));
+    }
   }
 
 }

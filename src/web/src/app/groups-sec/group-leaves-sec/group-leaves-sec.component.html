@@ -1,21 +1,23 @@
-<div class="group-leaves">
-  <group-content-sec [group]="group"></group-content-sec>
-  <ng-template group-header></ng-template>
-  <!--  <div *ngIf="canChange">-->
-  <!--    <button *ngIf="groupContent.realNode" (click)="onEditButtonClick()">Edit Group</button>-->
-  <!--    <button *ngIf="!groupContent.realNode" (click)="onMakeGroupRealButtonClick()">Add group to this version</button>-->
-  <!--    <button *ngIf="groupContent.realNode" (click)="onDeleteButtonClick()">Delete Group</button>-->
-  <!--  </div>-->
-  <group-leaves-sec *ngFor="let _group of group.groupContent"
-                    [group]="_group"
-                    [leaves]="_group.leaves"
-                    [groupHeaderRef]="groupHeaderRef"
-                    (onParentChange)="onGroupListChange($event)"></group-leaves-sec>
-  <ng-container *ngIf="group.leafContent">
-    <leaf-content-sec *ngFor="let leaf of group.leafContent"
-                      [leafHeaderRef]="leafHeaderRef"
-                      [leaf]="leaf"
-                      [groupId]="group.id"
-                      (onParentChange)="handleGroupChange($event)"></leaf-content-sec>
-  </ng-container>
+<div class="group-leaves-container">
+  <expand-all-button [isContentShowed]="isContentShowed" (onSwitchExpandAll)="setContentShowed(!isContentShowed)"></expand-all-button>
+  <expand-one-button [(isContentShowed)]="isContentShowed"></expand-one-button>
+  <div [hidden]="!isContentShowed" class="group-leaves">
+    <group-content-sec [group]="group"></group-content-sec>
+    <ng-template group-header></ng-template>
+    <div [hidden]="!isContentShowed">
+      <group-leaves-sec *ngFor="let _group of group.groupContent"
+                        [group]="_group"
+                        [leaves]="_group.leaves"
+                        [groupHeaderRef]="groupHeaderRef"
+                        [isContentShowed]=""
+                        (onParentChange)="onGroupListChange($event)"></group-leaves-sec>
+      <ng-container *ngIf="group.leafContent">
+        <leaf-content-sec *ngFor="let leaf of group.leafContent"
+                          [leafHeaderRef]="leafHeaderRef"
+                          [leaf]="leaf"
+                          [groupId]="group.id"
+                          (onParentChange)="handleGroupChange($event)"></leaf-content-sec>
+      </ng-container>
+    </div>
+  </div>
 </div>
