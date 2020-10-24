@@ -10,6 +10,7 @@
                       [config]="config"
                       [context]="context"
                       [group]="_group"
+                      [parentGroup]="group"
                       [leaves]="_group.leafContent"
                       (onParentChange)="onGroupListChange($event)"></group-leaves-sec>
     <ng-container *ngIf="group.leafContent">
