@@ -9,11 +9,12 @@ import { GroupsSecComponent } from './groups-sec.component';
 import { GroupLeavesSecComponent } from './group-leaves-sec/group-leaves-sec.component';
 import { LeafContentSecComponent } from './leaf-content-sec/leaf-content-sec.component';
 import { GroupContentSecComponent } from './group-content-sec/group-content-sec.component';
-import { ExpandOneButtonComponent } from './expand-one-button/expand-one-button.component';
-import { ExpandAllButtonComponent } from './expand-all-button/expand-all-button.component';
 import { GlobalHeader } from './groups-sec.directive';
 import { GroupHeaderDr } from './groups-sec.directive';
 import { LeafHeaderDr } from './groups-sec.directive';
+import { ExpandOneButtonComponent } from './expand-block/expand-one-button/expand-one-button.component';
+import { ExpandAllButtonComponent } from './expand-block/expand-all-button/expand-all-button.component';
+import { ExpandBlockComponent } from './expand-block/expand-block.component';
 
 @NgModule({
   declarations: [
@@ -21,6 +22,7 @@ import { LeafHeaderDr } from './groups-sec.directive';
     GroupLeavesSecComponent,
     LeafContentSecComponent,
     GroupContentSecComponent,
+    ExpandBlockComponent,
     ExpandOneButtonComponent,
     ExpandAllButtonComponent,
     GlobalHeader,

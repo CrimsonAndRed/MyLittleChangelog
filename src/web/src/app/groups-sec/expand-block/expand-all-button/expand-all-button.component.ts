@@ -1,18 +1,18 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
-  selector: 'expand-one-button',
-  templateUrl: './expand-one-button.component.html',
-  styleUrls: ['./expand-one-button.component.scss']
+  selector: 'expand-all-button',
+  templateUrl: './expand-all-button.component.html',
+  styleUrls: ['./expand-all-button.component.scss']
 })
-export class ExpandOneButtonComponent {
+export class ExpandAllButtonComponent {
 
   @Input() isContentShowed: boolean;
   @Output() isContentShowedChange = new EventEmitter<boolean>();
 
   constructor() { }
 
-  onSwitchContendShowedClick() {
+  onClick(): void {
     this.isContentShowed = !this.isContentShowed;
     this.isContentShowedChange.emit(this.isContentShowed);
   }

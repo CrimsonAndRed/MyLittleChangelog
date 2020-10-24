@@ -55,18 +55,18 @@ export class GroupLeavesSecComponent implements OnInit {
     }
   }
 
-  onGroupListChange(fn: ParentGroupListChangeFn) {
+  onGroupListChange(fn: ParentGroupListChangeFn): void {
     this.group.groupContent = fn(this.group.groupContent);
   }
 
-  handleGroupChange(fn: GroupChangeFn) {
+  handleGroupChange(fn: GroupChangeFn): void {
     this.group = fn(this.group);
   }
 
-  setContentShowed(value: boolean) {
+  changeGlobalContentShow(value: boolean): void {
     this.isContentShowed = value;
     if (value === true) {
-      this.embeddedGroupLeaves.forEach(egl => egl.setContentShowed(true));
+      this.embeddedGroupLeaves.forEach(egl => egl.changeGlobalContentShow(true));
     }
   }
 
