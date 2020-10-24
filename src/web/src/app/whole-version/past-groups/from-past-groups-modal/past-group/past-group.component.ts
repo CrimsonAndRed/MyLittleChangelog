@@ -1,7 +1,5 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { PastRadioEvent } from 'app/model/past-radio-event';
-
-import { PastGroupContent } from 'app/model/group-content';
+import { PastGroupContent, PastRadioEvent } from 'app/previous-version/previous-version.model';
 
 @Component({
   selector: 'past-group',

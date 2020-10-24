@@ -31,6 +31,7 @@ import { EditGroupButtonComponent } from './edit-group-button/edit-group-button.
 import { LeafHeaderComponent } from './leaf-header/leaf-header.component';
 import { DeleteLeafButtonComponent } from './delete-leaf-button/delete-leaf-button.component';
 import { EditLeafButtonComponent } from './edit-leaf-button/edit-leaf-button.component';
+import { PreviousVersionModule } from 'app/previous-version/previous-version.module';
 
 @NgModule({
   declarations: [
@@ -66,6 +67,7 @@ import { EditLeafButtonComponent } from './edit-leaf-button/edit-leaf-button.com
     MatDialogModule,
     MatSelectModule,
     GroupsSecModule,
+    PreviousVersionModule,
   ],
 })
 export class WholeVersionModule { }

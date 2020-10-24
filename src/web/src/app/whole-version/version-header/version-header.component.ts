@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter } from '@angular/core';
+import { Component, Output, EventEmitter, Input } from '@angular/core';
 import { GroupContent, NewGroupWithId } from 'app/model/group-content';
 
 @Component({
@@ -8,18 +8,25 @@ import { GroupContent, NewGroupWithId } from 'app/model/group-content';
 })
 export class VersionHeaderComponent {
 
-  @Output() onNewGroup = new EventEmitter<GroupContent>();
+  @Input() groups: GroupContent[];
 
-  handleNewGroup(newGroupWithId: NewGroupWithId) {
-      const newGroup: GroupContent = {
-        id: newGroupWithId.id,
-        name: newGroupWithId.name,
-        vid: newGroupWithId.vid,
-        realNode: true,
-        groupContent: [],
-        leafContent: []
-      };
-      this.onNewGroup.emit(newGroup);
-    }
+  @Output() onNewGroup = new EventEmitter<GroupContent>();
+  @Output() previousNodeChosen = new EventEmitter<void>();
+
+  handleNewGroup(newGroupWithId: NewGroupWithId): void {
+    const newGroup: GroupContent = {
+      id: newGroupWithId.id,
+      name: newGroupWithId.name,
+      vid: newGroupWithId.vid,
+      realNode: true,
+      groupContent: [],
+      leafContent: []
+    };
+    this.onNewGroup.emit(newGroup);
+  }
+
+  onPreviousNodeChosen(): void {
+    this.previousNodeChosen.emit();
+  }
 
 }

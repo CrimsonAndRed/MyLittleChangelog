@@ -1,13 +1,10 @@
-import { Component, Input, Output, Inject } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 
 import { WholeVersion, PreviousVersionsContent } from 'app/model/whole-version';
-import { PastLeafContent, LeafContent } from 'app/model/leaf-content';
-import { PastGroupContent, GroupContent } from 'app/model/group-content';
 import { Http } from 'app/http/http.service';
-import { ActivatedRoute } from '@angular/router';
-import { EventEmitter } from '@angular/core';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { PastRadioEvent } from 'app/model/past-radio-event'
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { PastGroupContent, PastLeafContent, PastRadioEvent } from 'app/previous-version/previous-version.model';
+import { GroupContent } from 'app/model/group-content';
 
 @Component({
   selector: 'from-past-groups-modal',

@@ -13,7 +13,7 @@ import { GroupContent } from 'app/model/group-content';
 import { LeafContent } from 'app/model/leaf-content';
 import { GroupHeaderDr } from '../groups-sec.directive';
 
-import { GroupHeader, LeafHeader, ParentGroupListChangeFn, GroupChangeFn } from '../groups-sec.model';
+import { GroupHeader,ParentGroupListChangeFn, GroupChangeFn, GroupsSecConfig, GroupsSecContext } from '../groups-sec.model';
 
 @Component({
   selector: 'group-leaves-sec',
@@ -25,27 +25,33 @@ export class GroupLeavesSecComponent implements OnInit {
   @Input() group: GroupContent;
   @Input() parentGroup: GroupContent = null;
   @Input() leaves: LeafContent[] = null;
-  @Input() groupHeaderRef: Type<GroupHeader> = null;
-  @Input() leafHeaderRef: Type<LeafHeader> = null;
+  @Input() config: GroupsSecConfig = null;
+  @Input() context: GroupsSecContext = null;
 
   @Output() onParentChange = new EventEmitter<ParentGroupListChangeFn>();
 
   @ViewChild(GroupHeaderDr, {static: true}) header: GroupHeaderDr;
   @ViewChildren(GroupLeavesSecComponent) embeddedGroupLeaves: GroupLeavesSecComponent[];
 
-  isContentShowed: boolean = false;
+  isContentShowed = false;
 
   constructor(private componentFactoryResolver: ComponentFactoryResolver) { };
 
-  ngOnInit() {
-    if (this.groupHeaderRef) {
-      const factory = this.componentFactoryResolver.resolveComponentFactory(this.groupHeaderRef);
+  ngOnInit(): void {
+    if (this.config?.groupHeader) {
+      const header = this.config.groupHeader;
+      const factory = this.componentFactoryResolver.resolveComponentFactory(header);
       const viewContainerRef = this.header.viewContainerRef;
       const componentRef = viewContainerRef.createComponent<GroupHeader>(factory);
-      componentRef.instance.group = this.group;
-      componentRef.instance.parentGroup = this.parentGroup;
-      componentRef.instance.onGroupChange.subscribe(g => this.group = g);
-      componentRef.instance.onParentGroupsChange.subscribe(fn => this.onParentChange.emit(fn));
+      componentRef.instance.data = {
+        group: this.group,
+        parentGroup: this.parentGroup,
+        groupChange: new EventEmitter<GroupContent>(),
+        parentGroupsChange: new EventEmitter<ParentGroupListChangeFn>(),
+      };
+      componentRef.instance.ctx = this.context;
+      componentRef.instance.data.groupChange.subscribe(g => this.group = g);
+      componentRef.instance.data.parentGroupsChange.subscribe(fn => this.onParentChange.emit(fn));
     }
   }
 

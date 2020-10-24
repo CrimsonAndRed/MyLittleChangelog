@@ -7,16 +7,6 @@ export interface LeafContent {
   groupVid: number;
 }
 
-export interface PastLeafContent {
-  id: number;
-  vid: number;
-  name: string;
-  valueType: number;
-  value: string;
-  inCurrentVersion: boolean;
-  groupVid: number;
-}
-
 export interface NewLeaf {
     name: string;
     valueType: number;

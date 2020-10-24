@@ -1,4 +1,4 @@
-import { LeafContent, PastLeafContent } from './leaf-content';
+import { LeafContent } from './leaf-content';
 
 export interface GroupContent {
   id: number;
@@ -7,16 +7,6 @@ export interface GroupContent {
   realNode: boolean;
   groupContent: GroupContent[];
   leafContent: LeafContent[];
-}
-
-export interface PastGroupContent {
-  id: number;
-  vid: number;
-  name: string;
-  realNode: boolean;
-  inCurrentVersion: boolean;
-  groupContent: PastGroupContent[];
-  leafContent: PastLeafContent[];
 }
 
 export interface NewGroup {

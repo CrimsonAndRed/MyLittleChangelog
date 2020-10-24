@@ -2,7 +2,11 @@ import { Component, Input, OnInit, Type } from '@angular/core';
 import { GroupContent } from 'app/model/group-content';
 import { LeafContent } from 'app/model/leaf-content';
 
-import { GroupHeader, LeafHeader, ParentGroupListChangeFn } from './groups-sec.model';
+import {
+  GroupsSecConfig,
+  GroupsSecContext,
+  ParentGroupListChangeFn,
+} from './groups-sec.model';
 
 @Component({
   selector: 'groups-sec',
@@ -12,10 +16,10 @@ import { GroupHeader, LeafHeader, ParentGroupListChangeFn } from './groups-sec.m
 export class GroupsSecComponent implements OnInit {
 
   @Input() groups: GroupContent[];
-  @Input() groupHeaderRef: Type<GroupHeader> = null;
-  @Input() leafHeaderRef: Type<LeafHeader> = null;
+  @Input() config: GroupsSecConfig;
+  @Input() context: GroupsSecContext;
 
-  constructor() {};
+  constructor() { }
 
   ngOnInit() {
   }

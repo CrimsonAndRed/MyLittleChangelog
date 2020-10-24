@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { LeafContent } from 'app/model/leaf-content';
-import { LeafHeader, GroupChangeFn } from '../groups-sec.model';
+import { LeafHeader, GroupChangeFn, GroupsSecContext, GroupsSecConfig } from '../groups-sec.model';
 import { LeafHeaderDr } from '../groups-sec.directive';
 
 @Component({
@@ -20,7 +20,8 @@ import { LeafHeaderDr } from '../groups-sec.directive';
 })
 export class LeafContentSecComponent implements OnInit {
 
-  @Input() leafHeaderRef: Type<LeafHeader> = null;
+  @Input() config: GroupsSecConfig = null;
+  @Input() context: GroupsSecContext = null;
   @Input() leaf: LeafContent;
   @Input() groupId: number;
 
@@ -30,57 +31,22 @@ export class LeafContentSecComponent implements OnInit {
 
   constructor(private componentFactoryResolver: ComponentFactoryResolver) { }
 
-  ngOnInit() {
-    if (this.leafHeaderRef) {
-      const factory = this.componentFactoryResolver.resolveComponentFactory(this.leafHeaderRef);
+  ngOnInit(): void {
+    if (this.config?.leafHeader) {
+      const header = this.config.leafHeader;
+      const factory = this.componentFactoryResolver.resolveComponentFactory(header);
       const viewContainerRef = this.header.viewContainerRef;
       const componentRef = viewContainerRef.createComponent<LeafHeader>(factory);
-      componentRef.instance.leaf = this.leaf;
-      componentRef.instance.groupId = this.groupId;
-      componentRef.instance.onLeafChange.subscribe(l => this.leaf = l);
-      componentRef.instance.onParentChange.subscribe(fn => this.onParentChange.emit(fn));
+      componentRef.instance.data = {
+        leaf: this.leaf,
+        groupId: this.groupId,
+        leafChange: new EventEmitter<LeafContent>(),
+        parentChange: new EventEmitter<GroupChangeFn>(),
+      };
+      componentRef.instance.ctx = this.context;
+      componentRef.instance.data.leafChange.subscribe(l => this.leaf = l);
+      componentRef.instance.data.parentChange.subscribe(fn => this.onParentChange.emit(fn));
     }
   }
-
-//  onEditButtonClick() {
-//    const dialogRef = this.dialog.open(EditLeafModalComponent, {
-//      hasBackdrop: true,
-//      data: {
-//        leaf: this.leafContent,
-//        groups: this.groups
-//      }
-//    });
-//
-//    dialogRef.afterClosed().subscribe(result => {
-//      if (result) {
-//        this.updateLeaf(result);
-//      }
-//    });
-//
-//  }
-//
-//  onDeleteButtonClick() {
-//    const versionId = this.route.snapshot.data.version.id;
-//    const groupId = this.parentId;
-//    const leafId = this.leafContent.id;
-//
-//    this.http.delete(`http://localhost:8080/version/${versionId}/group/${groupId}/leaf/${leafId}`)
-//      .subscribe(() => this.onLeafDelete.emit(this.leafContent));
-//  }
-//
-//  updateLeaf(leaf: LeafContent) {
-//    const versionId = this.route.snapshot.data.version.id;
-//    const parentId = this.parentId;
-//    const leafId = leaf.id;
-//
-//    const leafToUpdate: LeafToUpdate = {
-//      name: leaf.name,
-//      valueType: leaf.valueType,
-//      value: leaf.value,
-//      parentId: parentId,
-//    }
-//    this.http.put<UpdatedLeaf>(`http://localhost:8080/version/${versionId}/group/${parentId}/leaf/${leafId}`, leafToUpdate)
-//          .subscribe(updatedLeaf => this.onLeafUpdate.emit(updatedLeaf));
-//  }
 
 }

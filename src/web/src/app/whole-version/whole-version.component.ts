@@ -3,7 +3,7 @@ import { WholeVersion } from 'app/model/whole-version';
 import { ActivatedRoute } from '@angular/router'
 import { Http } from 'app/http/http.service'
 import { GroupContent, NewGroupWithId } from 'app/model/group-content';
-import { GroupHeader, LeafHeader } from 'app/groups-sec/groups-sec.model';
+import { GroupHeader, GroupsSecConfig, LeafHeader } from 'app/groups-sec/groups-sec.model';
 
 import { GroupHeaderComponent } from './group-header/group-header.component';
 import { LeafHeaderComponent } from './leaf-header/leaf-header.component';
@@ -16,8 +16,10 @@ import { LeafHeaderComponent } from './leaf-header/leaf-header.component';
 export class WholeVersionComponent implements OnInit {
 
   version: WholeVersion;
-  groupHeaderRef:Type<GroupHeader> = GroupHeaderComponent;
-  leafHeaderRef:Type<LeafHeader> = LeafHeaderComponent;
+  config: GroupsSecConfig = {
+    groupHeader: GroupHeaderComponent,
+    leafHeader: LeafHeaderComponent
+  };
 
   constructor(private http: Http, private route: ActivatedRoute) {
   }
@@ -30,7 +32,7 @@ export class WholeVersionComponent implements OnInit {
     this.version = this.route.snapshot.data.version;
   }
 
-  onRefresh() {
+  refresh(): void {
     const versionId = this.route.snapshot.params.id;
 
     this.http.get<WholeVersion>(`http://localhost:8080/version/${versionId}`)

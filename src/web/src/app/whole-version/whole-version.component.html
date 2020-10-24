@@ -1,14 +1,9 @@
 <div>
   <p> Version {{version.id}}</p>
-  <groups-sec [groups]="version.groupContent"
-              [groupHeaderRef]="groupHeaderRef"
-              [leafHeaderRef]="leafHeaderRef">
-    <version-header global-header (onNewGroup)="handleNewGroup($event)"></version-header>
+  <groups-sec [groups]="version.groupContent" [config]="config">
+    <version-header global-header
+                    [groups]="version.groupContent"
+                    (onNewGroup)="handleNewGroup($event)" 
+                    (previousNodeChosen)="refresh()"></version-header>
   </groups-sec>
-<!--  <div *ngIf="version.canChange">-->
-<!--    <from-past-groups-button (onRefresh)="onRefresh()" [version]="version"></from-past-groups-button>-->
-<!--  </div>-->
-<!--  <groups-leaves [groups]="version.groupContent"-->
-<!--                 [leaves]="[]"-->
-<!--                 [canChange]="version.canChange"></groups-leaves>-->
 </div>

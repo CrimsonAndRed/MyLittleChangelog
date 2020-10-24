@@ -1,23 +1,25 @@
 <div class="group-leaves-container">
-  <expand-all-button [isContentShowed]="isContentShowed" (onSwitchExpandAll)="setContentShowed(!isContentShowed)"></expand-all-button>
+  <expand-all-button [isContentShowed]="isContentShowed" 
+                     (onSwitchExpandAll)="setContentShowed(!isContentShowed)"></expand-all-button>
   <expand-one-button [(isContentShowed)]="isContentShowed"></expand-one-button>
-  <div [hidden]="!isContentShowed" class="group-leaves">
+  <div [hidden]="!isContentShowed" class="group-leaves {{ group.realNode ? 'in-use-group' : 'not-in-use-group' }}">
     <group-content-sec [group]="group"></group-content-sec>
     <ng-template group-header></ng-template>
     <div [hidden]="!isContentShowed">
-      <group-leaves-sec *ngFor="let _group of group.groupContent"
-                        [group]="_group"
-                        [leaves]="_group.leaves"
-                        [groupHeaderRef]="groupHeaderRef"
-                        [leafHeaderRef]="leafHeaderRef"
-                        (onParentChange)="onGroupListChange($event)"></group-leaves-sec>
-      <ng-container *ngIf="group.leafContent">
-        <leaf-content-sec *ngFor="let leaf of group.leafContent"
-                          [leafHeaderRef]="leafHeaderRef"
-                          [leaf]="leaf"
-                          [groupId]="group.id"
-                          (onParentChange)="handleGroupChange($event)"></leaf-content-sec>
-      </ng-container>
+    <group-leaves-sec *ngFor="let _group of group.groupContent"
+                      [config]="config"
+                      [context]="context"
+                      [group]="_group"
+                      [leaves]="_group.leafContent"
+                      (onParentChange)="onGroupListChange($event)"></group-leaves-sec>
+    <ng-container *ngIf="group.leafContent">
+      <leaf-content-sec *ngFor="let leaf of group.leafContent"
+                        [config]="config"
+                        [context]="context"
+                        [leaf]="leaf"
+                        [groupId]="group.id"
+                        (onParentChange)="handleGroupChange($event)"></leaf-content-sec>
+    </ng-container>
     </div>
   </div>
 </div>

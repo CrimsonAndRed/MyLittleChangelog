@@ -1,0 +1,15 @@
+<mat-dialog-content>
+  <ng-container *ngIf="groups && context">
+    <groups-sec [groups]="groups"
+                [config]="config"
+                [context]="context"></groups-sec>
+  </ng-container>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <div *ngIf="chosenPastElement">
+    Выбран элемент: {{ chosenPastElement.value.name }}
+  </div>
+  <button [mat-dialog-close]="null">Cancel</button>
+  <button [mat-dialog-close]="chosenPastElement">Save</button>
+</mat-dialog-actions>
