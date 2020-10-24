@@ -1,10 +1,8 @@
 import { Component, Inject, OnInit, Type } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { GroupsSecConfig, GroupsSecContext } from 'app/groups-sec/groups-sec.model';
-import { Http } from 'app/http/http.service';
 import { GroupContent } from 'app/model/group-content';
 import { WholeVersion } from 'app/model/whole-version';
-import { FromPastGroupsModal } from 'app/whole-version/past-groups/from-past-groups-modal/from-past-groups-modal.component';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { GroupHeaderComponent } from '../header/group-header/group-header.component';

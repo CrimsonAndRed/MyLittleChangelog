@@ -5,7 +5,7 @@ import { Http } from 'app/http/http.service';
 import { ActivatedRoute } from '@angular/router';
 import { EventEmitter } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { NewGroupModalComponent } from 'app/whole-version/group-content/new-group-modal/new-group-modal.component';
+import { NewGroupModalComponent } from './new-group-modal/new-group-modal.component';
 
 @Component({
   selector: 'new-group-button',

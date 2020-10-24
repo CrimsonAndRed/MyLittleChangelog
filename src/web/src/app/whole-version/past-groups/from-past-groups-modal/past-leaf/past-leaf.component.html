@@ -1,6 +1,0 @@
-<div class="leaf-content-outer">
-  <div class="leaf-content-inner" [ngClass]="(leafContent.inCurrentVersion)?'in-use-leaf':'not0-in-use-leaf'">
-    <input *ngIf="!leafContent.inCurrentVersion" type="radio" name="past-groups-leaves" value="{{leafContent.id}}" (click)="onRadioButtonClick()">
-    <label>{{ leafContent.name }}</label>
-  </div>
-</div>
