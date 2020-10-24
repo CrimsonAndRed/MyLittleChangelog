@@ -5,7 +5,7 @@ import { Http } from 'app/http/http.service';
 import { Observable } from 'rxjs';
 
 @Injectable({
-  providedIn: "root"
+  providedIn: 'root'
 })
 export class WholeVersionResolver implements Resolve<WholeVersion> {
 

@@ -19,7 +19,7 @@ export class NewLeafButtonComponent {
   constructor(private http: Http, private route: ActivatedRoute, private dialog: MatDialog) {
   }
 
-  onNewLeafButtonClick() {
+  onNewLeafButtonClick(): void {
 
     const dialogRef = this.dialog.open(NewLeafModalComponent, {
       hasBackdrop: true
@@ -33,12 +33,12 @@ export class NewLeafButtonComponent {
 
   }
 
-  createNewLeaf(newLeaf: NewLeaf) {
+  createNewLeaf(newLeaf: NewLeaf): void {
     const versionId = this.route.snapshot.data.version.id;
     const groupId = this.groupId;
 
     this.http.post<NewLeafWithId>(`http://localhost:8080/version/${versionId}/group/${groupId}/leaf`, newLeaf)
-          .subscribe(newLeaf =>this.onNewLeaf.emit(newLeaf));
+          .subscribe(newLeaf => this.onNewLeaf.emit(newLeaf));
   }
 
 }

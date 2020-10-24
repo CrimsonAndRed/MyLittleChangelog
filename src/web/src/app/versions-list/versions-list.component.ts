@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Version } from 'app/model/version';
 import { Http } from 'app/http/http.service';
-import { RouterLink, ActivatedRoute } from '@angular/router'
+import { RouterLink, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'versions-list',
@@ -15,7 +15,7 @@ export class VersionsListComponent implements OnInit {
   constructor(private http: Http, private route: ActivatedRoute) {
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.versions = this.route.snapshot.data.versions;
   }
 

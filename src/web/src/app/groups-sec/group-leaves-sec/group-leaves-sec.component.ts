@@ -13,7 +13,7 @@ import { GroupContent } from 'app/model/group-content';
 import { LeafContent } from 'app/model/leaf-content';
 import { GroupHeaderDr } from '../groups-sec.directive';
 
-import { GroupHeader,ParentGroupListChangeFn, GroupChangeFn, GroupsSecConfig, GroupsSecContext } from '../groups-sec.model';
+import { GroupHeader, ParentGroupListChangeFn, GroupChangeFn, GroupsSecConfig, GroupsSecContext } from '../groups-sec.model';
 
 @Component({
   selector: 'group-leaves-sec',
@@ -35,7 +35,7 @@ export class GroupLeavesSecComponent implements OnInit {
 
   isContentShowed = false;
 
-  constructor(private componentFactoryResolver: ComponentFactoryResolver) { };
+  constructor(private componentFactoryResolver: ComponentFactoryResolver) { }
 
   ngOnInit(): void {
     if (this.config?.groupHeader) {

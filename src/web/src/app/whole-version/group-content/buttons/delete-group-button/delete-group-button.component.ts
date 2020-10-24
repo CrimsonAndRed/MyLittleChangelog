@@ -12,9 +12,9 @@ export class DeleteGroupButtonComponent {
   @Input() groupId: number;
   @Output() onDeleteGroup = new EventEmitter<void>();
 
-  constructor(private http: Http, private route: ActivatedRoute) {};
+  constructor(private http: Http, private route: ActivatedRoute) {}
 
-  onDeleteClick() {
+  onDeleteClick(): void {
     const versionId = this.route.snapshot.data.version.id;
     const groupId = this.groupId;
 

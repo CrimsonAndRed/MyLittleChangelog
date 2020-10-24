@@ -21,7 +21,7 @@ export class NewGroupButtonComponent {
   constructor(private http: Http, private route: ActivatedRoute, private dialog: MatDialog) {
   }
 
-  onNewGroupButtonClick() {
+  onNewGroupButtonClick(): void {
     const dialogRef = this.dialog.open(NewGroupModalComponent, {
       hasBackdrop: true
     });
@@ -33,15 +33,15 @@ export class NewGroupButtonComponent {
     });
   }
 
-  createNewGroup(name: string) {
+  createNewGroup(name: string): void {
     const versionId = this.route.snapshot.data.version.id;
     const parentId = this.parentGroupId;
 
     const newGroup: NewGroup = {
       vid: null,
-      parentId: parentId,
-      name: name,
-    }
+      parentId,
+      name,
+    };
     this.http.post<NewGroupWithId>(`http://localhost:8080/version/${versionId}/group`, newGroup)
       .subscribe(newGroup => this.onNewGroup.emit(newGroup) );
   }

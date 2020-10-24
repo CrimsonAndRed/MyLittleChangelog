@@ -1,7 +1,7 @@
 import { Component, OnInit, Type } from '@angular/core';
 import { WholeVersion } from 'app/model/whole-version';
-import { ActivatedRoute } from '@angular/router'
-import { Http } from 'app/http/http.service'
+import { ActivatedRoute } from '@angular/router';
+import { Http } from 'app/http/http.service';
 import { GroupContent, NewGroupWithId } from 'app/model/group-content';
 import { GroupHeader, GroupsSecConfig, LeafHeader } from 'app/groups-sec/groups-sec.model';
 import { GroupHeaderComponent } from './group-content/group-header/group-header.component';
@@ -23,11 +23,11 @@ export class WholeVersionComponent implements OnInit {
   constructor(private http: Http, private route: ActivatedRoute) {
   }
 
-  handleNewGroup(group: GroupContent) {
+  handleNewGroup(group: GroupContent): void {
     this.version.groupContent.push(group);
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.version = this.route.snapshot.data.version;
   }
 

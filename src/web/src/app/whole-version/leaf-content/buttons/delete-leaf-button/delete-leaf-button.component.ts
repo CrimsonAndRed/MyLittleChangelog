@@ -13,9 +13,9 @@ export class DeleteLeafButtonComponent {
   @Input() leafId: number;
   @Output() onDeleteLeaf = new EventEmitter<void>();
 
-  constructor(private http: Http, private route: ActivatedRoute) {};
+  constructor(private http: Http, private route: ActivatedRoute) {}
 
-  onDeleteClick() {
+  onDeleteClick(): void {
     const versionId = this.route.snapshot.data.version.id;
     const groupId = this.groupId;
     const leafId = this.leafId;

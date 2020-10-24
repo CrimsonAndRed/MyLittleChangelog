@@ -19,7 +19,7 @@ export class EditLeafButtonComponent {
   constructor(private http: Http, private route: ActivatedRoute, private dialog: MatDialog) {
   }
 
-  onEditButtonClick() {
+  onEditButtonClick(): void {
     const dialogRef = this.dialog.open(EditLeafModalComponent, {
       hasBackdrop: true,
       data: this.leaf
@@ -33,7 +33,7 @@ export class EditLeafButtonComponent {
 
   }
 
-  updateLeaf(leaf: LeafContent) {
+  updateLeaf(leaf: LeafContent): void {
     const versionId = this.route.snapshot.data.version.id;
     const parentId = this.parentGroupId;
     const leafId = leaf.id;
@@ -44,7 +44,7 @@ export class EditLeafButtonComponent {
       value: leaf.value,
       // TODO Испрвить на vid
       parentVid: parentId,
-    }
+    };
     this.http.put<UpdatedLeaf>(`http://localhost:8080/version/${versionId}/group/${parentId}/leaf/${leafId}`, leafToUpdate)
           .subscribe(updatedLeaf => this.onUpdateLeaf.emit(updatedLeaf));
   }

@@ -13,7 +13,7 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 })
 export class NewGroupModalComponent {
 
-  name: string = '';
+  name = '';
 
   constructor(private dialogRef: MatDialogRef<NewGroupModalComponent>) {
   }

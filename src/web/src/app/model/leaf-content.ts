@@ -20,16 +20,16 @@ export interface NewLeafWithId extends NewLeaf {
 }
 
 export interface LeafToUpdate {
-  name: string,
-  valueType: number,
-  value: string,
-  parentVid: number
+  name: string;
+  valueType: number;
+  value: string;
+  parentVid: number;
 }
 
 export interface UpdatedLeaf {
-  id: number,
-  vid: number,
-  name: string,
-  valueType: number,
-  value: string,
+  id: number;
+  vid: number;
+  name: string;
+  valueType: number;
+  value: string;
 }
