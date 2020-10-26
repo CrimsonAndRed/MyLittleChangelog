@@ -1,6 +1,6 @@
 <ng-content select="[global-header]"></ng-content>
-<expand-block *ngIf="groups.length" 
-              [(isContentShowed)]="isContentShowed" 
+<expand-block *ngIf="groups.length"
+              [(isContentShowed)]="isContentShowed"
               (globalShowChange)="changeGlobalContentShow($event)"></expand-block>
 <div [hidden]="!isContentShowed">
   <group-leaves-sec *ngFor="let group of groups"

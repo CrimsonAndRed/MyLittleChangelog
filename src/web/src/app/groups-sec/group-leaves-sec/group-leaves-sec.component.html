@@ -2,9 +2,9 @@
   <div class="group-leaves {{ group.realNode ? 'in-use-group' : 'not-in-use-group' }}">
     <group-content-sec [group]="group"></group-content-sec>
     <ng-template group-header></ng-template>
-      <expand-block *ngIf="group.groupContent.length" 
-                    [(isContentShowed)]="isContentShowed" 
-                    (globalShowChange)="changeGlobalContentShow($event)"></expand-block>
+    <expand-block *ngIf="group.groupContent.length || group.leafContent.length"
+                  [(isContentShowed)]="isContentShowed"
+                  (globalShowChange)="changeGlobalContentShow($event)"></expand-block>
     <div [hidden]="!isContentShowed">
       <group-leaves-sec *ngFor="let _group of group.groupContent"
                         [config]="config"
