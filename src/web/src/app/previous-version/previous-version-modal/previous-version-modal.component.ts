@@ -1,13 +1,18 @@
-import { Component, Inject, OnInit, Type } from '@angular/core';
+import { Component, Inject, OnInit, Input, Type } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { GroupsSecConfig, GroupsSecContext } from 'app/groups-sec/groups-sec.model';
 import { GroupContent } from 'app/model/group-content';
-import { WholeVersion } from 'app/model/whole-version';
-import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { GroupHeaderComponent } from '../header/group-header/group-header.component';
 import { LeafHeaderComponent } from '../header/leaf-header/leaf-header.component';
-import { groupContentToPrevious, PastGroupContent, PastLeafContent, PastRadioEvent, PreviousUsedGroupsAndLeaves } from '../previous-version.model';
+import {
+  groupContentToPrevious,
+  PastGroupContent,
+  PastLeafContent,
+  PastRadioEvent,
+  PreviousUsedGroupsAndLeaves,
+  PreviousVersionModalData,
+} from '../previous-version.model';
 
 @Component({
   selector: 'previous-version-modal',
@@ -34,7 +39,7 @@ export class PreviousVersionModalComponent implements OnInit {
   ngOnInit(): void {
     this.data.version
       .pipe(
-        tap(v => this.usedIds = this.calculateUsedIds(v.groupContent)),
+        tap(v => this.usedIds = this.calculateUsedIds(this.data.currentGroups)),
         tap(v => this.groups = v.groupContent.map(g => groupContentToPrevious(g, this.usedIds)))
       )
       .subscribe(() => this.context = {
@@ -77,9 +82,6 @@ export class PreviousVersionModalComponent implements OnInit {
     group.leafContent.forEach(l => leafIds.add(l.id));
     group.groupContent.forEach(g => this.addUsedIdsRecursive(g, groupIds, leafIds));
   }
-
 }
 
-export interface PreviousVersionModalData {
-  version: Observable<WholeVersion>;
-}
+

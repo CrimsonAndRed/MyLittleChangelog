@@ -1,5 +1,7 @@
 import { GroupContent } from 'app/model/group-content';
 import { LeafContent } from 'app/model/leaf-content';
+import { WholeVersion } from 'app/model/whole-version';
+import { Observable } from 'rxjs';
 
 export interface PastGroupContent {
   id: number;
@@ -32,6 +34,11 @@ export interface PastRadioEvent {
 export interface PreviousUsedGroupsAndLeaves {
   usedGroups: Set<number>;
   usedLeaves: Set<number>;
+}
+
+export interface PreviousVersionModalData {
+  version: Observable<WholeVersion>;
+  currentGroups: GroupContent[];
 }
 
 export function groupContentToPrevious(group: GroupContent, usedIds: PreviousUsedGroupsAndLeaves): PastGroupContent {

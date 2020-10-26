@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter } from '@angular/core';
+import { Component, Output, EventEmitter, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { Http } from 'app/http/http.service';
@@ -16,6 +16,7 @@ import { PreviousUsedGroupsAndLeaves } from '../previous-version.model';
 export class PreviousVersionSelectButtonComponent {
 
   @Output() nodeChosen = new EventEmitter<void>();
+  @Input() currentGroups: GroupContent[];
 
   constructor(
     private http: Http,
@@ -28,7 +29,8 @@ export class PreviousVersionSelectButtonComponent {
       hasBackdrop: true,
       minWidth: '80%',
       data: {
-        version: this.http.get<WholeVersion>('http://localhost:8080/version/previous')
+        version: this.http.get<WholeVersion>('http://localhost:8080/version/previous'),
+        currentGroups: this.currentGroups,
       }
     });
 

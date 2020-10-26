@@ -18,4 +18,7 @@ export class GroupHeaderComponent implements GroupHeader {
     this.ctx.emitGroupCheck(groupContentToPrevious(this.data.group, this.ctx.usedIds), this.data.parentGroup?.id);
   }
 
+  showRadioButton(): boolean {
+    return !this.ctx.usedIds.usedGroups.has(this.data.group.id)
+  }
 }
