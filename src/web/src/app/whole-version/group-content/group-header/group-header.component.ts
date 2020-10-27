@@ -50,4 +50,12 @@ export class GroupHeaderComponent implements GroupHeader {
     this.data.groupChange.emit(this.data.group);
   }
 
+  handleMaterializeGroup(group: NewGroupWithId): void {
+    this.data.group.name = group.name;
+    this.data.group.vid = group.vid;
+    this.data.group.id = group.id;
+    this.data.group.realNode = true;
+
+    this.data.groupChange.emit(this.data.group);
+  }
 }
