@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { Http } from 'app/http/http.service';
 import { EditGroupModalComponent } from './edit-group-modal/edit-group-modal.component';
-import { GroupContent, GroupToUpdate, UpdatedGroup } from 'app/model/group-content';
+import { GroupContent, GroupToUpdate, Group } from 'app/model/group-content';
 
 @Component({
   selector: 'edit-group-button',
@@ -14,7 +14,7 @@ export class EditGroupButtonComponent {
 
   @Input() group: GroupContent;
   @Input() parentGroupId: number;
-  @Output() onUpdateGroup = new EventEmitter<UpdatedGroup>();
+  @Output() onUpdateGroup = new EventEmitter<Group>();
 
   constructor(private http: Http, private route: ActivatedRoute, private dialog: MatDialog) {
   }
@@ -40,7 +40,7 @@ export class EditGroupButtonComponent {
       name: group.name,
       parentId: this.parentGroupId
     };
-    this.http.put<UpdatedGroup>(`http://localhost:8080/version/${versionId}/group/${groupId}`, groupToUpdate)
+    this.http.put<Group>(`http://localhost:8080/version/${versionId}/group/${groupId}`, groupToUpdate)
       .subscribe(updatedGroup => this.onUpdateGroup.emit(updatedGroup));
   }
 

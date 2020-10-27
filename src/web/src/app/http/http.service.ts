@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, retry } from 'rxjs/operators';
 
@@ -29,7 +29,13 @@ export class Http {
       return this.httpClient.put<T>(url, body, jsonHttpOptions);
   }
 
-  delete<T>(url: string): Observable<T> {
-    return this.httpClient.delete<T>(url);
+  delete<T>(url: string, queryParams: HttpParams = new HttpParams()): Observable<T> {
+
+    const options = {
+      responseType: 'json' as const,
+      params: queryParams
+    }
+
+    return this.httpClient.delete<T>(url, options);
   }
 }

@@ -1,6 +1,6 @@
 import { Component, Input, Inject } from '@angular/core';
 
-import { GroupContent, NewGroupWithId, NewGroup } from 'app/model/group-content';
+import { GroupContent, NewGroup } from 'app/model/group-content';
 import { Http } from 'app/http/http.service';
 import { ActivatedRoute } from '@angular/router';
 import { EventEmitter } from '@angular/core';

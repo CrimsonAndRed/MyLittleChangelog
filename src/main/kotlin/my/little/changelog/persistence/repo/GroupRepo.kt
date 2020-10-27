@@ -4,8 +4,10 @@ import my.little.changelog.model.group.Group
 import my.little.changelog.model.group.Groups
 import my.little.changelog.model.leaf.Leaf
 import my.little.changelog.model.version.Version
+import my.little.changelog.model.version.Versions
 import my.little.changelog.persistence.AbstractCrudRepository
 import org.jetbrains.exposed.sql.and
+import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.statements.jdbc.iterate
 import org.jetbrains.exposed.sql.transactions.transaction
 
@@ -42,6 +44,15 @@ object GroupRepo : AbstractCrudRepository<Group, Int>(Group) {
                 UNION
                     SELECT g.* FROM sublatest AS g JOIN tmp_groups ON g.vid=tmp_groups.parent_vid
             ) SELECT id FROM tmp_groups
+        """
+
+    private const val FIND_SUBLATEST_GROUP_QUERY =
+        """
+            SELECT grouped.id FROM (
+                SELECT g.*, max(version_id) OVER (PARTITION BY vid) FROM groups AS g
+                WHERE g.vid = ? and g.version_id < ? 
+            ) as grouped
+            WHERE grouped.version_id=grouped.max
         """
 
     fun findRootGroupsByVersion(version: Version): Iterable<Group> = transaction {
@@ -82,5 +93,25 @@ object GroupRepo : AbstractCrudRepository<Group, Int>(Group) {
         val latestGroup = GroupLatestRepo.findByVid(vid)
 
         Group.find { (Groups.id eq latestGroup.id) }.single()
+    }
+
+    fun isEarliest(vid: Int, versionId: Int): Boolean = transaction {
+        Groups.innerJoin(Versions)
+            .select { (Groups.vid eq vid) and (Versions.id less versionId) }
+            .count() == 0L
+    }
+
+    fun findSublatestGroup(vid: Int, versionId: Int): Group = transaction {
+        val id = connection.prepareStatement(FIND_SUBLATEST_GROUP_QUERY, arrayOf("id"))
+            .apply {
+                set(1, vid)
+                set(2, versionId)
+            }
+            .executeQuery()
+            .also {
+                it.next()
+            }
+            .getInt("id")
+        Group.findById(id)!!
     }
 }

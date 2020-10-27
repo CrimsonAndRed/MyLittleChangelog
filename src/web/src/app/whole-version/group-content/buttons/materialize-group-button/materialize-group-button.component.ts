@@ -1,7 +1,7 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Http } from 'app/http/http.service';
-import { GroupContent, NewGroupWithId, NewGroup } from 'app/model/group-content';
+import { GroupContent, Group, NewGroup } from 'app/model/group-content';
 
 @Component({
   selector: 'materialize-group-button',
@@ -12,7 +12,7 @@ export class MaterializeGroupButtonComponent {
 
   @Input() group: GroupContent;
   @Input() parentGroup: GroupContent;
-  @Output() onMaterializeGroup = new EventEmitter<NewGroupWithId>();
+  @Output() onMaterializeGroup = new EventEmitter<Group>();
 
   constructor(private http: Http, private route: ActivatedRoute) {}
 
@@ -26,7 +26,7 @@ export class MaterializeGroupButtonComponent {
       parentId: this.parentGroup?.id,
     }
 
-    this.http.post<NewGroupWithId>(`http://localhost:8080/version/${versionId}/group`, newGroup)
+    this.http.post<Group>(`http://localhost:8080/version/${versionId}/group`, newGroup)
         .subscribe((res) => this.onMaterializeGroup.emit(res));
   }
 }

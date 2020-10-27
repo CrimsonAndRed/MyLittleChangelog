@@ -7,6 +7,7 @@ import my.little.changelog.model.group.dto.service.GroupUpdateDto
 import my.little.changelog.model.group.dto.service.ReturnedGroupDto
 import my.little.changelog.model.group.dto.service.toRepoDto
 import my.little.changelog.model.group.toReturnedDto
+import my.little.changelog.persistence.repo.GroupLatestRepo
 import my.little.changelog.persistence.repo.GroupRepo
 import my.little.changelog.persistence.repo.LeafRepo
 import my.little.changelog.persistence.repo.VersionRepo
@@ -41,22 +42,34 @@ object GroupService {
             .toReturnedDto(parentGroup?.toReturnedDto())
     }
 
-    fun deleteGroup(groupDelete: GroupDeletionDto): Unit = transaction {
+    fun deleteGroup(groupDelete: GroupDeletionDto, dropHierarchy: Boolean): ReturnedGroupDto = transaction {
         val group = GroupRepo.findById(groupDelete.id)
         if (group.version.id != VersionRepo.findLatest().id) {
             throw VersionIsNotLatestException()
         }
 
-        val leaves = LeafRepo.findCurrentGroupLeaves(group)
-        leaves.forEach {
-            it.delete()
-        }
+        if (dropHierarchy) {
+            val leaves = LeafRepo.findCurrentGroupLeaves(group)
+            leaves.forEach {
+                it.delete()
+            }
 
-        val subgroups = GroupRepo.findSubgroups(group)
-        subgroups.forEach { g ->
-            deleteGroup(GroupDeletionDto(g.id.value))
+            val subgroups = GroupRepo.findSubgroups(group)
+            subgroups.forEach { g ->
+                deleteGroup(GroupDeletionDto(g.id.value), true)
+            }
+        } else if (GroupRepo.isEarliest(group.vid, group.version.id.value)) {
+            throw RuntimeException("Can not delete group without hierarchy in version it was created")
         }
 
         GroupRepo.delete(group)
+
+        // TODO лишний запрос isEarliest
+        val sublatestGroup = GroupRepo.findSublatestGroup(group.vid, group.version.id.value)
+        // TODO лишний запрос, если нужен будет только parentVid
+        val parentGroupId = sublatestGroup.parentVid?.let {
+            GroupLatestRepo.findByVid(it).id.value
+        }
+        ReturnedGroupDto(sublatestGroup.id.value, sublatestGroup.vid, sublatestGroup.name, parentGroupId)
     }
 }

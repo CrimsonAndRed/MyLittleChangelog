@@ -15,16 +15,12 @@ export interface NewGroup {
     parentId: number;
 }
 
-export interface NewGroupWithId extends NewGroup {
-    id: number;
-}
-
 export interface GroupToUpdate {
   name: string;
   parentId: number;
 }
 
-export interface UpdatedGroup {
+export interface Group {
   id: number;
   vid: number;
   name: string;

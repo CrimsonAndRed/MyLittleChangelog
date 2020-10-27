@@ -10,6 +10,7 @@ import { WholeVersionComponent } from './whole-version.component';
 import { GroupHeaderComponent } from './group-content/group-header/group-header.component';
 import { DeleteGroupButtonComponent } from './group-content/buttons/delete-group-button/delete-group-button.component';
 import { MaterializeGroupButtonComponent } from './group-content/buttons/materialize-group-button/materialize-group-button.component';
+import { DematerializeGroupButtonComponent } from './group-content/buttons/dematerialize-group-button/dematerialize-group-button.component';
 import { EditGroupButtonComponent } from './group-content/buttons/edit-group-button/edit-group-button.component';
 import { LeafHeaderComponent } from './leaf-content/leaf-header/leaf-header.component';
 import { DeleteLeafButtonComponent } from './leaf-content/buttons/delete-leaf-button/delete-leaf-button.component';
@@ -33,6 +34,7 @@ import { EditLeafModalComponent } from './leaf-content/buttons/edit-leaf-button/
     NewGroupModalComponent,
     DeleteGroupButtonComponent,
     MaterializeGroupButtonComponent,
+    DematerializeGroupButtonComponent,
     EditGroupButtonComponent,
     EditGroupModalComponent,
 

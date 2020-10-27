@@ -6,5 +6,5 @@ fun Group.toReturnedDto(parent: ReturnedGroupDto? = null) = ReturnedGroupDto(
     id = id.value,
     vid = vid,
     name = name,
-    parent = parent,
+    parentId = parent?.id,
 )

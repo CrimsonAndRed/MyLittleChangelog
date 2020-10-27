@@ -44,7 +44,7 @@ object VersionService {
             LeafService.deleteLeaf(LeafDeletionDto(it.id.value))
         }
         GroupRepo.findRootGroupsByVersion(version).forEach {
-            GroupService.deleteGroup(GroupDeletionDto(it.id.value))
+            GroupService.deleteGroup(GroupDeletionDto(it.id.value), true)
         }
         VersionRepo.delete(version)
     }

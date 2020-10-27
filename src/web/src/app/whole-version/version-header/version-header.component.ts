@@ -1,5 +1,5 @@
 import { Component, Output, EventEmitter, Input } from '@angular/core';
-import { GroupContent, NewGroupWithId } from 'app/model/group-content';
+import { GroupContent, Group } from 'app/model/group-content';
 
 @Component({
   selector: 'version-header',
@@ -13,7 +13,7 @@ export class VersionHeaderComponent {
   @Output() onNewGroup = new EventEmitter<GroupContent>();
   @Output() previousNodeChosen = new EventEmitter<void>();
 
-  handleNewGroup(newGroupWithId: NewGroupWithId): void {
+  handleNewGroup(newGroupWithId: Group): void {
     const newGroup: GroupContent = {
       id: newGroupWithId.id,
       name: newGroupWithId.name,

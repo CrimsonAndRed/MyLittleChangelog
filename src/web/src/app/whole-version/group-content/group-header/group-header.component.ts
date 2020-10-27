@@ -1,5 +1,5 @@
 import { Component, EventEmitter } from '@angular/core';
-import { GroupContent, NewGroupWithId, UpdatedGroup } from 'app/model/group-content';
+import { GroupContent, Group } from 'app/model/group-content';
 import { LeafContent, NewLeafWithId } from 'app/model/leaf-content';
 import { GroupHeader, GroupHeaderData, GroupsSecContext, ParentGroupListChangeFn } from 'app/groups-sec/groups-sec.model';
 
@@ -15,7 +15,7 @@ export class GroupHeaderComponent implements GroupHeader {
 
   constructor() { }
 
-  handleNewGroup(newGroupWithId: NewGroupWithId): void {
+  handleNewGroup(newGroupWithId: Group): void {
     const newGroup: GroupContent = {
             id: newGroupWithId.id,
             name: newGroupWithId.name,
@@ -45,16 +45,25 @@ export class GroupHeaderComponent implements GroupHeader {
     this.data.parentGroupsChange.emit(gl => gl.filter(g => g.id !== this.data.group.id));
   }
 
-  handleUpdateGroup(group: UpdatedGroup): void {
+  handleUpdateGroup(group: Group): void {
     this.data.group.name = group.name;
     this.data.groupChange.emit(this.data.group);
   }
 
-  handleMaterializeGroup(group: NewGroupWithId): void {
+  handleMaterializeGroup(group: Group): void {
     this.data.group.name = group.name;
     this.data.group.vid = group.vid;
     this.data.group.id = group.id;
     this.data.group.realNode = true;
+
+    this.data.groupChange.emit(this.data.group);
+  }
+
+  handleDematerializeGroup(group: Group): void {
+    this.data.group.realNode = false;
+    this.data.group.name = group.name;
+    this.data.group.vid = group.vid;
+    this.data.group.id = group.id;
 
     this.data.groupChange.emit(this.data.group);
   }

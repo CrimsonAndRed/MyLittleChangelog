@@ -1,6 +1,6 @@
 import { Component, Input, Output } from '@angular/core';
 
-import { GroupContent, NewGroupWithId, NewGroup } from 'app/model/group-content';
+import { GroupContent, Group, NewGroup } from 'app/model/group-content';
 import { Http } from 'app/http/http.service';
 import { ActivatedRoute } from '@angular/router';
 import { EventEmitter } from '@angular/core';
@@ -14,7 +14,7 @@ import { NewGroupModalComponent } from './new-group-modal/new-group-modal.compon
 })
 export class NewGroupButtonComponent {
 
-  @Output() onNewGroup = new EventEmitter<NewGroupWithId>();
+  @Output() onNewGroup = new EventEmitter<Group>();
 
   @Input() parentGroupId: number = null;
 
@@ -42,7 +42,7 @@ export class NewGroupButtonComponent {
       parentId,
       name,
     };
-    this.http.post<NewGroupWithId>(`http://localhost:8080/version/${versionId}/group`, newGroup)
+    this.http.post<Group>(`http://localhost:8080/version/${versionId}/group`, newGroup)
       .subscribe(newGroup => this.onNewGroup.emit(newGroup) );
   }
 

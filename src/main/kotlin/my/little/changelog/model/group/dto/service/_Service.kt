@@ -15,7 +15,7 @@ fun ReturnedGroupDto.toExternalDto() = my.little.changelog.model.group.dto.exter
     id = id,
     vid = vid,
     name = name,
-    parentId = parent?.id,
+    parentId = parentId,
 )
 
 fun GroupDifferenceDto.toExternalDto(): my.little.changelog.model.group.dto.external.GroupDifferenceDto = my.little.changelog.model.group.dto.external.GroupDifferenceDto(

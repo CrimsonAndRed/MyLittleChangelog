@@ -2,7 +2,7 @@ import { Component, Output, EventEmitter, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { Http } from 'app/http/http.service';
-import { GroupContent, NewGroup, NewGroupWithId } from 'app/model/group-content';
+import { GroupContent, NewGroup, Group } from 'app/model/group-content';
 import { NewLeaf, NewLeafWithId } from 'app/model/leaf-content';
 import { WholeVersion } from 'app/model/whole-version';
 import { PreviousVersionModalComponent } from '../previous-version-modal/previous-version-modal.component';
@@ -66,7 +66,7 @@ export class PreviousVersionSelectButtonComponent {
   private addGroupFromPast(newGroup: NewGroup): void {
     const versionId = this.route.snapshot.data.version.id;
 
-    this.http.post<NewGroupWithId>(`http://localhost:8080/version/${versionId}/group`, newGroup)
+    this.http.post<Group>(`http://localhost:8080/version/${versionId}/group`, newGroup)
           .subscribe(() => this.nodeChosen.emit());
   }
 
