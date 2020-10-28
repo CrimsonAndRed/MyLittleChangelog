@@ -1,6 +1,7 @@
 package my.little.changelog.routing.version.group
 
 import io.ktor.application.call
+import io.ktor.http.HttpStatusCode
 import io.ktor.request.receive
 import io.ktor.response.respond
 import io.ktor.routing.Routing
@@ -42,7 +43,11 @@ fun Routing.groupRouting() {
             val groupId = call.parameters.getOrFail("groupId").toInt()
             val dropHierarchy = call.request.queryParameters["hierarchy"]?.toBoolean() ?: true
             val returnedGroup = GroupService.deleteGroup(GroupDeletionDto(groupId), dropHierarchy)
-            call.respond(returnedGroup.toExternalDto())
+            returnedGroup?.also {
+                call.respond(returnedGroup.toExternalDto())
+            } ?: run {
+                call.response.status(HttpStatusCode.NoContent)
+            }
         }
     }
 }

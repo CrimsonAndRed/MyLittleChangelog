@@ -95,23 +95,20 @@ object GroupRepo : AbstractCrudRepository<Group, Int>(Group) {
         Group.find { (Groups.id eq latestGroup.id) }.single()
     }
 
-    fun isEarliest(vid: Int, versionId: Int): Boolean = transaction {
-        Groups.innerJoin(Versions)
-            .select { (Groups.vid eq vid) and (Versions.id less versionId) }
-            .count() == 0L
-    }
-
-    fun findSublatestGroup(vid: Int, versionId: Int): Group = transaction {
-        val id = connection.prepareStatement(FIND_SUBLATEST_GROUP_QUERY, arrayOf("id"))
+    fun findSublatestGroup(vid: Int, versionId: Int): Group? = transaction {
+        connection.prepareStatement(FIND_SUBLATEST_GROUP_QUERY, arrayOf("id"))
             .apply {
                 set(1, vid)
                 set(2, versionId)
             }
             .executeQuery()
-            .also {
-                it.next()
+            .let {
+                if (it.next()) {
+                    val id = it.getInt("id")
+                    Group.findById(id)
+                } else {
+                    null
+                }
             }
-            .getInt("id")
-        Group.findById(id)!!
     }
 }

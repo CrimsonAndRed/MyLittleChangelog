@@ -42,12 +42,13 @@ object GroupService {
             .toReturnedDto(parentGroup?.toReturnedDto())
     }
 
-    fun deleteGroup(groupDelete: GroupDeletionDto, dropHierarchy: Boolean): ReturnedGroupDto = transaction {
+    fun deleteGroup(groupDelete: GroupDeletionDto, dropHierarchy: Boolean): ReturnedGroupDto? = transaction {
         val group = GroupRepo.findById(groupDelete.id)
         if (group.version.id != VersionRepo.findLatest().id) {
             throw VersionIsNotLatestException()
         }
 
+        val sublatestGroup = GroupRepo.findSublatestGroup(group.vid, group.version.id.value)
         if (dropHierarchy) {
             val leaves = LeafRepo.findCurrentGroupLeaves(group)
             leaves.forEach {
@@ -58,18 +59,17 @@ object GroupService {
             subgroups.forEach { g ->
                 deleteGroup(GroupDeletionDto(g.id.value), true)
             }
-        } else if (GroupRepo.isEarliest(group.vid, group.version.id.value)) {
+        } else if (sublatestGroup == null) {
             throw RuntimeException("Can not delete group without hierarchy in version it was created")
         }
 
         GroupRepo.delete(group)
 
-        // TODO лишний запрос isEarliest
-        val sublatestGroup = GroupRepo.findSublatestGroup(group.vid, group.version.id.value)
-        // TODO лишний запрос, если нужен будет только parentVid
-        val parentGroupId = sublatestGroup.parentVid?.let {
-            GroupLatestRepo.findByVid(it).id.value
+        sublatestGroup?.let {
+            val parentGroupId = sublatestGroup.parentVid?.let {
+                GroupLatestRepo.findByVid(it).id.value
+            }
+            ReturnedGroupDto(sublatestGroup.id.value, sublatestGroup.vid, sublatestGroup.name, parentGroupId)
         }
-        ReturnedGroupDto(sublatestGroup.id.value, sublatestGroup.vid, sublatestGroup.name, parentGroupId)
     }
 }

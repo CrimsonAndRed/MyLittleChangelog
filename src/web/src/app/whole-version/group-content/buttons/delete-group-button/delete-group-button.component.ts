@@ -1,6 +1,7 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Http } from 'app/http/http.service';
+import { HttpParams } from '@angular/common/http';
 
 @Component({
   selector: 'delete-group-button',
@@ -17,8 +18,9 @@ export class DeleteGroupButtonComponent {
   onDeleteClick(): void {
     const versionId = this.route.snapshot.data.version.id;
     const groupId = this.groupId;
+    const params = new HttpParams().set('hierarchy', 'true');
 
-    this.http.delete(`http://localhost:8080/version/${versionId}/group/${groupId}`)
+    this.http.delete(`http://localhost:8080/version/${versionId}/group/${groupId}`, params)
         .subscribe(() => this.onDeleteGroup.emit());
   }
 }
