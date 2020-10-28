@@ -42,7 +42,7 @@ internal class GroupRouterTest : AbstractRouterTest(
             assertEquals(serviceDto.id, resp.id)
             assertEquals(serviceDto.vid, resp.vid)
             assertEquals(serviceDto.name, resp.name)
-            assertEquals(serviceDto.parent?.id, resp.parentId)
+            assertEquals(serviceDto.parentId, resp.parentId)
         }
     }
 
@@ -73,7 +73,7 @@ internal class GroupRouterTest : AbstractRouterTest(
             assertEquals(serviceDto.id, resp.id)
             assertEquals(serviceDto.vid, resp.vid)
             assertEquals(serviceDto.name, resp.name)
-            assertEquals(serviceDto.parent?.id, resp.parentId)
+            assertEquals(serviceDto.parentId, resp.parentId)
         }
     }
 
