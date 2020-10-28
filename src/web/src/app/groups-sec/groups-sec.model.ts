@@ -14,7 +14,7 @@ export interface GroupHeaderData {
 
 export interface LeafHeaderData {
   leaf: LeafContent;
-  groupId: number;
+  parentGroup: GroupContent;
   leafChange: EventEmitter<LeafContent>;
   parentChange: EventEmitter<GroupChangeFn>;
 }

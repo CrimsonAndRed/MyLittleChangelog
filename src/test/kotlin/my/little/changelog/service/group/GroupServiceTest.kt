@@ -40,8 +40,7 @@ internal class GroupServiceTest : BaseMockedDbTest() {
         assertEquals(createdGroup.id.value, res.id)
         assertEquals(createdGroup.vid, res.vid)
         assertEquals(createdGroup.name, res.name)
-        // TODO раскоментить когда будет parentVid
-        //assertEquals(createdGroup.parentVid, res.parent?.vid)
+        assertEquals(createdGroup.parentVid, res.parentVid)
     }
 
     @Test
@@ -51,7 +50,7 @@ internal class GroupServiceTest : BaseMockedDbTest() {
         val dto = GroupCreationDto(
             name = "Тестовая саб группа",
             versionId = version.id.value,
-            parentId = rootGroup.id.value
+            parentVid = rootGroup.vid
         )
         val createdGroup = createGroup(1, 1, version, dto.name, rootGroup.vid)
 
@@ -65,8 +64,7 @@ internal class GroupServiceTest : BaseMockedDbTest() {
         assertEquals(createdGroup.id.value, res.id)
         assertEquals(createdGroup.vid, res.vid)
         assertEquals(createdGroup.name, res.name)
-        // TODO раскоментить когда будет parentVid
-        // assertEquals(createdGroup.parentVid, res.parent?.vid)
+        assertEquals(createdGroup.parentVid, res.parentVid)
     }
 
     @Test
@@ -93,8 +91,7 @@ internal class GroupServiceTest : BaseMockedDbTest() {
         assertEquals(createdGroup.id.value, res.id)
         assertEquals(createdGroup.vid, res.vid)
         assertEquals(createdGroup.name, res.name)
-        // TODO раскоментить когда будет parentVid
-        // assertEquals(createdGroup.parentVid, res.parent?.vid)
+        assertEquals(createdGroup.parentVid, res.parentVid)
     }
 
     @Test

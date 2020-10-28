@@ -10,6 +10,7 @@ import {
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { LeafContent } from 'app/model/leaf-content';
+import { GroupContent } from 'app/model/group-content';
 import { LeafHeader, GroupChangeFn, GroupsSecContext, GroupsSecConfig } from '../groups-sec.model';
 import { LeafHeaderDr } from '../groups-sec.directive';
 
@@ -23,7 +24,7 @@ export class LeafContentSecComponent implements OnInit {
   @Input() config: GroupsSecConfig = null;
   @Input() context: GroupsSecContext = null;
   @Input() leaf: LeafContent;
-  @Input() groupId: number;
+  @Input() parentGroup: GroupContent;
 
   @Output() onParentChange = new EventEmitter<GroupChangeFn>();
 
@@ -39,7 +40,7 @@ export class LeafContentSecComponent implements OnInit {
       const componentRef = viewContainerRef.createComponent<LeafHeader>(factory);
       componentRef.instance.data = {
         leaf: this.leaf,
-        groupId: this.groupId,
+        parentGroup: this.parentGroup,
         leafChange: new EventEmitter<LeafContent>(),
         parentChange: new EventEmitter<GroupChangeFn>(),
       };

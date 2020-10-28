@@ -13,7 +13,7 @@ import { GroupContent, GroupToUpdate, Group } from 'app/model/group-content';
 export class EditGroupButtonComponent {
 
   @Input() group: GroupContent;
-  @Input() parentGroupId: number;
+  @Input() parentGroupVid: number;
   @Output() onUpdateGroup = new EventEmitter<Group>();
 
   constructor(private http: Http, private route: ActivatedRoute, private dialog: MatDialog) {
@@ -38,7 +38,7 @@ export class EditGroupButtonComponent {
 
     const groupToUpdate: GroupToUpdate = {
       name: group.name,
-      parentId: this.parentGroupId
+      parentVid: this.parentGroupVid
     };
     this.http.put<Group>(`http://localhost:8080/version/${versionId}/group/${groupId}`, groupToUpdate)
       .subscribe(updatedGroup => this.onUpdateGroup.emit(updatedGroup));

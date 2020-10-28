@@ -42,7 +42,7 @@ internal class GroupIntegrationTest : AbstractIntegrationTest() {
 
                 val response: ReturnedGroupDto = Json.decodeFromString(response.content!!)
                 assertEquals(dto.name, response.name)
-                assertNull(response.parentId)
+                assertNull(response.parentVid)
             }
         }
     }
@@ -59,7 +59,7 @@ internal class GroupIntegrationTest : AbstractIntegrationTest() {
                 version to group
             }
 
-            val dto = GroupCreationDto("Тестовая Группа", parentId = group.id.value)
+            val dto = GroupCreationDto("Тестовая Группа", parentVid = group.vid)
 
             with(
                 handleRequest(HttpMethod.Post, "/version/${version.id}/group") {
@@ -71,7 +71,7 @@ internal class GroupIntegrationTest : AbstractIntegrationTest() {
 
                 val response: ReturnedGroupDto = Json.decodeFromString(response.content!!)
                 assertEquals(dto.name, response.name)
-                assertEquals(dto.parentId, response.parentId)
+                assertEquals(dto.parentVid, response.parentVid)
             }
         }
     }
@@ -100,7 +100,7 @@ internal class GroupIntegrationTest : AbstractIntegrationTest() {
 
                     val response: ReturnedGroupDto = Json.decodeFromString(response.content!!)
                     assertEquals(dto.name, response.name)
-                    assertEquals(dto.parentId, response.parentId)
+                    assertEquals(dto.parentVid, response.parentVid)
                     assertEquals(dto.vid, response.vid)
                     assertNotEquals(group.id.value, response.id)
                 }
@@ -134,7 +134,7 @@ internal class GroupIntegrationTest : AbstractIntegrationTest() {
                     assertEquals(group.id.value, response.id)
                     assertEquals(group.vid, response.vid)
                     assertEquals(dto.name, response.name)
-                    assertEquals(dto.parentId, response.parentId)
+                    assertEquals(dto.parentVid, response.parentVid)
                 }
             }
         }
@@ -171,7 +171,7 @@ internal class GroupIntegrationTest : AbstractIntegrationTest() {
                     assertEquals(groupSub.id.value, response.id)
                     assertEquals(groupSub.vid, response.vid)
                     assertEquals(dto.name, response.name)
-                    assertEquals(dto.parentId, response.parentId)
+                    assertEquals(dto.parentVid, response.parentVid)
                 }
             }
         }

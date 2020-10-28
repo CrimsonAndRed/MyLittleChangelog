@@ -15,7 +15,7 @@ export class LeafHeaderComponent implements LeafHeader {
   constructor() { }
 
   onNodeChecked(): void {
-    this.ctx.emitLeafCheck(leafContentToPrevious(this.data.leaf, this.ctx.usedIds), this.data.groupId);
+    this.ctx.emitLeafCheck(leafContentToPrevious(this.data.leaf, this.ctx.usedIds), this.data.parentGroup);
   }
 
   showRadioButton(): boolean {

@@ -16,7 +16,7 @@ export class NewGroupButtonComponent {
 
   @Output() onNewGroup = new EventEmitter<Group>();
 
-  @Input() parentGroupId: number = null;
+  @Input() parentGroupVid: number = null;
 
   constructor(private http: Http, private route: ActivatedRoute, private dialog: MatDialog) {
   }
@@ -35,11 +35,11 @@ export class NewGroupButtonComponent {
 
   createNewGroup(name: string): void {
     const versionId = this.route.snapshot.data.version.id;
-    const parentId = this.parentGroupId;
+    const parentVid = this.parentGroupVid;
 
     const newGroup: NewGroup = {
       vid: null,
-      parentId,
+      parentVid,
       name,
     };
     this.http.post<Group>(`http://localhost:8080/version/${versionId}/group`, newGroup)

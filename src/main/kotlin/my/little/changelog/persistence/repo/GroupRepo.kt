@@ -4,10 +4,8 @@ import my.little.changelog.model.group.Group
 import my.little.changelog.model.group.Groups
 import my.little.changelog.model.leaf.Leaf
 import my.little.changelog.model.version.Version
-import my.little.changelog.model.version.Versions
 import my.little.changelog.persistence.AbstractCrudRepository
 import org.jetbrains.exposed.sql.and
-import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.statements.jdbc.iterate
 import org.jetbrains.exposed.sql.transactions.transaction
 

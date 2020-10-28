@@ -4,5 +4,5 @@ data class ReturnedGroupDto(
     val id: Int,
     val vid: Int,
     val name: String,
-    val parentId: Int? = null
+    val parentVid: Int? = null
 )

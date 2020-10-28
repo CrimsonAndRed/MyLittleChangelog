@@ -49,18 +49,20 @@ export class PreviousVersionModalComponent implements OnInit {
       });
   }
 
-  onPastGroupCheck(group: PastGroupContent, groupId: number): void {
+  onPastGroupCheck(group: PastGroupContent, parentGroup: GroupContent): void {
     this.chosenPastElement = {
       value: group,
-      parentId: groupId,
+      parentId: parentGroup?.id,
+      parentVid: parentGroup?.vid,
       kind: 'group',
     };
   }
 
-  onPastLeafCheck(leaf: PastLeafContent, groupId: number): void {
+  onPastLeafCheck(leaf: PastLeafContent, parentGroup: GroupContent): void {
     this.chosenPastElement = {
       value: leaf,
-      parentId: groupId,
+      parentId: parentGroup?.id,
+      parentVid: parentGroup?.vid,
       kind: 'leaf',
     };
   }

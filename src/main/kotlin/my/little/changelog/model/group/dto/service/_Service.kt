@@ -1,13 +1,12 @@
 package my.little.changelog.model.group.dto.service
 
-import my.little.changelog.model.group.Group
 import my.little.changelog.model.leaf.dto.service.toExternalDto
 import my.little.changelog.model.version.Version
 
-fun GroupCreationDto.toRepoDto(version: Version, parent: Group?) = my.little.changelog.model.group.dto.repo.GroupCreationDto(
+fun GroupCreationDto.toRepoDto(version: Version) = my.little.changelog.model.group.dto.repo.GroupCreationDto(
     name = name,
     vid = vid,
-    parentVid = parent?.vid,
+    parentVid = parentVid,
     version = version,
 )
 
@@ -15,7 +14,7 @@ fun ReturnedGroupDto.toExternalDto() = my.little.changelog.model.group.dto.exter
     id = id,
     vid = vid,
     name = name,
-    parentId = parentId,
+    parentVid = parentVid,
 )
 
 fun GroupDifferenceDto.toExternalDto(): my.little.changelog.model.group.dto.external.GroupDifferenceDto = my.little.changelog.model.group.dto.external.GroupDifferenceDto(

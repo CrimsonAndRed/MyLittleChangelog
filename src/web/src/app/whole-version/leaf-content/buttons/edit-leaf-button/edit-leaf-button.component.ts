@@ -4,6 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Http } from 'app/http/http.service';
 import { EditLeafModalComponent } from './edit-leaf-modal/edit-leaf-modal.component';
 import { LeafContent, LeafToUpdate, UpdatedLeaf } from 'app/model/leaf-content';
+import { GroupContent } from 'app/model/group-content';
 
 @Component({
   selector: 'edit-leaf-button',
@@ -13,7 +14,7 @@ import { LeafContent, LeafToUpdate, UpdatedLeaf } from 'app/model/leaf-content';
 export class EditLeafButtonComponent {
 
   @Input() leaf: LeafContent;
-  @Input() parentGroupId: number;
+  @Input() parentGroup: GroupContent;
   @Output() onUpdateLeaf = new EventEmitter<UpdatedLeaf>();
 
   constructor(private http: Http, private route: ActivatedRoute, private dialog: MatDialog) {
@@ -35,15 +36,14 @@ export class EditLeafButtonComponent {
 
   updateLeaf(leaf: LeafContent): void {
     const versionId = this.route.snapshot.data.version.id;
-    const parentId = this.parentGroupId;
+    const parentId = this.parentGroup.id;
     const leafId = leaf.id;
 
     const leafToUpdate: LeafToUpdate = {
       name: leaf.name,
       valueType: leaf.valueType,
       value: leaf.value,
-      // TODO Испрвить на vid
-      parentVid: parentId,
+      parentVid: this.parentGroup?.vid,
     };
     this.http.put<UpdatedLeaf>(`http://localhost:8080/version/${versionId}/group/${parentId}/leaf/${leafId}`, leafToUpdate)
           .subscribe(updatedLeaf => this.onUpdateLeaf.emit(updatedLeaf));

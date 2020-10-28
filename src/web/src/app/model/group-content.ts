@@ -12,17 +12,17 @@ export interface GroupContent {
 export interface NewGroup {
     name: string;
     vid: number;
-    parentId: number;
+    parentVid: number;
 }
 
 export interface GroupToUpdate {
   name: string;
-  parentId: number;
+  parentVid: number;
 }
 
 export interface Group {
   id: number;
   vid: number;
   name: string;
-  parentId: number;
+  parentVid: number;
 }

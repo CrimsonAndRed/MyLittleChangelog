@@ -20,14 +20,12 @@ object GroupService {
         if (version.id != VersionRepo.findLatest().id) {
             throw VersionIsNotLatestException()
         }
-        val parentGroup = group.parentId?.let { GroupRepo.findById(it) }
-        GroupRepo.create(group.toRepoDto(version, parentGroup))
-            .toReturnedDto(parentGroup?.toReturnedDto())
+        GroupRepo.create(group.toRepoDto(version))
+            .toReturnedDto()
     }
 
     fun updateGroup(groupUpdate: GroupUpdateDto): ReturnedGroupDto = transaction {
         val group = GroupRepo.findById(groupUpdate.id)
-        val parentGroup = groupUpdate.parentId?.let { GroupRepo.findById(it) }
 
         if (group.version.id != VersionRepo.findLatest().id) {
             throw VersionIsNotLatestException()
@@ -35,11 +33,11 @@ object GroupService {
 
         group.apply {
             name = groupUpdate.name
-            parentVid = parentGroup?.vid
+            parentVid = groupUpdate.parentVid
         }
 
         GroupRepo.update(group)
-            .toReturnedDto(parentGroup?.toReturnedDto())
+            .toReturnedDto()
     }
 
     fun deleteGroup(groupDelete: GroupDeletionDto, dropHierarchy: Boolean): ReturnedGroupDto? = transaction {

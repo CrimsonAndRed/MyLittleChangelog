@@ -47,7 +47,7 @@ export class PreviousVersionSelectButtonComponent {
         this.addGroupFromPast({
           vid: result.value.vid,
           name: result.value.name,
-          parentId: result.parentId
+          parentVid: result.parentVid
         });
         break;
       case 'leaf':

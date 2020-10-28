@@ -18,12 +18,11 @@ export class MaterializeGroupButtonComponent {
 
   onMaterializeClick(): void {
     const versionId = this.route.snapshot.data.version.id;
-    const groupId = this.group.id;
 
     const newGroup: NewGroup = {
       vid: this.group.vid,
       name: this.group.name,
-      parentId: this.parentGroup?.id,
+      parentVid: this.parentGroup?.vid,
     }
 
     this.http.post<Group>(`http://localhost:8080/version/${versionId}/group`, newGroup)

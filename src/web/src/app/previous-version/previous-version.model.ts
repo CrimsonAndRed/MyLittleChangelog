@@ -27,6 +27,7 @@ export interface PastLeafContent {
 export interface PastRadioEvent {
   value: PastGroupContent | PastLeafContent;
   parentId: number;
+  parentVid: number;
   kind: 'leaf' | 'group';
 }
 
