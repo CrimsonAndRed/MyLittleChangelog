@@ -42,7 +42,17 @@ export class GroupHeaderComponent implements GroupHeader {
   }
 
   handleDeleteGroup(): void {
-    this.data.parentGroupsChange.emit(gl => gl.filter(g => g.id !== this.data.group.id));
+    let fn = (groupId) => ((gl, t) => {
+      let newArray = gl.filter(g => g.id !== groupId);
+      if (t !== null) {
+        if (newArray.length == 0 && (t.leaves == null || t.leaves.length == 0) && !t.group.realNode) {
+          t.onParentChange.emit(fn(t.group.id))
+        }
+      }
+      return newArray;
+    });
+
+    this.data.parentGroupsChange.emit(fn(this.data.group.id));
   }
 
   handleUpdateGroup(group: Group): void {
@@ -66,5 +76,20 @@ export class GroupHeaderComponent implements GroupHeader {
     this.data.group.id = group.id;
 
     this.data.groupChange.emit(this.data.group);
+
+    let fn = (groupId) => ((gl, t) => {
+      if (  (t === null && !gl.find(gr => gr.id === groupId).realNode) ||
+            (t !== null && t.group.groupContent.length === 1 && (t.leaves == null || t.leaves.length == 0))) {
+        let newArray = gl.filter(g => g.id !== groupId);
+        if (t) {
+          t.onParentChange.emit(fn(t.group.id))
+        }
+        return newArray;
+      }
+
+      return gl;
+    });
+
+    this.data.parentGroupsChange.emit(fn(group.id));
   }
 }

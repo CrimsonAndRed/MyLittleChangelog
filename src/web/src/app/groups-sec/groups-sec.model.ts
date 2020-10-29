@@ -1,6 +1,7 @@
 import { EventEmitter, Type } from '@angular/core';
 import { GroupContent } from 'app/model/group-content';
 import { LeafContent } from 'app/model/leaf-content';
+import { GroupLeavesSecComponent } from './group-leaves-sec/group-leaves-sec.component';
 
 export interface GroupHeader extends Header<GroupHeaderData> { }
 export interface LeafHeader extends Header<LeafHeaderData> { }
@@ -29,8 +30,9 @@ export interface Header<T> {
   ctx: GroupsSecContext;
 }
 
-export type ParentGroupListChangeFn = (list: GroupContent[]) => GroupContent[];
-export type GroupChangeFn = (group: GroupContent) => GroupContent;
+// TODO#5 это плохая структура
+export type ParentGroupListChangeFn = (list: GroupContent[], t: GroupLeavesSecComponent) => GroupContent[];
+export type GroupChangeFn = (group: GroupContent, t: GroupLeavesSecComponent) => GroupContent;
 
 export interface GroupsSecContext {
   [payload: string]: any;

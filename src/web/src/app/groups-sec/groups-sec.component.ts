@@ -26,7 +26,7 @@ export class GroupsSecComponent {
   constructor() { }
 
   onGroupListChange(fn: ParentGroupListChangeFn): void {
-    this.groups = fn(this.groups);
+    this.groups = fn(this.groups, null);
   }
 
   changeGlobalContentShow(value: boolean): void {

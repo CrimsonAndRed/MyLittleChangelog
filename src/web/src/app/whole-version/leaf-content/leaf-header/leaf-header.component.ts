@@ -15,8 +15,21 @@ export class LeafHeaderComponent implements LeafHeader {
   constructor() {}
 
   handleDeleteLeaf(): void {
-    this.data.parentChange.emit(g => {
+    let fn = (groupId) => (gl, t) => {
+      let newArray = gl.filter(g => g.id !== groupId);
+      if (t !== null) {
+        if (newArray.length == 0 && (t.leaves === null || t.leaves.length == 0) && !t.group.realNode) {
+          t.onParentChange.emit(fn(t.group.id))
+        }
+      }
+      return newArray;
+    }
+
+    this.data.parentChange.emit((g, t) => {
       g.leafContent = g.leafContent.filter(l => l.id !== this.data.leaf.id);
+      if ((g.groupContent === null || g.groupContent.length == 0) && (g.leafContent === null || g.leafContent.length == 0) && !g.realNode) {
+        t.onParentChange.emit(fn(g.id))
+      }
       return g;
     });
   }

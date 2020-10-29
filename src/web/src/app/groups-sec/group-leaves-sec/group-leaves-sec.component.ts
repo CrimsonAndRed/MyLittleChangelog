@@ -56,11 +56,11 @@ export class GroupLeavesSecComponent implements OnInit {
   }
 
   onGroupListChange(fn: ParentGroupListChangeFn): void {
-    this.group.groupContent = fn(this.group.groupContent);
+    this.group.groupContent = fn(this.group.groupContent, this);
   }
 
   handleGroupChange(fn: GroupChangeFn): void {
-    this.group = fn(this.group);
+    this.group = fn(this.group, this);
   }
 
   changeGlobalContentShow(value: boolean): void {
