@@ -2,10 +2,6 @@
                     [leafId]="data.leaf.id"
                     (onDeleteLeaf)="handleDeleteLeaf()"></delete-leaf-button>
 <edit-leaf-button [leaf]="data.leaf"
-<<<<<<< HEAD
-                  [parentGroup]="data.parentGroup"
-=======
                   [allGroups]="ctx.allGroups"
-                  [parentGroupId]="data.groupId"
->>>>>>> 77d09b9... еализация переноса лифа из группы в группу
+                  [parentGroup]="data.parentGroup"
                   (onUpdateLeaf)="handleUpdateLeaf($event)"></edit-leaf-button>

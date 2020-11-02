@@ -14,12 +14,8 @@ import { GroupContent } from 'app/model/group-content';
 export class EditLeafButtonComponent {
 
   @Input() leaf: LeafContent;
-<<<<<<< HEAD
   @Input() parentGroup: GroupContent;
-=======
-  @Input() parentGroupId: number;
   @Input() allGroups: GroupContent[];
->>>>>>> 77d09b9... еализация переноса лифа из группы в группу
   @Output() onUpdateLeaf = new EventEmitter<UpdatedLeaf>();
 
   constructor(private http: Http, private route: ActivatedRoute, private dialog: MatDialog) {
@@ -31,7 +27,7 @@ export class EditLeafButtonComponent {
       minWidth: '80%',
       data: {
         leaf: this.leaf,
-        parentGroupId: this.parentGroupId,
+        parentGroupId: this.parentGroup.id,
         allGroups: this.allGroups,
       }
     });
@@ -53,12 +49,8 @@ export class EditLeafButtonComponent {
       name: leaf.name,
       valueType: leaf.valueType,
       value: leaf.value,
-<<<<<<< HEAD
-      parentVid: this.parentGroup?.vid,
-=======
       // TODO Испрвить на vid
       parentVid: leaf.groupVid,
->>>>>>> 77d09b9... еализация переноса лифа из группы в группу
     };
     this.http.put<UpdatedLeaf>(`http://localhost:8080/version/${versionId}/group/${parentId}/leaf/${leafId}`, leafToUpdate)
           .subscribe(updatedLeaf => this.onUpdateLeaf.emit(updatedLeaf));
