@@ -36,7 +36,7 @@ object VersionService {
     }
 
     fun deleteVersion(deletionDto: VersionDeletionDto) = transaction {
-        val version = VersionRepo.findById(deletionDto.id)
+            val version = VersionRepo.findById(deletionDto.id)
         if (version.id != VersionRepo.findLatest().id) {
             throw VersionIsNotLatestException()
         }
