@@ -1,7 +1,8 @@
 import { Component, Input, Inject } from '@angular/core';
 
 import { LeafContent } from 'app/model/leaf-content';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { GroupContent } from 'app/model/group-content';
 
 @Component({
   selector: 'edit-leaf-modal',
@@ -10,9 +11,23 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 })
 export class EditLeafModalComponent {
 
-  _leaf: LeafContent;
+  leaf: LeafContent;
+  allGroups: GroupContent[];
+  parentGroupId: number;
 
-  constructor(private dialogRef: MatDialogRef<EditLeafModalComponent>, @Inject(MAT_DIALOG_DATA) private data: LeafContent) {
-    this._leaf = { ...data };
+  constructor(@Inject(MAT_DIALOG_DATA) private data: EditLeafModalData) {
+    this.leaf = { ...this.data.leaf };
+    this.allGroups = [...this.data.allGroups];
+    this.parentGroupId = this.data.parentGroupId;
   }
+
+  onParentChange(groupVid: number): void {
+    this.leaf.groupVid = groupVid;
+  }
+}
+
+export interface EditLeafModalData {
+  leaf: LeafContent;
+  parentGroupId: number;
+  allGroups: GroupContent[];
 }

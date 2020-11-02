@@ -70,4 +70,9 @@ export class GroupLeavesSecComponent implements OnInit {
     }
   }
 
+  isExpandButtonShowed(): boolean {
+    return (this.group.groupContent.length !== 0) ||
+      ((this.group.leafContent.length !== 0) && this.config.leafShowCondition());
+  }
+
 }

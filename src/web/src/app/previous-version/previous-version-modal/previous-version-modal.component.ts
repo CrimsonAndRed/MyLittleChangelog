@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit, Input, Type } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { GroupsSecConfig, GroupsSecContext } from 'app/groups-sec/groups-sec.model';
+import { GroupSecConfigBuilder, GroupsSecConfig, GroupsSecContext } from 'app/groups-sec/groups-sec.model';
 import { GroupContent } from 'app/model/group-content';
 import { tap } from 'rxjs/operators';
 import { GroupHeaderComponent } from '../header/group-header/group-header.component';
@@ -21,10 +21,10 @@ import {
 })
 export class PreviousVersionModalComponent implements OnInit {
 
-  config: GroupsSecConfig = {
-    groupHeader: GroupHeaderComponent,
-    leafHeader: LeafHeaderComponent,
-  };
+  config: GroupsSecConfig = new GroupSecConfigBuilder()
+    .setGroupHeader(GroupHeaderComponent)
+    .setLeafHeader(LeafHeaderComponent)
+    .build();
 
   context: GroupsSecContext;
 
@@ -85,5 +85,3 @@ export class PreviousVersionModalComponent implements OnInit {
     group.groupContent.forEach(g => this.addUsedIdsRecursive(g, groupIds, leafIds));
   }
 }
-
-

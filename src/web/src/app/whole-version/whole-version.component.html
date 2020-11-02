@@ -1,6 +1,6 @@
 <div>
   <p> Version {{version.id}}</p>
-  <groups-sec [groups]="version.groupContent" [config]="config">
+  <groups-sec *ngIf="version" [groups]="version.groupContent" [config]="config" [context]="context">
     <version-header global-header
                     [groups]="version.groupContent"
                     (onNewGroup)="handleNewGroup($event)" 

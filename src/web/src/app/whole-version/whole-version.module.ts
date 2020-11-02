@@ -22,6 +22,8 @@ import { EditGroupModalComponent } from './group-content/buttons/edit-group-butt
 import { NewGroupModalComponent } from './group-content/buttons/new-group-button/new-group-modal/new-group-modal.component';
 import { NewLeafModalComponent } from './leaf-content/buttons/new-leaf-button/new-leaf-modal/new-leaf-modal.component';
 import { EditLeafModalComponent } from './leaf-content/buttons/edit-leaf-button/edit-leaf-modal/edit-leaf-modal.component';
+import { NodeMovementComponent } from './node-movement/node-movement.component';
+import { NodeMovementGroupHeaderComponent } from './node-movement/group-header/group-header.component';
 
 @NgModule({
   declarations: [
@@ -44,6 +46,9 @@ import { EditLeafModalComponent } from './leaf-content/buttons/edit-leaf-button/
     DeleteLeafButtonComponent,
     EditLeafButtonComponent,
     EditLeafModalComponent,
+
+    NodeMovementComponent,
+    NodeMovementGroupHeaderComponent,
   ],
   imports: [
     BrowserModule,

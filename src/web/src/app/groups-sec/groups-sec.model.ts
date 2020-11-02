@@ -20,9 +20,10 @@ export interface LeafHeaderData {
   parentChange: EventEmitter<GroupChangeFn>;
 }
 
-export class GroupsSecConfig {
-  groupHeader: Type<GroupHeader> = null;
-  leafHeader: Type<LeafHeader> = null;
+export interface GroupsSecConfig {
+  groupHeader: Type<GroupHeader>;
+  leafHeader: Type<LeafHeader>;
+  leafShowCondition: () => boolean;
 }
 
 export interface Header<T> {
@@ -36,4 +37,39 @@ export type GroupChangeFn = (group: GroupContent, t: GroupLeavesSecComponent) =>
 
 export interface GroupsSecContext {
   [payload: string]: any;
+}
+
+//
+// BUILDERS
+//
+
+export class GroupSecConfigBuilder {
+  private readonly config: GroupsSecConfig;
+
+  constructor() {
+    this.config = {
+      groupHeader: null,
+      leafHeader: null,
+      leafShowCondition: () => true,
+    };
+  }
+
+  setGroupHeader(header: Type<GroupHeader>): GroupSecConfigBuilder {
+    this.config.groupHeader = header;
+    return this;
+  }
+
+  setLeafHeader(header: Type<LeafHeader>): GroupSecConfigBuilder {
+    this.config.leafHeader = header;
+    return this;
+  }
+
+  setLeafShowCondition(condition: () => boolean): GroupSecConfigBuilder {
+    this.config.leafShowCondition = condition;
+    return this;
+  }
+
+  build(): GroupsSecConfig {
+    return this.config;
+  }
 }
