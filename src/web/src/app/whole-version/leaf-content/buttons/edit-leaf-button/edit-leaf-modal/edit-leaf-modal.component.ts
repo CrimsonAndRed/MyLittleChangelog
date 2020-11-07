@@ -13,12 +13,12 @@ export class EditLeafModalComponent {
 
   leaf: LeafContent;
   allGroups: GroupContent[];
-  parentGroupId: number;
+  parentGroupVid: number;
 
   constructor(@Inject(MAT_DIALOG_DATA) private data: EditLeafModalData) {
     this.leaf = { ...this.data.leaf };
     this.allGroups = [...this.data.allGroups];
-    this.parentGroupId = this.data.parentGroupId;
+    this.parentGroupVid = this.data.parentGroupVid;
   }
 
   onParentChange(groupVid: number): void {
@@ -28,6 +28,6 @@ export class EditLeafModalComponent {
 
 export interface EditLeafModalData {
   leaf: LeafContent;
-  parentGroupId: number;
+  parentGroupVid: number;
   allGroups: GroupContent[];
 }

@@ -32,4 +32,5 @@ export interface UpdatedLeaf {
   name: string;
   valueType: number;
   value: string;
+  groupVid: number;
 }

@@ -27,7 +27,7 @@ export class EditLeafButtonComponent {
       minWidth: '80%',
       data: {
         leaf: this.leaf,
-        parentGroupId: this.parentGroup.id,
+        parentGroupVid: this.parentGroup.vid,
         allGroups: this.allGroups,
       }
     });
@@ -49,7 +49,6 @@ export class EditLeafButtonComponent {
       name: leaf.name,
       valueType: leaf.valueType,
       value: leaf.value,
-      // TODO Испрвить на vid
       parentVid: leaf.groupVid,
     };
     this.http.put<UpdatedLeaf>(`http://localhost:8080/version/${versionId}/group/${parentId}/leaf/${leafId}`, leafToUpdate)

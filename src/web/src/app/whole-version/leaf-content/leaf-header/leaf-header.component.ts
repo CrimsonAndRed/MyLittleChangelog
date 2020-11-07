@@ -1,5 +1,6 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { LeafHeader, GroupChangeFn, LeafHeaderData, GroupsSecContext } from 'app/groups-sec/groups-sec.model';
+import { GroupContent } from 'app/model/group-content';
 import { LeafContent, UpdatedLeaf } from 'app/model/leaf-content';
 
 @Component({
@@ -35,11 +36,31 @@ export class LeafHeaderComponent implements LeafHeader {
   }
 
   handleUpdateLeaf(updatedLeaf: UpdatedLeaf): void {
-    this.data.leaf.name = updatedLeaf.name;
-    this.data.leaf.valueType = updatedLeaf.valueType;
-    this.data.leaf.value = updatedLeaf.value;
+    const newLeafContent: LeafContent = {
+      id: updatedLeaf.id,
+      vid: updatedLeaf.vid,
+      name: updatedLeaf.name,
+      valueType: updatedLeaf.valueType,
+      value: updatedLeaf.value,
+      groupVid: updatedLeaf.groupVid,
+    };
+    this.data.leafChange.emit(newLeafContent);
+    if (newLeafContent.groupVid !== this.data.leaf.groupVid) {
+      this.handleGroupMovement(newLeafContent);
+    }
+  }
 
-    this.data.leafChange.emit(this.data.leaf);
+  private handleGroupMovement(newLeafContent: LeafContent): void {
+    const newGroup = this.findGroupByVid(newLeafContent.groupVid, this.ctx.allGroups);
+    newGroup.leafContent.push(newLeafContent);
+    this.data.parentChange.emit((g) => {
+      g.leafContent = g.leafContent.filter(l => l.vid !== this.data.leaf.vid);
+      return g;
+    });
+  }
+
+  private findGroupByVid(vid: number, groups: GroupContent[]): GroupContent {
+    return groups.find(g => g.vid === vid ? g : this.findGroupByVid(vid, g.groupContent));
   }
 
 }
