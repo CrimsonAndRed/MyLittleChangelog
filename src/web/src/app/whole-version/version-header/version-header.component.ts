@@ -19,6 +19,7 @@ export class VersionHeaderComponent {
       name: newGroupWithId.name,
       vid: newGroupWithId.vid,
       realNode: true,
+      isEarliest: true,
       groupContent: [],
       leafContent: []
     };

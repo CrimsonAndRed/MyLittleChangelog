@@ -8,6 +8,7 @@ export interface PastGroupContent {
   vid: number;
   name: string;
   realNode: boolean;
+  isEarliest: boolean;
   inCurrentVersion: boolean;
   groupContent: PastGroupContent[];
   leafContent: PastLeafContent[];
@@ -48,6 +49,7 @@ export function groupContentToPrevious(group: GroupContent, usedIds: PreviousUse
     vid: group.vid,
     name: group.name,
     realNode: group.realNode,
+    isEarliest: group.isEarliest,
     inCurrentVersion: usedIds.usedGroups.has(group.id),
     groupContent: group.groupContent.map(g => groupContentToPrevious(g, usedIds)),
     leafContent: group.leafContent.map(l => leafContentToPrevious(l, usedIds)),

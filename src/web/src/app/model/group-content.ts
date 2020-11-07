@@ -5,6 +5,7 @@ export interface GroupContent {
   vid: number;
   name: string;
   realNode: boolean;
+  isEarliest: boolean;
   groupContent: GroupContent[];
   leafContent: LeafContent[];
 }

@@ -8,6 +8,7 @@ data class WholeGroupDto(
     val id: Int,
     val vid: Int,
     val name: String,
+    val isEarliest: Boolean,
     val realNode: Boolean,
     val groupContent: List<WholeGroupDto>,
     val leafContent: List<WholeLeafDto>,

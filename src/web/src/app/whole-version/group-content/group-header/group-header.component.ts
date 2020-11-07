@@ -21,6 +21,7 @@ export class GroupHeaderComponent implements GroupHeader {
             name: newGroupWithId.name,
             vid: newGroupWithId.vid,
             realNode: true,
+            isEarliest: true,
             groupContent: [],
             leafContent: []
           };
@@ -65,21 +66,22 @@ export class GroupHeaderComponent implements GroupHeader {
     this.data.group.vid = group.vid;
     this.data.group.id = group.id;
     this.data.group.realNode = true;
+    this.data.group.isEarliest = false;
 
     this.data.groupChange.emit(this.data.group);
   }
 
   handleDematerializeGroup(group: Group): void {
-    this.data.group.realNode = false;
     this.data.group.name = group.name;
     this.data.group.vid = group.vid;
     this.data.group.id = group.id;
+    this.data.group.realNode = false;
 
     this.data.groupChange.emit(this.data.group);
 
     let fn = (groupId) => ((gl, t) => {
       if (  (t === null && !gl.find(gr => gr.id === groupId).realNode) ||
-            (t !== null && t.group.groupContent.length === 1 && (t.leaves == null || t.leaves.length == 0))) {
+            (t !== null && t.group.groupContent.length === 1 && (t.group.groupContent[0].leafContent === null || t.group.groupContent[0].leafContent.length === 0) && (t.leaves == null || t.leaves.length == 0))) {
         let newArray = gl.filter(g => g.id !== groupId);
         if (t) {
           t.onParentChange.emit(fn(t.group.id))

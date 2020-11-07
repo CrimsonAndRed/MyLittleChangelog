@@ -4,5 +4,5 @@
   <delete-group-button *ngIf="data.group.realNode" [groupId]="data.group.id" (onDeleteGroup)="handleDeleteGroup()"></delete-group-button>
   <edit-group-button *ngIf="data.group.realNode" [group]="data.group" [parentGroupVid]="data.parentGroup?.vid" (onUpdateGroup)="handleUpdateGroup($event)"></edit-group-button>
   <materialize-group-button *ngIf="!data.group.realNode" [group]="data.group" [parentGroup]="data.parentGroup" (onMaterializeGroup)="handleMaterializeGroup($event)"></materialize-group-button>
-  <dematerialize-group-button *ngIf="data.group.realNode && data.group.vid !== data.group.id" [group]="data.group" (onDematerializeGroup)="handleDematerializeGroup($event)"></dematerialize-group-button>
+  <dematerialize-group-button *ngIf="data.group.realNode && !data.group.isEarliest" [group]="data.group" (onDematerializeGroup)="handleDematerializeGroup($event)"></dematerialize-group-button>
 </div>

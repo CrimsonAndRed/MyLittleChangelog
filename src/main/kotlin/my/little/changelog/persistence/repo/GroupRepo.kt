@@ -53,6 +53,15 @@ object GroupRepo : AbstractCrudRepository<Group, Int>(Group) {
             WHERE grouped.version_id=grouped.max
         """
 
+    private const val FIND_EARLIEST_GROUP_QUERY =
+        """
+            SELECT grouped.id FROM (
+                SELECT g.*, min(version_id) OVER (PARTITION BY vid) FROM groups AS g
+                WHERE g.vid in (%s)
+            ) as grouped
+            WHERE grouped.version_id=grouped.min
+        """
+
     fun findRootGroupsByVersion(version: Version): Iterable<Group> = transaction {
         Group.find { (Groups.version eq version.id) and (Groups.parentVid eq null) }
     }
@@ -108,5 +117,17 @@ object GroupRepo : AbstractCrudRepository<Group, Int>(Group) {
                     null
                 }
             }
+    }
+
+    fun findEarliestByVids(vids: Iterable<Int>): Iterable<Int> = transaction {
+        if (vids.iterator().hasNext()) {
+            connection.prepareStatement(FIND_EARLIEST_GROUP_QUERY.format(vids.joinToString(", ")), arrayOf("id"))
+                .executeQuery()
+                .iterate {
+                    this.getInt("id")
+                }
+        } else {
+            emptyList()
+        }
     }
 }

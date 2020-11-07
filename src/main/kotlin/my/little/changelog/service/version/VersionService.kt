@@ -55,10 +55,12 @@ object VersionService {
 
         val leaves = LeafRepo.findByVersion(version)
         val groups = GroupRepo.findGroupsAffectedByVersion(version) // TODO(#4) - eager loading- работает, но ломает тест .toList().with(Group::version)
+        val earliestIds = GroupRepo.findEarliestByVids(groups.map { it.vid }).toSet()
 
         createDtosRecursive(
             groups.groupBy({ it.parentVid }) { it },
             leaves.groupBy({ it.groupVid }) { it },
+            earliestIds,
             version.id.value,
         ).let {
             WholeVersion(version.id.value, version.id.value == latestVersion.id.value, it.first)
@@ -68,12 +70,13 @@ object VersionService {
     private fun createDtosRecursive(
         groupsMap: Map<Int?, List<Group>>,
         leavesMap: Map<Int?, List<Leaf>>,
+        earliestIds: Set<Int>,
         currentVersion: Int,
         value: Int? = null
     ): Pair<List<WholeGroupDto>, List<WholeLeafDto>> {
         val rootGroupDtos = groupsMap[value]?.map {
-            val pair = createDtosRecursive(groupsMap, leavesMap, currentVersion, it.vid)
-            WholeGroupDto(it.id.value, it.vid, it.name, currentVersion == it.version.id.value, pair.first, pair.second)
+            val pair = createDtosRecursive(groupsMap, leavesMap, earliestIds, currentVersion, it.vid)
+            WholeGroupDto(it.id.value, it.vid, it.name, earliestIds.contains(it.id.value), currentVersion == it.version.id.value, pair.first, pair.second)
         } ?: emptyList()
 
         val rootLeafDtos = leavesMap[value]?.map {
@@ -87,10 +90,12 @@ object VersionService {
         val version = VersionRepo.findLatest()
         val groups = GroupLatestRepo.findAll()
         val leaves = LeafLatestRepo.findAll()
+        val earliestIds = GroupRepo.findEarliestByVids(groups.map { it.vid }).toSet()
 
         createLatestDtosRecursive(
             groups.groupBy({ it.parentVid }) { it },
             leaves.groupBy({ it.groupVid }) { it },
+            earliestIds,
             version.id.value
         ).let {
             PreviousVersionsDTO(it.first)
@@ -101,12 +106,14 @@ object VersionService {
     private fun createLatestDtosRecursive(
         groupsMap: Map<Int?, List<GroupLatest>>,
         leavesMap: Map<Int?, List<LeafLatest>>,
+        earliestIds: Set<Int>,
         currentVersion: Int,
         value: Int? = null
     ): Pair<List<WholeGroupDto>, List<WholeLeafDto>> {
         val rootGroupDtos = groupsMap[value]?.map {
-            val pair = createLatestDtosRecursive(groupsMap, leavesMap, currentVersion, it.vid)
-            WholeGroupDto(it.id.value, it.vid, it.name, currentVersion == it.version.id.value, pair.first, pair.second)
+            val pair = createLatestDtosRecursive(groupsMap, leavesMap, earliestIds, currentVersion, it.vid)
+            val id = it.id
+            WholeGroupDto(id.value, it.vid, it.name, earliestIds.contains(id), currentVersion == it.version.id.value, pair.first, pair.second)
         } ?: emptyList()
 
         val rootLeafDtos = leavesMap[value]?.map {
