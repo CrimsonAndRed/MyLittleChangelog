@@ -12,22 +12,15 @@ import { GroupContent } from 'app/model/group-content';
 export class EditLeafModalComponent {
 
   leaf: LeafContent;
-  allGroups: GroupContent[];
   parentGroupVid: number;
 
   constructor(@Inject(MAT_DIALOG_DATA) private data: EditLeafModalData) {
     this.leaf = { ...this.data.leaf };
-    this.allGroups = [...this.data.allGroups];
     this.parentGroupVid = this.data.parentGroupVid;
-  }
-
-  onParentChange(groupVid: number): void {
-    this.leaf.groupVid = groupVid;
   }
 }
 
 export interface EditLeafModalData {
   leaf: LeafContent;
   parentGroupVid: number;
-  allGroups: GroupContent[];
 }

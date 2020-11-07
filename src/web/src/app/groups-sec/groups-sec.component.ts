@@ -5,7 +5,6 @@ import { GroupLeavesSecComponent } from './group-leaves-sec/group-leaves-sec.com
 import {
   GroupsSecConfig,
   GroupsSecContext,
-  ParentGroupListChangeFn,
 } from './groups-sec.model';
 
 @Component({
@@ -24,10 +23,6 @@ export class GroupsSecComponent {
   isContentShowed = false;
 
   constructor() { }
-
-  onGroupListChange(fn: ParentGroupListChangeFn): void {
-    this.groups = fn(this.groups, null);
-  }
 
   changeGlobalContentShow(value: boolean): void {
     this.isContentShowed = value;

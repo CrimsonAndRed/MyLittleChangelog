@@ -14,7 +14,7 @@ export class NodeMovementGroupHeaderComponent implements GroupHeader {
   constructor() { }
 
   onNodeCheckRadioClick(): void {
-    this.ctx.emitGroupChoise(this.data.group);
+    this.ctx.emitGroupChoice(this.data.group);
   }
 
   isRadioButtonShowed(): boolean {

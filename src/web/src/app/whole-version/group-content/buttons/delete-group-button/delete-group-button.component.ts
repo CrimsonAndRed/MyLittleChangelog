@@ -16,7 +16,7 @@ export class DeleteGroupButtonComponent {
   constructor(private http: Http, private route: ActivatedRoute) {}
 
   onDeleteClick(): void {
-    const versionId = this.route.snapshot.data.version.id;
+    const versionId = this.route.snapshot.params.id;
     const groupId = this.groupId;
     const params = new HttpParams().set('hierarchy', 'true');
 

@@ -17,7 +17,7 @@ export class MaterializeGroupButtonComponent {
   constructor(private http: Http, private route: ActivatedRoute) {}
 
   onMaterializeClick(): void {
-    const versionId = this.route.snapshot.data.version.id;
+    const versionId = this.route.snapshot.params.id;
 
     const newGroup: NewGroup = {
       vid: this.group.vid,

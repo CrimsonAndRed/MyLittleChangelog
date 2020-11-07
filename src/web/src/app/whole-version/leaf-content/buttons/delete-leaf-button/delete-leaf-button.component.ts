@@ -16,7 +16,7 @@ export class DeleteLeafButtonComponent {
   constructor(private http: Http, private route: ActivatedRoute) {}
 
   onDeleteClick(): void {
-    const versionId = this.route.snapshot.data.version.id;
+    const versionId = this.route.snapshot.params.id;
     const groupId = this.groupId;
     const leafId = this.leafId;
 

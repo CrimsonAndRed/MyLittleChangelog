@@ -7,6 +7,7 @@ import { GroupHeader, GroupSecConfigBuilder, GroupsSecConfig, GroupsSecContext, 
 import { GroupHeaderComponent } from './group-content/group-header/group-header.component';
 import { LeafHeaderComponent } from './leaf-content/leaf-header/leaf-header.component';
 import { tap } from 'rxjs/operators';
+import { WholeVersionService } from 'app/service/whole-version.service';
 
 @Component({
   selector: 'whole-version',
@@ -15,7 +16,6 @@ import { tap } from 'rxjs/operators';
 })
 export class WholeVersionComponent implements OnInit {
 
-  version: WholeVersion;
   config: GroupsSecConfig = new GroupSecConfigBuilder()
     .setGroupHeader(GroupHeaderComponent)
     .setLeafHeader(LeafHeaderComponent)
@@ -24,26 +24,18 @@ export class WholeVersionComponent implements OnInit {
     allGroups: null
   };
 
-  constructor(private http: Http, private route: ActivatedRoute) {
-  }
-
-  handleNewGroup(group: GroupContent): void {
-    this.version.groupContent.push(group);
+  constructor(private http: Http, private route: ActivatedRoute, public wholeVersionService: WholeVersionService) {
   }
 
   ngOnInit(): void {
-    const version = this.route.snapshot.data.version;
-    this.context.allGroups = version.groupContent;
-    this.version = version;
+    this.refresh();
   }
 
+  // TODO(#6) убрать refresh
   refresh(): void {
-    const versionId = this.route.snapshot.params.id;
-
-    this.http.get<WholeVersion>(`http://localhost:8080/version/${versionId}`)
-      .pipe(
-        tap(v => this.context.allGroups = v.groupContent)
-      )
-      .subscribe(result => this.version = result);
+    this.wholeVersionService.initWholeVersion(this.route.snapshot.params.id)
+      .subscribe(res => {
+        this.context.allGroups = res.groupContent;
+      });
   }
 }

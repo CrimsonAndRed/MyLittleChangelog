@@ -11,14 +11,12 @@
                         [context]="context"
                         [group]="_group"
                         [parentGroup]="group"
-                        [leaves]="_group.leafContent"
-                        (onParentChange)="onGroupListChange($event)"></group-leaves-sec>
+                        [leaves]="_group.leafContent"></group-leaves-sec>
       <leaf-content-sec *ngFor="let leaf of group.leafContent"
                         [config]="config"
                         [context]="context"
                         [leaf]="leaf"
-                        [parentGroup]="group"
-                        (onParentChange)="handleGroupChange($event)"></leaf-content-sec>
+                        [parentGroup]="group"></leaf-content-sec>
     </div>
   </div>
 </div>

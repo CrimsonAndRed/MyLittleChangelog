@@ -15,7 +15,6 @@ export class EditLeafButtonComponent {
 
   @Input() leaf: LeafContent;
   @Input() parentGroup: GroupContent;
-  @Input() allGroups: GroupContent[];
   @Output() onUpdateLeaf = new EventEmitter<UpdatedLeaf>();
 
   constructor(private http: Http, private route: ActivatedRoute, private dialog: MatDialog) {
@@ -28,7 +27,6 @@ export class EditLeafButtonComponent {
       data: {
         leaf: this.leaf,
         parentGroupVid: this.parentGroup.vid,
-        allGroups: this.allGroups,
       }
     });
 
@@ -37,11 +35,10 @@ export class EditLeafButtonComponent {
         this.updateLeaf(result);
       }
     });
-
   }
 
   updateLeaf(leaf: LeafContent): void {
-    const versionId = this.route.snapshot.data.version.id;
+    const versionId = this.route.snapshot.params.id;
     const parentId = this.parentGroup.id;
     const leafId = leaf.id;
 
@@ -49,7 +46,7 @@ export class EditLeafButtonComponent {
       name: leaf.name,
       valueType: leaf.valueType,
       value: leaf.value,
-      parentVid: leaf.groupVid,
+      parentVid: leaf.groupVid == null ? this.parentGroup.vid : leaf.groupVid,
     };
     this.http.put<UpdatedLeaf>(`http://localhost:8080/version/${versionId}/group/${parentId}/leaf/${leafId}`, leafToUpdate)
           .subscribe(updatedLeaf => this.onUpdateLeaf.emit(updatedLeaf));

@@ -33,7 +33,7 @@ export class EditGroupButtonComponent {
   }
 
   updateGroup(group: GroupContent): void {
-    const versionId = this.route.snapshot.data.version.id;
+    const versionId = this.route.snapshot.params.id;
     const groupId = this.group.id;
 
     const groupToUpdate: GroupToUpdate = {

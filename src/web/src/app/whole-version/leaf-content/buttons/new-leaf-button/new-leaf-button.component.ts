@@ -34,7 +34,7 @@ export class NewLeafButtonComponent {
   }
 
   createNewLeaf(newLeaf: NewLeaf): void {
-    const versionId = this.route.snapshot.data.version.id;
+    const versionId = this.route.snapshot.params.id;
     const groupId = this.groupId;
 
     this.http.post<NewLeafWithId>(`http://localhost:8080/version/${versionId}/group/${groupId}/leaf`, newLeaf)

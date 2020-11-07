@@ -1,7 +1,6 @@
-<delete-leaf-button [groupId]="data.parentGroup?.id"
+<delete-leaf-button [groupId]="data.parentGroup.id"
                     [leafId]="data.leaf.id"
                     (onDeleteLeaf)="handleDeleteLeaf()"></delete-leaf-button>
 <edit-leaf-button [leaf]="data.leaf"
-                  [allGroups]="ctx.allGroups"
                   [parentGroup]="data.parentGroup"
                   (onUpdateLeaf)="handleUpdateLeaf($event)"></edit-leaf-button>

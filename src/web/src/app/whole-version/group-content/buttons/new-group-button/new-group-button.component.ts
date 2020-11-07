@@ -33,8 +33,10 @@ export class NewGroupButtonComponent {
     });
   }
 
+
   createNewGroup(name: string): void {
-    const versionId = this.route.snapshot.data.version.id;
+    // TODO(#7) подумать про currentVersionService вместо this.route.snapshot.params.id
+    const versionId = this.route.snapshot.params.id;
     const parentVid = this.parentGroupVid;
 
     const newGroup: NewGroup = {

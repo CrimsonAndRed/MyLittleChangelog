@@ -1,5 +1,6 @@
 import { Component, Output, EventEmitter, Input } from '@angular/core';
 import { GroupContent, Group } from 'app/model/group-content';
+import { WholeVersionService } from 'app/service/whole-version.service'
 
 @Component({
   selector: 'version-header',
@@ -10,8 +11,9 @@ export class VersionHeaderComponent {
 
   @Input() groups: GroupContent[];
 
-  @Output() onNewGroup = new EventEmitter<GroupContent>();
   @Output() previousNodeChosen = new EventEmitter<void>();
+
+  constructor(private wholeVersionService: WholeVersionService) {}
 
   handleNewGroup(newGroupWithId: Group): void {
     const newGroup: GroupContent = {
@@ -23,11 +25,11 @@ export class VersionHeaderComponent {
       groupContent: [],
       leafContent: []
     };
-    this.onNewGroup.emit(newGroup);
+
+    this.wholeVersionService.addGroupToParent(newGroup, null);
   }
 
   onPreviousNodeChosen(): void {
     this.previousNodeChosen.emit();
   }
-
 }

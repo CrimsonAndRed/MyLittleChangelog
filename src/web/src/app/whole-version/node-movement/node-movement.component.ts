@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { GroupSecConfigBuilder, GroupsSecConfig, GroupsSecContext } from 'app/groups-sec/groups-sec.model';
 import { GroupContent } from 'app/model/group-content';
 import { NodeMovementGroupHeaderComponent } from './group-header/group-header.component';
+import { WholeVersionService } from 'app/service/whole-version.service';
 
 @Component({
   selector: 'node-movement',
@@ -11,7 +12,6 @@ import { NodeMovementGroupHeaderComponent } from './group-header/group-header.co
 export class NodeMovementComponent implements OnInit {
 
   @Input() parentVid: number;
-  @Input() groups: GroupContent[];
   @Output() parentChange = new EventEmitter<number>();
 
   config: GroupsSecConfig = new GroupSecConfigBuilder()
@@ -21,16 +21,16 @@ export class NodeMovementComponent implements OnInit {
 
   context: GroupsSecContext;
 
-  constructor() { }
+  constructor(public wholeVersionService: WholeVersionService) { }
 
   ngOnInit(): void {
     this.context = {
       parentVid: this.parentVid,
-      emitGroupChoise: this.onGroupChoise.bind(this),
+      emitGroupChoice: this.onGroupChoice.bind(this),
     };
   }
 
-  onGroupChoise(group: GroupContent): void {
+  onGroupChoice(group: GroupContent): void {
     this.parentChange.emit(group.vid);
   }
 }

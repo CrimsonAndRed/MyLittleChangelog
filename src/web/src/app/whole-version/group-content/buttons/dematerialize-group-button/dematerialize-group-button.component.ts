@@ -17,7 +17,7 @@ export class DematerializeGroupButtonComponent {
   constructor(private http: Http, private route: ActivatedRoute) {}
 
   onDematerializeClick(): void {
-    const versionId = this.route.snapshot.data.version.id;
+    const versionId = this.route.snapshot.params.id;
     const groupId = this.group.id;
     const params = new HttpParams().set('hierarchy', 'false');
 

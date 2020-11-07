@@ -3,7 +3,6 @@ import { RouterModule, Routes } from '@angular/router';
 import { VersionsListComponent } from './versions-list/versions-list.component';
 import { WholeVersionComponent } from './whole-version/whole-version.component';
 import { VersionsResolver } from './resolver/versions.resolver';
-import { WholeVersionResolver } from './resolver/whole-version.resolver';
 
 const routes: Routes = [
   {
@@ -16,9 +15,6 @@ const routes: Routes = [
   {
     path: 'version/:id',
     component: WholeVersionComponent,
-    resolve: {
-      version: WholeVersionResolver
-    }
   },
 ];
 

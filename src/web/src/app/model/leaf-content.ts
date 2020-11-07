@@ -4,6 +4,7 @@ export interface LeafContent {
   name: string;
   valueType: number;
   value: string;
+  // TODO(#8) что это?
   groupVid: number;
 }
 

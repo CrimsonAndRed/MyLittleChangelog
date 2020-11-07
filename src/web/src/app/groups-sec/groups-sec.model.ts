@@ -9,15 +9,11 @@ export interface LeafHeader extends Header<LeafHeaderData> { }
 export interface GroupHeaderData {
   group: GroupContent;
   parentGroup: GroupContent;
-  parentGroupsChange: EventEmitter<ParentGroupListChangeFn>;
-  groupChange: EventEmitter<GroupContent>;
 }
 
 export interface LeafHeaderData {
   leaf: LeafContent;
   parentGroup: GroupContent;
-  leafChange: EventEmitter<LeafContent>;
-  parentChange: EventEmitter<GroupChangeFn>;
 }
 
 export interface GroupsSecConfig {
@@ -30,10 +26,6 @@ export interface Header<T> {
   data: T;
   ctx: GroupsSecContext;
 }
-
-// TODO#5 это плохая структура
-export type ParentGroupListChangeFn = (list: GroupContent[], t: GroupLeavesSecComponent) => GroupContent[];
-export type GroupChangeFn = (group: GroupContent, t: GroupLeavesSecComponent) => GroupContent;
 
 export interface GroupsSecContext {
   [payload: string]: any;
