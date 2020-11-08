@@ -75,6 +75,7 @@ internal class VersionIntegrationTest : AbstractIntegrationTest() {
                     realNode = true,
                     groupContent = emptyList(),
                     leafContent = emptyList(),
+                    isEarliest = true,
                 )
 
                 val leafDto = WholeLeafDto(
@@ -92,6 +93,7 @@ internal class VersionIntegrationTest : AbstractIntegrationTest() {
                     realNode = true,
                     groupContent = listOf(group2Dto),
                     leafContent = listOf(leafDto),
+                    isEarliest = true,
                 )
 
                 WholeVersion(

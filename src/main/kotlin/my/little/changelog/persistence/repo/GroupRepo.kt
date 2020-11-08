@@ -38,7 +38,7 @@ object GroupRepo : AbstractCrudRepository<Group, Int>(Group) {
                 WHERE grouped.version_id=grouped.max
             ),  tmp_groups AS (
                     SELECT * FROM sublatest 
-                    WHERE (vid in (%s))
+                    WHERE vid = ANY(?)
                 UNION
                     SELECT g.* FROM sublatest AS g JOIN tmp_groups ON g.vid=tmp_groups.parent_vid
             ) SELECT id FROM tmp_groups
@@ -57,7 +57,7 @@ object GroupRepo : AbstractCrudRepository<Group, Int>(Group) {
         """
             SELECT grouped.id FROM (
                 SELECT g.*, min(version_id) OVER (PARTITION BY vid) FROM groups AS g
-                WHERE g.vid in (%s)
+                WHERE g.vid = ANY(?)
             ) as grouped
             WHERE grouped.version_id=grouped.min
         """
@@ -85,15 +85,12 @@ object GroupRepo : AbstractCrudRepository<Group, Int>(Group) {
             it.groupVid
         }.distinct()
 
-        if (groupVids.isEmpty()) {
-            emptyList()
-        } else {
-            connection.prepareStatement(FIND_GROUPS_AFFECTED_BY_SUBLATEST_LEAVES_QUERY.format(groupVids.joinToString(", ")), arrayOf("id"))
-                .apply {
-                    set(1, version.id.value)
-                }
-                .executeQuery().iterate { getInt("id") }.let { Group.forIds(it) }
-        }
+        connection.prepareStatement(FIND_GROUPS_AFFECTED_BY_SUBLATEST_LEAVES_QUERY, arrayOf("id"))
+            .apply {
+                set(1, version.id.value)
+                set(2, (connection.connection as java.sql.Connection).createArrayOf("INTEGER", groupVids.toTypedArray()))
+            }
+            .executeQuery().iterate { getInt("id") }.let { Group.forIds(it) }
     }
 
     fun findLatestGroupByVid(vid: Int): Group = transaction {
@@ -120,14 +117,13 @@ object GroupRepo : AbstractCrudRepository<Group, Int>(Group) {
     }
 
     fun findEarliestByVids(vids: Iterable<Int>): Iterable<Int> = transaction {
-        if (vids.iterator().hasNext()) {
-            connection.prepareStatement(FIND_EARLIEST_GROUP_QUERY.format(vids.joinToString(", ")), arrayOf("id"))
-                .executeQuery()
-                .iterate {
-                    this.getInt("id")
-                }
-        } else {
-            emptyList()
-        }
+        connection.prepareStatement(FIND_EARLIEST_GROUP_QUERY, arrayOf("id"))
+            .apply {
+                set(1, (connection.connection as java.sql.Connection).createArrayOf("INTEGER", vids.toList().toTypedArray()))
+            }
+            .executeQuery()
+            .iterate {
+                this.getInt("id")
+            }
     }
 }
