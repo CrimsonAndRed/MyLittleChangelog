@@ -19,11 +19,10 @@ TODO
 - кэш запросов past version?
 - Лифы в руте
 - дематериализация + перенос родителя?
-- parentId(?vid) в GroupContent на фронте??
 - порядок показа групп в версии?
 - если удалить все группы в версии, потом добавить в рут - группа не добавится на фронт!
 - TODO(#6) убрать refresh
 - TODO(#7) получение текущей версии через сервис?
 - TODO(#8) groupVid в LeafContent?
 - TODD(#9) про удаление последнего лифа в узле
-- На updateGroup и updateLeaf отдаются немного разные данные (это проблема)?
+- При нажатии на "edit leaf": Error: Cannot find a differ supporting object '[object Object]' of type 'object'. NgFor only supports binding to Iterables such as Arrays.

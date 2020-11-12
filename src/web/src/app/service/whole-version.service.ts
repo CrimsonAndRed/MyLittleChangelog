@@ -4,7 +4,7 @@ import { WholeVersion } from 'app/model/whole-version'
 import { tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { GroupContent, Group } from 'app/model/group-content';
-import { LeafContent } from 'app/model/leaf-content';
+import { LeafContent, UpdatedLeaf } from 'app/model/leaf-content';
 
 @Injectable({
   providedIn: 'root',
@@ -41,7 +41,15 @@ export class WholeVersionService {
     this.groupsByVid.get(parentVid).leafContent.push(leaf);
   }
 
-  updateLeaf(leaf: LeafContent, previousParentVid: number) {
+  updateLeaf(updatedLeaf: UpdatedLeaf, previousParentVid: number) {
+    const leaf: LeafContent = {
+      id: updatedLeaf.id,
+      vid: updatedLeaf.vid,
+      name: updatedLeaf.name,
+      valueType: updatedLeaf.valueType,
+      value: updatedLeaf.value,
+      groupVid: updatedLeaf.groupVid,
+    };
     this.groupsByVid.get(previousParentVid).leafContent = this.groupsByVid.get(previousParentVid).leafContent.filter(l => l.id !== leaf.id);
     this.groupsByVid.get(leaf.groupVid).leafContent.push(leaf);
   }

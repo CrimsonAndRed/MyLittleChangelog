@@ -21,14 +21,6 @@ export class LeafHeaderComponent implements LeafHeader {
   }
 
   handleUpdateLeaf(updatedLeaf: UpdatedLeaf): void {
-    const newLeafContent: LeafContent = {
-      id: updatedLeaf.id,
-      vid: updatedLeaf.vid,
-      name: updatedLeaf.name,
-      valueType: updatedLeaf.valueType,
-      value: updatedLeaf.value,
-      groupVid: updatedLeaf.groupVid,
-    };
-    this.wholeVersionService.updateLeaf(newLeafContent, this.data.parentGroup.vid);
+    this.wholeVersionService.updateLeaf(updatedLeaf, this.data.parentGroup.vid);
   }
 }
