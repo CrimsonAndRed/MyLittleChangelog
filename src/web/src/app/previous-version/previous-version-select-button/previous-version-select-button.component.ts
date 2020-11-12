@@ -64,17 +64,16 @@ export class PreviousVersionSelectButtonComponent {
   }
 
   private addGroupFromPast(newGroup: NewGroup): void {
-    const versionId = this.route.snapshot.data.version.id;
+    const versionId = this.route.snapshot.params.id;
 
     this.http.post<Group>(`http://localhost:8080/version/${versionId}/group`, newGroup)
           .subscribe(() => this.nodeChosen.emit());
   }
 
   private addLeafFromPast(newLeaf: NewLeaf, parentId: number): void {
-    const versionId = this.route.snapshot.data.version.id;
+    const versionId = this.route.snapshot.params.id;
 
     this.http.post<NewLeafWithId>(`http://localhost:8080/version/${versionId}/group/${parentId}/leaf`, newLeaf)
           .subscribe(() => this.nodeChosen.emit());
   }
-
 }
