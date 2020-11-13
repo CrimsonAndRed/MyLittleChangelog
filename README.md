@@ -26,4 +26,3 @@ TODO
 - TODO(#8) groupVid в LeafContent?
 - TODO(#10) притягиваю в service router, это не верно
 - При изменении дерева whole-version - нужно сохранять открытые узлы
-- При нажатии на "edit leaf": Error: Cannot find a differ supporting object '[object Object]' of type 'object'. NgFor only supports binding to Iterables such as Arrays.
