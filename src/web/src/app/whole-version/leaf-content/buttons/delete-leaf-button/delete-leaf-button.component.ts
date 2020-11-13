@@ -1,6 +1,7 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Http } from 'app/http/http.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'delete-leaf-button',
@@ -11,7 +12,7 @@ export class DeleteLeafButtonComponent {
 
   @Input() groupId: number;
   @Input() leafId: number;
-  @Output() onDeleteLeaf = new EventEmitter<void>();
+  @Output() onDeleteLeaf = new EventEmitter<Observable<void>>();
 
   constructor(private http: Http, private route: ActivatedRoute) {}
 
@@ -20,8 +21,7 @@ export class DeleteLeafButtonComponent {
     const groupId = this.groupId;
     const leafId = this.leafId;
 
-    this.http.delete(`http://localhost:8080/version/${versionId}/group/${groupId}/leaf/${leafId}`)
-      .subscribe(() => this.onDeleteLeaf.emit());
+    this.onDeleteLeaf.emit(this.http.delete(`http://localhost:8080/version/${versionId}/group/${groupId}/leaf/${leafId}`))
   }
 
 }

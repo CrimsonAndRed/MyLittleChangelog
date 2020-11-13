@@ -8,10 +8,12 @@ import { AppComponent } from './app.component';
 import { VersionsListModule } from './versions-list/versions-list.module';
 import { AppRoutingModule } from './app-routing.module';
 import { WholeVersionModule } from './whole-version/whole-version.module';
+import { Spinner } from './spinner/spinner.component'
 
 @NgModule({
   declarations: [
     AppComponent,
+    Spinner,
   ],
   imports: [
     VersionsListModule,
@@ -20,7 +22,7 @@ import { WholeVersionModule } from './whole-version/whole-version.module';
     AppRoutingModule,
     FormsModule,
     HttpClientModule,
-    NoopAnimationsModule,
+    NoopAnimationsModule
   ],
   bootstrap: [AppComponent]
 })

@@ -3,6 +3,10 @@ import { LeafHeader, LeafHeaderData, GroupsSecContext } from 'app/groups-sec/gro
 import { GroupContent } from 'app/model/group-content';
 import { LeafContent, UpdatedLeaf } from 'app/model/leaf-content';
 import { WholeVersionService } from 'app/service/whole-version.service';
+import { Observable } from 'rxjs';
+import { switchMap, tap } from 'rxjs/operators';
+import { SpinnerService } from 'app/spinner/spinner.service';
+
 
 @Component({
   selector: 'leaf-header',
@@ -14,10 +18,15 @@ export class LeafHeaderComponent implements LeafHeader {
   data: LeafHeaderData;
   ctx: GroupsSecContext;
 
-  constructor(private wholeVersionService: WholeVersionService) {}
+  constructor(private wholeVersionService: WholeVersionService, private spinnerService: SpinnerService) {}
 
-  handleDeleteLeaf(): void {
-    this.wholeVersionService.deleteLeaf(this.data.leaf.id, this.data.parentGroup.vid);
+  handleDeleteLeaf(obs: Observable<void>): void {
+    this.spinnerService.startSpin();
+    obs.pipe(
+      switchMap(() => this.wholeVersionService.deleteLeaf(this.data.leaf.id, this.data.parentGroup.vid)),
+      tap((res) => this.spinnerService.stopSpin()),
+    )
+    .subscribe();
   }
 
   handleUpdateLeaf(updatedLeaf: UpdatedLeaf): void {

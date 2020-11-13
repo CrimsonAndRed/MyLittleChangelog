@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Http } from 'app/http/http.service';
 import { GroupContent, Group, NewGroup } from 'app/model/group-content';
 import { HttpParams } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'dematerialize-group-button',
@@ -12,7 +13,7 @@ import { HttpParams } from '@angular/common/http';
 export class DematerializeGroupButtonComponent {
 
   @Input() group: GroupContent;
-  @Output() onDematerializeGroup = new EventEmitter<Group>();
+  @Output() onDematerializeGroup = new EventEmitter<Observable<Group>>();
 
   constructor(private http: Http, private route: ActivatedRoute) {}
 
@@ -21,7 +22,6 @@ export class DematerializeGroupButtonComponent {
     const groupId = this.group.id;
     const params = new HttpParams().set('hierarchy', 'false');
 
-    this.http.delete<Group>(`http://localhost:8080/version/${versionId}/group/${groupId}`, params)
-        .subscribe((res) => this.onDematerializeGroup.emit(res));
+    this.onDematerializeGroup.emit(this.http.delete<Group>(`http://localhost:8080/version/${versionId}/group/${groupId}`, params));
   }
 }

@@ -24,5 +24,6 @@ TODO
 - TODO(#6) убрать refresh
 - TODO(#7) получение текущей версии через сервис?
 - TODO(#8) groupVid в LeafContent?
-- TODD(#9) про удаление последнего лифа в узле
+- TODO(#10) притягиваю в service router, это не верно
+- При изменении дерева whole-version - нужно сохранять открытые узлы
 - При нажатии на "edit leaf": Error: Cannot find a differ supporting object '[object Object]' of type 'object'. NgFor only supports binding to Iterables such as Arrays.

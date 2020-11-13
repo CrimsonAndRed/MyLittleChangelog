@@ -5,6 +5,8 @@ import { tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { GroupContent, Group } from 'app/model/group-content';
 import { LeafContent, UpdatedLeaf } from 'app/model/leaf-content';
+import { SpinnerService } from '../spinner/spinner.service';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
@@ -15,7 +17,8 @@ export class WholeVersionService {
 
   private groupsByVid: Map<number, GroupContent> = new Map<number, GroupContent>();
 
-  constructor(private http: Http) {}
+  // TODO(#10) Router?
+  constructor(private http: Http, private spinnerService: SpinnerService, private route: Router) {}
 
   initWholeVersion(versionId: number): Observable<WholeVersion> {
     this.wholeVersion = null;
@@ -24,7 +27,7 @@ export class WholeVersionService {
     return this.http.get<WholeVersion>(`http://localhost:8080/version/${versionId}`)
       .pipe(
         tap(res => this.wholeVersion = res),
-        tap(res => res.groupContent.forEach(g => this.addGroupToMap(g)))
+        tap(res => res.groupContent.forEach(g => this.addGroupToMap(g))),
       );
   }
 
@@ -54,23 +57,12 @@ export class WholeVersionService {
     this.groupsByVid.get(leaf.groupVid).leafContent.push(leaf);
   }
 
-  // TODD(#9) Здесь происходит refresh потому что мы должны удалить все вышестоящие узлы если этот лиф был последним узлом
-  // Но мы не знаем кто является родителем этого лифа, поэтому не можем этого сделать
-  // Как вариант добавить parentVid в GroupContent или сделать мапу groupVid на parentVid
-  deleteLeaf(leafId: number, parentVid: number) {
-    this.groupsByVid.get(parentVid).leafContent = this.groupsByVid.get(parentVid).leafContent.filter(l => l.id !== leafId);
-    window.location.reload();
+  deleteLeaf(leafId: number, parentVid: number): Observable<WholeVersion> {
+    return this.initWholeVersion(parseInt(this.route.routerState.snapshot.root.children[0].url[1].path));
   }
 
-  // TODO(#9)
-  deleteGroup(groupId: number, parentVid: number) {
-    if (parentVid != null) {
-      this.groupsByVid.get(parentVid).groupContent = this.groupsByVid.get(parentVid).groupContent.filter(g => g.id !== groupId);
-      this.groupsByVid.delete(parentVid);
-    } else {
-      this.wholeVersion.groupContent = this.wholeVersion.groupContent.filter(g => g.id !== groupId);
-    }
-    window.location.reload();
+  deleteGroup(groupId: number, parentVid: number): Observable<WholeVersion> {
+    return this.initWholeVersion(parseInt(this.route.routerState.snapshot.root.children[0].url[1].path));
   }
 
   updateGroup(group: Group) {
@@ -89,15 +81,8 @@ export class WholeVersionService {
     updateGroup.isEarliest = false;
   }
 
-  // TODO(#9)
-  dematerializeGroup(group: Group) {
-    let updateGroup = this.groupsByVid.get(group.vid);
-
-    updateGroup.name = group.name;
-    updateGroup.vid = group.vid;
-    updateGroup.id = group.id;
-    updateGroup.realNode = false;
-    window.location.reload();
+  dematerializeGroup(group: Group): Observable<WholeVersion> {
+    return this.initWholeVersion(parseInt(this.route.routerState.snapshot.root.children[0].url[1].path));
   }
 
   private addGroupToMap(group: GroupContent) {

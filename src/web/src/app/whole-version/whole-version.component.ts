@@ -24,7 +24,9 @@ export class WholeVersionComponent implements OnInit {
     allGroups: null
   };
 
-  constructor(private http: Http, private route: ActivatedRoute, public wholeVersionService: WholeVersionService) {
+  constructor(private http: Http,
+              private route: ActivatedRoute,
+              public wholeVersionService: WholeVersionService) {
   }
 
   ngOnInit(): void {

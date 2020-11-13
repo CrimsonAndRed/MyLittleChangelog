@@ -3,6 +3,9 @@ import { GroupContent, Group } from 'app/model/group-content';
 import { LeafContent, NewLeafWithId } from 'app/model/leaf-content';
 import { GroupHeader, GroupHeaderData, GroupsSecContext } from 'app/groups-sec/groups-sec.model';
 import { WholeVersionService } from 'app/service/whole-version.service';
+import { Observable } from 'rxjs';
+import { switchMap, tap } from 'rxjs/operators';
+import { SpinnerService } from 'app/spinner/spinner.service';
 
 @Component({
   selector: 'group-header',
@@ -14,7 +17,7 @@ export class GroupHeaderComponent implements GroupHeader {
   data: GroupHeaderData;
   ctx: GroupsSecContext;
 
-  constructor(private wholeVersionService: WholeVersionService) { }
+  constructor(private wholeVersionService: WholeVersionService, private spinnerService: SpinnerService) { }
 
   handleNewGroup(newGroupWithId: Group): void {
     const newGroup: GroupContent = {
@@ -42,8 +45,13 @@ export class GroupHeaderComponent implements GroupHeader {
     this.wholeVersionService.addLeafToParent(newLeaf, this.data.group.vid)
   }
 
-  handleDeleteGroup(): void {
-    this.wholeVersionService.deleteGroup(this.data.group.id, this.data.parentGroup?.vid)
+  handleDeleteGroup(obs: Observable<void>): void {
+    this.spinnerService.startSpin();
+    obs.pipe(
+      switchMap(() => this.wholeVersionService.deleteGroup(this.data.group.id, this.data.parentGroup?.vid)),
+      tap((res) => this.spinnerService.stopSpin()),
+    )
+    .subscribe();
   }
 
   handleUpdateGroup(group: Group): void {
@@ -54,7 +62,12 @@ export class GroupHeaderComponent implements GroupHeader {
     this.wholeVersionService.materializeGroup(group);
   }
 
-  handleDematerializeGroup(group: Group): void {
-    this.wholeVersionService.dematerializeGroup(group);
+  handleDematerializeGroup(obs: Observable<Group>): void {
+    this.spinnerService.startSpin();
+    obs.pipe(
+      switchMap((group: Group) => this.wholeVersionService.dematerializeGroup(group)),
+      tap((res) => this.spinnerService.stopSpin()),
+    )
+    .subscribe();
   }
 }
