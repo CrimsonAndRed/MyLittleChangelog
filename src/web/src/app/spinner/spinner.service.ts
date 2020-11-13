@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Subject, Subscription } from 'rxjs';
+import { Observable, Subject, Subscription } from 'rxjs';
 
 
 @Injectable({
@@ -29,6 +29,12 @@ export class SpinnerService {
       return this.subject.subscribe({
         next: fn
       });
+    }
+
+    public wrapSpinner(obs: Observable<any>) {
+      this.startSpin();
+      obs
+        .subscribe(() => this.stopSpin())
     }
 
     private messageSubscribers() {

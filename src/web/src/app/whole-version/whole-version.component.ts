@@ -8,6 +8,9 @@ import { GroupHeaderComponent } from './group-content/group-header/group-header.
 import { LeafHeaderComponent } from './leaf-content/leaf-header/leaf-header.component';
 import { tap } from 'rxjs/operators';
 import { WholeVersionService } from 'app/service/whole-version.service';
+import { SpinnerService } from 'app/spinner/spinner.service';
+import { Observable } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'whole-version',
@@ -20,24 +23,35 @@ export class WholeVersionComponent implements OnInit {
     .setGroupHeader(GroupHeaderComponent)
     .setLeafHeader(LeafHeaderComponent)
     .build();
+
   context: GroupsSecContext = {
     allGroups: null
   };
 
   constructor(private http: Http,
               private route: ActivatedRoute,
-              public wholeVersionService: WholeVersionService) {
+              public wholeVersionService: WholeVersionService,
+              private spinnerService: SpinnerService) {
   }
 
   ngOnInit(): void {
-    this.refresh();
+    this.spinnerService.wrapSpinner(
+      this.refresh()
+    );
   }
 
-  // TODO(#6) убрать refresh
-  refresh(): void {
-    this.wholeVersionService.initWholeVersion(this.route.snapshot.params.id)
-      .subscribe(res => {
-        this.context.allGroups = res.groupContent;
-      });
+  handlePreviousNodeChosen(obs: Observable<void>) {
+    this.spinnerService.wrapSpinner(
+      obs.pipe(
+        switchMap(() => this.refresh())
+      )
+    );
+  }
+
+  refresh(): Observable<WholeVersion> {
+    return this.wholeVersionService.initWholeVersion(this.route.snapshot.params.id)
+      .pipe(
+        tap((res) => this.context.allGroups = res.groupContent)
+      )
   }
 }

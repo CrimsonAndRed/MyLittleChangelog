@@ -19,55 +19,74 @@ export class GroupHeaderComponent implements GroupHeader {
 
   constructor(private wholeVersionService: WholeVersionService, private spinnerService: SpinnerService) { }
 
-  handleNewGroup(newGroupWithId: Group): void {
-    const newGroup: GroupContent = {
-      id: newGroupWithId.id,
-      name: newGroupWithId.name,
-      vid: newGroupWithId.vid,
-      realNode: true,
-      isEarliest: true,
-      groupContent: [],
-      leafContent: []
-    };
+  handleNewGroup(obs: Observable<Group>): void {
+    this.spinnerService.wrapSpinner(
+      obs.pipe(
+        tap(newGroupWithId => {
+          const newGroup: GroupContent = {
+            id: newGroupWithId.id,
+            name: newGroupWithId.name,
+            vid: newGroupWithId.vid,
+            realNode: true,
+            isEarliest: true,
+            groupContent: [],
+            leafContent: []
+          };
 
-    this.wholeVersionService.addGroupToParent(newGroup, this.data.group.vid);
+          this.wholeVersionService.addGroupToParent(newGroup, this.data.group.vid);
+        })
+      )
+    );
+
   }
 
-  handleNewLeaf(newLeafWithId: NewLeafWithId): void {
-    const newLeaf: LeafContent = {
-      id: newLeafWithId.id,
-      name: newLeafWithId.name,
-      vid: newLeafWithId.vid,
-      valueType: newLeafWithId.valueType,
-      value: newLeafWithId.value,
-      groupVid: newLeafWithId.groupVid
-    };
-    this.wholeVersionService.addLeafToParent(newLeaf, this.data.group.vid)
+  handleNewLeaf(obs: Observable<NewLeafWithId>): void {
+    this.spinnerService.wrapSpinner(
+      obs.pipe(
+        tap(newLeafWithId => {
+          const newLeaf: LeafContent = {
+            id: newLeafWithId.id,
+            name: newLeafWithId.name,
+            vid: newLeafWithId.vid,
+            valueType: newLeafWithId.valueType,
+            value: newLeafWithId.value,
+            groupVid: newLeafWithId.groupVid
+          };
+          this.wholeVersionService.addLeafToParent(newLeaf, this.data.group.vid)
+        })
+      )
+    );
   }
 
   handleDeleteGroup(obs: Observable<void>): void {
-    this.spinnerService.startSpin();
-    obs.pipe(
-      switchMap(() => this.wholeVersionService.deleteGroup(this.data.group.id, this.data.parentGroup?.vid)),
-      tap((res) => this.spinnerService.stopSpin()),
-    )
-    .subscribe();
+    this.spinnerService.wrapSpinner(
+      obs.pipe(
+        switchMap(() => this.wholeVersionService.deleteGroup(this.data.group.id, this.data.parentGroup?.vid))
+      )
+    );
   }
 
-  handleUpdateGroup(group: Group): void {
-    this.wholeVersionService.updateGroup(group);
+  handleUpdateGroup(obs: Observable<Group>): void {
+    this.spinnerService.wrapSpinner(
+      obs.pipe(
+        tap(group => this.wholeVersionService.updateGroup(group))
+      )
+    );
   }
 
-  handleMaterializeGroup(group: Group): void {
-    this.wholeVersionService.materializeGroup(group);
+  handleMaterializeGroup(obs: Observable<Group>): void {
+    this.spinnerService.wrapSpinner(
+      obs.pipe(
+        tap(group => this.wholeVersionService.materializeGroup(group))
+      )
+    );
   }
 
   handleDematerializeGroup(obs: Observable<Group>): void {
-    this.spinnerService.startSpin();
-    obs.pipe(
-      switchMap((group: Group) => this.wholeVersionService.dematerializeGroup(group)),
-      tap((res) => this.spinnerService.stopSpin()),
-    )
-    .subscribe();
+    this.spinnerService.wrapSpinner(
+      obs.pipe(
+        switchMap((group: Group) => this.wholeVersionService.dematerializeGroup(group)),
+      )
+    );
   }
 }

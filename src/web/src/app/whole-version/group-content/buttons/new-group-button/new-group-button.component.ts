@@ -6,6 +6,7 @@ import { ActivatedRoute } from '@angular/router';
 import { EventEmitter } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { NewGroupModalComponent } from './new-group-modal/new-group-modal.component';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'new-group-button',
@@ -14,7 +15,7 @@ import { NewGroupModalComponent } from './new-group-modal/new-group-modal.compon
 })
 export class NewGroupButtonComponent {
 
-  @Output() onNewGroup = new EventEmitter<Group>();
+  @Output() onNewGroup = new EventEmitter<Observable<Group>>();
 
   @Input() parentGroupVid: number = null;
 
@@ -34,7 +35,7 @@ export class NewGroupButtonComponent {
   }
 
 
-  createNewGroup(name: string): void {
+  createNewGroup(name: string) {
     // TODO(#7) подумать про currentVersionService вместо this.route.snapshot.params.id
     const versionId = this.route.snapshot.params.id;
     const parentVid = this.parentGroupVid;
@@ -44,8 +45,7 @@ export class NewGroupButtonComponent {
       parentVid,
       name,
     };
-    this.http.post<Group>(`http://localhost:8080/version/${versionId}/group`, newGroup)
-      .subscribe(newGroup => this.onNewGroup.emit(newGroup) );
+    this.onNewGroup.emit(this.http.post<Group>(`http://localhost:8080/version/${versionId}/group`, newGroup));
   }
 
 }

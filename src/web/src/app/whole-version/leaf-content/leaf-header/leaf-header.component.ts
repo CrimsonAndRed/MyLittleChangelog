@@ -20,16 +20,19 @@ export class LeafHeaderComponent implements LeafHeader {
 
   constructor(private wholeVersionService: WholeVersionService, private spinnerService: SpinnerService) {}
 
-  handleDeleteLeaf(obs: Observable<void>): void {
-    this.spinnerService.startSpin();
-    obs.pipe(
-      switchMap(() => this.wholeVersionService.deleteLeaf(this.data.leaf.id, this.data.parentGroup.vid)),
-      tap((res) => this.spinnerService.stopSpin()),
-    )
-    .subscribe();
+  handleDeleteLeaf(obs: Observable<void>) {
+    this.spinnerService.wrapSpinner(
+      obs.pipe(
+        switchMap(() => this.wholeVersionService.deleteLeaf(this.data.leaf.id, this.data.parentGroup.vid))
+      )
+    );
   }
 
-  handleUpdateLeaf(updatedLeaf: UpdatedLeaf): void {
-    this.wholeVersionService.updateLeaf(updatedLeaf, this.data.parentGroup.vid);
+  handleUpdateLeaf(obs: Observable<UpdatedLeaf>) {
+    this.spinnerService.wrapSpinner(
+      obs.pipe(
+        tap(updatedLeaf => this.wholeVersionService.updateLeaf(updatedLeaf, this.data.parentGroup.vid))
+      )
+    );
   }
 }

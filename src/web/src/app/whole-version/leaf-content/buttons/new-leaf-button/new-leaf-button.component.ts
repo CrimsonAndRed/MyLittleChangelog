@@ -4,6 +4,7 @@ import { NewLeafWithId, NewLeaf} from 'app/model/leaf-content';
 import { ActivatedRoute } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { NewLeafModalComponent } from './new-leaf-modal/new-leaf-modal.component';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'new-leaf-button',
@@ -12,7 +13,7 @@ import { NewLeafModalComponent } from './new-leaf-modal/new-leaf-modal.component
 })
 export class NewLeafButtonComponent {
 
-  @Output() onNewLeaf = new EventEmitter<NewLeafWithId>();
+  @Output() onNewLeaf = new EventEmitter<Observable<NewLeafWithId>>();
 
   @Input() groupId: number;
 
@@ -37,8 +38,9 @@ export class NewLeafButtonComponent {
     const versionId = this.route.snapshot.params.id;
     const groupId = this.groupId;
 
-    this.http.post<NewLeafWithId>(`http://localhost:8080/version/${versionId}/group/${groupId}/leaf`, newLeaf)
-          .subscribe(newLeaf => this.onNewLeaf.emit(newLeaf));
+    this.onNewLeaf.emit(
+      this.http.post<NewLeafWithId>(`http://localhost:8080/version/${versionId}/group/${groupId}/leaf`, newLeaf)
+    );
   }
 
 }

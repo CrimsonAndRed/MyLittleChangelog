@@ -7,6 +7,8 @@ import { NewLeaf, NewLeafWithId } from 'app/model/leaf-content';
 import { WholeVersion } from 'app/model/whole-version';
 import { PreviousVersionModalComponent } from '../previous-version-modal/previous-version-modal.component';
 import { PreviousUsedGroupsAndLeaves } from '../previous-version.model';
+import { Observable } from 'rxjs';
+import { switchMap, map } from 'rxjs/operators';
 
 @Component({
   selector: 'previous-version-select-button',
@@ -15,7 +17,7 @@ import { PreviousUsedGroupsAndLeaves } from '../previous-version.model';
 })
 export class PreviousVersionSelectButtonComponent {
 
-  @Output() nodeChosen = new EventEmitter<void>();
+  @Output() nodeChosen = new EventEmitter<Observable<void>>();
   @Input() currentGroups: GroupContent[];
 
   constructor(
@@ -66,14 +68,18 @@ export class PreviousVersionSelectButtonComponent {
   private addGroupFromPast(newGroup: NewGroup): void {
     const versionId = this.route.snapshot.params.id;
 
-    this.http.post<Group>(`http://localhost:8080/version/${versionId}/group`, newGroup)
-          .subscribe(() => this.nodeChosen.emit());
+    this.nodeChosen.emit(
+      this.http.post<Group>(`http://localhost:8080/version/${versionId}/group`, newGroup)
+        .pipe(map((res) => { return; }))
+    );
   }
 
   private addLeafFromPast(newLeaf: NewLeaf, parentId: number): void {
     const versionId = this.route.snapshot.params.id;
 
-    this.http.post<NewLeafWithId>(`http://localhost:8080/version/${versionId}/group/${parentId}/leaf`, newLeaf)
-          .subscribe(() => this.nodeChosen.emit());
+    this.nodeChosen.emit(
+      this.http.post<NewLeafWithId>(`http://localhost:8080/version/${versionId}/group/${parentId}/leaf`, newLeaf)
+        .pipe(map((res) => { return; }))
+    );
   }
 }

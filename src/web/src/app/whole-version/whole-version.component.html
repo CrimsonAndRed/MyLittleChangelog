@@ -4,6 +4,6 @@
               [config]="config" [context]="context">
     <version-header global-header
                     [groups]="wholeVersionService.wholeVersion.groupContent"
-                    (previousNodeChosen)="refresh()"></version-header>
+                    (previousNodeChosen)="handlePreviousNodeChosen($event)"></version-header>
   </groups-sec>
 </div>
