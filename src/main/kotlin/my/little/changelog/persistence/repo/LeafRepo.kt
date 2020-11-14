@@ -37,6 +37,10 @@ object LeafRepo : AbstractCrudRepository<Leaf, Int>(Leaf) {
         Leaf.find { (Leaves.version eq group.version.id.value) and (Leaves.groupVid eq group.vid) }
     }
 
+    fun findCurrentGroupsLeaves(groupVids: Iterable<Int>, version: Version): Iterable<Leaf> = transaction {
+        Leaf.find { (Leaves.version eq version.id.value) and (Leaves.groupVid inList groupVids) }
+    }
+
     fun findDifferentialLeaves(fromVersion: Version, toVersion: Version): Iterable<Leaf> = transaction {
         connection.prepareStatement(DIFFERENTIAL_LEAVES_QUERY, arrayOf("id"))
             .apply {

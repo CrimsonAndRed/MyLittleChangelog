@@ -126,4 +126,8 @@ object GroupRepo : AbstractCrudRepository<Group, Int>(Group) {
                 this.getInt("id")
             }
     }
+
+    fun findByVids(vids: Iterable<Int>, version: Version): Iterable<Group> = transaction {
+        Group.find { (Groups.vid inList vids) and (Groups.version eq version.id.value) }
+    }
 }
