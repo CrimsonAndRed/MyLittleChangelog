@@ -44,17 +44,18 @@ export class WholeVersionService {
     this.groupsByVid.get(parentVid).leafContent.push(leaf);
   }
 
-  updateLeaf(updatedLeaf: UpdatedLeaf, previousParentVid: number) {
-    const leaf: LeafContent = {
-      id: updatedLeaf.id,
-      vid: updatedLeaf.vid,
-      name: updatedLeaf.name,
-      valueType: updatedLeaf.valueType,
-      value: updatedLeaf.value,
-      groupVid: updatedLeaf.groupVid,
-    };
-    this.groupsByVid.get(previousParentVid).leafContent = this.groupsByVid.get(previousParentVid).leafContent.filter(l => l.id !== leaf.id);
-    this.groupsByVid.get(leaf.groupVid).leafContent.push(leaf);
+  updateLeaf(updatedLeaf: UpdatedLeaf, previousParentVid: number): Observable<WholeVersion> {
+//    const leaf: LeafContent = {
+//      id: updatedLeaf.id,
+//      vid: updatedLeaf.vid,
+//      name: updatedLeaf.name,
+//      valueType: updatedLeaf.valueType,
+//      value: updatedLeaf.value,
+//      groupVid: updatedLeaf.groupVid,
+//    };
+//    this.groupsByVid.get(previousParentVid).leafContent = this.groupsByVid.get(previousParentVid).leafContent.filter(l => l.id !== leaf.id);
+//    this.groupsByVid.get(leaf.groupVid).leafContent.push(leaf);
+    return this.initWholeVersion(parseInt(this.route.routerState.snapshot.root.children[0].url[1].path));
   }
 
   deleteLeaf(leafId: number, parentVid: number): Observable<WholeVersion> {

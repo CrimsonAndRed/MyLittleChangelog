@@ -23,8 +23,6 @@ export class GroupsSecComponent implements OnInit {
   @ViewChild(GlobalHeaderDr, {static: true}) globalHeader: GlobalHeaderDr;
   @ViewChildren(GroupLeavesSecComponent) embeddedGroupLeaves: GroupLeavesSecComponent[];
 
-  isContentShowed = false;
-
   constructor(private componentFactoryResolver: ComponentFactoryResolver) { }
 
   ngOnInit(): void {
@@ -41,10 +39,17 @@ export class GroupsSecComponent implements OnInit {
   }
 
   changeGlobalContentShow(value: boolean): void {
-    this.isContentShowed = value;
+    this.config.expandMap.set(null, value);
     if (value === true) {
       this.embeddedGroupLeaves.forEach(egl => egl.changeGlobalContentShow(true));
     }
   }
 
+  changeLocalContentShow(value: boolean): void {
+    this.config.expandMap.set(null, value);
+  }
+
+  isContentShowed(): boolean {
+    return this.config.expandMap.get(null) === true;
+  }
 }

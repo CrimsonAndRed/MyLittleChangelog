@@ -31,8 +31,6 @@ export class GroupLeavesSecComponent implements OnInit {
   @ViewChild(GroupHeaderDr, {static: true}) header: GroupHeaderDr;
   @ViewChildren(GroupLeavesSecComponent) embeddedGroupLeaves: GroupLeavesSecComponent[];
 
-  isContentShowed = false;
-
   constructor(private componentFactoryResolver: ComponentFactoryResolver) { }
 
   ngOnInit(): void {
@@ -50,15 +48,22 @@ export class GroupLeavesSecComponent implements OnInit {
   }
 
   changeGlobalContentShow(value: boolean): void {
-    this.isContentShowed = value;
+    this.config.expandMap.set(this.group.vid, value);
     if (value === true) {
       this.embeddedGroupLeaves.forEach(egl => egl.changeGlobalContentShow(true));
     }
+  }
+
+  changeLocalContentShow(value: boolean): void {
+    this.config.expandMap.set(this.group.vid, value);
+  }
+
+  isContentShowed(): boolean {
+    return this.config.expandMap.get(this.group.vid) === true;
   }
 
   isExpandButtonShowed(): boolean {
     return (this.group.groupContent.length !== 0) ||
       ((this.group.leafContent.length !== 0) && this.config.leafShowCondition());
   }
-
 }

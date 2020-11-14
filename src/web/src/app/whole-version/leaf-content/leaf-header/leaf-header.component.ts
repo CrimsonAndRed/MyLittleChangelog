@@ -31,7 +31,7 @@ export class LeafHeaderComponent implements LeafHeader {
   handleUpdateLeaf(obs: Observable<UpdatedLeaf>) {
     this.spinnerService.wrapSpinner(
       obs.pipe(
-        tap(updatedLeaf => this.wholeVersionService.updateLeaf(updatedLeaf, this.data.parentGroup.vid))
+        switchMap(updatedLeaf => this.wholeVersionService.updateLeaf(updatedLeaf, this.data.parentGroup.vid))
       )
     );
   }

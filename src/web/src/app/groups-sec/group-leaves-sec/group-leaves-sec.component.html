@@ -3,9 +3,10 @@
     <group-content-sec [group]="group"></group-content-sec>
     <ng-template group-header></ng-template>
     <expand-block *ngIf="isExpandButtonShowed()"
-                  [(isContentShowed)]="isContentShowed"
+                  [isContentShowed]="isContentShowed()"
+                  (localShowChange)="changeLocalContentShow($event)"
                   (globalShowChange)="changeGlobalContentShow($event)"></expand-block>
-    <div [hidden]="!isContentShowed">
+    <div [hidden]="!isContentShowed()">
       <group-leaves-sec *ngFor="let _group of group.groupContent"
                         [config]="config"
                         [context]="context"

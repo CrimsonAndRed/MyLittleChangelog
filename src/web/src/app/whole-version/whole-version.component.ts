@@ -13,6 +13,7 @@ import { PreviousVersionGroupHeaderComponent } from './group-content/previous-ve
 import { PreviousVersionLeafHeaderComponent } from './leaf-content/previous-version-leaf-header/previous-version-leaf-header.component';
 import { VersionHeaderComponent } from './version-header/version-header.component';
 import { PreviousVersionVersionHeaderComponent } from './previous-version-version-header/previous-version-version-header.component';
+import { GroupContent } from 'app/model/group-content';
 
 @Component({
   selector: 'whole-version',
@@ -22,6 +23,9 @@ import { PreviousVersionVersionHeaderComponent } from './previous-version-versio
 export class WholeVersionComponent implements OnInit {
 
   config: GroupsSecConfig;
+
+  expandMap: Map<number, boolean> = new Map();
+
   context: GroupsSecContext = {
     allGroups: null
   };
@@ -48,17 +52,29 @@ export class WholeVersionComponent implements OnInit {
   refresh(): Observable<WholeVersion> {
     return this.wholeVersionService.initWholeVersion(this.route.snapshot.params.id)
       .pipe(
-        tap((v: WholeVersion) => this.config = this.createConfig(v)),
+        tap((v: WholeVersion) => this.config = this.recreateConfig(v)),
         tap((v: WholeVersion) => this.context.allGroups = v.groupContent),
         tap(() => this.context.previousNodeChosen = this.handlePreviousNodeChosen.bind(this)),
       );
   }
 
-  private createConfig(v: WholeVersion): GroupsSecConfig {
+  private recreateConfig(v: WholeVersion): GroupsSecConfig {
+    let newExpandMap: Map<number, boolean> = new Map();
+    newExpandMap.set(null, this.expandMap.get(null) === true);
+    this.recreateExpandMap(v.groupContent, newExpandMap);
+    this.expandMap = newExpandMap;
     return new GroupSecConfigBuilder()
       .setGlobalHeader(v.canChange ? VersionHeaderComponent : PreviousVersionVersionHeaderComponent)
       .setGroupHeader(v.canChange ? GroupHeaderComponent : PreviousVersionGroupHeaderComponent)
       .setLeafHeader(v.canChange ? LeafHeaderComponent : PreviousVersionLeafHeaderComponent)
+      .setExpandMap(this.expandMap)
       .build();
+  }
+
+  private recreateExpandMap(groups: GroupContent[], map: Map<number, boolean>) {
+    groups.forEach(g => {
+      map.set(g.vid, this.expandMap.get(g.vid) === true);
+      this.recreateExpandMap(g.groupContent, map);
+    })
   }
 }

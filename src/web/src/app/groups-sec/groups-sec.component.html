@@ -1,8 +1,9 @@
 <ng-template global-header></ng-template>
 <expand-block *ngIf="groups.length"
-              [(isContentShowed)]="isContentShowed"
+              [isContentShowed]="isContentShowed()"
+              (localShowChange)="changeLocalContentShow($event)"
               (globalShowChange)="changeGlobalContentShow($event)"></expand-block>
-<div [hidden]="!isContentShowed">
+<div [hidden]="!isContentShowed()">
   <group-leaves-sec *ngFor="let group of groups"
                     [group]="group"
                     [config]="config"

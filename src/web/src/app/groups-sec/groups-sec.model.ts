@@ -25,6 +25,7 @@ export interface GroupsSecConfig {
   groupHeader: Type<GroupHeader>;
   leafHeader: Type<LeafHeader>;
   leafShowCondition: () => boolean;
+  expandMap: Map<number, boolean>;
 }
 
 export interface Header<T> {
@@ -49,6 +50,7 @@ export class GroupSecConfigBuilder {
       groupHeader: null,
       leafHeader: null,
       leafShowCondition: () => true,
+      expandMap: new Map()
     };
   }
 
@@ -69,6 +71,11 @@ export class GroupSecConfigBuilder {
 
   setLeafShowCondition(condition: () => boolean): GroupSecConfigBuilder {
     this.config.leafShowCondition = condition;
+    return this;
+  }
+
+  setExpandMap(map: Map<number, boolean>): GroupSecConfigBuilder {
+    this.config.expandMap = map;
     return this;
   }
 

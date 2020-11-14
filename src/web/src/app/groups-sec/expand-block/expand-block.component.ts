@@ -8,19 +8,16 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 export class ExpandBlockComponent {
 
   @Input() isContentShowed: boolean;
-  @Output() isContentShowedChange = new EventEmitter<boolean>();
+  @Output() localShowChange = new EventEmitter<boolean>();
   @Output() globalShowChange = new EventEmitter<boolean>();
 
   constructor() { }
 
   onSingleShowChange(value: boolean): void {
-    this.isContentShowed = value;
-    this.isContentShowedChange.emit(this.isContentShowed);
+    this.localShowChange.emit(value);
   }
 
   onGlobalShowChange(value: boolean): void {
-    this.isContentShowed = value;
-    this.globalShowChange.emit(this.isContentShowed);
+    this.globalShowChange.emit(value);
   }
-
 }
