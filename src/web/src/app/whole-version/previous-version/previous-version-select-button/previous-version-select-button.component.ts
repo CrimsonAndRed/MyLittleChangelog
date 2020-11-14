@@ -10,6 +10,7 @@ import { PreviousUsedGroupsAndLeaves } from '../previous-version.model';
 import { Observable } from 'rxjs';
 import { switchMap, map, tap } from 'rxjs/operators';
 import { PreloaderService } from 'app/preloader/preloader.service';
+import { WholeVersionService } from 'app/whole-version/whole-version.service';
 
 @Component({
   selector: 'previous-version-select-button',
@@ -25,7 +26,8 @@ export class PreviousVersionSelectButtonComponent {
     private http: Http,
     private route: ActivatedRoute,
     private dialog: MatDialog,
-    private preloaderService: PreloaderService
+    private preloaderService: PreloaderService,
+    private wholeVersionService: WholeVersionService
   ) { }
 
   onButtonClick(): void {
@@ -76,7 +78,7 @@ export class PreviousVersionSelectButtonComponent {
   }
 
   private addGroupFromPast(newGroup: NewGroup): void {
-    const versionId = this.route.snapshot.params.id;
+    const versionId = this.wholeVersionService.wholeVersion.id;
 
     this.nodeChosen.emit(
       this.http.post<Group>(`http://localhost:8080/version/${versionId}/group`, newGroup)
@@ -85,7 +87,7 @@ export class PreviousVersionSelectButtonComponent {
   }
 
   private addLeafFromPast(newLeaf: NewLeaf, parentId: number): void {
-    const versionId = this.route.snapshot.params.id;
+    const versionId = this.wholeVersionService.wholeVersion.id;
 
     this.nodeChosen.emit(
       this.http.post<NewLeafWithId>(`http://localhost:8080/version/${versionId}/group/${parentId}/leaf`, newLeaf)
