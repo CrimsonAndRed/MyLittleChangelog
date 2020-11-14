@@ -49,7 +49,6 @@ export class GroupHeaderComponent implements GroupHeader {
             vid: newLeafWithId.vid,
             valueType: newLeafWithId.valueType,
             value: newLeafWithId.value,
-            groupVid: newLeafWithId.groupVid
           };
           this.wholeVersionService.addLeafToParent(newLeaf, this.data.group.vid)
         })

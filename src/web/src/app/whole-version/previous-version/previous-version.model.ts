@@ -21,7 +21,6 @@ export interface PastLeafContent {
   valueType: number;
   value: string;
   inCurrentVersion: boolean;
-  groupVid: number;
 }
 
 
@@ -64,6 +63,5 @@ export function leafContentToPrevious(leaf: LeafContent, usedIds: PreviousUsedGr
     valueType: leaf.valueType,
     value: leaf.value,
     inCurrentVersion: usedIds.usedLeaves.has(leaf.id),
-    groupVid: leaf.groupVid,
   };
 }
