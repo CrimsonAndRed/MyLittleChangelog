@@ -8,7 +8,8 @@ import { WholeVersion } from 'app/model/whole-version';
 import { PreviousVersionModalComponent } from '../previous-version-modal/previous-version-modal.component';
 import { PreviousUsedGroupsAndLeaves } from '../previous-version.model';
 import { Observable } from 'rxjs';
-import { switchMap, map } from 'rxjs/operators';
+import { switchMap, map, tap } from 'rxjs/operators';
+import { SpinnerService } from 'app/spinner/spinner.service';
 
 @Component({
   selector: 'previous-version-select-button',
@@ -23,24 +24,33 @@ export class PreviousVersionSelectButtonComponent {
   constructor(
     private http: Http,
     private route: ActivatedRoute,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private spinnerService: SpinnerService
   ) { }
 
   onButtonClick(): void {
-    const dialogRef = this.dialog.open(PreviousVersionModalComponent, {
-      hasBackdrop: true,
-      minWidth: '80%',
-      data: {
-        version: this.http.get<WholeVersion>('http://localhost:8080/version/previous'),
-        currentGroups: this.currentGroups,
-      }
-    });
 
-    dialogRef.afterClosed().subscribe(res => {
-      if (res) {
-        this.handleResult(res);
-      }
-    });
+    this.spinnerService.wrapSpinner(
+      this.http.get<WholeVersion>('http://localhost:8080/version/previous')
+      .pipe(
+        tap(v => {
+          const dialogRef = this.dialog.open(PreviousVersionModalComponent, {
+            hasBackdrop: true,
+            minWidth: '80%',
+            data: {
+              version: v,
+              currentGroups: this.currentGroups,
+            }
+          });
+
+          dialogRef.afterClosed().subscribe(res => {
+            if (res) {
+              this.handleResult(res);
+            }
+          });
+        })
+      )
+    );
   }
 
   handleResult(result: any): void {

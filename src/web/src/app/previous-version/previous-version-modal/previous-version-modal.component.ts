@@ -37,16 +37,13 @@ export class PreviousVersionModalComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.data.version
-      .pipe(
-        tap(v => this.usedIds = this.calculateUsedIds(this.data.currentGroups)),
-        tap(v => this.groups = v.groupContent.map(g => groupContentToPrevious(g, this.usedIds)))
-      )
-      .subscribe(() => this.context = {
-        emitGroupCheck: this.onPastGroupCheck.bind(this),
-        emitLeafCheck: this.onPastLeafCheck.bind(this),
-        usedIds: this.usedIds
-      });
+    this.usedIds = this.calculateUsedIds(this.data.currentGroups);
+    this.groups = this.data.version.groupContent.map(g => groupContentToPrevious(g, this.usedIds));
+    this.context = {
+      emitGroupCheck: this.onPastGroupCheck.bind(this),
+      emitLeafCheck: this.onPastLeafCheck.bind(this),
+      usedIds: this.usedIds
+    };
   }
 
   onPastGroupCheck(group: PastGroupContent, parentGroup: GroupContent): void {

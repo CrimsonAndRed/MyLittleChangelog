@@ -39,7 +39,7 @@ export interface PreviousUsedGroupsAndLeaves {
 }
 
 export interface PreviousVersionModalData {
-  version: Observable<WholeVersion>;
+  version: WholeVersion;
   currentGroups: GroupContent[];
 }
 
