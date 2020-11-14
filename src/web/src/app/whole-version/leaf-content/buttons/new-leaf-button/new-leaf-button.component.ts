@@ -5,6 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { NewLeafModalComponent } from './new-leaf-modal/new-leaf-modal.component';
 import { Observable } from 'rxjs';
+import { WholeVersionService } from 'app/whole-version/whole-version.service';
 
 @Component({
   selector: 'new-leaf-button',
@@ -17,7 +18,10 @@ export class NewLeafButtonComponent {
 
   @Input() groupId: number;
 
-  constructor(private http: Http, private route: ActivatedRoute, private dialog: MatDialog) {
+  constructor(private http: Http,
+              private route: ActivatedRoute,
+              private dialog: MatDialog,
+              private wholeVersionService: WholeVersionService) {
   }
 
   onNewLeafButtonClick(): void {
@@ -31,11 +35,10 @@ export class NewLeafButtonComponent {
         this.createNewLeaf(result);
       }
     });
-
   }
 
   createNewLeaf(newLeaf: NewLeaf): void {
-    const versionId = this.route.snapshot.params.id;
+    const versionId = this.wholeVersionService.wholeVersion.id;
     const groupId = this.groupId;
 
     this.onNewLeaf.emit(

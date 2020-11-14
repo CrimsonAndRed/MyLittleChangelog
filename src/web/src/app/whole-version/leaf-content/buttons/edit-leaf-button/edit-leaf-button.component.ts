@@ -6,6 +6,7 @@ import { EditLeafModalComponent } from './edit-leaf-modal/edit-leaf-modal.compon
 import { LeafContent, LeafToUpdate, UpdatedLeaf } from 'app/model/leaf-content';
 import { GroupContent } from 'app/model/group-content';
 import { Observable } from 'rxjs';
+import { WholeVersionService } from 'app/whole-version/whole-version.service';
 
 @Component({
   selector: 'edit-leaf-button',
@@ -18,7 +19,10 @@ export class EditLeafButtonComponent {
   @Input() parentGroup: GroupContent;
   @Output() onUpdateLeaf = new EventEmitter<Observable<UpdatedLeaf>>();
 
-  constructor(private http: Http, private route: ActivatedRoute, private dialog: MatDialog) {
+  constructor(private http: Http,
+              private route: ActivatedRoute,
+              private dialog: MatDialog,
+              private wholeVersionService: WholeVersionService) {
   }
 
   onEditButtonClick(): void {
@@ -39,7 +43,7 @@ export class EditLeafButtonComponent {
   }
 
   updateLeaf(leaf: LeafContent): void {
-    const versionId = this.route.snapshot.params.id;
+    const versionId = this.wholeVersionService.wholeVersion.id;
     const parentId = this.parentGroup.id;
     const leafId = leaf.id;
 

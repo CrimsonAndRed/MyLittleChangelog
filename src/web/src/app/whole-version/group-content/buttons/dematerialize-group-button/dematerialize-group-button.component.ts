@@ -4,6 +4,7 @@ import { Http } from 'app/http/http.service';
 import { GroupContent, Group, NewGroup } from 'app/model/group-content';
 import { HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { WholeVersionService } from 'app/whole-version/whole-version.service';
 
 @Component({
   selector: 'dematerialize-group-button',
@@ -15,10 +16,10 @@ export class DematerializeGroupButtonComponent {
   @Input() group: GroupContent;
   @Output() onDematerializeGroup = new EventEmitter<Observable<Group>>();
 
-  constructor(private http: Http, private route: ActivatedRoute) {}
+  constructor(private http: Http, private route: ActivatedRoute, private wholeVersionService: WholeVersionService) {}
 
   onDematerializeClick(): void {
-    const versionId = this.route.snapshot.params.id;
+    const versionId = this.wholeVersionService.wholeVersion.id;
     const groupId = this.group.id;
     const params = new HttpParams().set('hierarchy', 'false');
 

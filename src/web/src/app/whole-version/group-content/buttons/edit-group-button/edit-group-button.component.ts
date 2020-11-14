@@ -5,6 +5,7 @@ import { Http } from 'app/http/http.service';
 import { EditGroupModalComponent } from './edit-group-modal/edit-group-modal.component';
 import { GroupContent, GroupToUpdate, Group } from 'app/model/group-content';
 import { Observable } from 'rxjs';
+import { WholeVersionService } from 'app/whole-version/whole-version.service';
 
 @Component({
   selector: 'edit-group-button',
@@ -17,7 +18,10 @@ export class EditGroupButtonComponent {
   @Input() parentGroupVid: number;
   @Output() onUpdateGroup = new EventEmitter<Observable<Group>>();
 
-  constructor(private http: Http, private route: ActivatedRoute, private dialog: MatDialog) {
+  constructor(private http: Http,
+              private route: ActivatedRoute,
+              private dialog: MatDialog,
+              private wholeVersionService: WholeVersionService) {
   }
 
   onEditClick(): void {
@@ -34,7 +38,7 @@ export class EditGroupButtonComponent {
   }
 
   updateGroup(group: GroupContent): void {
-    const versionId = this.route.snapshot.params.id;
+    const versionId = this.wholeVersionService.wholeVersion.id;
     const groupId = this.group.id;
 
     const groupToUpdate: GroupToUpdate = {

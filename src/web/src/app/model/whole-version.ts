@@ -1,4 +1,4 @@
-import { PastGroupContent } from 'app/previous-version/previous-version.model';
+import { PastGroupContent } from 'app/whole-version/previous-version/previous-version.model';
 import { GroupContent } from './group-content';
 
 export interface WholeVersion {

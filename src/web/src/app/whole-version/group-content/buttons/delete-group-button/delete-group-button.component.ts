@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Http } from 'app/http/http.service';
 import { HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { WholeVersionService } from 'app/whole-version/whole-version.service';
 
 @Component({
   selector: 'delete-group-button',
@@ -14,10 +15,10 @@ export class DeleteGroupButtonComponent {
   @Input() groupId: number;
   @Output() onDeleteGroup = new EventEmitter<Observable<void>>();
 
-  constructor(private http: Http, private route: ActivatedRoute) {}
+  constructor(private http: Http, private route: ActivatedRoute, private wholeVersionService: WholeVersionService) {}
 
   onDeleteClick(): void {
-    const versionId = this.route.snapshot.params.id;
+    const versionId = this.wholeVersionService.wholeVersion.id;
     const groupId = this.groupId;
     const params = new HttpParams().set('hierarchy', 'true');
 

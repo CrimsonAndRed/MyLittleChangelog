@@ -6,7 +6,6 @@ import { Observable } from 'rxjs';
 import { GroupContent, Group } from 'app/model/group-content';
 import { LeafContent, UpdatedLeaf } from 'app/model/leaf-content';
 import { PreloaderService } from '../preloader/preloader.service';
-import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',

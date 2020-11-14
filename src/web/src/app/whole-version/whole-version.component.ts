@@ -4,11 +4,10 @@ import { ActivatedRoute } from '@angular/router';
 import { GroupSecConfigBuilder, GroupsSecConfig, GroupsSecContext } from 'app/groups-sec/groups-sec.model';
 import { GroupHeaderComponent } from './group-content/group-header/group-header.component';
 import { LeafHeaderComponent } from './leaf-content/leaf-header/leaf-header.component';
-import { tap } from 'rxjs/operators';
 import { WholeVersionService } from 'app/whole-version/whole-version.service';
 import { PreloaderService } from 'app/preloader/preloader.service';
 import { Observable } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { switchMap, tap } from 'rxjs/operators';
 import { PreviousVersionGroupHeaderComponent } from './group-content/previous-version-group-header/previous-version-group-header.component';
 import { PreviousVersionLeafHeaderComponent } from './leaf-content/previous-version-leaf-header/previous-version-leaf-header.component';
 import { VersionHeaderComponent } from './version-header/version-header.component';
@@ -75,6 +74,6 @@ export class WholeVersionComponent implements OnInit {
     groups.forEach(g => {
       map.set(g.vid, this.expandMap.get(g.vid) === true);
       this.recreateExpandMap(g.groupContent, map);
-    })
+    });
   }
 }

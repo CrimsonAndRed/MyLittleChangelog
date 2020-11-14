@@ -2,6 +2,7 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Http } from 'app/http/http.service';
 import { Observable } from 'rxjs';
+import { WholeVersionService } from 'app/whole-version/whole-version.service';
 
 @Component({
   selector: 'delete-leaf-button',
@@ -14,10 +15,10 @@ export class DeleteLeafButtonComponent {
   @Input() leafId: number;
   @Output() onDeleteLeaf = new EventEmitter<Observable<void>>();
 
-  constructor(private http: Http, private route: ActivatedRoute) {}
+  constructor(private http: Http, private route: ActivatedRoute, private wholeVersionService: WholeVersionService) {}
 
   onDeleteClick(): void {
-    const versionId = this.route.snapshot.params.id;
+    const versionId = this.wholeVersionService.wholeVersion.id;
     const groupId = this.groupId;
     const leafId = this.leafId;
 

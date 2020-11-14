@@ -5,7 +5,7 @@ import { RouterModule } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 import { GroupsSecModule } from 'app/groups-sec/groups-sec.module';
 import { VersionHeaderComponent } from './version-header/version-header.component';
-import { PreviousVersionModule } from 'app/previous-version/previous-version.module';
+import { PreviousVersionModule } from './previous-version/previous-version.module';
 import { WholeVersionComponent } from './whole-version.component';
 import { GroupHeaderComponent } from './group-content/group-header/group-header.component';
 import { DeleteGroupButtonComponent } from './group-content/buttons/delete-group-button/delete-group-button.component';

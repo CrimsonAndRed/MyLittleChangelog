@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Http } from 'app/http/http.service';
 import { GroupContent, Group, NewGroup } from 'app/model/group-content';
 import { Observable } from 'rxjs';
+import { WholeVersionService } from 'app/whole-version/whole-version.service';
 
 @Component({
   selector: 'materialize-group-button',
@@ -15,10 +16,10 @@ export class MaterializeGroupButtonComponent {
   @Input() parentGroup: GroupContent;
   @Output() onMaterializeGroup = new EventEmitter<Observable<Group>>();
 
-  constructor(private http: Http, private route: ActivatedRoute) {}
+  constructor(private http: Http, private route: ActivatedRoute, private wholeVersionService: WholeVersionService) {}
 
   onMaterializeClick(): void {
-    const versionId = this.route.snapshot.params.id;
+    const versionId = this.wholeVersionService.wholeVersion.id;
 
     const newGroup: NewGroup = {
       vid: this.group.vid,

@@ -7,6 +7,7 @@ import { EventEmitter } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { NewGroupModalComponent } from './new-group-modal/new-group-modal.component';
 import { Observable } from 'rxjs';
+import { WholeVersionService } from 'app/whole-version/whole-version.service';
 
 @Component({
   selector: 'new-group-button',
@@ -19,7 +20,10 @@ export class NewGroupButtonComponent {
 
   @Input() parentGroupVid: number = null;
 
-  constructor(private http: Http, private route: ActivatedRoute, private dialog: MatDialog) {
+  constructor(private http: Http,
+              private route: ActivatedRoute,
+              private dialog: MatDialog,
+              private wholeVersionService: WholeVersionService) {
   }
 
   onNewGroupButtonClick(): void {
@@ -36,8 +40,7 @@ export class NewGroupButtonComponent {
 
 
   createNewGroup(name: string) {
-    // TODO(#7) подумать про currentVersionService вместо this.route.snapshot.params.id
-    const versionId = this.route.snapshot.params.id;
+    const versionId = this.wholeVersionService.wholeVersion.id;
     const parentVid = this.parentGroupVid;
 
     const newGroup: NewGroup = {
@@ -47,5 +50,4 @@ export class NewGroupButtonComponent {
     };
     this.onNewGroup.emit(this.http.post<Group>(`http://localhost:8080/version/${versionId}/group`, newGroup));
   }
-
 }

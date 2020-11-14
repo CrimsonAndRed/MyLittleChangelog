@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { GroupsSecContext, LeafHeader, LeafHeaderData } from 'app/groups-sec/groups-sec.model';
-import { leafContentToPrevious } from 'app/previous-version/previous-version.model';
+import { leafContentToPrevious } from '../../previous-version.model';
 
 @Component({
   selector: 'leaf-header',

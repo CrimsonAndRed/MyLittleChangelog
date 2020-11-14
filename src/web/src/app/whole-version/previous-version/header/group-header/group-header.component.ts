@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { GroupHeader, GroupHeaderData, GroupsSecContext } from 'app/groups-sec/groups-sec.model';
-import { groupContentToPrevious } from 'app/previous-version/previous-version.model';
+import { groupContentToPrevious } from '../../previous-version.model';
 
 @Component({
   selector: 'group-header',
