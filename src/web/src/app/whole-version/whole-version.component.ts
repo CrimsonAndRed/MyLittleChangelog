@@ -5,7 +5,7 @@ import { GroupSecConfigBuilder, GroupsSecConfig, GroupsSecContext } from 'app/gr
 import { GroupHeaderComponent } from './group-content/group-header/group-header.component';
 import { LeafHeaderComponent } from './leaf-content/leaf-header/leaf-header.component';
 import { tap } from 'rxjs/operators';
-import { WholeVersionService } from 'app/service/whole-version.service';
+import { WholeVersionService } from 'app/whole-version/whole-version.service';
 import { PreloaderService } from 'app/preloader/preloader.service';
 import { Observable } from 'rxjs';
 import { switchMap } from 'rxjs/operators';

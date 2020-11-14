@@ -1,7 +1,7 @@
 import { Component, Output, EventEmitter, Input } from '@angular/core';
 import { GlobalHeader, GlobalHeaderData, GroupsSecContext } from 'app/groups-sec/groups-sec.model';
 import { GroupContent, Group } from 'app/model/group-content';
-import { WholeVersionService } from 'app/service/whole-version.service';
+import { WholeVersionService } from 'app/whole-version/whole-version.service';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { PreloaderService } from 'app/preloader/preloader.service';

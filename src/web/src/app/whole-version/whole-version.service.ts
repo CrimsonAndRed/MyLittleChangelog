@@ -17,8 +17,7 @@ export class WholeVersionService {
 
   private groupsByVid: Map<number, GroupContent> = new Map<number, GroupContent>();
 
-  // TODO(#10) Router?
-  constructor(private http: Http, private preloaderService: PreloaderService, private route: Router) {}
+  constructor(private http: Http, private preloaderService: PreloaderService) {  }
 
   initWholeVersion(versionId: number): Observable<WholeVersion> {
     this.wholeVersion = null;
@@ -45,25 +44,15 @@ export class WholeVersionService {
   }
 
   updateLeaf(updatedLeaf: UpdatedLeaf, previousParentVid: number): Observable<WholeVersion> {
-//    const leaf: LeafContent = {
-//      id: updatedLeaf.id,
-//      vid: updatedLeaf.vid,
-//      name: updatedLeaf.name,
-//      valueType: updatedLeaf.valueType,
-//      value: updatedLeaf.value,
-//      groupVid: updatedLeaf.groupVid,
-//    };
-//    this.groupsByVid.get(previousParentVid).leafContent = this.groupsByVid.get(previousParentVid).leafContent.filter(l => l.id !== leaf.id);
-//    this.groupsByVid.get(leaf.groupVid).leafContent.push(leaf);
-    return this.initWholeVersion(parseInt(this.route.routerState.snapshot.root.children[0].url[1].path));
+    return this.initWholeVersion(this.wholeVersion.id);
   }
 
   deleteLeaf(leafId: number, parentVid: number): Observable<WholeVersion> {
-    return this.initWholeVersion(parseInt(this.route.routerState.snapshot.root.children[0].url[1].path));
+    return this.initWholeVersion(this.wholeVersion.id);
   }
 
   deleteGroup(groupId: number, parentVid: number): Observable<WholeVersion> {
-    return this.initWholeVersion(parseInt(this.route.routerState.snapshot.root.children[0].url[1].path));
+    return this.initWholeVersion(this.wholeVersion.id);
   }
 
   updateGroup(group: Group) {
@@ -83,7 +72,7 @@ export class WholeVersionService {
   }
 
   dematerializeGroup(group: Group): Observable<WholeVersion> {
-    return this.initWholeVersion(parseInt(this.route.routerState.snapshot.root.children[0].url[1].path));
+    return this.initWholeVersion(this.wholeVersion.id);
   }
 
   private addGroupToMap(group: GroupContent) {

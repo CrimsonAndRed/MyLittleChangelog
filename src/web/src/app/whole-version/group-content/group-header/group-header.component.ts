@@ -2,7 +2,7 @@ import { Component, EventEmitter } from '@angular/core';
 import { GroupContent, Group } from 'app/model/group-content';
 import { LeafContent, NewLeafWithId } from 'app/model/leaf-content';
 import { GroupHeader, GroupHeaderData, GroupsSecContext } from 'app/groups-sec/groups-sec.model';
-import { WholeVersionService } from 'app/service/whole-version.service';
+import { WholeVersionService } from 'app/whole-version/whole-version.service';
 import { Observable } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
 import { PreloaderService } from 'app/preloader/preloader.service';
@@ -37,7 +37,6 @@ export class GroupHeaderComponent implements GroupHeader {
         })
       )
     );
-
   }
 
   handleNewLeaf(obs: Observable<NewLeafWithId>): void {
