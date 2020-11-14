@@ -3,7 +3,8 @@ import { Directive, ViewContainerRef } from '@angular/core';
 @Directive({
   selector: '[global-header]'
 })
-export class GlobalHeader {
+export class GlobalHeaderDr {
+  constructor(public viewContainerRef: ViewContainerRef) { }
 }
 
 @Directive({

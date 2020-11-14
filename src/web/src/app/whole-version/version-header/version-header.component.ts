@@ -1,6 +1,7 @@
 import { Component, Output, EventEmitter, Input } from '@angular/core';
+import { GlobalHeader, GlobalHeaderData, GroupsSecContext } from 'app/groups-sec/groups-sec.model';
 import { GroupContent, Group } from 'app/model/group-content';
-import { WholeVersionService } from 'app/service/whole-version.service'
+import { WholeVersionService } from 'app/service/whole-version.service';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { SpinnerService } from 'app/spinner/spinner.service';
@@ -10,11 +11,10 @@ import { SpinnerService } from 'app/spinner/spinner.service';
   templateUrl: './version-header.component.html',
   styleUrls: ['./version-header.component.scss']
 })
-export class VersionHeaderComponent {
+export class VersionHeaderComponent implements GlobalHeader {
 
-  @Input() groups: GroupContent[];
-
-  @Output() previousNodeChosen = new EventEmitter<Observable<void>>();
+  data: GlobalHeaderData;
+  ctx: GroupsSecContext;
 
   constructor(private wholeVersionService: WholeVersionService, private spinnerService: SpinnerService) {}
 
@@ -39,6 +39,6 @@ export class VersionHeaderComponent {
   }
 
   onPreviousNodeChosen(obs: Observable<void>): void {
-    this.previousNodeChosen.emit(obs);
+    this.ctx.previousNodeChosen.emit(obs);
   }
 }

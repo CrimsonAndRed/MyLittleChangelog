@@ -24,14 +24,19 @@ import { NewLeafModalComponent } from './leaf-content/buttons/new-leaf-button/ne
 import { EditLeafModalComponent } from './leaf-content/buttons/edit-leaf-button/edit-leaf-modal/edit-leaf-modal.component';
 import { NodeMovementComponent } from './node-movement/node-movement.component';
 import { NodeMovementGroupHeaderComponent } from './node-movement/group-header/group-header.component';
+import { PreviousVersionGroupHeaderComponent } from './group-content/previous-version-group-header/previous-version-group-header.component';
+import { PreviousVersionLeafHeaderComponent } from './leaf-content/previous-version-leaf-header/previous-version-leaf-header.component';
+import { PreviousVersionVersionHeaderComponent } from './previous-version-version-header/previous-version-version-header.component';
 
 @NgModule({
   declarations: [
     WholeVersionComponent,
 
     VersionHeaderComponent,
+    PreviousVersionVersionHeaderComponent,
 
     GroupHeaderComponent,
+    PreviousVersionGroupHeaderComponent,
     NewGroupButtonComponent,
     NewGroupModalComponent,
     DeleteGroupButtonComponent,
@@ -41,6 +46,7 @@ import { NodeMovementGroupHeaderComponent } from './node-movement/group-header/g
     EditGroupModalComponent,
 
     LeafHeaderComponent,
+    PreviousVersionLeafHeaderComponent,
     NewLeafButtonComponent,
     NewLeafModalComponent,
     DeleteLeafButtonComponent,

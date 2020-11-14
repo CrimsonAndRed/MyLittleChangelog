@@ -9,7 +9,7 @@ import { GroupsSecComponent } from './groups-sec.component';
 import { GroupLeavesSecComponent } from './group-leaves-sec/group-leaves-sec.component';
 import { LeafContentSecComponent } from './leaf-content-sec/leaf-content-sec.component';
 import { GroupContentSecComponent } from './group-content-sec/group-content-sec.component';
-import { GlobalHeader } from './groups-sec.directive';
+import { GlobalHeaderDr } from './groups-sec.directive';
 import { GroupHeaderDr } from './groups-sec.directive';
 import { LeafHeaderDr } from './groups-sec.directive';
 import { ExpandOneButtonComponent } from './expand-block/expand-one-button/expand-one-button.component';
@@ -25,7 +25,7 @@ import { ExpandBlockComponent } from './expand-block/expand-block.component';
     ExpandBlockComponent,
     ExpandOneButtonComponent,
     ExpandAllButtonComponent,
-    GlobalHeader,
+    GlobalHeaderDr,
     GroupHeaderDr,
     LeafHeaderDr,
   ],
@@ -38,7 +38,7 @@ import { ExpandBlockComponent } from './expand-block/expand-block.component';
   ],
   exports: [
     GroupsSecComponent,
-    GlobalHeader,
+    GlobalHeaderDr,
   ]
 })
 export class GroupsSecModule { }

@@ -1,10 +1,14 @@
-import { EventEmitter, Type } from '@angular/core';
+import { Type } from '@angular/core';
 import { GroupContent } from 'app/model/group-content';
 import { LeafContent } from 'app/model/leaf-content';
-import { GroupLeavesSecComponent } from './group-leaves-sec/group-leaves-sec.component';
 
+export interface GlobalHeader extends Header<GlobalHeaderData> { }
 export interface GroupHeader extends Header<GroupHeaderData> { }
 export interface LeafHeader extends Header<LeafHeaderData> { }
+
+export interface GlobalHeaderData {
+  groups: GroupContent[];
+}
 
 export interface GroupHeaderData {
   group: GroupContent;
@@ -17,6 +21,7 @@ export interface LeafHeaderData {
 }
 
 export interface GroupsSecConfig {
+  globalHeader: Type<GlobalHeader>;
   groupHeader: Type<GroupHeader>;
   leafHeader: Type<LeafHeader>;
   leafShowCondition: () => boolean;
@@ -40,10 +45,16 @@ export class GroupSecConfigBuilder {
 
   constructor() {
     this.config = {
+      globalHeader: null,
       groupHeader: null,
       leafHeader: null,
       leafShowCondition: () => true,
     };
+  }
+
+  setGlobalHeader(header: Type<GlobalHeader>): GroupSecConfigBuilder {
+    this.config.globalHeader = header;
+    return this;
   }
 
   setGroupHeader(header: Type<GroupHeader>): GroupSecConfigBuilder {

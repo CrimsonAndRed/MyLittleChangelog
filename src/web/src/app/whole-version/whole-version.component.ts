@@ -1,9 +1,7 @@
-import { Component, OnInit, Type } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { WholeVersion } from 'app/model/whole-version';
 import { ActivatedRoute } from '@angular/router';
-import { Http } from 'app/http/http.service';
-import { GroupContent, Group } from 'app/model/group-content';
-import { GroupHeader, GroupSecConfigBuilder, GroupsSecConfig, GroupsSecContext, LeafHeader } from 'app/groups-sec/groups-sec.model';
+import { GroupSecConfigBuilder, GroupsSecConfig, GroupsSecContext } from 'app/groups-sec/groups-sec.model';
 import { GroupHeaderComponent } from './group-content/group-header/group-header.component';
 import { LeafHeaderComponent } from './leaf-content/leaf-header/leaf-header.component';
 import { tap } from 'rxjs/operators';
@@ -11,6 +9,10 @@ import { WholeVersionService } from 'app/service/whole-version.service';
 import { SpinnerService } from 'app/spinner/spinner.service';
 import { Observable } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
+import { PreviousVersionGroupHeaderComponent } from './group-content/previous-version-group-header/previous-version-group-header.component';
+import { PreviousVersionLeafHeaderComponent } from './leaf-content/previous-version-leaf-header/previous-version-leaf-header.component';
+import { VersionHeaderComponent } from './version-header/version-header.component';
+import { PreviousVersionVersionHeaderComponent } from './previous-version-version-header/previous-version-version-header.component';
 
 @Component({
   selector: 'whole-version',
@@ -19,17 +21,12 @@ import { switchMap } from 'rxjs/operators';
 })
 export class WholeVersionComponent implements OnInit {
 
-  config: GroupsSecConfig = new GroupSecConfigBuilder()
-    .setGroupHeader(GroupHeaderComponent)
-    .setLeafHeader(LeafHeaderComponent)
-    .build();
-
+  config: GroupsSecConfig;
   context: GroupsSecContext = {
     allGroups: null
   };
 
-  constructor(private http: Http,
-              private route: ActivatedRoute,
+  constructor(private route: ActivatedRoute,
               public wholeVersionService: WholeVersionService,
               private spinnerService: SpinnerService) {
   }
@@ -40,7 +37,7 @@ export class WholeVersionComponent implements OnInit {
     );
   }
 
-  handlePreviousNodeChosen(obs: Observable<void>) {
+  handlePreviousNodeChosen(obs: Observable<void>): void {
     this.spinnerService.wrapSpinner(
       obs.pipe(
         switchMap(() => this.refresh())
@@ -51,7 +48,17 @@ export class WholeVersionComponent implements OnInit {
   refresh(): Observable<WholeVersion> {
     return this.wholeVersionService.initWholeVersion(this.route.snapshot.params.id)
       .pipe(
-        tap((res) => this.context.allGroups = res.groupContent)
-      )
+        tap((v: WholeVersion) => this.config = this.createConfig(v)),
+        tap((v: WholeVersion) => this.context.allGroups = v.groupContent),
+        tap(() => this.context.previousNodeChosen = this.handlePreviousNodeChosen.bind(this)),
+      );
+  }
+
+  private createConfig(v: WholeVersion): GroupsSecConfig {
+    return new GroupSecConfigBuilder()
+      .setGlobalHeader(v.canChange ? VersionHeaderComponent : PreviousVersionVersionHeaderComponent)
+      .setGroupHeader(v.canChange ? GroupHeaderComponent : PreviousVersionGroupHeaderComponent)
+      .setLeafHeader(v.canChange ? LeafHeaderComponent : PreviousVersionLeafHeaderComponent)
+      .build();
   }
 }

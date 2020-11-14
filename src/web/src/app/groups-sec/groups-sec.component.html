@@ -1,4 +1,4 @@
-<ng-content select="[global-header]"></ng-content>
+<ng-template global-header></ng-template>
 <expand-block *ngIf="groups.length"
               [(isContentShowed)]="isContentShowed"
               (globalShowChange)="changeGlobalContentShow($event)"></expand-block>

@@ -2,8 +2,5 @@
   <p *ngIf="wholeVersionService.wholeVersion"> Version {{ wholeVersionService.wholeVersion.id }}</p>
   <groups-sec *ngIf="wholeVersionService.wholeVersion" [groups]="wholeVersionService.wholeVersion.groupContent"
               [config]="config" [context]="context">
-    <version-header global-header
-                    [groups]="wholeVersionService.wholeVersion.groupContent"
-                    (previousNodeChosen)="handlePreviousNodeChosen($event)"></version-header>
   </groups-sec>
 </div>
