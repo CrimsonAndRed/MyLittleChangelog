@@ -76,10 +76,6 @@ object GroupRepo : AbstractCrudRepository<Group, Int>(Group) {
             .executeQuery().iterate { getInt("id") }.let { Group.forIds(it) }
     }
 
-    fun findSubgroups(group: Group): Iterable<Group> = transaction {
-        Group.find { (Groups.version eq group.version.id.value) and (Groups.parentVid eq group.vid) }
-    }
-
     fun findGroupsAffectedByLeaves(leaves: Iterable<Leaf>, version: Version): Iterable<Group> = transaction {
         val groupVids: List<Int?> = leaves.map {
             it.groupVid
@@ -129,5 +125,9 @@ object GroupRepo : AbstractCrudRepository<Group, Int>(Group) {
 
     fun findByVids(vids: Iterable<Int>, version: Version): Iterable<Group> = transaction {
         Group.find { (Groups.vid inList vids) and (Groups.version eq version.id.value) }
+    }
+
+    fun findByVersion(version: Version): Iterable<Group> = transaction {
+        Group.find { Groups.version eq version.id.value }
     }
 }
