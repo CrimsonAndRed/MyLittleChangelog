@@ -9,15 +9,15 @@ export interface LeafContent {
 }
 
 export interface NewLeaf {
-    name: string;
-    valueType: number;
-    value: string;
-    vid: number;
+  name: string;
+  valueType: number;
+  value: string;
+  vid: number;
 }
 
 export interface NewLeafWithId extends NewLeaf {
-    id: number;
-    groupVid: number;
+  id: number;
+  groupVid: number;
 }
 
 export interface LeafToUpdate {

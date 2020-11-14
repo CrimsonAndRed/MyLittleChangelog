@@ -5,24 +5,24 @@ import { Observable, Subject, Subscription } from 'rxjs';
 @Injectable({
   providedIn: 'root',
 })
-export class SpinnerService {
-    private spin: boolean = false;
+export class PreloaderService {
+    private loading: boolean = false;
     private subject: Subject<boolean> = new Subject();
 
     constructor() {}
 
-    public startSpin() {
-      this.spin = true;
+    public start() {
+      this.loading = true;
       this.messageSubscribers();
     }
 
-    public stopSpin() {
-      this.spin = false;
+    public stop() {
+      this.loading = false;
       this.messageSubscribers();
     }
 
-    public isSpinning(): boolean {
-      return this.spin;
+    public isLoading(): boolean {
+      return this.loading;
     }
 
     public subscribe(fn: (val: boolean) => void): Subscription {
@@ -31,13 +31,13 @@ export class SpinnerService {
       });
     }
 
-    public wrapSpinner(obs: Observable<any>) {
-      this.startSpin();
+    public wrap(obs: Observable<any>) {
+      this.start();
       obs
-        .subscribe(() => this.stopSpin())
+        .subscribe(() => this.stop())
     }
 
     private messageSubscribers() {
-      this.subject.next(this.spin);
+      this.subject.next(this.loading);
     }
 }

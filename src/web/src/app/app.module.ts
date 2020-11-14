@@ -8,12 +8,12 @@ import { AppComponent } from './app.component';
 import { VersionsListModule } from './versions-list/versions-list.module';
 import { AppRoutingModule } from './app-routing.module';
 import { WholeVersionModule } from './whole-version/whole-version.module';
-import { Spinner } from './spinner/spinner.component'
+import { Preloader } from './preloader/preloader.component'
 
 @NgModule({
   declarations: [
     AppComponent,
-    Spinner,
+    Preloader,
   ],
   imports: [
     VersionsListModule,

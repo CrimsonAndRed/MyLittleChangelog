@@ -4,7 +4,7 @@ import { Http } from 'app/http/http.service';
 import { RouterLink, ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { SpinnerService } from 'app/spinner/spinner.service';
+import { PreloaderService } from 'app/preloader/preloader.service';
 
 @Component({
   selector: 'versions-list',
@@ -15,7 +15,7 @@ export class VersionsListComponent implements OnInit {
 
   versions: Version[];
 
-  constructor(private http: Http, private route: ActivatedRoute, private spinnerService: SpinnerService) {
+  constructor(private http: Http, private route: ActivatedRoute, private preloaderService: PreloaderService) {
   }
 
   ngOnInit(): void {
@@ -27,7 +27,7 @@ export class VersionsListComponent implements OnInit {
   }
 
   onNewVersionCreated(obs: Observable<Version>): void {
-    this.spinnerService.wrapSpinner(
+    this.preloaderService.wrap(
       obs.pipe(
         tap((version) => this.versions.push(version)),
       )
@@ -35,7 +35,7 @@ export class VersionsListComponent implements OnInit {
   }
 
   onVersionDelete(version: Version): void {
-    this.spinnerService.wrapSpinner(
+    this.preloaderService.wrap(
       this.http.delete(`http://localhost:8080/version/${version.id}`)
         .pipe(
           tap(() => this.versions = this.versions.filter(v => v.id !== version.id)),

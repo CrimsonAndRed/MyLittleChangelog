@@ -5,7 +5,7 @@ import { tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { GroupContent, Group } from 'app/model/group-content';
 import { LeafContent, UpdatedLeaf } from 'app/model/leaf-content';
-import { SpinnerService } from '../spinner/spinner.service';
+import { PreloaderService } from '../preloader/preloader.service';
 import { Router } from '@angular/router';
 
 @Injectable({
@@ -18,7 +18,7 @@ export class WholeVersionService {
   private groupsByVid: Map<number, GroupContent> = new Map<number, GroupContent>();
 
   // TODO(#10) Router?
-  constructor(private http: Http, private spinnerService: SpinnerService, private route: Router) {}
+  constructor(private http: Http, private preloaderService: PreloaderService, private route: Router) {}
 
   initWholeVersion(versionId: number): Observable<WholeVersion> {
     this.wholeVersion = null;

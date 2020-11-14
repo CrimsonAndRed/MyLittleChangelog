@@ -6,7 +6,7 @@ import { GroupHeaderComponent } from './group-content/group-header/group-header.
 import { LeafHeaderComponent } from './leaf-content/leaf-header/leaf-header.component';
 import { tap } from 'rxjs/operators';
 import { WholeVersionService } from 'app/service/whole-version.service';
-import { SpinnerService } from 'app/spinner/spinner.service';
+import { PreloaderService } from 'app/preloader/preloader.service';
 import { Observable } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { PreviousVersionGroupHeaderComponent } from './group-content/previous-version-group-header/previous-version-group-header.component';
@@ -32,17 +32,17 @@ export class WholeVersionComponent implements OnInit {
 
   constructor(private route: ActivatedRoute,
               public wholeVersionService: WholeVersionService,
-              private spinnerService: SpinnerService) {
+              private preloaderService: PreloaderService) {
   }
 
   ngOnInit(): void {
-    this.spinnerService.wrapSpinner(
+    this.preloaderService.wrap(
       this.refresh()
     );
   }
 
   handlePreviousNodeChosen(obs: Observable<void>): void {
-    this.spinnerService.wrapSpinner(
+    this.preloaderService.wrap(
       obs.pipe(
         switchMap(() => this.refresh())
       )

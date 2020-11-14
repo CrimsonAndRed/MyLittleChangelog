@@ -4,7 +4,7 @@ import { GroupContent, Group } from 'app/model/group-content';
 import { WholeVersionService } from 'app/service/whole-version.service';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { SpinnerService } from 'app/spinner/spinner.service';
+import { PreloaderService } from 'app/preloader/preloader.service';
 
 @Component({
   selector: 'version-header',
@@ -16,10 +16,10 @@ export class VersionHeaderComponent implements GlobalHeader {
   data: GlobalHeaderData;
   ctx: GroupsSecContext;
 
-  constructor(private wholeVersionService: WholeVersionService, private spinnerService: SpinnerService) {}
+  constructor(private wholeVersionService: WholeVersionService, private preloaderService: PreloaderService) {}
 
   handleNewGroup(obs: Observable<Group>): void {
-    this.spinnerService.wrapSpinner(
+    this.preloaderService.wrap(
       obs.pipe(
         tap(newGroupWithId => {
           const newGroup: GroupContent = {

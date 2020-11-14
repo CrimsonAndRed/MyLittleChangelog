@@ -5,7 +5,7 @@ import { GroupHeader, GroupHeaderData, GroupsSecContext } from 'app/groups-sec/g
 import { WholeVersionService } from 'app/service/whole-version.service';
 import { Observable } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
-import { SpinnerService } from 'app/spinner/spinner.service';
+import { PreloaderService } from 'app/preloader/preloader.service';
 
 @Component({
   selector: 'group-header',
@@ -17,10 +17,10 @@ export class GroupHeaderComponent implements GroupHeader {
   data: GroupHeaderData;
   ctx: GroupsSecContext;
 
-  constructor(private wholeVersionService: WholeVersionService, private spinnerService: SpinnerService) { }
+  constructor(private wholeVersionService: WholeVersionService, private preloaderService: PreloaderService) { }
 
   handleNewGroup(obs: Observable<Group>): void {
-    this.spinnerService.wrapSpinner(
+    this.preloaderService.wrap(
       obs.pipe(
         tap(newGroupWithId => {
           const newGroup: GroupContent = {
@@ -41,7 +41,7 @@ export class GroupHeaderComponent implements GroupHeader {
   }
 
   handleNewLeaf(obs: Observable<NewLeafWithId>): void {
-    this.spinnerService.wrapSpinner(
+    this.preloaderService.wrap(
       obs.pipe(
         tap(newLeafWithId => {
           const newLeaf: LeafContent = {
@@ -59,7 +59,7 @@ export class GroupHeaderComponent implements GroupHeader {
   }
 
   handleDeleteGroup(obs: Observable<void>): void {
-    this.spinnerService.wrapSpinner(
+    this.preloaderService.wrap(
       obs.pipe(
         switchMap(() => this.wholeVersionService.deleteGroup(this.data.group.id, this.data.parentGroup?.vid))
       )
@@ -67,7 +67,7 @@ export class GroupHeaderComponent implements GroupHeader {
   }
 
   handleUpdateGroup(obs: Observable<Group>): void {
-    this.spinnerService.wrapSpinner(
+    this.preloaderService.wrap(
       obs.pipe(
         tap(group => this.wholeVersionService.updateGroup(group))
       )
@@ -75,7 +75,7 @@ export class GroupHeaderComponent implements GroupHeader {
   }
 
   handleMaterializeGroup(obs: Observable<Group>): void {
-    this.spinnerService.wrapSpinner(
+    this.preloaderService.wrap(
       obs.pipe(
         tap(group => this.wholeVersionService.materializeGroup(group))
       )
@@ -83,7 +83,7 @@ export class GroupHeaderComponent implements GroupHeader {
   }
 
   handleDematerializeGroup(obs: Observable<Group>): void {
-    this.spinnerService.wrapSpinner(
+    this.preloaderService.wrap(
       obs.pipe(
         switchMap((group: Group) => this.wholeVersionService.dematerializeGroup(group)),
       )

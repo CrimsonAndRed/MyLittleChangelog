@@ -5,7 +5,7 @@ import { LeafContent, UpdatedLeaf } from 'app/model/leaf-content';
 import { WholeVersionService } from 'app/service/whole-version.service';
 import { Observable } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
-import { SpinnerService } from 'app/spinner/spinner.service';
+import { PreloaderService } from 'app/preloader/preloader.service';
 
 
 @Component({
@@ -18,10 +18,10 @@ export class LeafHeaderComponent implements LeafHeader {
   data: LeafHeaderData;
   ctx: GroupsSecContext;
 
-  constructor(private wholeVersionService: WholeVersionService, private spinnerService: SpinnerService) {}
+  constructor(private wholeVersionService: WholeVersionService, private preloaderService: PreloaderService) {}
 
   handleDeleteLeaf(obs: Observable<void>) {
-    this.spinnerService.wrapSpinner(
+    this.preloaderService.wrap(
       obs.pipe(
         switchMap(() => this.wholeVersionService.deleteLeaf(this.data.leaf.id, this.data.parentGroup.vid))
       )
@@ -29,7 +29,7 @@ export class LeafHeaderComponent implements LeafHeader {
   }
 
   handleUpdateLeaf(obs: Observable<UpdatedLeaf>) {
-    this.spinnerService.wrapSpinner(
+    this.preloaderService.wrap(
       obs.pipe(
         switchMap(updatedLeaf => this.wholeVersionService.updateLeaf(updatedLeaf, this.data.parentGroup.vid))
       )

@@ -9,7 +9,7 @@ import { PreviousVersionModalComponent } from '../previous-version-modal/previou
 import { PreviousUsedGroupsAndLeaves } from '../previous-version.model';
 import { Observable } from 'rxjs';
 import { switchMap, map, tap } from 'rxjs/operators';
-import { SpinnerService } from 'app/spinner/spinner.service';
+import { PreloaderService } from 'app/preloader/preloader.service';
 
 @Component({
   selector: 'previous-version-select-button',
@@ -25,12 +25,12 @@ export class PreviousVersionSelectButtonComponent {
     private http: Http,
     private route: ActivatedRoute,
     private dialog: MatDialog,
-    private spinnerService: SpinnerService
+    private preloaderService: PreloaderService
   ) { }
 
   onButtonClick(): void {
 
-    this.spinnerService.wrapSpinner(
+    this.preloaderService.wrap(
       this.http.get<WholeVersion>('http://localhost:8080/version/previous')
       .pipe(
         tap(v => {
