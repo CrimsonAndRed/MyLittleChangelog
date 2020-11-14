@@ -18,6 +18,10 @@ export class EditLeafModalComponent {
     this.leaf = { ...this.data.leaf };
     this.parentGroupVid = this.data.parentGroupVid;
   }
+
+  onParentChange(groupVid: number): void {
+    this.leaf.groupVid = groupVid;
+  }
 }
 
 export interface EditLeafModalData {

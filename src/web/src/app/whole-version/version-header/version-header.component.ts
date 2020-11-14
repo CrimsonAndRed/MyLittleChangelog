@@ -39,6 +39,6 @@ export class VersionHeaderComponent implements GlobalHeader {
   }
 
   onPreviousNodeChosen(obs: Observable<void>): void {
-    this.ctx.previousNodeChosen.emit(obs);
+    this.ctx.previousNodeChosen(obs);
   }
 }

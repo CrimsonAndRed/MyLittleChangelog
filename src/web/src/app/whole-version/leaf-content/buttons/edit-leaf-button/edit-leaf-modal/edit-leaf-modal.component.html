@@ -9,7 +9,7 @@
     <div>
       <label>Value type</label><input [(ngModel)]="leaf.valueType"/>
     </div>
-    <node-movement [parentVid]="parentGroupVid"></node-movement>
+    <node-movement [parentVid]="parentGroupVid" (parentChange)="onParentChange($event)"></node-movement>
   </div>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
