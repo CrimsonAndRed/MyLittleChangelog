@@ -3,7 +3,6 @@ package my.little.changelog.service.version
 import my.little.changelog.model.exception.VersionIsNotLatestException
 import my.little.changelog.model.group.Group
 import my.little.changelog.model.group.GroupLatest
-import my.little.changelog.model.group.dto.external.GroupDeletionDto
 import my.little.changelog.model.group.dto.external.WholeGroupDto
 import my.little.changelog.model.leaf.Leaf
 import my.little.changelog.model.leaf.LeafLatest
@@ -19,7 +18,6 @@ import my.little.changelog.persistence.repo.GroupRepo
 import my.little.changelog.persistence.repo.LeafLatestRepo
 import my.little.changelog.persistence.repo.LeafRepo
 import my.little.changelog.persistence.repo.VersionRepo
-import my.little.changelog.service.group.GroupService
 import my.little.changelog.service.leaf.LeafService
 import org.jetbrains.exposed.sql.transactions.transaction
 
@@ -112,8 +110,8 @@ object VersionService {
     ): Pair<List<WholeGroupDto>, List<WholeLeafDto>> {
         val rootGroupDtos = groupsMap[value]?.map {
             val pair = createLatestDtosRecursive(groupsMap, leavesMap, earliestIds, currentVersion, it.vid)
-            val id = it.id
-            WholeGroupDto(id.value, it.vid, it.name, earliestIds.contains(id), currentVersion == it.version.id.value, pair.first, pair.second)
+            val id = it.id.value
+            WholeGroupDto(id, it.vid, it.name, earliestIds.contains(id), currentVersion == it.version.id.value, pair.first, pair.second)
         } ?: emptyList()
 
         val rootLeafDtos = leavesMap[value]?.map {

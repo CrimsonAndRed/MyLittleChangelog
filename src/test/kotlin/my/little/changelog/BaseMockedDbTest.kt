@@ -74,6 +74,10 @@ class TestTransactionManager : TransactionManager {
         TransactionManager.resetCurrent(null)
         TransactionManager.closeAndUnregister(mockedDatabase)
     }
+
+    override fun bindTransactionToThread(transaction: Transaction?) {
+
+    }
 }
 
 val manager = TestTransactionManager()

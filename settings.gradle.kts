@@ -1,7 +1,5 @@
 pluginManagement {
     val kotlinVersion: String by settings
-    val ktorVersion: String by settings
-    val logbackVersion: String by settings
     val shadowVersion: String by settings
     val ktlintVersion: String by settings
     plugins {
