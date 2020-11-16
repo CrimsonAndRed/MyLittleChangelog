@@ -7,12 +7,12 @@ import io.mockk.every
 import io.mockk.mockkObject
 import kotlinx.serialization.decodeFromString
 import my.little.changelog.configuration.Json
-import my.little.changelog.model.exception.VersionIsNotLatestException
 import my.little.changelog.model.group.dto.external.GroupCreationDto
 import my.little.changelog.model.group.dto.external.GroupUpdateDto
 import my.little.changelog.model.group.dto.external.ReturnedGroupDto
 import my.little.changelog.routing.AbstractRouterTest
 import my.little.changelog.service.group.GroupService
+import my.little.changelog.validator.Valid
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
@@ -33,7 +33,7 @@ internal class GroupRouterTest : AbstractRouterTest(
         val dto = GroupCreationDto("Test")
         val serviceDto = my.little.changelog.model.group.dto.service.ReturnedGroupDto(0, 0, "Test")
 
-        every { GroupService.createGroup(any()) } returns serviceDto
+        every { GroupService.createGroup(any()) } returns Valid(serviceDto)
 
         testRoute(HttpMethod.Post, baseUrl(vg.v), dto) {
             assertEquals(HttpStatusCode.OK, response.status())
@@ -48,13 +48,12 @@ internal class GroupRouterTest : AbstractRouterTest(
 
     @Test
     fun `Test Create Group Exception`() {
-        val dto = ReturnedGroupDto(0, 0, "Test")
+        val dto = GroupCreationDto("Test", 0, 0)
         testExceptions(
             constructRequest(HttpMethod.Post, baseUrl(vg.v), dto),
             listOf { GroupService.createGroup(any()) },
             listOf(
-                { RuntimeException() } to HttpStatusCode.InternalServerError,
-                { VersionIsNotLatestException() } to HttpStatusCode.InternalServerError
+                { RuntimeException() } to HttpStatusCode.InternalServerError
             )
         )
     }
@@ -64,7 +63,7 @@ internal class GroupRouterTest : AbstractRouterTest(
         val dto = GroupUpdateDto("Test")
         val serviceDto = my.little.changelog.model.group.dto.service.ReturnedGroupDto(0, 0, "Test")
 
-        every { GroupService.updateGroup(any()) } returns serviceDto
+        every { GroupService.updateGroup(any()) } returns Valid(serviceDto)
 
         testRoute(HttpMethod.Put, "${baseUrl(vg.v)}/${vg.g}", dto) {
             assertEquals(HttpStatusCode.OK, response.status())
@@ -79,13 +78,12 @@ internal class GroupRouterTest : AbstractRouterTest(
 
     @Test
     fun `Test Update Group Exception`() {
-        val dto = ReturnedGroupDto(0, 0, "Test")
+        val dto = GroupUpdateDto("Test", 0)
         testExceptions(
             constructRequest(HttpMethod.Put, "${baseUrl(vg.v)}/${vg.g}", dto),
             listOf { GroupService.updateGroup(any()) },
             listOf(
-                { RuntimeException() } to HttpStatusCode.InternalServerError,
-                { VersionIsNotLatestException() } to HttpStatusCode.InternalServerError
+                { RuntimeException() } to HttpStatusCode.InternalServerError
             )
         )
     }

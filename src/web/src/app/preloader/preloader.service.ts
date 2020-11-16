@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, Subject, Subscription } from 'rxjs';
-
+import { finalize } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
@@ -34,7 +34,10 @@ export class PreloaderService {
     public wrap(obs: Observable<any>) {
       this.start();
       obs
-        .subscribe(() => this.stop())
+        .pipe(
+          finalize(() => this.stop())
+        )
+        .subscribe()
     }
 
     private messageSubscribers() {

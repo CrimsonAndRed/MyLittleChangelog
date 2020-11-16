@@ -267,7 +267,7 @@ internal class LeafIntegrationTest : AbstractIntegrationTest() {
                 with(
                     handleRequest(HttpMethod.Delete, "/version/${version2.id}/group/${group.id}/leaf/${leaf.id}")
                 ) {
-                    assertEquals(HttpStatusCode.InternalServerError, response.status())
+                    assertEquals(HttpStatusCode.BadRequest, response.status())
                 }
                 assertNotNull(Leaf[leaf.id])
             }

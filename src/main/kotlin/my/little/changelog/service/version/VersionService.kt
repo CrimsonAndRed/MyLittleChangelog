@@ -1,6 +1,5 @@
 package my.little.changelog.service.version
 
-import my.little.changelog.model.exception.VersionIsNotLatestException
 import my.little.changelog.model.group.Group
 import my.little.changelog.model.group.GroupLatest
 import my.little.changelog.model.group.dto.external.WholeGroupDto
@@ -19,6 +18,8 @@ import my.little.changelog.persistence.repo.LeafLatestRepo
 import my.little.changelog.persistence.repo.LeafRepo
 import my.little.changelog.persistence.repo.VersionRepo
 import my.little.changelog.service.leaf.LeafService
+import my.little.changelog.validator.Response
+import my.little.changelog.validator.VersionValidator
 import org.jetbrains.exposed.sql.transactions.transaction
 
 object VersionService {
@@ -33,18 +34,22 @@ object VersionService {
         VersionRepo.create().toReturnedDto()
     }
 
-    fun deleteVersion(deletionDto: VersionDeletionDto) = transaction {
+    fun deleteVersion(deletionDto: VersionDeletionDto): Response<Unit> = transaction {
         val version = VersionRepo.findById(deletionDto.id)
-        if (version.id != VersionRepo.findLatest().id) {
-            throw VersionIsNotLatestException()
+        val validationResponse = VersionValidator.validateLatest(version)
+        if (validationResponse.isValid()) {
+            LeafRepo.findByVersion(version).forEach {
+                LeafService.deleteLeaf(LeafDeletionDto(it.id.value))
+            }
+            GroupRepo.findByVersion(version).forEach {
+                GroupRepo.delete(it)
+            }
+
+            VersionRepo.delete(version)
+            return@transaction my.little.changelog.validator.Valid(Unit)
+        } else {
+            return@transaction my.little.changelog.validator.Err<Unit>(validationResponse.errors)
         }
-        LeafRepo.findByVersion(version).forEach {
-            LeafService.deleteLeaf(LeafDeletionDto(it.id.value))
-        }
-        GroupRepo.findByVersion(version).forEach {
-            GroupRepo.delete(it)
-        }
-        VersionRepo.delete(version)
     }
 
     fun getWholeVersion(id: Int): WholeVersion = transaction {

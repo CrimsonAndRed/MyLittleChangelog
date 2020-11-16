@@ -4,14 +4,15 @@ import io.ktor.util.KtorExperimentalAPI
 import io.mockk.every
 import io.mockk.mockkObject
 import my.little.changelog.BaseMockedDbTest
-import my.little.changelog.model.exception.VersionIsNotLatestException
 import my.little.changelog.model.group.dto.service.GroupCreationDto
 import my.little.changelog.persistence.repo.GroupRepo
 import my.little.changelog.persistence.repo.LeafRepo
 import my.little.changelog.persistence.repo.VersionRepo
+import my.little.changelog.validator.Err
+import my.little.changelog.validator.Valid
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
 import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 @KtorExperimentalAPI
 internal class GroupServiceTest : BaseMockedDbTest() {
@@ -37,10 +38,11 @@ internal class GroupServiceTest : BaseMockedDbTest() {
 
         val res = GroupService.createGroup(dto)
 
-        assertEquals(createdGroup.id.value, res.id)
-        assertEquals(createdGroup.vid, res.vid)
-        assertEquals(createdGroup.name, res.name)
-        assertEquals(createdGroup.parentVid, res.parentVid)
+        assertTrue(res is Valid)
+        assertEquals(createdGroup.id.value, res.data.id)
+        assertEquals(createdGroup.vid, res.data.vid)
+        assertEquals(createdGroup.name, res.data.name)
+        assertEquals(createdGroup.parentVid, res.data.parentVid)
     }
 
     @Test
@@ -61,10 +63,11 @@ internal class GroupServiceTest : BaseMockedDbTest() {
 
         val res = GroupService.createGroup(dto)
 
-        assertEquals(createdGroup.id.value, res.id)
-        assertEquals(createdGroup.vid, res.vid)
-        assertEquals(createdGroup.name, res.name)
-        assertEquals(createdGroup.parentVid, res.parentVid)
+        assertTrue(res is Valid)
+        assertEquals(createdGroup.id.value, res.data.id)
+        assertEquals(createdGroup.vid, res.data.vid)
+        assertEquals(createdGroup.name, res.data.name)
+        assertEquals(createdGroup.parentVid, res.data.parentVid)
     }
 
     @Test
@@ -88,10 +91,11 @@ internal class GroupServiceTest : BaseMockedDbTest() {
 
         val res = GroupService.createGroup(dto)
 
-        assertEquals(createdGroup.id.value, res.id)
-        assertEquals(createdGroup.vid, res.vid)
-        assertEquals(createdGroup.name, res.name)
-        assertEquals(createdGroup.parentVid, res.parentVid)
+        assertTrue(res is Valid)
+        assertEquals(createdGroup.id.value, res.data.id)
+        assertEquals(createdGroup.vid, res.data.vid)
+        assertEquals(createdGroup.name, res.data.name)
+        assertEquals(createdGroup.parentVid, res.data.parentVid)
     }
 
     @Test
@@ -109,7 +113,10 @@ internal class GroupServiceTest : BaseMockedDbTest() {
         every { VersionRepo.findById(version2.id.value) } returns version2
         every { GroupRepo.findById(group.id.value) } returns group
 
-        assertThrows<VersionIsNotLatestException> { GroupService.createGroup(dto) }
+        val createdGroup = GroupService.createGroup(dto)
+
+        assertTrue(createdGroup is Err)
+        assertTrue(createdGroup.errors.isNotEmpty())
     }
 
     // TODO(#1) В сервисе мутируется Group, на этом мок ломается

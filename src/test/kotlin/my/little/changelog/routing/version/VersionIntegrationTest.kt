@@ -166,7 +166,7 @@ internal class VersionIntegrationTest : AbstractIntegrationTest() {
     }
 
     @Test
-    fun `Test Delete Version Failure`() {
+    fun `Test Delete Not Latest Version Failure`() {
         testApplication {
             val firstVersion = transaction {
                 val firstVersion = Version.new { }
@@ -186,10 +186,30 @@ internal class VersionIntegrationTest : AbstractIntegrationTest() {
 
             with(handleRequest(HttpMethod.Delete, "/version/${firstVersion.id.value}")) {
                 transaction {
-                    assertEquals(HttpStatusCode.InternalServerError, response.status())
+                    assertEquals(HttpStatusCode.BadRequest, response.status())
                     assertNotEquals(firstVersion, VersionRepo.findLatest())
                     assertEquals(1, GroupRepo.findAll().count())
                     assertEquals(1, LeafRepo.findAll().count())
+                }
+            }
+        }
+    }
+
+    @Test
+    fun `Test Delete Unknown Version Failure`() {
+        testApplication {
+            val firstVersion = transaction {
+                val firstVersion = Version.new { }
+                Group.new {
+                    name = "Test Group 1"
+                    version = firstVersion
+                }
+                firstVersion
+            }
+
+            with(handleRequest(HttpMethod.Delete, "/version/${firstVersion.id.value + 1}")) {
+                transaction {
+                    assertEquals(HttpStatusCode.InternalServerError, response.status())
                 }
             }
         }

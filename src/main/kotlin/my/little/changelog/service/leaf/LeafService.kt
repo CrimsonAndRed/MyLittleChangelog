@@ -1,6 +1,5 @@
 package my.little.changelog.service.leaf
 
-import my.little.changelog.model.exception.VersionIsNotLatestException
 import my.little.changelog.model.leaf.dto.service.LeafCreationDto
 import my.little.changelog.model.leaf.dto.service.LeafDeletionDto
 import my.little.changelog.model.leaf.dto.service.LeafReturnedDto
@@ -10,39 +9,52 @@ import my.little.changelog.model.leaf.toReturnedDto
 import my.little.changelog.persistence.repo.GroupRepo
 import my.little.changelog.persistence.repo.LeafRepo
 import my.little.changelog.persistence.repo.VersionRepo
+import my.little.changelog.validator.Err
+import my.little.changelog.validator.Response
+import my.little.changelog.validator.Valid
+import my.little.changelog.validator.VersionValidator
 import org.jetbrains.exposed.sql.transactions.transaction
 
 object LeafService {
 
-    fun createLeaf(leaf: LeafCreationDto): LeafReturnedDto = transaction {
+    fun createLeaf(leaf: LeafCreationDto): Response<LeafReturnedDto> = transaction {
         val version = VersionRepo.findById(leaf.versionId)
-        if (version.id != VersionRepo.findLatest().id) {
-            throw VersionIsNotLatestException()
+        val validationResult = VersionValidator.validateLatest(version)
+        if (validationResult.isValid()) {
+            val group = GroupRepo.findById(leaf.groupId)
+            val returnedLeaf: LeafReturnedDto = LeafRepo.create(leaf.toRepoDto(version, group)).toReturnedDto()
+            return@transaction Valid(returnedLeaf)
+        } else {
+            return@transaction Err(validationResult.errors)
         }
-        val group = GroupRepo.findById(leaf.groupId)
-        LeafRepo.create(leaf.toRepoDto(version, group)).toReturnedDto()
     }
 
-    fun updateLeaf(leafUpdate: LeafUpdateDto): LeafReturnedDto = transaction {
+    fun updateLeaf(leafUpdate: LeafUpdateDto): Response<LeafReturnedDto> = transaction {
         val leaf = LeafRepo.findById(leafUpdate.id)
         val newParentGroup = GroupRepo.findLatestGroupByVid(leafUpdate.parentVid)
-        if (leaf.version.id != VersionRepo.findLatest().id) {
-            throw VersionIsNotLatestException()
+        val validationResult = VersionValidator.validateLatest(leaf.version)
+        if (validationResult.isValid()) {
+            leaf.apply {
+                name = leafUpdate.name
+                value = leafUpdate.value
+                valueType = leafUpdate.valueType
+                groupVid = newParentGroup.vid
+            }
+            val returnedLeaf: LeafReturnedDto = LeafRepo.update(leaf).toReturnedDto()
+            return@transaction Valid(returnedLeaf)
+        } else {
+            return@transaction Err(validationResult.errors)
         }
-        leaf.apply {
-            name = leafUpdate.name
-            value = leafUpdate.value
-            valueType = leafUpdate.valueType
-            groupVid = newParentGroup.vid
-        }
-        LeafRepo.update(leaf).toReturnedDto()
     }
 
-    fun deleteLeaf(leafDeletionDto: LeafDeletionDto) = transaction {
+    fun deleteLeaf(leafDeletionDto: LeafDeletionDto): Response<Unit> = transaction {
         val leaf = LeafRepo.findById(leafDeletionDto.id)
-        if (leaf.version.id != VersionRepo.findLatest().id) {
-            throw VersionIsNotLatestException()
+        val validationResult = VersionValidator.validateLatest(leaf.version)
+        if (validationResult.isValid()) {
+            LeafRepo.delete(leaf)
+            return@transaction Valid(Unit)
+        } else {
+            return@transaction Err(validationResult.errors)
         }
-        LeafRepo.delete(leaf)
     }
 }

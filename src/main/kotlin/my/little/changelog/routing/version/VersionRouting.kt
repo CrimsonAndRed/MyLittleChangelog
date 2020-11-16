@@ -1,7 +1,6 @@
 package my.little.changelog.routing.version
 
 import io.ktor.application.call
-import io.ktor.http.HttpStatusCode
 import io.ktor.response.respond
 import io.ktor.routing.Routing
 import io.ktor.routing.delete
@@ -12,7 +11,9 @@ import io.ktor.util.KtorExperimentalAPI
 import io.ktor.util.getOrFail
 import my.little.changelog.model.version.dto.service.VersionDeletionDto
 import my.little.changelog.model.version.dto.service.toExternalDto
+import my.little.changelog.routing.ofEmptyResponse
 import my.little.changelog.service.version.VersionService
+import my.little.changelog.validator.Response
 
 @KtorExperimentalAPI
 fun Routing.versionRouting() {
@@ -39,8 +40,8 @@ fun Routing.versionRouting() {
         }
         delete {
             val idParam = call.parameters.getOrFail("versionId")
-            VersionService.deleteVersion(VersionDeletionDto(idParam.toInt()))
-            call.response.status(HttpStatusCode.NoContent)
+            val resp: Response<Unit> = VersionService.deleteVersion(VersionDeletionDto(idParam.toInt()))
+            call.ofEmptyResponse(resp)
         }
     }
 }

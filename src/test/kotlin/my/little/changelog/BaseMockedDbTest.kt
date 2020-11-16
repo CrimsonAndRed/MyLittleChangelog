@@ -76,7 +76,6 @@ class TestTransactionManager : TransactionManager {
     }
 
     override fun bindTransactionToThread(transaction: Transaction?) {
-
     }
 }
 

@@ -8,6 +8,6 @@ fun Leaf.toReturnedDto() = LeafReturnedDto(
     name = name,
     valueType = valueType,
     value = value,
-    // TODO Убарть Not Null Assertion когда реализуется ограничение на создание лифов в руте
+    // TODO Убрать Not Null Assertion когда реализуется ограничение на создание лифов в руте
     groupVid = groupVid!!
 )

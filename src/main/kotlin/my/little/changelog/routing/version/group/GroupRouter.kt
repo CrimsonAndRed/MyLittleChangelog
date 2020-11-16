@@ -1,9 +1,7 @@
 package my.little.changelog.routing.version.group
 
 import io.ktor.application.call
-import io.ktor.http.HttpStatusCode
 import io.ktor.request.receive
-import io.ktor.response.respond
 import io.ktor.routing.Routing
 import io.ktor.routing.delete
 import io.ktor.routing.post
@@ -16,6 +14,8 @@ import my.little.changelog.model.group.dto.external.GroupDeletionDto
 import my.little.changelog.model.group.dto.external.GroupUpdateDto
 import my.little.changelog.model.group.dto.external.toServiceDto
 import my.little.changelog.model.group.dto.service.toExternalDto
+import my.little.changelog.routing.ofPossiblyEmptyResponse
+import my.little.changelog.routing.ofResponse
 import my.little.changelog.service.group.GroupService
 
 @KtorExperimentalAPI
@@ -26,7 +26,7 @@ fun Routing.groupRouting() {
             val dto = call.receive<GroupCreationDto>()
 
             val group = GroupService.createGroup(dto.toServiceDto(versionId))
-            call.respond(group.toExternalDto())
+            call.ofResponse(group.map { it.toExternalDto() })
         }
     }
 
@@ -36,18 +36,14 @@ fun Routing.groupRouting() {
             val dto = call.receive<GroupUpdateDto>()
 
             val group = GroupService.updateGroup(dto.toServiceDto(groupId))
-            call.respond(group.toExternalDto())
+            call.ofResponse(group.map { it.toExternalDto() })
         }
 
         delete {
             val groupId = call.parameters.getOrFail("groupId").toInt()
             val dropHierarchy = call.request.queryParameters["hierarchy"]?.toBoolean() ?: true
             val returnedGroup = GroupService.deleteGroup(GroupDeletionDto(groupId), dropHierarchy)
-            returnedGroup?.also {
-                call.respond(returnedGroup.toExternalDto())
-            } ?: run {
-                call.response.status(HttpStatusCode.NoContent)
-            }
+            call.ofPossiblyEmptyResponse(returnedGroup.map { it?.toExternalDto() })
         }
     }
 }

@@ -1,9 +1,7 @@
 package my.little.changelog.routing.version.group.leaf
 
 import io.ktor.application.call
-import io.ktor.http.HttpStatusCode
 import io.ktor.request.receive
-import io.ktor.response.respond
 import io.ktor.routing.Routing
 import io.ktor.routing.delete
 import io.ktor.routing.post
@@ -15,8 +13,12 @@ import my.little.changelog.model.leaf.dto.external.LeafCreationDto
 import my.little.changelog.model.leaf.dto.external.LeafDeletionDto
 import my.little.changelog.model.leaf.dto.external.LeafUpdateDto
 import my.little.changelog.model.leaf.dto.external.toServiceDto
+import my.little.changelog.model.leaf.dto.service.LeafReturnedDto
 import my.little.changelog.model.leaf.dto.service.toExternalDto
+import my.little.changelog.routing.ofEmptyResponse
+import my.little.changelog.routing.ofResponse
 import my.little.changelog.service.leaf.LeafService
+import my.little.changelog.validator.Response
 
 @KtorExperimentalAPI
 fun Routing.leafRouting() {
@@ -26,8 +28,8 @@ fun Routing.leafRouting() {
             val versionId = call.parameters.getOrFail("versionId").toInt()
             val dto = call.receive<LeafCreationDto>()
 
-            val leaf = LeafService.createLeaf(dto.toServiceDto(groupId, versionId))
-            call.respond(leaf.toExternalDto())
+            val resp: Response<LeafReturnedDto> = LeafService.createLeaf(dto.toServiceDto(groupId, versionId))
+            call.ofResponse(resp.map { it.toExternalDto() })
         }
     }
 
@@ -36,13 +38,13 @@ fun Routing.leafRouting() {
             val leafId = call.parameters.getOrFail("leafId").toInt()
             val dto = call.receive<LeafUpdateDto>()
 
-            val leaf = LeafService.updateLeaf(dto.toServiceDto(leafId))
-            call.respond(leaf.toExternalDto())
+            val resp: Response<LeafReturnedDto> = LeafService.updateLeaf(dto.toServiceDto(leafId))
+            call.ofResponse(resp.map { it.toExternalDto() })
         }
         delete {
             val leafDeletionDto = LeafDeletionDto(call.parameters.getOrFail("leafId").toInt())
-            LeafService.deleteLeaf(leafDeletionDto.toServiceDto())
-            call.response.status(HttpStatusCode.NoContent)
+            val resp: Response<Unit> = LeafService.deleteLeaf(leafDeletionDto.toServiceDto())
+            call.ofEmptyResponse(resp)
         }
     }
 }

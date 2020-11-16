@@ -6,7 +6,6 @@ import io.ktor.util.KtorExperimentalAPI
 import io.mockk.every
 import io.mockk.mockkObject
 import my.little.changelog.model.diff.dto.service.ReturnedDifferenceDto
-import my.little.changelog.model.exception.VersionIsNotLatestException
 import my.little.changelog.routing.AbstractRouterTest
 import my.little.changelog.routing.diff.differenceRouting
 import my.little.changelog.service.diff.DifferenceService
@@ -43,7 +42,6 @@ internal class DifferenceRouterTest : AbstractRouterTest(
         listOf { DifferenceService.findDifference(allAny()) },
         listOf(
             { RuntimeException() } to HttpStatusCode.InternalServerError,
-            { VersionIsNotLatestException() } to HttpStatusCode.InternalServerError
         )
     )
 

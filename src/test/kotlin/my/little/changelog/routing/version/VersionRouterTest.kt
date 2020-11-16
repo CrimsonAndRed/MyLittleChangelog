@@ -7,7 +7,6 @@ import io.mockk.every
 import io.mockk.mockkObject
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
-import my.little.changelog.model.exception.VersionIsNotLatestException
 import my.little.changelog.model.version.dto.external.PreviousVersionsDTO
 import my.little.changelog.model.version.dto.external.WholeVersion
 import my.little.changelog.model.version.dto.service.ReturnedVersionDto
@@ -43,8 +42,7 @@ internal class VersionRouterTest : AbstractRouterTest(
         constructRequest(HttpMethod.Post, baseUrl),
         listOf { VersionService.createVersion() },
         listOf(
-            { RuntimeException() } to HttpStatusCode.InternalServerError,
-            { VersionIsNotLatestException() } to HttpStatusCode.InternalServerError
+            { RuntimeException() } to HttpStatusCode.InternalServerError
         )
     )
 
@@ -67,8 +65,7 @@ internal class VersionRouterTest : AbstractRouterTest(
         constructRequest(HttpMethod.Get, "$baseUrl/$0"),
         listOf { VersionService.getWholeVersion(any()) },
         listOf(
-            { RuntimeException() } to HttpStatusCode.InternalServerError,
-            { VersionIsNotLatestException() } to HttpStatusCode.InternalServerError
+            { RuntimeException() } to HttpStatusCode.InternalServerError
         )
     )
 
@@ -88,8 +85,7 @@ internal class VersionRouterTest : AbstractRouterTest(
         constructRequest(HttpMethod.Get, baseUrl),
         listOf { VersionService.getVersions() },
         listOf(
-            { RuntimeException() } to HttpStatusCode.InternalServerError,
-            { VersionIsNotLatestException() } to HttpStatusCode.InternalServerError
+            { RuntimeException() } to HttpStatusCode.InternalServerError
         )
     )
 
@@ -110,7 +106,6 @@ internal class VersionRouterTest : AbstractRouterTest(
         listOf { VersionService.getPreviousVersions() },
         listOf(
             { RuntimeException() } to HttpStatusCode.InternalServerError,
-            { VersionIsNotLatestException() } to HttpStatusCode.InternalServerError
         )
     )
 }

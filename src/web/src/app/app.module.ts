@@ -8,7 +8,8 @@ import { AppComponent } from './app.component';
 import { VersionsListModule } from './versions-list/versions-list.module';
 import { AppRoutingModule } from './app-routing.module';
 import { WholeVersionModule } from './whole-version/whole-version.module';
-import { Preloader } from './preloader/preloader.component'
+import { Preloader } from './preloader/preloader.component';
+import { ErrorModule } from 'app/error/error.module';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { Preloader } from './preloader/preloader.component'
     AppRoutingModule,
     FormsModule,
     HttpClientModule,
-    NoopAnimationsModule
+    NoopAnimationsModule,
+    ErrorModule
   ],
   bootstrap: [AppComponent]
 })
