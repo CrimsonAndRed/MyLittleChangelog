@@ -25,8 +25,8 @@ fun Routing.groupRouting() {
             val versionId = call.parameters.getOrFail("versionId").toInt()
             val dto = call.receive<GroupCreationDto>()
 
-            val group = GroupService.createGroup(dto.toServiceDto(versionId))
-            call.ofResponse(group.map { it.toExternalDto() })
+            val resp = GroupService.createGroup(dto.toServiceDto(versionId))
+            call.ofResponse(resp.map { it.toExternalDto() })
         }
     }
 
@@ -35,8 +35,8 @@ fun Routing.groupRouting() {
             val groupId = call.parameters.getOrFail("groupId").toInt()
             val dto = call.receive<GroupUpdateDto>()
 
-            val group = GroupService.updateGroup(dto.toServiceDto(groupId))
-            call.ofResponse(group.map { it.toExternalDto() })
+            val resp = GroupService.updateGroup(dto.toServiceDto(groupId))
+            call.ofResponse(resp.map { it.toExternalDto() })
         }
 
         delete {

@@ -19,21 +19,21 @@ object LeafService {
 
     fun createLeaf(leaf: LeafCreationDto): Response<LeafReturnedDto> = transaction {
         val version = VersionRepo.findById(leaf.versionId)
-        val validationResult = VersionValidator.validateLatest(version)
-        if (validationResult.isValid()) {
+        val validationResponse = VersionValidator.validateLatest(version)
+        if (validationResponse.isValid()) {
             val group = GroupRepo.findById(leaf.groupId)
             val returnedLeaf: LeafReturnedDto = LeafRepo.create(leaf.toRepoDto(version, group)).toReturnedDto()
             return@transaction Valid(returnedLeaf)
         } else {
-            return@transaction Err(validationResult.errors)
+            return@transaction Err(validationResponse.errors)
         }
     }
 
     fun updateLeaf(leafUpdate: LeafUpdateDto): Response<LeafReturnedDto> = transaction {
         val leaf = LeafRepo.findById(leafUpdate.id)
         val newParentGroup = GroupRepo.findLatestGroupByVid(leafUpdate.parentVid)
-        val validationResult = VersionValidator.validateLatest(leaf.version)
-        if (validationResult.isValid()) {
+        val validationResponse = VersionValidator.validateLatest(leaf.version)
+        if (validationResponse.isValid()) {
             leaf.apply {
                 name = leafUpdate.name
                 value = leafUpdate.value
@@ -43,7 +43,7 @@ object LeafService {
             val returnedLeaf: LeafReturnedDto = LeafRepo.update(leaf).toReturnedDto()
             return@transaction Valid(returnedLeaf)
         } else {
-            return@transaction Err(validationResult.errors)
+            return@transaction Err(validationResponse.errors)
         }
     }
 
