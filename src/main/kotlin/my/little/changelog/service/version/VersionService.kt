@@ -36,20 +36,18 @@ object VersionService {
 
     fun deleteVersion(deletionDto: VersionDeletionDto): Response<Unit> = transaction {
         val version = VersionRepo.findById(deletionDto.id)
-        val validationResponse = VersionValidator.validateLatest(version)
-        if (validationResponse.isValid()) {
-            LeafRepo.findByVersion(version).forEach {
-                LeafService.deleteLeaf(LeafDeletionDto(it.id.value))
-            }
-            GroupRepo.findByVersion(version).forEach {
-                GroupRepo.delete(it)
-            }
+        VersionValidator
+            .validateLatest(version)
+            .ifValid {
+                LeafRepo.findByVersion(version).forEach {
+                    LeafService.deleteLeaf(LeafDeletionDto(it.id.value))
+                }
+                GroupRepo.findByVersion(version).forEach {
+                    GroupRepo.delete(it)
+                }
 
-            VersionRepo.delete(version)
-            return@transaction my.little.changelog.validator.Valid(Unit)
-        } else {
-            return@transaction my.little.changelog.validator.Err<Unit>(validationResponse.errors)
-        }
+                VersionRepo.delete(version)
+            }
     }
 
     fun getWholeVersion(id: Int): WholeVersion = transaction {

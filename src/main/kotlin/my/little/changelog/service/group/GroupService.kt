@@ -20,39 +20,31 @@ object GroupService {
 
     fun createGroup(group: GroupCreationDto): Response<ReturnedGroupDto> = transaction {
         val version = VersionRepo.findById(group.versionId)
-        val validatorResponse = VersionValidator.validateLatest(version)
-        if (validatorResponse.isValid()) {
-
-            val returned = GroupRepo.create(group.toRepoDto(version))
-                .toReturnedDto()
-            return@transaction Valid(returned)
-        } else {
-            return@transaction Err(validatorResponse.errors)
-        }
+        VersionValidator.validateLatest(version)
+            .ifValid {
+                GroupRepo.create(group.toRepoDto(version)).toReturnedDto()
+            }
     }
 
     fun updateGroup(groupUpdate: GroupUpdateDto): Response<ReturnedGroupDto> = transaction {
         val group = GroupRepo.findById(groupUpdate.id)
-        val validatorResponse = VersionValidator.validateLatest(group.version)
-        if (validatorResponse.isValid()) {
+        VersionValidator.validateLatest(group.version)
+            .ifValid {
+                group.apply {
+                    name = groupUpdate.name
+                    parentVid = groupUpdate.parentVid
+                }
 
-            group.apply {
-                name = groupUpdate.name
-                parentVid = groupUpdate.parentVid
+                GroupRepo.update(group)
+                    .toReturnedDto()
             }
-
-            val returned = GroupRepo.update(group)
-                .toReturnedDto()
-            return@transaction Valid(returned)
-        } else {
-            return@transaction Err(validatorResponse.errors)
-        }
     }
 
     fun deleteGroup(groupDelete: GroupDeletionDto, dropHierarchy: Boolean): Response<ReturnedGroupDto?> = transaction {
         val group = GroupRepo.findById(groupDelete.id)
         val versionId = group.version.id.value
         val validatorResponse = VersionValidator.validateLatest(group.version)
+        // TODO(#5) и как расчленить это?
         if (validatorResponse.isValid()) {
             val sublatestGroup = GroupRepo.findSublatestGroup(group.vid, versionId)
             if (dropHierarchy) {

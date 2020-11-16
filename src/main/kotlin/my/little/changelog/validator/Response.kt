@@ -3,7 +3,7 @@ package my.little.changelog.validator
 sealed class Response<T> {
 
     fun <G> map(f: (T) -> G): Response<G> {
-        return when(this) {
+        return when (this) {
             is Valid -> Valid(f(this.data))
             is Err -> Err(this.errors)
         }
