@@ -26,7 +26,7 @@ object GroupService {
             }
     }
 
-    fun updateGroup(groupUpdate: GroupUpdateDto): Response<ReturnedGroupDto> = transaction {
+    fun updateGroup(groupUpdate: GroupUpdateDto): Response<Unit> = transaction {
         val group = GroupRepo.findById(groupUpdate.id)
         VersionValidator.validateLatest(group.version)
             .ifValid {
@@ -36,11 +36,11 @@ object GroupService {
                 }
 
                 GroupRepo.update(group)
-                    .toReturnedDto()
+                Unit
             }
     }
 
-    fun deleteGroup(groupDelete: GroupDeletionDto, dropHierarchy: Boolean): Response<ReturnedGroupDto?> = transaction {
+    fun deleteGroup(groupDelete: GroupDeletionDto, dropHierarchy: Boolean): Response<Unit> = transaction {
         val group = GroupRepo.findById(groupDelete.id)
         val versionId = group.version.id.value
         val validatorResponse = VersionValidator.validateLatest(group.version)
@@ -69,13 +69,7 @@ object GroupService {
                 GroupRepo.delete(group)
             }
 
-            val returned = sublatestGroup?.let {
-                val parentGroupId = sublatestGroup.parentVid?.let {
-                    GroupLatestRepo.findByVid(it).id.value
-                }
-                ReturnedGroupDto(sublatestGroup.id.value, sublatestGroup.vid, sublatestGroup.name, parentGroupId)
-            }
-            return@transaction Valid(returned)
+            return@transaction Valid(Unit)
         } else {
             return@transaction Err(validatorResponse.errors)
         }

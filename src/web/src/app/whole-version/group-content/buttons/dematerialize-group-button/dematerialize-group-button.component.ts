@@ -14,7 +14,7 @@ import { WholeVersionService } from 'app/whole-version/whole-version.service';
 export class DematerializeGroupButtonComponent {
 
   @Input() group: GroupContent;
-  @Output() onDematerializeGroup = new EventEmitter<Observable<Group>>();
+  @Output() onDematerializeGroup = new EventEmitter<Observable<void>>();
 
   constructor(private http: Http, private route: ActivatedRoute, private wholeVersionService: WholeVersionService) {}
 
@@ -23,6 +23,6 @@ export class DematerializeGroupButtonComponent {
     const groupId = this.group.id;
     const params = new HttpParams().set('hierarchy', 'false');
 
-    this.onDematerializeGroup.emit(this.http.delete<Group>(`http://localhost:8080/version/${versionId}/group/${groupId}`, params));
+    this.onDematerializeGroup.emit(this.http.delete<void>(`http://localhost:8080/version/${versionId}/group/${groupId}`, params));
   }
 }

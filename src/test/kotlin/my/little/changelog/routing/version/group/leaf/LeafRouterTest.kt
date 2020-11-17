@@ -82,21 +82,10 @@ internal class LeafRouterTest : AbstractRouterTest({
     @Test
     fun `Test Leaf Update Success`() {
         val dto = LeafUpdateDto("Имя1", 1, "Значение1", 0)
-        val serviceReturnedDto = my.little.changelog.model.leaf.dto.service.LeafReturnedDto(
-            id = baseVgl.l,
-            vid = baseVgl.l,
-            name = dto.name,
-            valueType = dto.valueType,
-            value = dto.value,
-            // При создании лифа в изначальной группе, то у этой группы vid == id
-            groupVid = baseVgl.g
-        )
 
-        every { LeafService.updateLeaf(allAny()) } returns Valid(serviceReturnedDto)
+        every { LeafService.updateLeaf(allAny()) } returns Valid(Unit)
         testRoute(HttpMethod.Put, "${baseUrl(baseVgl.v, baseVgl.g)}/${baseVgl.l}", dto) {
-            assertEquals(HttpStatusCode.OK, response.status())
-            val response = Json.decodeFromString<LeafReturnedDto>(response.content!!)
-            assertEquals(serviceReturnedDto.toExternalDto(), response)
+            assertEquals(HttpStatusCode.NoContent, response.status())
         }
     }
 

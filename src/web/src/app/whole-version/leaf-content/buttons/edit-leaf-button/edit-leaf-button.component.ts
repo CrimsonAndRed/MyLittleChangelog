@@ -17,7 +17,7 @@ export class EditLeafButtonComponent {
 
   @Input() leaf: LeafContent;
   @Input() parentGroup: GroupContent;
-  @Output() onUpdateLeaf = new EventEmitter<Observable<UpdatedLeaf>>();
+  @Output() onUpdateLeaf = new EventEmitter<Observable<void>>();
 
   constructor(private http: Http,
               private route: ActivatedRoute,
@@ -54,7 +54,7 @@ export class EditLeafButtonComponent {
       parentVid: newParentGroupVid,
     };
     this.onUpdateLeaf.emit(
-      this.http.put<UpdatedLeaf>(`http://localhost:8080/version/${versionId}/group/${parentId}/leaf/${leafId}`, leafToUpdate)
+      this.http.put<void>(`http://localhost:8080/version/${versionId}/group/${parentId}/leaf/${leafId}`, leafToUpdate)
     );
   }
 }

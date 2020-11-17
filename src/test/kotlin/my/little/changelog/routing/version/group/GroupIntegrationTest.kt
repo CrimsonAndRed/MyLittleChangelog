@@ -151,7 +151,7 @@ internal class GroupIntegrationTest : AbstractIntegrationTest() {
                 val dto = GroupCreationDto(group.name, vid = group.vid + 1)
 
                 with(
-                    handleRequest(HttpMethod.Post, "version/${version2}/group") {
+                    handleRequest(HttpMethod.Post, "version/$version2/group") {
                         addHeader("Content-Type", "application/json")
                         setBody(Json.encodeToString(dto))
                     }
@@ -182,13 +182,7 @@ internal class GroupIntegrationTest : AbstractIntegrationTest() {
                         setBody(Json.encodeToString(dto))
                     }
                 ) {
-                    assertEquals(HttpStatusCode.OK, response.status())
-
-                    val response: ReturnedGroupDto = Json.decodeFromString(response.content!!)
-                    assertEquals(group.id.value, response.id)
-                    assertEquals(group.vid, response.vid)
-                    assertEquals(dto.name, response.name)
-                    assertEquals(dto.parentVid, response.parentVid)
+                    assertEquals(HttpStatusCode.NoContent, response.status())
                 }
             }
         }
@@ -219,13 +213,7 @@ internal class GroupIntegrationTest : AbstractIntegrationTest() {
                         setBody(Json.encodeToString(dto))
                     }
                 ) {
-                    assertEquals(HttpStatusCode.OK, response.status())
-
-                    val response: ReturnedGroupDto = Json.decodeFromString(response.content!!)
-                    assertEquals(groupSub.id.value, response.id)
-                    assertEquals(groupSub.vid, response.vid)
-                    assertEquals(dto.name, response.name)
-                    assertEquals(dto.parentVid, response.parentVid)
+                    assertEquals(HttpStatusCode.NoContent, response.status())
                 }
             }
         }

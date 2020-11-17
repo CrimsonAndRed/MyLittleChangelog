@@ -16,7 +16,7 @@ export class EditGroupButtonComponent {
 
   @Input() group: GroupContent;
   @Input() parentGroupVid: number;
-  @Output() onUpdateGroup = new EventEmitter<Observable<Group>>();
+  @Output() onUpdateGroup = new EventEmitter<Observable<void>>();
 
   constructor(private http: Http,
               private route: ActivatedRoute,
@@ -45,7 +45,7 @@ export class EditGroupButtonComponent {
       name: group.name,
       parentVid: this.parentGroupVid
     };
-    this.onUpdateGroup.emit(this.http.put<Group>(`http://localhost:8080/version/${versionId}/group/${groupId}`, groupToUpdate));
+    this.onUpdateGroup.emit(this.http.put<void>(`http://localhost:8080/version/${versionId}/group/${groupId}`, groupToUpdate));
   }
 
 }

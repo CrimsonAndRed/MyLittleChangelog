@@ -14,7 +14,7 @@ import my.little.changelog.model.group.dto.external.GroupDeletionDto
 import my.little.changelog.model.group.dto.external.GroupUpdateDto
 import my.little.changelog.model.group.dto.external.toServiceDto
 import my.little.changelog.model.group.dto.service.toExternalDto
-import my.little.changelog.routing.ofPossiblyEmptyResponse
+import my.little.changelog.routing.ofEmptyResponse
 import my.little.changelog.routing.ofResponse
 import my.little.changelog.service.group.GroupService
 
@@ -36,14 +36,14 @@ fun Routing.groupRouting() {
             val dto = call.receive<GroupUpdateDto>()
 
             val resp = GroupService.updateGroup(dto.toServiceDto(groupId))
-            call.ofResponse(resp.map { it.toExternalDto() })
+            call.ofEmptyResponse(resp)
         }
 
         delete {
             val groupId = call.parameters.getOrFail("groupId").toInt()
             val dropHierarchy = call.request.queryParameters["hierarchy"]?.toBoolean() ?: true
-            val returnedGroup = GroupService.deleteGroup(GroupDeletionDto(groupId), dropHierarchy)
-            call.ofPossiblyEmptyResponse(returnedGroup.map { it?.toExternalDto() })
+            val resp = GroupService.deleteGroup(GroupDeletionDto(groupId), dropHierarchy)
+            call.ofEmptyResponse(resp)
         }
     }
 }

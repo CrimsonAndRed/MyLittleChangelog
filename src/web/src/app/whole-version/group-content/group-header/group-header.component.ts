@@ -64,10 +64,10 @@ export class GroupHeaderComponent implements GroupHeader {
     );
   }
 
-  handleUpdateGroup(obs: Observable<Group>): void {
+  handleUpdateGroup(obs: Observable<void>): void {
     this.preloaderService.wrap(
       obs.pipe(
-        tap(group => this.wholeVersionService.updateGroup(group))
+        switchMap(() => this.wholeVersionService.updateGroup())
       )
     );
   }
@@ -80,10 +80,10 @@ export class GroupHeaderComponent implements GroupHeader {
     );
   }
 
-  handleDematerializeGroup(obs: Observable<Group>): void {
+  handleDematerializeGroup(obs: Observable<void>): void {
     this.preloaderService.wrap(
       obs.pipe(
-        switchMap((group: Group) => this.wholeVersionService.dematerializeGroup(group)),
+        switchMap(() => this.wholeVersionService.dematerializeGroup()),
       )
     );
   }

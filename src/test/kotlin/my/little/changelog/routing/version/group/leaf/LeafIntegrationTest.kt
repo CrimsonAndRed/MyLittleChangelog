@@ -194,14 +194,7 @@ internal class LeafIntegrationTest : AbstractIntegrationTest() {
                     }
                 ) {
 
-                    assertEquals(HttpStatusCode.OK, response.status())
-                    val response: LeafReturnedDto = Json.decodeFromString(response.content!!)
-                    assertEquals(leaf.id.value, response.id)
-                    assertEquals(leaf.vid, response.vid)
-                    assertEquals(leaf.groupVid, response.groupVid)
-                    assertEquals(dto.name, response.name)
-                    assertEquals(dto.value, response.value)
-                    assertEquals(dto.valueType, response.valueType)
+                    assertEquals(HttpStatusCode.NoContent, response.status())
                 }
             }
         }
@@ -241,15 +234,7 @@ internal class LeafIntegrationTest : AbstractIntegrationTest() {
                         setBody(Json.encodeToString(dto))
                     }
                 ) {
-                    assertEquals(HttpStatusCode.OK, response.status())
-
-                    val response: LeafReturnedDto = Json.decodeFromString(response.content!!)
-                    assertEquals(leaf.id.value, response.id)
-                    assertEquals(leaf.vid, response.vid)
-                    assertEquals(leaf.groupVid, response.groupVid)
-                    assertEquals(dto.name, response.name)
-                    assertEquals(dto.value, response.value)
-                    assertEquals(dto.valueType, response.valueType)
+                    assertEquals(HttpStatusCode.NoContent, response.status())
                 }
             }
         }
@@ -294,15 +279,7 @@ internal class LeafIntegrationTest : AbstractIntegrationTest() {
                         setBody(Json.encodeToString(dto))
                     }
                 ) {
-                    assertEquals(HttpStatusCode.OK, response.status())
-
-                    val response: LeafReturnedDto = Json.decodeFromString(response.content!!)
-                    assertEquals(leaf.id.value, response.id)
-                    assertEquals(leaf.vid, response.vid)
-                    assertEquals(dto.name, response.name)
-                    assertEquals(dto.value, response.value)
-                    assertEquals(dto.valueType, response.valueType)
-                    assertEquals(dto.parentVid, response.groupVid)
+                    assertEquals(HttpStatusCode.NoContent, response.status())
                 }
             }
         }
@@ -342,7 +319,7 @@ internal class LeafIntegrationTest : AbstractIntegrationTest() {
                         setBody(Json.encodeToString(dto))
                     }
                 ) {
-                    assertEquals(HttpStatusCode.OK, response.status())
+                    assertEquals(HttpStatusCode.NoContent, response.status())
                 }
             }
         }

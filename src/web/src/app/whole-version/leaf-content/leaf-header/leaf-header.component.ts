@@ -28,10 +28,10 @@ export class LeafHeaderComponent implements LeafHeader {
     );
   }
 
-  handleUpdateLeaf(obs: Observable<UpdatedLeaf>) {
+  handleUpdateLeaf(obs: Observable<void>) {
     this.preloaderService.wrap(
       obs.pipe(
-        switchMap(updatedLeaf => this.wholeVersionService.updateLeaf(updatedLeaf, this.data.parentGroup.vid))
+        switchMap(() => this.wholeVersionService.updateLeaf())
       )
     );
   }

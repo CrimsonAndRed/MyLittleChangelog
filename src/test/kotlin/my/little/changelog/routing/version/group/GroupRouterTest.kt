@@ -61,18 +61,11 @@ internal class GroupRouterTest : AbstractRouterTest(
     @Test
     fun `Test Update Group Success`() {
         val dto = GroupUpdateDto("Test")
-        val serviceDto = my.little.changelog.model.group.dto.service.ReturnedGroupDto(0, 0, "Test")
 
-        every { GroupService.updateGroup(any()) } returns Valid(serviceDto)
+        every { GroupService.updateGroup(any()) } returns Valid(Unit)
 
         testRoute(HttpMethod.Put, "${baseUrl(vg.v)}/${vg.g}", dto) {
-            assertEquals(HttpStatusCode.OK, response.status())
-            val resp = Json.decodeFromString<ReturnedGroupDto>(response.content!!)
-
-            assertEquals(serviceDto.id, resp.id)
-            assertEquals(serviceDto.vid, resp.vid)
-            assertEquals(serviceDto.name, resp.name)
-            assertEquals(serviceDto.parentVid, resp.parentVid)
+            assertEquals(HttpStatusCode.NoContent, response.status())
         }
     }
 

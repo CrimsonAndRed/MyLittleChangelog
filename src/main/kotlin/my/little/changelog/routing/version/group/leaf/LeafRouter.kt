@@ -38,8 +38,8 @@ fun Routing.leafRouting() {
             val leafId = call.parameters.getOrFail("leafId").toInt()
             val dto = call.receive<LeafUpdateDto>()
 
-            val resp: Response<LeafReturnedDto> = LeafService.updateLeaf(dto.toServiceDto(leafId))
-            call.ofResponse(resp.map { it.toExternalDto() })
+            val resp: Response<Unit> = LeafService.updateLeaf(dto.toServiceDto(leafId))
+            call.ofEmptyResponse(resp)
         }
         delete {
             val leafDeletionDto = LeafDeletionDto(call.parameters.getOrFail("leafId").toInt())

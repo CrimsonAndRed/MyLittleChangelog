@@ -42,7 +42,7 @@ export class WholeVersionService {
     this.groupsByVid.get(parentVid).leafContent.push(leaf);
   }
 
-  updateLeaf(updatedLeaf: UpdatedLeaf, previousParentVid: number): Observable<WholeVersion> {
+  updateLeaf(): Observable<WholeVersion> {
     return this.initWholeVersion(this.wholeVersion.id);
   }
 
@@ -54,10 +54,8 @@ export class WholeVersionService {
     return this.initWholeVersion(this.wholeVersion.id);
   }
 
-  updateGroup(group: Group) {
-    let updateGroup = this.groupsByVid.get(group.vid);
-
-    updateGroup.name = group.name;
+  updateGroup(): Observable<WholeVersion> {
+    return this.initWholeVersion(this.wholeVersion.id);
   }
 
   materializeGroup(group: Group) {
@@ -70,7 +68,7 @@ export class WholeVersionService {
     updateGroup.isEarliest = false;
   }
 
-  dematerializeGroup(group: Group): Observable<WholeVersion> {
+  dematerializeGroup(): Observable<WholeVersion> {
     return this.initWholeVersion(this.wholeVersion.id);
   }
 
