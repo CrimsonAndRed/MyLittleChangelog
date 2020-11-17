@@ -33,3 +33,8 @@ export interface UpdatedLeaf {
   value: string;
   groupVid: number;
 }
+
+export interface LeafType {
+  id: number;
+  name: string;
+}

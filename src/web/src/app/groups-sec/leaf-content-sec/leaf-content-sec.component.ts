@@ -13,6 +13,7 @@ import { LeafContent } from 'app/model/leaf-content';
 import { GroupContent } from 'app/model/group-content';
 import { LeafHeader, GroupsSecContext, GroupsSecConfig } from '../groups-sec.model';
 import { LeafHeaderDr } from '../groups-sec.directive';
+import { LeafTypeService } from 'app/service/leaf-type.service';
 
 @Component({
   selector: 'leaf-content-sec',
@@ -28,7 +29,7 @@ export class LeafContentSecComponent implements OnInit {
 
   @ViewChild(LeafHeaderDr, {static: true}) header: LeafHeaderDr;
 
-  constructor(private componentFactoryResolver: ComponentFactoryResolver) { }
+  constructor(private componentFactoryResolver: ComponentFactoryResolver, public leafTypeService: LeafTypeService) { }
 
   ngOnInit(): void {
     if (this.config?.leafHeader) {

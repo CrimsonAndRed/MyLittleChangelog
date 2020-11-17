@@ -1,13 +1,14 @@
 <mat-dialog-content>
   <div>
     <div>
-      <label>Name</label><input [(ngModel)]="leaf.name"/>
+      <label>Name</label><input type="text" [(ngModel)]="leaf.name"/>
     </div>
     <div>
       <label>Value</label><input [(ngModel)]="leaf.value"/>
     </div>
     <div>
-      <label>Value type</label><input [(ngModel)]="leaf.valueType"/>
+      <label>Value type</label>
+      <input type="radio" value="1" id="leaf-type-1" checked/><label for="leaf-type-1"> {{ leafTypeService.leafById(1)?.name }}</label>
     </div>
     <node-movement [parentVid]="parentGroupVid" (parentChange)="onParentChange($event)"></node-movement>
   </div>

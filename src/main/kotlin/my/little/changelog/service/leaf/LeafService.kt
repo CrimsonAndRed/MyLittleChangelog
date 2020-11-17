@@ -9,6 +9,7 @@ import my.little.changelog.model.leaf.toReturnedDto
 import my.little.changelog.persistence.repo.GroupRepo
 import my.little.changelog.persistence.repo.LeafRepo
 import my.little.changelog.persistence.repo.VersionRepo
+import my.little.changelog.validator.LeafValidator
 import my.little.changelog.validator.Response
 import my.little.changelog.validator.VersionValidator
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -18,6 +19,9 @@ object LeafService {
     fun createLeaf(leaf: LeafCreationDto): Response<LeafReturnedDto> = transaction {
         val version = VersionRepo.findById(leaf.versionId)
         VersionValidator.validateLatest(version)
+            .chain {
+                LeafValidator.validateNew(leaf)
+            }
             .ifValid {
                 val group = GroupRepo.findById(leaf.groupId)
                 LeafRepo.create(leaf.toRepoDto(version, group)).toReturnedDto()
@@ -28,6 +32,9 @@ object LeafService {
         val leaf = LeafRepo.findById(leafUpdate.id)
         val newParentGroup = GroupRepo.findLatestGroupByVid(leafUpdate.parentVid)
         VersionValidator.validateLatest(leaf.version)
+            .chain {
+                LeafValidator.validateUpdate(leafUpdate)
+            }
             .ifValid {
                 leaf.apply {
                     name = leafUpdate.name

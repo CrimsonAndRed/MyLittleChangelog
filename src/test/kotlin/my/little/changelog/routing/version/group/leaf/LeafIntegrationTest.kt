@@ -182,7 +182,7 @@ internal class LeafIntegrationTest : AbstractIntegrationTest() {
 
                 val dto = LeafUpdateDto(
                     "Имя1",
-                    2,
+                    1,
                     "Значение 2",
                     group.vid
                 )
