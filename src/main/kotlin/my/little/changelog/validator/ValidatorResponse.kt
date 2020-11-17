@@ -1,6 +1,6 @@
 package my.little.changelog.validator
 
-open class ValidatorResponse(val errors: List<String>) {
+open class ValidatorResponse(private val errors: List<String>) {
 
     fun isValid(): Boolean {
         return errors.isEmpty()

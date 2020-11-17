@@ -62,10 +62,6 @@ object GroupRepo : AbstractCrudRepository<Group, Int>(Group) {
             WHERE grouped.version_id=grouped.min
         """
 
-    fun findRootGroupsByVersion(version: Version): Iterable<Group> = transaction {
-        Group.find { (Groups.version eq version.id) and (Groups.parentVid eq null) }
-    }
-
     fun findGroupsAffectedByVersion(version: Version): Iterable<Group> = transaction {
         connection.prepareStatement(FIND_GROUPS_AFFECTED_BY_VERSION_QUERY, arrayOf("id"))
             .apply {
