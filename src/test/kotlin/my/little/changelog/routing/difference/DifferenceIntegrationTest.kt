@@ -74,4 +74,36 @@ internal class DifferenceIntegrationTest : AbstractIntegrationTest() {
             }
         }
     }
+
+    @Test
+    fun `Test Get Difference With Nonexistent Version Failure`() {
+        testApplication {
+            val version1 = transaction {
+                Version.new {}
+            }
+            val version2 = transaction {
+                Version.new {}
+            }
+
+            with(handleRequest(HttpMethod.Get, "difference?from=${version1.id.value}&to=${version2.id.value + 1}")) {
+                assertEquals(HttpStatusCode.InternalServerError, response.status())
+            }
+        }
+    }
+
+    @Test
+    fun `Test Get Difference With Param Missing Failure`() {
+        testApplication {
+            val version1 = transaction {
+                Version.new {}
+            }
+            transaction {
+                Version.new {}
+            }
+
+            with(handleRequest(HttpMethod.Get, "difference?from=${version1.id.value}")) {
+                assertEquals(HttpStatusCode.InternalServerError, response.status())
+            }
+        }
+    }
 }

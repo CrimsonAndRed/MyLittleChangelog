@@ -33,7 +33,7 @@ internal class VersionIntegrationTest : AbstractIntegrationTest() {
                 Version.new {}
             }
 
-            with(handleRequest(HttpMethod.Get, "version/${version.id}")) {
+            with(handleRequest(HttpMethod.Get, "version/${version.id.value}")) {
                 assertEquals(HttpStatusCode.OK, response.status())
             }
         }
@@ -196,7 +196,7 @@ internal class VersionIntegrationTest : AbstractIntegrationTest() {
     }
 
     @Test
-    fun `Test Delete Unknown Version Failure`() {
+    fun `Test Delete Nonexistent Version Failure`() {
         testApplication {
             val firstVersion = transaction {
                 val firstVersion = Version.new { }
