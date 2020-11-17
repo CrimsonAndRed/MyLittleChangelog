@@ -42,7 +42,7 @@ internal class VersionServiceTest : BaseMockedDbTest() {
         }
     }
 
-    // Доступ к полю version в модели Group отсутсвует для замоканных моделей
+    // Доступ к полю version в модели Group отсутствует для замоканных моделей
 //    @Test
 //    fun `Test Get WholeVersion 1`() {
 //

@@ -33,7 +33,7 @@ internal class GroupIntegrationTest : AbstractIntegrationTest() {
             val dto = GroupCreationDto("Тестовая Группа")
 
             with(
-                handleRequest(HttpMethod.Post, "/version/${version.id}/group") {
+                handleRequest(HttpMethod.Post, "version/${version.id}/group") {
                     addHeader("Content-Type", "application/json")
                     setBody(Json.encodeToString(dto))
                 }
@@ -62,7 +62,7 @@ internal class GroupIntegrationTest : AbstractIntegrationTest() {
             val dto = GroupCreationDto("Тестовая Группа", parentVid = group.vid)
 
             with(
-                handleRequest(HttpMethod.Post, "/version/${version.id}/group") {
+                handleRequest(HttpMethod.Post, "version/${version.id}/group") {
                     addHeader("Content-Type", "application/json")
                     setBody(Json.encodeToString(dto))
                 }
@@ -91,7 +91,7 @@ internal class GroupIntegrationTest : AbstractIntegrationTest() {
                 val dto = GroupCreationDto(group.name, vid = group.vid)
 
                 with(
-                    handleRequest(HttpMethod.Post, "/version/${version2.id}/group") {
+                    handleRequest(HttpMethod.Post, "version/${version2.id}/group") {
                         addHeader("Content-Type", "application/json")
                         setBody(Json.encodeToString(dto))
                     }
@@ -123,7 +123,7 @@ internal class GroupIntegrationTest : AbstractIntegrationTest() {
                 val dto = GroupUpdateDto("Тестовая Базовая Группа 2", null)
 
                 with(
-                    handleRequest(HttpMethod.Put, "/version/${version.id}/group/${group.id}") {
+                    handleRequest(HttpMethod.Put, "version/${version.id}/group/${group.id}") {
                         addHeader("Content-Type", "application/json")
                         setBody(Json.encodeToString(dto))
                     }
@@ -160,7 +160,7 @@ internal class GroupIntegrationTest : AbstractIntegrationTest() {
                 val dto = GroupUpdateDto("Тестовая Базовая Группа 2", groupRoot.id.value)
 
                 with(
-                    handleRequest(HttpMethod.Put, "/version/${version.id}/group/${groupSub.id}") {
+                    handleRequest(HttpMethod.Put, "version/${version.id}/group/${groupSub.id}") {
                         addHeader("Content-Type", "application/json")
                         setBody(Json.encodeToString(dto))
                     }

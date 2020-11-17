@@ -46,7 +46,7 @@ internal class LeafIntegrationTest : AbstractIntegrationTest() {
             )
 
             with(
-                handleRequest(HttpMethod.Post, "/version/${version.id}/group/${group.id}/leaf") {
+                handleRequest(HttpMethod.Post, "version/${version.id}/group/${group.id}/leaf") {
                     addHeader("Content-Type", "application/json")
                     setBody(Json.encodeToString(dto))
                 }
@@ -91,7 +91,7 @@ internal class LeafIntegrationTest : AbstractIntegrationTest() {
                 )
 
                 with(
-                    handleRequest(HttpMethod.Put, "/version/${version.id}/group/${group.id}/leaf/${leaf.id}") {
+                    handleRequest(HttpMethod.Put, "version/${version.id}/group/${group.id}/leaf/${leaf.id}") {
                         addHeader("Content-Type", "application/json")
                         setBody(Json.encodeToString(dto))
                     }
@@ -139,7 +139,7 @@ internal class LeafIntegrationTest : AbstractIntegrationTest() {
                 )
 
                 with(
-                    handleRequest(HttpMethod.Put, "/version/${version.id}/group/${group.id}/leaf/${leaf.id}") {
+                    handleRequest(HttpMethod.Put, "version/${version.id}/group/${group.id}/leaf/${leaf.id}") {
                         addHeader("Content-Type", "application/json")
                         setBody(Json.encodeToString(dto))
                     }
@@ -192,7 +192,7 @@ internal class LeafIntegrationTest : AbstractIntegrationTest() {
                 )
 
                 with(
-                    handleRequest(HttpMethod.Put, "/version/${version.id}/group/${group1.id}/leaf/${leaf.id}") {
+                    handleRequest(HttpMethod.Put, "version/${version.id}/group/${group1.id}/leaf/${leaf.id}") {
                         addHeader("Content-Type", "application/json")
                         setBody(Json.encodeToString(dto))
                     }
@@ -233,7 +233,7 @@ internal class LeafIntegrationTest : AbstractIntegrationTest() {
                 commit()
 
                 with(
-                    handleRequest(HttpMethod.Delete, "/version/${version.id}/group/${group.id}/leaf/${leaf.id}")
+                    handleRequest(HttpMethod.Delete, "version/${version.id}/group/${group.id}/leaf/${leaf.id}")
                 ) {
                     assertEquals(HttpStatusCode.NoContent, response.status())
                 }
@@ -265,7 +265,7 @@ internal class LeafIntegrationTest : AbstractIntegrationTest() {
                 commit()
 
                 with(
-                    handleRequest(HttpMethod.Delete, "/version/${version2.id}/group/${group.id}/leaf/${leaf.id}")
+                    handleRequest(HttpMethod.Delete, "version/${version2.id}/group/${group.id}/leaf/${leaf.id}")
                 ) {
                     assertEquals(HttpStatusCode.BadRequest, response.status())
                 }

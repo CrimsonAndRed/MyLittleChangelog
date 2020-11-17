@@ -33,7 +33,7 @@ internal class VersionIntegrationTest : AbstractIntegrationTest() {
                 Version.new {}
             }
 
-            with(handleRequest(HttpMethod.Get, "/version/${version.id}")) {
+            with(handleRequest(HttpMethod.Get, "version/${version.id}")) {
                 assertEquals(HttpStatusCode.OK, response.status())
             }
         }
@@ -103,7 +103,7 @@ internal class VersionIntegrationTest : AbstractIntegrationTest() {
                 )
             }
 
-            with(handleRequest(HttpMethod.Get, "/version/${version.id}")) {
+            with(handleRequest(HttpMethod.Get, "version/${version.id}")) {
                 assertEquals(HttpStatusCode.OK, response.status())
                 val json: WholeVersion = Json.decodeFromString(response.content!!)
                 assertEquals(json, version)
@@ -119,7 +119,7 @@ internal class VersionIntegrationTest : AbstractIntegrationTest() {
                 Version.new {}
             }
 
-            with(handleRequest(HttpMethod.Get, "/version")) {
+            with(handleRequest(HttpMethod.Get, "version")) {
                 assertEquals(HttpStatusCode.OK, response.status())
                 val jsonList: List<ReturnedVersionDto> = Json.decodeFromString(response.content!!)
                 assertEquals(2, jsonList.size)
@@ -154,7 +154,7 @@ internal class VersionIntegrationTest : AbstractIntegrationTest() {
                 latestVersion
             }
 
-            with(handleRequest(HttpMethod.Delete, "/version/${latestVersion.id.value}")) {
+            with(handleRequest(HttpMethod.Delete, "version/${latestVersion.id.value}")) {
                 transaction {
                     assertEquals(HttpStatusCode.NoContent, response.status())
                     assertNotEquals(latestVersion, VersionRepo.findLatest())
@@ -184,7 +184,7 @@ internal class VersionIntegrationTest : AbstractIntegrationTest() {
                 firstVersion
             }
 
-            with(handleRequest(HttpMethod.Delete, "/version/${firstVersion.id.value}")) {
+            with(handleRequest(HttpMethod.Delete, "version/${firstVersion.id.value}")) {
                 transaction {
                     assertEquals(HttpStatusCode.BadRequest, response.status())
                     assertNotEquals(firstVersion, VersionRepo.findLatest())
@@ -207,7 +207,7 @@ internal class VersionIntegrationTest : AbstractIntegrationTest() {
                 firstVersion
             }
 
-            with(handleRequest(HttpMethod.Delete, "/version/${firstVersion.id.value + 1}")) {
+            with(handleRequest(HttpMethod.Delete, "version/${firstVersion.id.value + 1}")) {
                 transaction {
                     assertEquals(HttpStatusCode.InternalServerError, response.status())
                 }
@@ -238,7 +238,7 @@ internal class VersionIntegrationTest : AbstractIntegrationTest() {
                 }
             }
 
-            with(handleRequest(HttpMethod.Get, "/version/previous")) {
+            with(handleRequest(HttpMethod.Get, "version/previous")) {
                 transaction {
                     assertEquals(HttpStatusCode.OK, response.status())
                     val json: PreviousVersionsDTO = Json.decodeFromString(response.content!!)
