@@ -27,23 +27,27 @@ export class EditGroupButtonComponent {
   onEditClick(): void {
     const dialogRef = this.dialog.open(EditGroupModalComponent, {
       hasBackdrop: true,
-      data: this.group
+      minWidth: '80%',
+      data: {
+        group: this.group,
+        parentGroupVid: this.parentGroupVid
+      }
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.updateGroup(result);
+        this.updateGroup(result[0], result[1]);
       }
     });
   }
 
-  updateGroup(group: GroupContent): void {
+  updateGroup(group: GroupContent, newParentVid: number): void {
     const versionId = this.wholeVersionService.wholeVersion.id;
     const groupId = this.group.id;
 
     const groupToUpdate: GroupToUpdate = {
       name: group.name,
-      parentVid: this.parentGroupVid
+      parentVid: newParentVid
     };
     this.onUpdateGroup.emit(this.http.put<void>(`http://localhost:8080/version/${versionId}/group/${groupId}`, groupToUpdate));
   }

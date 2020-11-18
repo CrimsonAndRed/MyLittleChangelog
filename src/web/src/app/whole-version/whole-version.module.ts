@@ -22,8 +22,11 @@ import { EditGroupModalComponent } from './group-content/buttons/edit-group-butt
 import { NewGroupModalComponent } from './group-content/buttons/new-group-button/new-group-modal/new-group-modal.component';
 import { NewLeafModalComponent } from './leaf-content/buttons/new-leaf-button/new-leaf-modal/new-leaf-modal.component';
 import { EditLeafModalComponent } from './leaf-content/buttons/edit-leaf-button/edit-leaf-modal/edit-leaf-modal.component';
-import { NodeMovementComponent } from './node-movement/node-movement.component';
-import { NodeMovementGroupHeaderComponent } from './node-movement/group-header/group-header.component';
+import { LeafMovementComponent } from './node-movement/leaf-movement/leaf-movement.component';
+import { GroupMovementComponent } from './node-movement/group-movement/group-movement.component';
+import { LeafMovementGroupHeaderComponent } from './node-movement/leaf-movement/group-header/group-header.component';
+import { GroupMovementGroupHeaderComponent } from './node-movement/group-movement/group-header/group-header.component';
+import { GroupMovementGlobalHeaderComponent } from './node-movement/group-movement/global-header/global-header.component';
 import { PreviousVersionGroupHeaderComponent } from './group-content/previous-version-group-header/previous-version-group-header.component';
 import { PreviousVersionLeafHeaderComponent } from './leaf-content/previous-version-leaf-header/previous-version-leaf-header.component';
 import { PreviousVersionVersionHeaderComponent } from './previous-version-version-header/previous-version-version-header.component';
@@ -53,8 +56,11 @@ import { PreviousVersionVersionHeaderComponent } from './previous-version-versio
     EditLeafButtonComponent,
     EditLeafModalComponent,
 
-    NodeMovementComponent,
-    NodeMovementGroupHeaderComponent,
+    LeafMovementComponent,
+    GroupMovementComponent,
+    LeafMovementGroupHeaderComponent,
+    GroupMovementGroupHeaderComponent,
+    GroupMovementGlobalHeaderComponent,
   ],
   imports: [
     BrowserModule,

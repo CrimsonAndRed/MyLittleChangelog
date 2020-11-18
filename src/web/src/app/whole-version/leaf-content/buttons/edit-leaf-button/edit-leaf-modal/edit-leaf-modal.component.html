@@ -10,7 +10,7 @@
       <label>Value type</label>
       <input type="radio" value="1" id="leaf-type-1" checked/><label for="leaf-type-1"> {{ leafTypeService.leafById(1)?.name }}</label>
     </div>
-    <node-movement [parentVid]="parentGroupVid" (parentChange)="onParentChange($event)"></node-movement>
+    <leaf-movement [parentVid]="parentGroupVid" (parentChange)="onParentChange($event)"></leaf-movement>
   </div>
 </mat-dialog-content>
 <mat-dialog-actions align="end">

@@ -1,29 +1,29 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { GroupSecConfigBuilder, GroupsSecConfig, GroupsSecContext } from 'app/groups-sec/groups-sec.model';
+import { GroupSecConfigBuilder, GroupsSecConfig, GroupsSecContext, GroupHeader } from 'app/groups-sec/groups-sec.model';
 import { GroupContent } from 'app/model/group-content';
-import { NodeMovementGroupHeaderComponent } from './group-header/group-header.component';
 import { WholeVersionService } from 'app/whole-version/whole-version.service';
+import { LeafMovementGroupHeaderComponent } from './group-header/group-header.component';
 
 @Component({
-  selector: 'node-movement',
-  templateUrl: './node-movement.component.html',
-  styleUrls: ['./node-movement.component.scss']
+  selector: 'leaf-movement',
+  templateUrl: './leaf-movement.component.html',
+  styleUrls: ['./leaf-movement.component.scss']
 })
-export class NodeMovementComponent implements OnInit {
+export class LeafMovementComponent implements OnInit {
 
   @Input() parentVid: number;
   @Output() parentChange = new EventEmitter<number>();
-
-  config: GroupsSecConfig = new GroupSecConfigBuilder()
-    .setGroupHeader(NodeMovementGroupHeaderComponent)
-    .setLeafShowCondition(() => false)
-    .build();
+  config: GroupsSecConfig
 
   context: GroupsSecContext;
 
   constructor(public wholeVersionService: WholeVersionService) { }
 
   ngOnInit(): void {
+    this.config = new GroupSecConfigBuilder()
+      .setGroupHeader(LeafMovementGroupHeaderComponent)
+      .setLeafShowCondition(() => false)
+      .build();
     this.context = {
       parentVid: this.parentVid,
       emitGroupChoice: this.onGroupChoice.bind(this),

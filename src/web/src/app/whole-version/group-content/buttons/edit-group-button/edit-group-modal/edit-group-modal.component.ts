@@ -14,8 +14,21 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dial
 export class EditGroupModalComponent {
 
   _group: GroupContent;
+  parentGroupVid: number;
+  newParentGroupVid: number;
 
-  constructor(private dialogRef: MatDialogRef<EditGroupModalComponent>, @Inject(MAT_DIALOG_DATA) private group: GroupContent) {
-    this._group = { ...group };
+  constructor(private dialogRef: MatDialogRef<EditGroupModalComponent>, @Inject(MAT_DIALOG_DATA) private data: EditGroupModalData) {
+    this._group = { ...data.group };
+    this.parentGroupVid = data.parentGroupVid;
+    this.newParentGroupVid = data.parentGroupVid;
   }
+
+  onParentChange(groupVid: number): void {
+    this.newParentGroupVid = groupVid;
+  }
+}
+
+export interface EditGroupModalData {
+  group: GroupContent;
+  parentGroupVid: number;
 }
