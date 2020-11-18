@@ -13,11 +13,13 @@
                         [group]="_group"
                         [parentGroup]="group"
                         [leaves]="_group.leafContent"></group-leaves-sec>
-      <leaf-content-sec *ngFor="let leaf of group.leafContent"
+      <ng-container *ngIf="config.leafShowCondition()">
+        <leaf-content-sec *ngFor="let leaf of group.leafContent"
                         [config]="config"
                         [context]="context"
                         [leaf]="leaf"
                         [parentGroup]="group"></leaf-content-sec>
+      </ng-container>
     </div>
   </div>
 </div>
