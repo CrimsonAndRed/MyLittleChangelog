@@ -23,7 +23,7 @@ export class LeafHeaderComponent implements LeafHeader {
   handleDeleteLeaf(obs: Observable<void>) {
     this.preloaderService.wrap(
       obs.pipe(
-        switchMap(() => this.wholeVersionService.deleteLeaf(this.data.leaf.id, this.data.parentGroup.vid))
+        switchMap(() => this.wholeVersionService.deleteLeaf())
       )
     );
   }

@@ -59,7 +59,7 @@ export class GroupHeaderComponent implements GroupHeader {
   handleDeleteGroup(obs: Observable<void>): void {
     this.preloaderService.wrap(
       obs.pipe(
-        switchMap(() => this.wholeVersionService.deleteGroup(this.data.group.id, this.data.parentGroup?.vid))
+        switchMap(() => this.wholeVersionService.deleteGroup())
       )
     );
   }

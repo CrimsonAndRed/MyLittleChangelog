@@ -46,11 +46,11 @@ export class WholeVersionService {
     return this.initWholeVersion(this.wholeVersion.id);
   }
 
-  deleteLeaf(leafId: number, parentVid: number): Observable<WholeVersion> {
+  deleteLeaf(): Observable<WholeVersion> {
     return this.initWholeVersion(this.wholeVersion.id);
   }
 
-  deleteGroup(groupId: number, parentVid: number): Observable<WholeVersion> {
+  deleteGroup(): Observable<WholeVersion> {
     return this.initWholeVersion(this.wholeVersion.id);
   }
 
