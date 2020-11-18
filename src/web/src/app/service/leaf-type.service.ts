@@ -12,4 +12,8 @@ export class LeafTypeService {
   leafById(id: number) {
     return this.map.get(id);
   }
+
+  leafTypes(): Iterable<LeafType> {
+    return this.map.values();
+  }
 }

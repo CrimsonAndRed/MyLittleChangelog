@@ -7,6 +7,7 @@ import { LeafTypeService } from 'app/service/leaf-type.service';
 import { Type } from '@angular/core';
 import { GroupHeader } from 'app/groups-sec/groups-sec.model';
 import { LeafMovementGroupHeaderComponent } from 'app/whole-version/node-movement/leaf-movement/group-header/group-header.component';
+import { LeafType } from 'app/model/leaf-content';
 
 @Component({
   selector: 'edit-leaf-modal',
@@ -22,14 +23,16 @@ export class EditLeafModalComponent {
 
   constructor(@Inject(MAT_DIALOG_DATA) private data: EditLeafModalData, public leafTypeService: LeafTypeService) {
     this.leaf = { ...this.data.leaf };
-    // TODO(#5) неимплементированы другие значения
-    this.leaf.valueType = 1;
     this.parentGroupVid = this.data.parentGroupVid;
     this.newParentGroupVid = this.data.parentGroupVid;
   }
 
   onParentChange(groupVid: number): void {
     this.newParentGroupVid = groupVid;
+  }
+
+  onLeafTypeClick(leafType: LeafType): void {
+    this.leaf.valueType = leafType.id;
   }
 }
 

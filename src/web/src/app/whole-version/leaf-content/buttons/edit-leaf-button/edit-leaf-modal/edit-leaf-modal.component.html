@@ -8,7 +8,9 @@
     </div>
     <div>
       <label>Value type</label>
-      <input type="radio" value="1" id="leaf-type-1" checked/><label for="leaf-type-1"> {{ leafTypeService.leafById(1)?.name }}</label>
+      <div *ngFor="let leafType of leafTypeService.leafTypes()">
+        <input type="radio" (click)="onLeafTypeClick(leafType)" [checked]="leaf.valueType === leafType.id"/><label> {{ leafType.name }}</label>
+      </div>
     </div>
     <leaf-movement [parentVid]="parentGroupVid" (parentChange)="onParentChange($event)"></leaf-movement>
   </div>
