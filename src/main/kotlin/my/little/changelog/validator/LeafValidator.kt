@@ -24,7 +24,7 @@ object LeafValidator {
 
     private fun validateName(name: String, errors: MutableList<String>) {
         if (name.isBlank()) {
-            errors.add("Name can not be blank")
+            errors.add(ValidatorMessage.isBlank("name"))
         }
     }
 

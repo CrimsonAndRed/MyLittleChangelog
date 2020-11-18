@@ -20,7 +20,7 @@ import org.junit.jupiter.api.Test
 import kotlin.test.assertTrue
 
 @KtorExperimentalAPI
-internal class GroupIntegrationValidationTest : AbstractIntegrationTest() {
+internal class LeafIntegrationValidationTest : AbstractIntegrationTest() {
     @Test
     fun `Test Create Leaf With Blank Name`() {
         testApplication {
