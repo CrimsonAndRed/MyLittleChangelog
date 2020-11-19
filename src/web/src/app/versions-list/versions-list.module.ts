@@ -5,7 +5,8 @@ import { RouterModule } from '@angular/router';
 
 import { VersionsListComponent } from './versions-list.component';
 import { NewVersionComponent } from './new-version/new-version.component';
-import { DifferenceChooserComponent } from './difference-chooser/difference-chooser.component';
+import { DifferenceButtonComponent } from './difference-button/difference-button.component';
+import { DifferenceModalComponent } from './difference-button/difference-modal/difference-modal.component';
 
 import { HttpClientModule } from '@angular/common/http';
 
@@ -13,7 +14,8 @@ import { HttpClientModule } from '@angular/common/http';
   declarations: [
     VersionsListComponent,
     NewVersionComponent,
-    DifferenceChooserComponent,
+    DifferenceButtonComponent,
+    DifferenceModalComponent,
   ],
   imports: [
     BrowserModule,

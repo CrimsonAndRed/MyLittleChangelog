@@ -18,6 +18,6 @@
     </div>
   </div>
   <div *ngIf="fromVersion != null && toVersion != null">
-    <a [routerLink]="['difference']" [queryParams]="{from: fromVersion.id, to: toVersion.id}">Show Diff</a>
+    <button (click)="onGoToDifference()">Show Diff</button>
   </div>
 </div>
