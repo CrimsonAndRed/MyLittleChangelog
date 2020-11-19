@@ -32,13 +32,7 @@ export class EditLeafModalComponent {
   onParentChange(groupVid: number): void {
     this.newParentGroupVid = groupVid;
   }
-
-  onLeafTypeClick(leafType: LeafType): void {
-    this.leaf.valueType = leafType.id;
-  }
 }
-
-
 
 export interface EditLeafModalData {
   leaf: LeafContent;

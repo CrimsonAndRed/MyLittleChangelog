@@ -9,6 +9,7 @@ import { DifferenceButtonComponent } from './difference-button/difference-button
 import { DifferenceModalComponent } from './difference-button/difference-modal/difference-modal.component';
 
 import { HttpClientModule } from '@angular/common/http';
+import { MatSelectModule } from '@angular/material/select';
 
 @NgModule({
   declarations: [
@@ -22,6 +23,7 @@ import { HttpClientModule } from '@angular/common/http';
     FormsModule,
     HttpClientModule,
     RouterModule,
+    MatSelectModule
   ],
 })
 export class VersionsListModule { }

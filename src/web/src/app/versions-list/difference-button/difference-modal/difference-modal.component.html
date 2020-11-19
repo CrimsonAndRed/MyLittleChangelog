@@ -1,21 +1,21 @@
 <div>
   <div>
-    <p>Choose "from" version</p>
     <div>
-      <div *ngFor="let version of versions">
-        <input type="radio" name="from-version-check" (click)="onFromVersionChoose(version)" />
-        <label> {{ version.id }} </label>
-      </div>
+      <label>Choose "from" version</label>
+      <mat-form-field appearance="fill">
+        <mat-select [(ngModel)]="fromVersion" (selectionChange)="onFromChanged($event)">
+          <mat-option *ngFor="let version of versions" [value]="version"> {{ version.id }}</mat-option>
+        </mat-select>
+      </mat-form-field>
     </div>
   </div>
   <div>
-    <p>Choose "to" version</p>
-    <div>
-      <div *ngFor="let version of versions">
-        <input type="radio" name="to-version-check" (click)="onToVersionChoose(version)" />
-        <label> {{ version.id }} </label>
-      </div>
-    </div>
+    <label>Choose "to" version</label>
+    <mat-form-field appearance="fill">
+      <mat-select [(ngModel)]="toVersion" (selectionChange)="onToChanged($event)">
+        <mat-option *ngFor="let version of versions" [value]="version"> {{ version.id }}</mat-option>
+      </mat-select>
+    </mat-form-field>
   </div>
   <div *ngIf="fromVersion != null && toVersion != null">
     <button (click)="onGoToDifference()">Show Diff</button>

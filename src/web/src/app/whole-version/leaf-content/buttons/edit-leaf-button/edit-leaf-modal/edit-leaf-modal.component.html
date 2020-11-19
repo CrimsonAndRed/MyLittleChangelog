@@ -8,9 +8,11 @@
     </div>
     <div>
       <label>Value type</label>
-      <div *ngFor="let leafType of leafTypes">
-        <input type="radio" (click)="onLeafTypeClick(leafType)" [checked]="leaf.valueType === leafType.id"/><label> {{ leafType.name }}</label>
-      </div>
+      <mat-form-field appearance="fill">
+        <mat-select [(ngModel)]="leaf.valueType">
+          <mat-option *ngFor="let leafType of leafTypes" [value]="leafType.id"> {{ leafType.name }}</mat-option>
+        </mat-select>
+      </mat-form-field>
     </div>
     <leaf-movement [parentVid]="parentGroupVid" (parentChange)="onParentChange($event)"></leaf-movement>
   </div>

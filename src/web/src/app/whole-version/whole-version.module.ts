@@ -30,6 +30,7 @@ import { GroupMovementGlobalHeaderComponent } from './node-movement/group-moveme
 import { PreviousVersionGroupHeaderComponent } from './group-content/previous-version-group-header/previous-version-group-header.component';
 import { PreviousVersionLeafHeaderComponent } from './leaf-content/previous-version-leaf-header/previous-version-leaf-header.component';
 import { PreviousVersionVersionHeaderComponent } from './previous-version-version-header/previous-version-version-header.component';
+import { MatSelectModule } from '@angular/material/select';
 
 @NgModule({
   declarations: [
@@ -70,6 +71,7 @@ import { PreviousVersionVersionHeaderComponent } from './previous-version-versio
     MatDialogModule,
     GroupsSecModule,
     PreviousVersionModule,
+    MatSelectModule
   ],
 })
 export class WholeVersionModule { }

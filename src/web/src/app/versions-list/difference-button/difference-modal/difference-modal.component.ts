@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { MatSelectChange } from '@angular/material/select';
 
 @Component({
   selector: 'difference-modal',
@@ -22,16 +23,20 @@ export class DifferenceModalComponent  {
     this.versions = data.versions;
   }
 
-  onToVersionChoose(version: Version) {
-    this.toVersion = version;
-  }
-
-  onFromVersionChoose(version: Version) {
-    this.fromVersion = version;
-  }
-
   onGoToDifference() {
     this.dialogRef.close(null);
     this.router.navigate(['difference'], { queryParams: { 'to': this.toVersion.id, 'from': this.fromVersion.id }, skipLocationChange: false});
+  }
+
+  onToChanged(event: MatSelectChange) {
+    if (this.fromVersion != null && this.fromVersion.id >= event.value.id) {
+      this.fromVersion = null;
+    }
+  }
+
+  onFromChanged(event: MatSelectChange) {
+    if (this.toVersion != null && this.toVersion.id <= event.value.id) {
+      this.toVersion = null;
+    }
   }
 }
