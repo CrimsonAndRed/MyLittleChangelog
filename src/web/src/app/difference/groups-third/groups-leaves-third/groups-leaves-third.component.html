@@ -1,0 +1,12 @@
+<div class="group-leaves-container">
+  <div class="group-leaves">
+    <group-third [group]="group"></group-third>
+    <groups-leaves-third *ngFor="let _group of group.groupContent"
+                      [group]="_group">
+    </groups-leaves-third>
+
+    <leaf-third *ngFor="let leaf of group.leafContent"
+                      [leaf]="leaf">
+    </leaf-third>
+  </div>
+</div>

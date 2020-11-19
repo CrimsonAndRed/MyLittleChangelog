@@ -8,7 +8,7 @@
     </div>
     <div>
       <label>Value type</label>
-      <div *ngFor="let leafType of leafTypeService.leafTypes()">
+      <div *ngFor="let leafType of leafTypes">
         <input type="radio" (click)="onLeafTypeClick(leafType)" [checked]="leaf.valueType === leafType.id"/><label> {{ leafType.name }}</label>
       </div>
     </div>

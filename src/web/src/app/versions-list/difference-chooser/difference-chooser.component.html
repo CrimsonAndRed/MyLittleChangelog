@@ -1,0 +1,23 @@
+<div>
+  <div>
+    <p>Choose "from" version</p>
+    <div>
+      <div *ngFor="let version of versions">
+        <input type="radio" name="from-version-check" (click)="onFromVersionChoose(version)" />
+        <label> {{ version.id }} </label>
+      </div>
+    </div>
+  </div>
+  <div>
+    <p>Choose "to" version</p>
+    <div>
+      <div *ngFor="let version of versions">
+        <input type="radio" name="to-version-check" (click)="onToVersionChoose(version)" />
+        <label> {{ version.id }} </label>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="fromVersion != null && toVersion != null">
+    <a [routerLink]="['difference']" [queryParams]="{from: fromVersion.id, to: toVersion.id}">Show Diff</a>
+  </div>
+</div>

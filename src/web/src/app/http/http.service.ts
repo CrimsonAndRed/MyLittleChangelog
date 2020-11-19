@@ -19,8 +19,12 @@ export class Http {
   constructor(private httpClient: HttpClient, private dialog: MatDialog) {
   }
 
-  get<T>(url: string): Observable<T> {
-    return this.handleErrors(this.httpClient.get<T>(url));
+  get<T>(url: string, queryParams: HttpParams = new HttpParams()): Observable<T> {
+    const options = {
+      responseType: 'json' as const,
+      params: queryParams
+    }
+    return this.handleErrors(this.httpClient.get<T>(url, options));
   }
 
   post<T>(url: string, body: any = null): Observable<T> {

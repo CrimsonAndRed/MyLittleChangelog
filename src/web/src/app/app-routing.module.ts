@@ -3,6 +3,8 @@ import { RouterModule, Routes } from '@angular/router';
 import { VersionsListComponent } from './versions-list/versions-list.component';
 import { WholeVersionComponent } from './whole-version/whole-version.component';
 import { VersionsResolver } from './resolver/versions.resolver';
+import { DifferenceComponent } from './difference/difference.component';
+import { DifferenceResolver } from './resolver/difference.resolver';
 
 const routes: Routes = [
   {
@@ -15,6 +17,13 @@ const routes: Routes = [
   {
     path: 'version/:id',
     component: WholeVersionComponent,
+  },
+  {
+    path: 'difference',
+    component: DifferenceComponent,
+    resolve: {
+      difference: DifferenceResolver
+    },
   },
 ];
 

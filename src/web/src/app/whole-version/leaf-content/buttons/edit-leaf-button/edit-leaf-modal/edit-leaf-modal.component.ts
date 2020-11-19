@@ -20,11 +20,13 @@ export class EditLeafModalComponent {
   parentGroupVid: number;
   newParentGroupVid: number;
   groupHeader: Type<GroupHeader> = LeafMovementGroupHeaderComponent;
+  leafTypes: LeafType[] = null;
 
   constructor(@Inject(MAT_DIALOG_DATA) private data: EditLeafModalData, public leafTypeService: LeafTypeService) {
     this.leaf = { ...this.data.leaf };
     this.parentGroupVid = this.data.parentGroupVid;
     this.newParentGroupVid = this.data.parentGroupVid;
+    this.leafTypes = [...leafTypeService.leafTypes()];
   }
 
   onParentChange(groupVid: number): void {
