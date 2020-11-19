@@ -7,7 +7,10 @@
       <label>Value</label><input [(ngModel)]="leaf.value"/>
     </div>
     <div>
-      <label>Value type</label><input [(ngModel)]="leaf.valueType"/>
+      <label>Value type</label>
+      <div *ngFor="let leafType of leafTypes">
+        <input type="radio" (click)="onLeafTypeClick(leafType)" [checked]="leaf.valueType === leafType.id"/><label> {{ leafType.name }}</label>
+      </div>
     </div>
   </div>
 </mat-dialog-content>
