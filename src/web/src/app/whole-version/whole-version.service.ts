@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Http } from 'app/http/http.service';
-import { WholeVersion } from 'app/model/whole-version'
+import { WholeVersion } from 'app/model/whole-version';
 import { tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { GroupContent, Group } from 'app/model/group-content';
@@ -29,7 +29,7 @@ export class WholeVersionService {
       );
   }
 
-  addGroupToParent(group: GroupContent, parentVid: number) {
+  addGroupToParent(group: GroupContent, parentVid: number): void {
     if (parentVid !== null) {
       this.groupsByVid.get(parentVid).groupContent.push(group);
     } else {
@@ -38,7 +38,7 @@ export class WholeVersionService {
     this.groupsByVid.set(group.vid, group);
   }
 
-  addLeafToParent(leaf: LeafContent, parentVid: number) {
+  addLeafToParent(leaf: LeafContent, parentVid: number): void {
     this.groupsByVid.get(parentVid).leafContent.push(leaf);
   }
 
@@ -58,8 +58,8 @@ export class WholeVersionService {
     return this.initWholeVersion(this.wholeVersion.id);
   }
 
-  materializeGroup(group: Group) {
-    let updateGroup = this.groupsByVid.get(group.vid);
+  materializeGroup(group: Group): void {
+    const updateGroup = this.groupsByVid.get(group.vid);
 
     updateGroup.name = group.name;
     updateGroup.vid = group.vid;
@@ -72,7 +72,16 @@ export class WholeVersionService {
     return this.initWholeVersion(this.wholeVersion.id);
   }
 
-  private addGroupToMap(group: GroupContent) {
+  swapLeaves(parentVid: number, id1: number, id2: number): void {
+    const group = this.groupsByVid.get(parentVid);
+    const leafIdxFs = group.leafContent.findIndex(l => l.id === id1);
+    const leafIdxSc = group.leafContent.findIndex(l => l.id === id2);
+    const tmpLeaf = group.leafContent[leafIdxFs];
+    group.leafContent[leafIdxFs] = group.leafContent[leafIdxSc];
+    group.leafContent[leafIdxSc] = tmpLeaf;
+  }
+
+  private addGroupToMap(group: GroupContent): void {
     this.groupsByVid.set(group.vid, group);
     group.groupContent.forEach(g => this.addGroupToMap(g));
   }

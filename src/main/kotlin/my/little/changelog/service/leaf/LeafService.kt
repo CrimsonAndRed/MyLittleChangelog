@@ -54,4 +54,21 @@ object LeafService {
                 LeafRepo.delete(leaf)
             }
     }
+
+    fun changePosition(leafId: Int, changeAgainstId: Int) = transaction {
+        val latestVersion = VersionRepo.findLatest().id
+        val leaf = LeafRepo.findById(leafId)
+        val leafChangeAgainst = LeafRepo.findById(changeAgainstId)
+        if (leaf.version.id != latestVersion || leafChangeAgainst.version.id != latestVersion) {
+            throw VersionIsNotLatestException()
+        }
+        if (leaf.groupVid != leafChangeAgainst.groupVid) {
+            throw LeavesIsNotInSameGroupException(leaf, leafChangeAgainst)
+        }
+        val tmpOrder = leaf.order
+        leaf.apply { order = leafChangeAgainst.order }
+        leafChangeAgainst.apply { order = tmpOrder }
+        LeafRepo.update(leaf)
+        LeafRepo.update(leafChangeAgainst)
+    }
 }

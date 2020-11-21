@@ -50,7 +50,7 @@ export class GroupHeaderComponent implements GroupHeader {
             valueType: newLeafWithId.valueType,
             value: newLeafWithId.value,
           };
-          this.wholeVersionService.addLeafToParent(newLeaf, this.data.group.vid)
+          this.wholeVersionService.addLeafToParent(newLeaf, this.data.group.vid);
         })
       )
     );

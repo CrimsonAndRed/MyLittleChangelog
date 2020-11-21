@@ -1,11 +1,15 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { LeafHeader, LeafHeaderData, GroupsSecContext } from 'app/groups-sec/groups-sec.model';
 import { GroupContent } from 'app/model/group-content';
 import { LeafContent, UpdatedLeaf } from 'app/model/leaf-content';
 import { WholeVersionService } from 'app/whole-version/whole-version.service';
+import { UpdatedLeaf } from 'app/model/leaf-content';
+import { WholeVersionService } from 'app/service/whole-version.service';
 import { Observable } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
 import { PreloaderService } from 'app/preloader/preloader.service';
+import { Http } from 'app/http/http.service';
+import { ActivatedRoute } from '@angular/router';
 
 
 @Component({
@@ -13,14 +17,20 @@ import { PreloaderService } from 'app/preloader/preloader.service';
   templateUrl: './leaf-header.component.html',
   styleUrls: ['./leaf-header.component.scss']
 })
-export class LeafHeaderComponent implements LeafHeader {
+export class LeafHeaderComponent implements LeafHeader, OnInit {
 
   data: LeafHeaderData;
   ctx: GroupsSecContext;
 
-  constructor(private wholeVersionService: WholeVersionService, private preloaderService: PreloaderService) {}
+  constructor(private http: Http,
+              private route: ActivatedRoute,
+              private wholeVersionService: WholeVersionService,
+              private preloaderService: PreloaderService) {}
 
-  handleDeleteLeaf(obs: Observable<void>) {
+  ngOnInit(): void {
+  }
+
+  handleDeleteLeaf(obs: Observable<void>): void {
     this.preloaderService.wrap(
       obs.pipe(
         switchMap(() => this.wholeVersionService.deleteLeaf())
@@ -28,11 +38,46 @@ export class LeafHeaderComponent implements LeafHeader {
     );
   }
 
-  handleUpdateLeaf(obs: Observable<void>) {
+  handleUpdateLeaf(obs: Observable<void>): void {
     this.preloaderService.wrap(
       obs.pipe(
         switchMap(() => this.wholeVersionService.updateLeaf())
       )
+    );
+  }
+
+  isUpButtonShowed(): boolean {
+    return this.data.parentGroup.leafContent[0].id !== this.data.leaf.id;
+  }
+
+  isDownButtonShowed(): boolean {
+    return this.data.parentGroup.leafContent[this.data.parentGroup.leafContent.length - 1].id !== this.data.leaf.id;
+  }
+
+  handleMoveUp(): void {
+    this.moveLeaf(this.data.parentGroup.leafContent[this.findIdxInParent() - 1].id);
+  }
+
+  handleMoveDown(): void {
+    this.moveLeaf(this.data.parentGroup.leafContent[this.findIdxInParent() + 1].id);
+  }
+
+  private findIdxInParent(): number {
+    return this.data.parentGroup.leafContent.findIndex(l => l.id === this.data.leaf.id);
+  }
+
+  private moveLeaf(changeAgainstId: number): void {
+    const versionId = this.route.snapshot.params.id;
+    const parentId = this.data.parentGroup.id;
+    const leafId = this.data.leaf.id;
+
+    const dto = { changeAgainstId };
+
+    this.spinnerService.wrapSpinner(
+      this.http.patch(`http://localhost:8080/version/${versionId}/group/${parentId}/leaf/${leafId}/position`, dto)
+        .pipe(
+          tap(() => this.wholeVersionService.swapLeaves(this.data.parentGroup.vid, leafId, changeAgainstId))
+        )
     );
   }
 }

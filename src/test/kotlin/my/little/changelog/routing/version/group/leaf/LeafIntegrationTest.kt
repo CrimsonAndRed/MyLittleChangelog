@@ -2,6 +2,7 @@ package my.little.changelog.routing.version.group.leaf
 
 import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
+import io.ktor.server.testing.TestApplicationEngine
 import io.ktor.server.testing.handleRequest
 import io.ktor.server.testing.setBody
 import io.ktor.util.KtorExperimentalAPI
@@ -10,10 +11,12 @@ import kotlinx.serialization.encodeToString
 import my.little.changelog.configuration.Json
 import my.little.changelog.model.group.Group
 import my.little.changelog.model.leaf.Leaf
+import my.little.changelog.model.leaf.dto.external.ChangeLeafPositionDto
 import my.little.changelog.model.leaf.dto.external.LeafCreationDto
 import my.little.changelog.model.leaf.dto.external.LeafReturnedDto
 import my.little.changelog.model.leaf.dto.external.LeafUpdateDto
 import my.little.changelog.model.version.Version
+import my.little.changelog.persistence.repo.LeafRepo
 import my.little.changelog.routing.AbstractIntegrationTest
 import org.jetbrains.exposed.dao.exceptions.EntityNotFoundException
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -23,6 +26,7 @@ import org.junit.jupiter.api.assertThrows
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
+// TODO Зарефакторить создание версий, групп, лифов через функции в [AbstractIntegrationTest]
 @KtorExperimentalAPI
 internal class LeafIntegrationTest : AbstractIntegrationTest() {
 
@@ -457,6 +461,56 @@ internal class LeafIntegrationTest : AbstractIntegrationTest() {
                 }
                 assertNotNull(Leaf[leaf.id])
             }
+        }
+    }
+
+    @Test
+    fun `Test Move leaf`() {
+        testApplication {
+            transaction {
+                val version = createVersion()
+                val group = createGroup(version, "Группа1")
+                val leaf1 = createLeaf(version, "Лиф1", 1, "Значение1", group.vid)
+                val leaf2 = createLeaf(version, "Лиф2", 2, "Значение2", group.vid)
+                testMoveLeafPositive(version, group, leaf1, leaf2)
+            }
+            transaction {
+                val version = createVersion()
+                val group = createGroup(version, "Группа1")
+                val leaf1 = createLeaf(version, "Лиф1", 1, "Значение1", group.vid)
+                val leaf2 = createLeaf(version, "Лиф2", 2, "Значение2", group.vid)
+                testMoveLeafPositive(version, group, leaf2, leaf1)
+            }
+            transaction {
+                val version = createVersion()
+                val group = createGroup(version, "Группа1")
+                val group2 = createGroup(version, "Группа2")
+                val leaf1 = createLeaf(version, "Лиф1", 1, "Значение1", group.vid)
+                val leaf2 = createLeaf(version, "Лиф2", 2, "Значение2", group2.vid)
+                testMoveLeafNegative(version, group, leaf2, leaf1)
+            }
+        }
+    }
+
+    private fun TestApplicationEngine.testMoveLeafPositive(version: Version, group: Group, leaf1: Leaf, leaf2: Leaf) {
+        val dto = ChangeLeafPositionDto(leaf2.id.value)
+        handleRequest(HttpMethod.Patch, "/version/${version.id}/group/${group.id}/leaf/${leaf1.id}/position") {
+            addHeader("Content-Type", "application/json")
+            setBody(Json.encodeToString(dto))
+        }.apply {
+            assertEquals(HttpStatusCode.NoContent, response.status())
+            assertEquals(LeafRepo.findById(leaf1.id.value).order, leaf2.order)
+            assertEquals(LeafRepo.findById(leaf2.id.value).order, leaf1.order)
+        }
+    }
+
+    private fun TestApplicationEngine.testMoveLeafNegative(version: Version, group: Group, leaf1: Leaf, leaf2: Leaf) {
+        val dto = ChangeLeafPositionDto(leaf2.id.value)
+        handleRequest(HttpMethod.Patch, "/version/${version.id}/group/${group.id}/leaf/${leaf1.id}/position") {
+            addHeader("Content-Type", "application/json")
+            setBody(Json.encodeToString(dto))
+        }.apply {
+            assertEquals(HttpStatusCode.InternalServerError, response.status())
         }
     }
 }

@@ -32,7 +32,7 @@ export class VersionHeaderComponent implements GlobalHeader {
             leafContent: []
           };
 
-          this.wholeVersionService.addGroupToParent(newGroup, null)
+          this.wholeVersionService.addGroupToParent(newGroup, null);
         })
       )
     );

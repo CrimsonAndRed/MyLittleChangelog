@@ -25,7 +25,7 @@ export class MaterializeGroupButtonComponent {
       vid: this.group.vid,
       name: this.group.name,
       parentVid: this.parentGroup?.vid,
-    }
+    };
     this.onMaterializeGroup.emit(this.http.post<Group>(`http://localhost:8080/version/${versionId}/group`, newGroup));
   }
 }

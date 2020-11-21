@@ -31,6 +31,7 @@ import { PreviousVersionGroupHeaderComponent } from './group-content/previous-ve
 import { PreviousVersionLeafHeaderComponent } from './leaf-content/previous-version-leaf-header/previous-version-leaf-header.component';
 import { PreviousVersionVersionHeaderComponent } from './previous-version-version-header/previous-version-version-header.component';
 import { MatSelectModule } from '@angular/material/select';
+import { MoveUpDownButtonComponent } from './move-updown-button/move-updown-button.component';
 
 @NgModule({
   declarations: [
@@ -62,6 +63,10 @@ import { MatSelectModule } from '@angular/material/select';
     LeafMovementGroupHeaderComponent,
     GroupMovementGroupHeaderComponent,
     GroupMovementGlobalHeaderComponent,
+    MoveUpDownButtonComponent,
+
+    NodeMovementComponent,
+    NodeMovementGroupHeaderComponent,
   ],
   imports: [
     BrowserModule,

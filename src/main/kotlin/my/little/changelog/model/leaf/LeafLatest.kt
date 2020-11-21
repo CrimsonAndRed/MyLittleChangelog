@@ -16,6 +16,7 @@ class LeafLatest(id: EntityID<Int>) : IntEntity(id) {
     var value by LeavesLatest.value
     var version by Version referencedOn LeavesLatest.version
     var groupVid by LeavesLatest.groupVid
+    var order by LeavesLatest.order
 }
 
 object LeavesLatest : IntIdTable("leaves_latest") {
@@ -25,4 +26,5 @@ object LeavesLatest : IntIdTable("leaves_latest") {
     val value = text("value")
     val version = reference("version_id", Versions)
     val groupVid = integer("group_vid").nullable()
+    val order = integer("order").autoIncrement("leaves_order_seq")
 }

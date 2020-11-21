@@ -37,7 +37,7 @@ export class PreloaderService {
         .pipe(
           finalize(() => this.stop())
         )
-        .subscribe()
+        .subscribe();
     }
 
     private messageSubscribers() {

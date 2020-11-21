@@ -1,3 +1,7 @@
+<move-updown-button [upShowCondition]="isUpButtonShowed()"
+                    [downShowCondition]="isDownButtonShowed()"
+                    (up)="handleMoveUp()" 
+                    (down)="handleMoveDown()"></move-updown-button>
 <delete-leaf-button [groupId]="data.parentGroup.id"
                     [leafId]="data.leaf.id"
                     (onDeleteLeaf)="handleDeleteLeaf($event)"></delete-leaf-button>

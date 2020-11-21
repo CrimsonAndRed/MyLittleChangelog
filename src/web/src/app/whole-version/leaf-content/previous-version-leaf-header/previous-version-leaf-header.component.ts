@@ -1,5 +1,5 @@
-import { Component } from "@angular/core";
-import { GroupsSecContext, LeafHeader, LeafHeaderData } from "app/groups-sec/groups-sec.model";
+import { Component } from '@angular/core';
+import { GroupsSecContext, LeafHeader, LeafHeaderData } from 'app/groups-sec/groups-sec.model';
 
 @Component({
   selector: 'previous-version-leaf-header',

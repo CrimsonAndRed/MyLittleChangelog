@@ -19,6 +19,6 @@ export class LeafHeaderComponent implements LeafHeader {
   }
 
   showRadioButton(): boolean {
-    return !this.ctx.usedIds.usedLeaves.has(this.data.leaf.id)
+    return !this.ctx.usedIds.usedLeaves.has(this.data.leaf.id);
   }
 }

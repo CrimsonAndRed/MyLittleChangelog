@@ -19,6 +19,6 @@ export class GroupHeaderComponent implements GroupHeader {
   }
 
   showRadioButton(): boolean {
-    return !this.ctx.usedIds.usedGroups.has(this.data.group.id)
+    return !this.ctx.usedIds.usedGroups.has(this.data.group.id);
   }
 }

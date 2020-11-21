@@ -40,7 +40,7 @@ export class Http {
     const options = {
       responseType: 'json' as const,
       params: queryParams
-    }
+    };
 
     return this.handleErrors(this.httpClient.delete<T>(url, options));
   }
@@ -68,5 +68,9 @@ export class Http {
         }
       )
     );
+  }
+
+  patch<Req, Res>(url: string, body: Req): Observable<Res> {
+    return this.httpClient.patch<Res>(url, body, jsonHttpOptions);
   }
 }

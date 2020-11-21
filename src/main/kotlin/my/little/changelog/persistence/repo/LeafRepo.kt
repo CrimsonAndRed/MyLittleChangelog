@@ -5,6 +5,7 @@ import my.little.changelog.model.leaf.Leaf
 import my.little.changelog.model.leaf.Leaves
 import my.little.changelog.model.version.Version
 import my.little.changelog.persistence.AbstractCrudRepository
+import org.jetbrains.exposed.sql.SortOrder
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.statements.jdbc.iterate
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -31,10 +32,12 @@ object LeafRepo : AbstractCrudRepository<Leaf, Int>(Leaf) {
 
     fun findByVersion(version: Version): Iterable<Leaf> = transaction {
         Leaf.find { Leaves.version eq version.id.value }
+            .orderBy(Leaves.order to SortOrder.ASC)
     }
 
     fun findCurrentGroupLeaves(group: Group): Iterable<Leaf> = transaction {
         Leaf.find { (Leaves.version eq group.version.id.value) and (Leaves.groupVid eq group.vid) }
+            .orderBy(Leaves.order to SortOrder.ASC)
     }
 
     fun findCurrentGroupsLeaves(groupVids: Iterable<Int>, version: Version): Iterable<Leaf> = transaction {

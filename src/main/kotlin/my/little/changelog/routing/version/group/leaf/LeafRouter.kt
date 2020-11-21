@@ -4,11 +4,13 @@ import io.ktor.application.call
 import io.ktor.request.receive
 import io.ktor.routing.Routing
 import io.ktor.routing.delete
+import io.ktor.routing.patch
 import io.ktor.routing.post
 import io.ktor.routing.put
 import io.ktor.routing.route
 import io.ktor.util.KtorExperimentalAPI
 import io.ktor.util.getOrFail
+import my.little.changelog.model.leaf.dto.external.ChangeLeafPositionDto
 import my.little.changelog.model.leaf.dto.external.LeafCreationDto
 import my.little.changelog.model.leaf.dto.external.LeafDeletionDto
 import my.little.changelog.model.leaf.dto.external.LeafUpdateDto
@@ -45,6 +47,16 @@ fun Routing.leafRouting() {
             val leafDeletionDto = LeafDeletionDto(call.parameters.getOrFail("leafId").toInt())
             val resp: Response<Unit> = LeafService.deleteLeaf(leafDeletionDto.toServiceDto())
             call.ofEmptyResponse(resp)
+        }
+    }
+
+    route("version/{versionId}/group/{groupId}/leaf/{leafId}/position") {
+        patch {
+            val leafId = call.parameters.getOrFail("leafId").toInt()
+            val changePositionDto = call.receive<ChangeLeafPositionDto>()
+
+            LeafService.changePosition(leafId, changePositionDto.changeAgainstId)
+            call.response.status(HttpStatusCode.NoContent)
         }
     }
 }

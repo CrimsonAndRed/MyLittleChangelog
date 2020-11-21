@@ -22,7 +22,7 @@ export class DeleteLeafButtonComponent {
     const groupId = this.groupId;
     const leafId = this.leafId;
 
-    this.onDeleteLeaf.emit(this.http.delete(`http://localhost:8080/version/${versionId}/group/${groupId}/leaf/${leafId}`))
+    this.onDeleteLeaf.emit(this.http.delete(`http://localhost:8080/version/${versionId}/group/${groupId}/leaf/${leafId}`));
   }
 
 }
