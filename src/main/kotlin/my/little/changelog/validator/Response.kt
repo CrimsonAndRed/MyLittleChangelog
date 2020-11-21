@@ -2,12 +2,12 @@ package my.little.changelog.validator
 
 sealed class Response<T> {
 
-    fun <G> map(f: (T) -> G): Response<G> {
-        return when (this) {
-            is Valid -> Valid(f(this.data))
-            is Err -> Err(this.errors)
-        }
+    fun <G> map(f: (T) -> G): Response<G> = when (this) {
+        is Valid -> Valid(f(this.data))
+        is Err -> Err(this.errors)
     }
+
+    fun mapEmpty(): Response<Unit> = map { Unit }
 }
 
 class Err<T>(val errors: List<String>) : Response<T>()

@@ -1,6 +1,12 @@
 package my.little.changelog.validator
 
-open class ValidatorResponse(private val errors: List<String>) {
+class ValidatorResponse(private val errors: List<String>) {
+
+    companion object {
+        fun ofSimple(message: String, check: () -> Boolean): ValidatorResponse =
+            if (check()) ValidatorResponse(listOf(message))
+            else ValidatorResponse(emptyList())
+    }
 
     fun isValid(): Boolean {
         return errors.isEmpty()

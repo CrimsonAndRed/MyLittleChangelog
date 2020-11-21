@@ -1,10 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { LeafHeader, LeafHeaderData, GroupsSecContext } from 'app/groups-sec/groups-sec.model';
-import { GroupContent } from 'app/model/group-content';
-import { LeafContent, UpdatedLeaf } from 'app/model/leaf-content';
 import { WholeVersionService } from 'app/whole-version/whole-version.service';
-import { UpdatedLeaf } from 'app/model/leaf-content';
-import { WholeVersionService } from 'app/service/whole-version.service';
 import { Observable } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
 import { PreloaderService } from 'app/preloader/preloader.service';
@@ -73,7 +69,7 @@ export class LeafHeaderComponent implements LeafHeader, OnInit {
 
     const dto = { changeAgainstId };
 
-    this.spinnerService.wrapSpinner(
+    this.preloaderService.wrap(
       this.http.patch(`http://localhost:8080/version/${versionId}/group/${parentId}/leaf/${leafId}/position`, dto)
         .pipe(
           tap(() => this.wholeVersionService.swapLeaves(this.data.parentGroup.vid, leafId, changeAgainstId))

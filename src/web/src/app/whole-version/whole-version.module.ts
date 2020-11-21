@@ -64,9 +64,6 @@ import { MoveUpDownButtonComponent } from './move-updown-button/move-updown-butt
     GroupMovementGroupHeaderComponent,
     GroupMovementGlobalHeaderComponent,
     MoveUpDownButtonComponent,
-
-    NodeMovementComponent,
-    NodeMovementGroupHeaderComponent,
   ],
   imports: [
     BrowserModule,

@@ -55,8 +55,8 @@ fun Routing.leafRouting() {
             val leafId = call.parameters.getOrFail("leafId").toInt()
             val changePositionDto = call.receive<ChangeLeafPositionDto>()
 
-            LeafService.changePosition(leafId, changePositionDto.changeAgainstId)
-            call.response.status(HttpStatusCode.NoContent)
+            val resp = LeafService.changePosition(leafId, changePositionDto.changeAgainstId)
+            call.ofEmptyResponse(resp)
         }
     }
 }

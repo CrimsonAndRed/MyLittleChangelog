@@ -11,6 +11,7 @@ import my.little.changelog.persistence.repo.LeafRepo
 import my.little.changelog.persistence.repo.VersionRepo
 import my.little.changelog.validator.LeafValidator
 import my.little.changelog.validator.Response
+import my.little.changelog.validator.ValidatorResponse
 import my.little.changelog.validator.VersionValidator
 import org.jetbrains.exposed.sql.transactions.transaction
 
@@ -43,8 +44,8 @@ object LeafService {
                     groupVid = newParentGroup.vid
                 }
                 LeafRepo.update(leaf)
-                Unit
             }
+            .mapEmpty()
     }
 
     fun deleteLeaf(leafDeletionDto: LeafDeletionDto): Response<Unit> = transaction {
@@ -55,20 +56,24 @@ object LeafService {
             }
     }
 
-    fun changePosition(leafId: Int, changeAgainstId: Int) = transaction {
-        val latestVersion = VersionRepo.findLatest().id
+    fun changePosition(leafId: Int, changeAgainstId: Int): Response<Unit> = transaction {
         val leaf = LeafRepo.findById(leafId)
         val leafChangeAgainst = LeafRepo.findById(changeAgainstId)
-        if (leaf.version.id != latestVersion || leafChangeAgainst.version.id != latestVersion) {
-            throw VersionIsNotLatestException()
-        }
-        if (leaf.groupVid != leafChangeAgainst.groupVid) {
-            throw LeavesIsNotInSameGroupException(leaf, leafChangeAgainst)
-        }
-        val tmpOrder = leaf.order
-        leaf.apply { order = leafChangeAgainst.order }
-        leafChangeAgainst.apply { order = tmpOrder }
-        LeafRepo.update(leaf)
-        LeafRepo.update(leafChangeAgainst)
+        VersionValidator.validateLatest(leaf.version)
+            .chain { VersionValidator.validateLatest(leafChangeAgainst.version) }
+            .chain {
+                ValidatorResponse
+                    .ofSimple("Could not modify leaves that is not in the same group. IDs [${leaf.id.value}] [${leafChangeAgainst.id.value}]") {
+                        leaf.groupVid != leafChangeAgainst.groupVid
+                    }
+            }
+            .ifValid {
+                val tmpOrder = leaf.order
+                leaf.apply { order = leafChangeAgainst.order }
+                leafChangeAgainst.apply { order = tmpOrder }
+                LeafRepo.update(leaf)
+                LeafRepo.update(leafChangeAgainst)
+            }
+            .mapEmpty()
     }
 }
