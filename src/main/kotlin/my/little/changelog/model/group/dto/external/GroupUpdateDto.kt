@@ -4,6 +4,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class GroupUpdateDto(
-    val name: String,
+    val name: String?,
     val parentVid: Int? = null
 )

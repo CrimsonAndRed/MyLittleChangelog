@@ -4,8 +4,8 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class LeafUpdateDto(
-    val name: String,
-    val valueType: Int,
-    val value: String,
+    val name: String?,
+    val valueType: Int?,
+    val value: String?,
     val parentVid: Int
 )

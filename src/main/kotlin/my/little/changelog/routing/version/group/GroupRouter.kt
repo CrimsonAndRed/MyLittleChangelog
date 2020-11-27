@@ -17,6 +17,7 @@ import my.little.changelog.model.group.dto.service.toExternalDto
 import my.little.changelog.routing.ofEmptyResponse
 import my.little.changelog.routing.ofResponse
 import my.little.changelog.service.group.GroupService
+import my.little.changelog.validator.dto.GroupDtoValidator
 
 @KtorExperimentalAPI
 fun Routing.groupRouting() {
@@ -24,9 +25,12 @@ fun Routing.groupRouting() {
         post {
             val versionId = call.parameters.getOrFail("versionId").toInt()
             val dto = call.receive<GroupCreationDto>()
-
-            val resp = GroupService.createGroup(dto.toServiceDto(versionId))
-            call.ofResponse(resp.map { it.toExternalDto() })
+            GroupDtoValidator.validateDtoNew(dto)
+                .ifValidResponse {
+                    GroupService.createGroup(dto.toServiceDto(versionId)).map { it.toExternalDto() }
+                }.let {
+                    call.ofResponse(it)
+                }
         }
     }
 
@@ -34,9 +38,12 @@ fun Routing.groupRouting() {
         put {
             val groupId = call.parameters.getOrFail("groupId").toInt()
             val dto = call.receive<GroupUpdateDto>()
-
-            val resp = GroupService.updateGroup(dto.toServiceDto(groupId))
-            call.ofEmptyResponse(resp)
+            GroupDtoValidator.validateDtoUpdate(dto)
+                .ifValidResponse {
+                    GroupService.updateGroup(dto.toServiceDto(groupId))
+                }.let {
+                    call.ofEmptyResponse(it)
+                }
         }
 
         delete {

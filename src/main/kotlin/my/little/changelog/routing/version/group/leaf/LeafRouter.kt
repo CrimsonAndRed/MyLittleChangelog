@@ -15,12 +15,12 @@ import my.little.changelog.model.leaf.dto.external.LeafCreationDto
 import my.little.changelog.model.leaf.dto.external.LeafDeletionDto
 import my.little.changelog.model.leaf.dto.external.LeafUpdateDto
 import my.little.changelog.model.leaf.dto.external.toServiceDto
-import my.little.changelog.model.leaf.dto.service.LeafReturnedDto
 import my.little.changelog.model.leaf.dto.service.toExternalDto
 import my.little.changelog.routing.ofEmptyResponse
 import my.little.changelog.routing.ofResponse
 import my.little.changelog.service.leaf.LeafService
 import my.little.changelog.validator.Response
+import my.little.changelog.validator.dto.LeafDtoValidator
 
 @KtorExperimentalAPI
 fun Routing.leafRouting() {
@@ -29,9 +29,12 @@ fun Routing.leafRouting() {
             val groupId = call.parameters.getOrFail("groupId").toInt()
             val versionId = call.parameters.getOrFail("versionId").toInt()
             val dto = call.receive<LeafCreationDto>()
-
-            val resp: Response<LeafReturnedDto> = LeafService.createLeaf(dto.toServiceDto(groupId, versionId))
-            call.ofResponse(resp.map { it.toExternalDto() })
+            LeafDtoValidator.validateDtoNew(dto)
+                .ifValidResponse {
+                    LeafService.createLeaf(dto.toServiceDto(groupId, versionId)).map { it.toExternalDto() }
+                }.let {
+                    call.ofResponse(it)
+                }
         }
     }
 
@@ -39,9 +42,12 @@ fun Routing.leafRouting() {
         put {
             val leafId = call.parameters.getOrFail("leafId").toInt()
             val dto = call.receive<LeafUpdateDto>()
-
-            val resp: Response<Unit> = LeafService.updateLeaf(dto.toServiceDto(leafId))
-            call.ofEmptyResponse(resp)
+            LeafDtoValidator.validateDtoUpdate(dto)
+                .ifValidResponse {
+                    LeafService.updateLeaf(dto.toServiceDto(leafId))
+                }.let {
+                    call.ofEmptyResponse(it)
+                }
         }
         delete {
             val leafDeletionDto = LeafDeletionDto(call.parameters.getOrFail("leafId").toInt())

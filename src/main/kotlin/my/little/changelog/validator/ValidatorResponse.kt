@@ -12,11 +12,19 @@ class ValidatorResponse(private val errors: List<String>) {
         return errors.isEmpty()
     }
 
-    fun chain(f: () -> ValidatorResponse): ValidatorResponse {
+    fun chain(block: () -> ValidatorResponse): ValidatorResponse {
         return if (this.errors.isEmpty()) {
-            f()
+            block()
         } else {
             this
+        }
+    }
+
+    fun <T> ifValidResponse(block: () -> Response<T>): Response<T> {
+        return if (this.errors.isEmpty()) {
+            block()
+        } else {
+            Err(this.errors)
         }
     }
 

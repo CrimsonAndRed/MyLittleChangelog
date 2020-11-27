@@ -4,7 +4,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class GroupCreationDto(
-    val name: String,
+    val name: String?,
     val vid: Int? = null,
     val parentVid: Int? = null,
 )
