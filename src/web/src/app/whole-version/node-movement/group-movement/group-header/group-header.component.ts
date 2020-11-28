@@ -18,6 +18,6 @@ export class GroupMovementGroupHeaderComponent implements GroupHeader {
   }
 
   isRadioButtonShowed(): boolean {
-    return this.ctx.parentVid !== this.data.group.vid && this.ctx.group.vid !== this.data.group.vid;
+    return !this.ctx.forbiddenVids.has(this.data.group.vid);
   }
 }

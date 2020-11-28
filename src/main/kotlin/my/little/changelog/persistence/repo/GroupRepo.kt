@@ -126,4 +126,9 @@ object GroupRepo : AbstractCrudRepository<Group, Int>(Group) {
     fun findByVersion(version: Version): Iterable<Group> = transaction {
         Group.find { Groups.version eq version.id.value }
     }
+
+    fun findParents(vid: Int?): Iterable<Group> = transaction {
+        GroupLatestRepo.findParentIds(vid)
+            .let { Group.forIds(it.toList()) }
+    }
 }

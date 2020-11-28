@@ -33,7 +33,7 @@ object GroupService {
         val group = GroupRepo.findById(groupUpdate.id)
         VersionValidator.validateLatest(group.version)
             .chain {
-                GroupValidator.validateUpdate(groupUpdate)
+                GroupValidator.validateUpdate(groupUpdate, group)
             }
             .ifValid {
                 group.apply {

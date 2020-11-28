@@ -28,14 +28,27 @@ export class GroupMovementComponent implements OnInit {
       .setGlobalHeader(GroupMovementGlobalHeaderComponent)
       .setLeafShowCondition(() => false)
       .build();
+
+    let set: Set<number> = new Set();
+    set.add(this.parentVid);
+    this.collectChildVids(set, this.group);
+
     this.context = {
       parentVid: this.parentVid,
       emitGroupChoice: this.onGroupChoice.bind(this),
       group: this.group,
+      forbiddenVids: set
     };
   }
 
   onGroupChoice(group: GroupContent): void {
     this.parentChange.emit(group?.vid);
+  }
+
+  collectChildVids(set: Set<number>, group: GroupContent) {
+    set.add(group.vid);
+    group.groupContent.forEach(it => {
+      this.collectChildVids(set, it);
+    })
   }
 }

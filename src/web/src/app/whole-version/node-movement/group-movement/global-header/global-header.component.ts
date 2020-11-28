@@ -23,6 +23,6 @@ export class GroupMovementGlobalHeaderComponent implements GlobalHeader {
   }
 
   isRadioButtonShowed(): boolean {
-    return this.ctx.parentVid !== null;
+    return !this.ctx.forbiddenVids.has(null);
   }
 }

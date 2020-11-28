@@ -18,6 +18,16 @@ object GroupLatestRepo : AbstractCrudRepository<GroupLatest, Int>(GroupLatest) {
             ) SELECT id FROM tmp_groups
         """
 
+    private const val FIND_PARENT_GROUPS_QUERY =
+        """
+            WITH RECURSIVE parents AS (
+                    SELECT id, parent_vid FROM groups_latest
+                    WHERE vid = ?
+                UNION
+                    SELECT g.id, g.parent_vid FROM groups_latest AS g JOIN parents ON g.vid=parents.parent_vid
+            ) SELECT id FROM parents
+        """
+
     fun findByVid(vid: Int): GroupLatest = transaction {
         GroupLatest.find { GroupsLatest.vid eq vid }.single()
     }
@@ -28,5 +38,14 @@ object GroupLatestRepo : AbstractCrudRepository<GroupLatest, Int>(GroupLatest) {
                 set(1, vid)
             }
             .executeQuery().iterate { getInt("id") }.let { GroupLatest.forIds(it) }
+    }
+
+    fun findParentIds(vid: Int?): Iterable<Int> = transaction {
+        connection.prepareStatement(FIND_PARENT_GROUPS_QUERY, arrayOf("id"))
+            .apply {
+                set(1, vid)
+            }
+            .executeQuery()
+            .iterate { getInt("id") }
     }
 }
