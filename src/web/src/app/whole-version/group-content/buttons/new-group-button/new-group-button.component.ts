@@ -32,7 +32,7 @@ export class NewGroupButtonComponent {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if (result) {
+      if (result != null) {
         this.createNewGroup(result);
       }
     });
