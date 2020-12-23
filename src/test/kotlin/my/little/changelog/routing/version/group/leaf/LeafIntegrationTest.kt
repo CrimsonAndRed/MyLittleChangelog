@@ -510,7 +510,7 @@ internal class LeafIntegrationTest : AbstractIntegrationTest() {
             addHeader("Content-Type", "application/json")
             setBody(Json.encodeToString(dto))
         }.apply {
-            assertEquals(HttpStatusCode.InternalServerError, response.status())
+            assertEquals(HttpStatusCode.BadRequest, response.status())
         }
     }
 }

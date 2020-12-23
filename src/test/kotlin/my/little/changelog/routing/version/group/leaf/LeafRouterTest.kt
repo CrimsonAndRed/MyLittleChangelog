@@ -38,9 +38,9 @@ internal class LeafRouterTest : AbstractRouterTest({
         val serviceReturnedDto = my.little.changelog.model.leaf.dto.service.LeafReturnedDto(
             id = baseVgl.l,
             vid = baseVgl.l,
-            name = dto.name,
-            valueType = dto.valueType,
-            value = dto.value,
+            name = dto.name!!,
+            valueType = dto.valueType!!,
+            value = dto.value!!,
             // При создании лифа в изначальной группе, то у этой группы vid == id
             groupVid = baseVgl.g
         )
