@@ -32,6 +32,14 @@ export class WholeVersionComponent implements OnInit {
   constructor(private route: ActivatedRoute,
               public wholeVersionService: WholeVersionService,
               private preloaderService: PreloaderService) {
+    // TODO некоторый хак?
+    this.wholeVersionService.wholeVersionSubject.subscribe({
+      next: (v) => {
+        this.config = this.recreateConfig(v);
+        this.context.allGroups = v.groupContent;
+        this.context.previousNodeChosen = this.handlePreviousNodeChosen.bind(this);
+      }
+    });
   }
 
   ngOnInit(): void {

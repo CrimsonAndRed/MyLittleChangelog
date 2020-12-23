@@ -6,6 +6,7 @@ import { WholeVersionService } from 'app/whole-version/whole-version.service';
 import { Observable } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
 import { PreloaderService } from 'app/preloader/preloader.service';
+import { Http } from 'app/http/http.service';
 
 @Component({
   selector: 'group-header',
@@ -17,7 +18,9 @@ export class GroupHeaderComponent implements GroupHeader {
   data: GroupHeaderData;
   ctx: GroupsSecContext;
 
-  constructor(private wholeVersionService: WholeVersionService, private preloaderService: PreloaderService) { }
+  constructor(private wholeVersionService: WholeVersionService,
+              private preloaderService: PreloaderService,
+              private http: Http) { }
 
   handleNewGroup(obs: Observable<Group>): void {
     this.preloaderService.wrap(
@@ -85,6 +88,66 @@ export class GroupHeaderComponent implements GroupHeader {
       obs.pipe(
         switchMap(() => this.wholeVersionService.dematerializeGroup()),
       )
+    );
+  }
+
+  isUpButtonShowed(): boolean {
+    if (!this.data.group.realNode) {
+      return false;
+    }
+    if (this.data.parentGroup == null) {
+      return this.ctx.allGroups[0].id !== this.data.group.id;
+    } else {
+      return this.data.parentGroup.groupContent[0].id !== this.data.group.id;
+    }
+  }
+
+  isDownButtonShowed(): boolean {
+    if (!this.data.group.realNode) {
+      return false;
+    }
+    if (this.data.parentGroup == null) {
+      return this.ctx.allGroups[this.ctx.allGroups.length - 1].id !== this.data.group.id;
+    } else {
+      return this.data.parentGroup.groupContent[this.data.parentGroup.groupContent.length - 1].id !== this.data.group.id;
+    }
+  }
+
+  handleMoveUp(): void {
+    if (this.data.parentGroup == null) {
+      this.moveGroup(this.ctx.allGroups[this.findIdxInParent() - 1].id);
+    } else {
+      this.moveGroup(this.data.parentGroup.groupContent[this.findIdxInParent() - 1].id);
+    }
+  }
+
+  handleMoveDown(): void {
+    if (this.data.parentGroup == null) {
+      this.moveGroup(this.ctx.allGroups[this.findIdxInParent() + 1].id);
+    } else {
+      this.moveGroup(this.data.parentGroup.groupContent[this.findIdxInParent() + 1].id);
+    }
+  }
+
+  private findIdxInParent(): number {
+    if (this.data.parentGroup == null) {
+      return this.ctx.allGroups.findIndex(l => l.id === this.data.group.id);
+    } else {
+      return this.data.parentGroup.groupContent.findIndex(l => l.id === this.data.group.id);
+    }
+  }
+
+  private moveGroup(changeAgainstId: number): void {
+    const versionId = this.wholeVersionService.wholeVersion.id;
+    const groupId = this.data.group.id;
+
+    const dto = { changeAgainstId };
+
+    this.preloaderService.wrap(
+      this.http.patch(`http://localhost:8080/version/${versionId}/group/${groupId}/position`, dto)
+        .pipe(
+          switchMap(() => this.wholeVersionService.swapGroups(groupId, changeAgainstId))
+        )
     );
   }
 }

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Http } from 'app/http/http.service';
 import { WholeVersion } from 'app/model/whole-version';
 import { tap } from 'rxjs/operators';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { GroupContent, Group } from 'app/model/group-content';
 import { LeafContent, UpdatedLeaf } from 'app/model/leaf-content';
 import { PreloaderService } from '../preloader/preloader.service';
@@ -13,6 +13,8 @@ import { PreloaderService } from '../preloader/preloader.service';
 export class WholeVersionService {
 
   public wholeVersion: WholeVersion = null;
+
+  public wholeVersionSubject: Subject<WholeVersion> = new Subject();
 
   private groupsByVid: Map<number, GroupContent> = new Map<number, GroupContent>();
 
@@ -26,6 +28,7 @@ export class WholeVersionService {
       .pipe(
         tap(res => this.wholeVersion = res),
         tap(res => res.groupContent.forEach(g => this.addGroupToMap(g))),
+        tap(() => this.wholeVersionSubject.next(this.wholeVersion))
       );
   }
 
@@ -79,6 +82,10 @@ export class WholeVersionService {
     const tmpLeaf = group.leafContent[leafIdxFs];
     group.leafContent[leafIdxFs] = group.leafContent[leafIdxSc];
     group.leafContent[leafIdxSc] = tmpLeaf;
+  }
+
+  swapGroups(groupVid: number, changeAgainstGroupVid: number): Observable<WholeVersion> {
+    return this.initWholeVersion(this.wholeVersion.id);
   }
 
   private addGroupToMap(group: GroupContent): void {

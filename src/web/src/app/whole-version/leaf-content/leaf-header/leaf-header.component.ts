@@ -1,11 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { LeafHeader, LeafHeaderData, GroupsSecContext } from 'app/groups-sec/groups-sec.model';
 import { WholeVersionService } from 'app/whole-version/whole-version.service';
 import { Observable } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
 import { PreloaderService } from 'app/preloader/preloader.service';
 import { Http } from 'app/http/http.service';
-import { ActivatedRoute } from '@angular/router';
 
 
 @Component({
@@ -13,18 +12,14 @@ import { ActivatedRoute } from '@angular/router';
   templateUrl: './leaf-header.component.html',
   styleUrls: ['./leaf-header.component.scss']
 })
-export class LeafHeaderComponent implements LeafHeader, OnInit {
+export class LeafHeaderComponent implements LeafHeader {
 
   data: LeafHeaderData;
   ctx: GroupsSecContext;
 
   constructor(private http: Http,
-              private route: ActivatedRoute,
               private wholeVersionService: WholeVersionService,
               private preloaderService: PreloaderService) {}
-
-  ngOnInit(): void {
-  }
 
   handleDeleteLeaf(obs: Observable<void>): void {
     this.preloaderService.wrap(
@@ -63,7 +58,7 @@ export class LeafHeaderComponent implements LeafHeader, OnInit {
   }
 
   private moveLeaf(changeAgainstId: number): void {
-    const versionId = this.route.snapshot.params.id;
+    const versionId = this.wholeVersionService.wholeVersion.id;
     const parentId = this.data.parentGroup.id;
     const leafId = this.data.leaf.id;
 

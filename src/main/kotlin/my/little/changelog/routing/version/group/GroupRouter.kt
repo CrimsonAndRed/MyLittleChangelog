@@ -4,11 +4,13 @@ import io.ktor.application.call
 import io.ktor.request.receive
 import io.ktor.routing.Routing
 import io.ktor.routing.delete
+import io.ktor.routing.patch
 import io.ktor.routing.post
 import io.ktor.routing.put
 import io.ktor.routing.route
 import io.ktor.util.KtorExperimentalAPI
 import io.ktor.util.getOrFail
+import my.little.changelog.model.group.dto.external.ChangeGroupPositionDto
 import my.little.changelog.model.group.dto.external.GroupCreationDto
 import my.little.changelog.model.group.dto.external.GroupDeletionDto
 import my.little.changelog.model.group.dto.external.GroupUpdateDto
@@ -50,6 +52,16 @@ fun Routing.groupRouting() {
             val groupId = call.parameters.getOrFail("groupId").toInt()
             val dropHierarchy = call.request.queryParameters["hierarchy"]?.toBoolean() ?: true
             val resp = GroupService.deleteGroup(GroupDeletionDto(groupId), dropHierarchy)
+            call.ofEmptyResponse(resp)
+        }
+    }
+
+    route("version/{versionId}/group/{groupId}/position") {
+        patch {
+            val leafId = call.parameters.getOrFail("groupId").toInt()
+            val changePositionDto = call.receive<ChangeGroupPositionDto>()
+
+            val resp = GroupService.changePosition(leafId, changePositionDto.changeAgainstId)
             call.ofEmptyResponse(resp)
         }
     }

@@ -10,8 +10,10 @@ import my.little.changelog.persistence.repo.GroupLatestRepo
 import my.little.changelog.persistence.repo.GroupRepo
 import my.little.changelog.persistence.repo.LeafRepo
 import my.little.changelog.persistence.repo.VersionRepo
+import my.little.changelog.validator.Err
 import my.little.changelog.validator.GroupValidator
 import my.little.changelog.validator.Response
+import my.little.changelog.validator.Valid
 import my.little.changelog.validator.ValidatorResponse
 import my.little.changelog.validator.VersionValidator
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -77,5 +79,54 @@ object GroupService {
                     GroupRepo.delete(group)
                 }
             }
+    }
+
+    fun changePosition(groupId: Int, changeAgainstId: Int): Response<Unit> = transaction {
+        val group = GroupRepo.findById(groupId)
+        // TODO Грязный трюк
+        // Если нам нужно материализовать группу - то мы сначала создаем группу с новым order, а потом его заменяем нужным.
+        // Это не совсем верно
+        val groupChangeAgainstOrigin = GroupRepo.findById(changeAgainstId)
+        var groupChangeAgainst = groupChangeAgainstOrigin
+        val latestVersion = VersionRepo.findLatest()
+        VersionValidator.validateLatest(group.version)
+            .chain {
+                ValidatorResponse
+                    .ofSimple("Could not modify groups that is not in the same group. IDs [${group.id.value}] [${groupChangeAgainst.id.value}]") {
+                        group.parentVid != groupChangeAgainst.parentVid
+                    }
+            }
+            .chain {
+                if (groupChangeAgainst.version.id != latestVersion.id) {
+                    val materializedGroupResponse = GroupService.createGroup(
+                        GroupCreationDto(
+                            groupChangeAgainst.name,
+                            groupChangeAgainst.vid,
+                            groupChangeAgainst.parentVid,
+                            latestVersion.id.value
+                        )
+                    )
+
+                    ValidatorResponse.ofSimple("Could not materialize group to swap orders") {
+                        when (materializedGroupResponse) {
+                            is Valid -> {
+                                groupChangeAgainst = GroupRepo.findById(materializedGroupResponse.data.id)
+                                return@ofSimple true
+                            }
+                            is Err -> return@ofSimple false
+                        }
+                    }
+                }
+
+                ValidatorResponse(emptyList())
+            }
+            .ifValid {
+                val tmpOrder = group.order
+                group.apply { order = groupChangeAgainstOrigin.order }
+                groupChangeAgainst.apply { order = tmpOrder }
+                GroupRepo.update(group)
+                GroupRepo.update(groupChangeAgainst)
+            }
+            .mapEmpty()
     }
 }

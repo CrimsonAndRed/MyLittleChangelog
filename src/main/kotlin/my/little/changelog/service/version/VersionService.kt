@@ -75,12 +75,16 @@ object VersionService {
         currentVersion: Int,
         value: Int? = null
     ): Pair<List<WholeGroupDto>, List<WholeLeafDto>> {
-        val rootGroupDtos = groupsMap[value]?.map {
+        val rootGroupDtos = groupsMap[value]?.sortedBy {
+            it.order
+        }?.map {
             val pair = createDtosRecursive(groupsMap, leavesMap, earliestIds, currentVersion, it.vid)
             WholeGroupDto(it.id.value, it.vid, it.name, earliestIds.contains(it.id.value), currentVersion == it.version.id.value, pair.first, pair.second)
         } ?: emptyList()
 
-        val rootLeafDtos = leavesMap[value]?.map {
+        val rootLeafDtos = leavesMap[value]?.sortedBy {
+            it.order
+        }?.map {
             WholeLeafDto(it.id.value, it.vid, it.name, it.valueType, it.value)
         } ?: emptyList()
 
@@ -111,13 +115,17 @@ object VersionService {
         currentVersion: Int,
         value: Int? = null
     ): Pair<List<WholeGroupDto>, List<WholeLeafDto>> {
-        val rootGroupDtos = groupsMap[value]?.map {
+        val rootGroupDtos = groupsMap[value]?.sortedBy {
+            it.order
+        }?.map {
             val pair = createLatestDtosRecursive(groupsMap, leavesMap, earliestIds, currentVersion, it.vid)
             val id = it.id.value
             WholeGroupDto(id, it.vid, it.name, earliestIds.contains(id), currentVersion == it.version.id.value, pair.first, pair.second)
         } ?: emptyList()
 
-        val rootLeafDtos = leavesMap[value]?.map {
+        val rootLeafDtos = leavesMap[value]?.sortedBy {
+            it.order
+        }?.map {
             WholeLeafDto(it.id.value, it.vid, it.name, it.valueType, it.value)
         } ?: emptyList()
 

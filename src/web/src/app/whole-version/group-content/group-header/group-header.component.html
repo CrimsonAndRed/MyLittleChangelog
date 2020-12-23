@@ -1,6 +1,11 @@
 <div class="group-header">
   <new-group-button [parentGroupVid]="data.group.vid" (onNewGroup)="handleNewGroup($event)"></new-group-button>
   <new-leaf-button [groupId]="data.group.id" (onNewLeaf)="handleNewLeaf($event)"></new-leaf-button>
+
+  <move-updown-button [upShowCondition]="isUpButtonShowed()"
+                    [downShowCondition]="isDownButtonShowed()"
+                    (up)="handleMoveUp()"
+                    (down)="handleMoveDown()"></move-updown-button>
   <delete-group-button *ngIf="data.group.realNode" [groupId]="data.group.id" (onDeleteGroup)="handleDeleteGroup($event)"></delete-group-button>
   <edit-group-button *ngIf="data.group.realNode" [group]="data.group" [parentGroupVid]="data.parentGroup?.vid" (onUpdateGroup)="handleUpdateGroup($event)"></edit-group-button>
   <materialize-group-button *ngIf="!data.group.realNode" [group]="data.group" [parentGroup]="data.parentGroup" (onMaterializeGroup)="handleMaterializeGroup($event)"></materialize-group-button>
