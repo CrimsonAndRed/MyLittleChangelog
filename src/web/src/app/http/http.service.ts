@@ -71,6 +71,6 @@ export class Http {
   }
 
   patch<Req, Res>(url: string, body: Req): Observable<Res> {
-    return this.httpClient.patch<Res>(url, body, jsonHttpOptions);
+    return this.handleErrors(this.httpClient.patch<Res>(url, body, jsonHttpOptions));
   }
 }
