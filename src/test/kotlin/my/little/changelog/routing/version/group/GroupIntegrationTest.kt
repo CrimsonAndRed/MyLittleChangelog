@@ -319,7 +319,6 @@ internal class GroupIntegrationTest : AbstractIntegrationTest() {
         }
     }
 
-
     @Test
     fun `Test Move group`() {
         testApplication {

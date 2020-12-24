@@ -349,7 +349,7 @@ internal class LeafIntegrationTest : AbstractIntegrationTest() {
                 val group = createGroup(version)
                 val group2 = createGroup(version)
                 val leaf1 = createLeaf(version, group.vid)
-                val leaf2 = createLeaf(version, group2.vid,)
+                val leaf2 = createLeaf(version, group2.vid)
                 testMoveLeafNegative(version, group, leaf2, leaf1)
             }
         }
