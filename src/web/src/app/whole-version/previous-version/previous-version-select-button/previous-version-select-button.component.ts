@@ -1,7 +1,7 @@
 import { Component, Output, EventEmitter, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
-import { Http } from 'app/http/http.service';
+import { Http } from 'app/service/http.service';
 import { GroupContent, NewGroup, Group } from 'app/model/group-content';
 import { NewLeaf, NewLeafWithId } from 'app/model/leaf-content';
 import { WholeVersion } from 'app/model/whole-version';

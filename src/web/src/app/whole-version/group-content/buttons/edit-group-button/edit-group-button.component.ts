@@ -1,7 +1,7 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
-import { Http } from 'app/http/http.service';
+import { Http } from 'app/service/http.service';
 import { EditGroupModalComponent } from './edit-group-modal/edit-group-modal.component';
 import { GroupContent, GroupToUpdate, Group } from 'app/model/group-content';
 import { Observable } from 'rxjs';

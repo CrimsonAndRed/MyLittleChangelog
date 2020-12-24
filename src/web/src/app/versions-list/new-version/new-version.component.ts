@@ -1,5 +1,5 @@
 import { Component, OnInit, EventEmitter, Output } from '@angular/core';
-import { Http } from 'app/http/http.service';
+import { Http } from 'app/service/http.service';
 import { Version } from 'app/model/version';
 import { Observable } from 'rxjs';
 

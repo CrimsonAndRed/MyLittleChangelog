@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Http } from 'app/http/http.service';
+import { Http } from 'app/service/http.service';
 import { WholeVersion } from 'app/model/whole-version';
 import { tap } from 'rxjs/operators';
 import { Observable, Subject } from 'rxjs';

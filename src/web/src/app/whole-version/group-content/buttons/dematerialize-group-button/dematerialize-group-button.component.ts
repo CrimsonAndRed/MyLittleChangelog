@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Http } from 'app/http/http.service';
+import { Http } from 'app/service/http.service';
 import { GroupContent, Group, NewGroup } from 'app/model/group-content';
 import { HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Http } from 'app/http/http.service';
+import { Http } from 'app/service/http.service';
 import { Version } from 'app/model/version';
 import { PreloaderService } from 'app/preloader/preloader.service';
 import { Observable } from 'rxjs';

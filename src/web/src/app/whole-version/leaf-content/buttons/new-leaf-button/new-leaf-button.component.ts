@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { Http } from 'app/http/http.service';
+import { Http } from 'app/service/http.service';
 import { NewLeafWithId, NewLeaf} from 'app/model/leaf-content';
 import { ActivatedRoute } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';

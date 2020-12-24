@@ -4,7 +4,7 @@ import { WholeVersionService } from 'app/whole-version/whole-version.service';
 import { Observable } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
 import { PreloaderService } from 'app/preloader/preloader.service';
-import { Http } from 'app/http/http.service';
+import { Http } from 'app/service/http.service';
 
 
 @Component({

@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Inject } from '@angular/core';
 import { Version } from 'app/model/version';
-import { Http } from 'app/http/http.service';
+import { Http } from 'app/service/http.service';
 import { RouterLink, ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';

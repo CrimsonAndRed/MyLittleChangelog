@@ -1,7 +1,7 @@
 import { Component, Input, Inject } from '@angular/core';
 
 import { GroupContent, NewGroup } from 'app/model/group-content';
-import { Http } from 'app/http/http.service';
+import { Http } from 'app/service/http.service';
 import { ActivatedRoute } from '@angular/router';
 import { EventEmitter } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';

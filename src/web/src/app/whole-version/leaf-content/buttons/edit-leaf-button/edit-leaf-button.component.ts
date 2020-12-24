@@ -1,7 +1,7 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
-import { Http } from 'app/http/http.service';
+import { Http } from 'app/service/http.service';
 import { EditLeafModalComponent } from './edit-leaf-modal/edit-leaf-modal.component';
 import { LeafContent, LeafToUpdate, UpdatedLeaf } from 'app/model/leaf-content';
 import { GroupContent } from 'app/model/group-content';
