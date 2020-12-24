@@ -11,6 +11,7 @@ import kotlinx.serialization.encodeToString
 import my.little.changelog.configuration.Json
 import my.little.changelog.model.group.Group
 import my.little.changelog.model.leaf.Leaf
+import my.little.changelog.model.leaf.LeafType
 import my.little.changelog.model.leaf.dto.external.ChangeLeafPositionDto
 import my.little.changelog.model.leaf.dto.external.LeafCreationDto
 import my.little.changelog.model.leaf.dto.external.LeafReturnedDto
@@ -96,9 +97,9 @@ internal class LeafIntegrationTest : AbstractIntegrationTest() {
                 val group = createGroup(version)
                 val dto = LeafCreationDto(
                     null,
-                    "Имя1",
-                    1,
-                    "Значение1"
+                    "Test Name 1",
+                    LeafType.TEXTUAL.id,
+                    "Test Value 1"
                 )
 
                 with(
@@ -121,9 +122,9 @@ internal class LeafIntegrationTest : AbstractIntegrationTest() {
                 val group = createGroup(version)
                 val dto = LeafCreationDto(
                     null,
-                    "Имя1",
-                    1,
-                    "Значение1"
+                    "Test Name 1",
+                    LeafType.TEXTUAL.id,
+                    "Test Value 1"
                 )
 
                 with(
@@ -146,9 +147,9 @@ internal class LeafIntegrationTest : AbstractIntegrationTest() {
                 val group = createGroup(version)
                 val leaf = createLeaf(version, group.vid)
                 val dto = LeafUpdateDto(
-                    "Имя1",
-                    1,
-                    "Значение 2",
+                    "Test Name 1",
+                    LeafType.TEXTUAL.id,
+                    "Test Value 2",
                     group.vid
                 )
 
@@ -173,8 +174,8 @@ internal class LeafIntegrationTest : AbstractIntegrationTest() {
                 val group = createGroup(version)
                 val leaf = createLeaf(version, group.vid)
                 val dto = LeafUpdateDto(
-                    "Лиф1",
-                    1,
+                    "Test Name 1",
+                    LeafType.TEXTUAL.id,
                     "Значение1",
                     group.vid
                 )

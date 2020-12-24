@@ -33,7 +33,7 @@ internal class GroupIntegrationTest : AbstractIntegrationTest() {
         testApplication {
             transaction {
                 val version = createVersion()
-                val dto = GroupCreationDto("Тестовая Группа")
+                val dto = GroupCreationDto("Test Name 1")
 
                 with(
                     handleRequest(HttpMethod.Post, "version/${version.id.value}/group") {
@@ -57,7 +57,7 @@ internal class GroupIntegrationTest : AbstractIntegrationTest() {
             transaction {
                 val version = createVersion()
                 val group = createGroup(version)
-                val dto = GroupCreationDto("Тестовая Группа", parentVid = group.vid)
+                val dto = GroupCreationDto("Test Name 1", parentVid = group.vid)
 
                 with(
                     handleRequest(HttpMethod.Post, "version/${version.id.value}/group") {
@@ -150,7 +150,7 @@ internal class GroupIntegrationTest : AbstractIntegrationTest() {
             transaction {
                 val version = createVersion()
                 val group = createGroup(version)
-                val dto = GroupUpdateDto("Тестовая Базовая Группа 2", null)
+                val dto = GroupUpdateDto("Test Base Group 2", null)
 
                 with(
                     handleRequest(HttpMethod.Put, "version/${version.id.value}/group/${group.id.value}") {
@@ -172,7 +172,7 @@ internal class GroupIntegrationTest : AbstractIntegrationTest() {
                 val groupRoot = createGroup(version)
                 val groupSub = createGroup(version)
 
-                val dto = GroupUpdateDto("Тестовая Базовая Группа 2", groupRoot.id.value)
+                val dto = GroupUpdateDto("Test Base Group 2", groupRoot.id.value)
 
                 with(
                     handleRequest(HttpMethod.Put, "version/${version.id.value}/group/${groupSub.id.value}") {
@@ -193,7 +193,7 @@ internal class GroupIntegrationTest : AbstractIntegrationTest() {
                 val version = createVersion()
                 createVersion()
                 val group = createGroup(version)
-                val dto = GroupUpdateDto("Тестовая Базовая Группа 2", null)
+                val dto = GroupUpdateDto("Test Base Group 2", null)
 
                 with(
                     handleRequest(HttpMethod.Put, "version/${version.id.value}/group/${group.id.value}") {

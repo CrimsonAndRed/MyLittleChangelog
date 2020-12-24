@@ -36,7 +36,7 @@ internal class LeafRouterTest : AbstractRouterTest({
 
     @Test
     fun `Test Leaf Creation Success`() {
-        val dto = LeafCreationDto(null, "Имя1", 1, "Значение1")
+        val dto = LeafCreationDto(null, "Test Name 1", LeafType.TEXTUAL.id, "Test Value 1")
         val serviceReturnedDto = my.little.changelog.model.leaf.dto.service.LeafReturnedDto(
             id = baseVgl.l,
             vid = baseVgl.l,
@@ -70,7 +70,7 @@ internal class LeafRouterTest : AbstractRouterTest({
 
     @Test
     fun `Test Leaf Creation Validation Error`() {
-        val dto = LeafCreationDto(null, "Имя1", 1, "Значение1")
+        val dto = LeafCreationDto(null, "Test Name 1", 1, "Test Value 1")
         every { LeafService.createLeaf(allAny()) } returns Err(listOf("Test error"))
 
         testRoute(HttpMethod.Post, baseUrl(baseVgl.v, baseVgl.g), dto) {
@@ -82,7 +82,7 @@ internal class LeafRouterTest : AbstractRouterTest({
 
     @Test
     fun `Test Leaf Update Success`() {
-        val dto = LeafUpdateDto("Имя1", 1, "Значение1", 0)
+        val dto = LeafUpdateDto("Test Name 1", 1, "Test Value 1", 0)
 
         every { LeafService.updateLeaf(allAny()) } returns Valid(Unit)
         testRoute(HttpMethod.Put, "${baseUrl(baseVgl.v, baseVgl.g)}/${baseVgl.l}", dto) {
@@ -92,7 +92,7 @@ internal class LeafRouterTest : AbstractRouterTest({
 
     @Test
     fun `Test Leaf Update Exception`() {
-        val dto = LeafUpdateDto("Имя1", 1, "Значение1", 0)
+        val dto = LeafUpdateDto("Test Name 1", 1, "Test Value 1", 0)
 
         testExceptions(
             constructRequest(HttpMethod.Put, "${baseUrl(baseVgl.v, baseVgl.g)}/${baseVgl.l}", dto),
@@ -105,7 +105,7 @@ internal class LeafRouterTest : AbstractRouterTest({
 
     @Test
     fun `Test Leaf Update Validation Error`() {
-        val dto = LeafUpdateDto("Имя1", 1, "Значение1", 0)
+        val dto = LeafUpdateDto("Test Name 1", 1, "Test Value 1", 0)
         every { LeafService.updateLeaf(allAny()) } returns Err(listOf("Test error"))
 
         testRoute(HttpMethod.Put, "${baseUrl(baseVgl.v, baseVgl.g)}/${baseVgl.l}", dto) {
