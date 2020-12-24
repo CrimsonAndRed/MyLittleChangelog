@@ -41,7 +41,6 @@ internal class LeafRouterTest : AbstractRouterTest({
             name = dto.name!!,
             valueType = dto.valueType!!,
             value = dto.value!!,
-            // При создании лифа в изначальной группе, то у этой группы vid == id
             groupVid = baseVgl.g
         )
 

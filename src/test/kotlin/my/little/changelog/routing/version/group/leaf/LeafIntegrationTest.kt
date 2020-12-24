@@ -26,42 +26,36 @@ import org.junit.jupiter.api.assertThrows
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
-// TODO Зарефакторить создание версий, групп, лифов через функции в [AbstractIntegrationTest]
 @KtorExperimentalAPI
 internal class LeafIntegrationTest : AbstractIntegrationTest() {
 
     @Test
     fun `Test Create Leaf Success`() {
         testApplication {
-            val (version, group) = transaction {
-                val version = Version.new {}
-                val group = Group.new {
-                    this.version = version
-                    this.name = "Группа1"
-                    this.parentVid = null
+            transaction {
+                val version = createVersion()
+                val group = createGroup(version)
+
+                val dto = LeafCreationDto(
+                    null,
+                    "Имя1",
+                    1,
+                    "Значение1"
+                )
+
+                with(
+                    handleRequest(HttpMethod.Post, "version/${version.id.value}/group/${group.id.value}/leaf") {
+                        addHeader("Content-Type", "application/json")
+                        setBody(Json.encodeToString(dto))
+                    }
+                ) {
+
+                    assertEquals(HttpStatusCode.OK, response.status())
+                    val response = Json.decodeFromString<LeafReturnedDto>(response.content!!)
+                    assertEquals(dto.name, response.name)
+                    assertEquals(dto.value, response.value)
+                    assertEquals(dto.valueType, response.valueType)
                 }
-
-                version to group
-            }
-            val dto = LeafCreationDto(
-                null,
-                "Имя1",
-                1,
-                "Значение1"
-            )
-
-            with(
-                handleRequest(HttpMethod.Post, "version/${version.id.value}/group/${group.id.value}/leaf") {
-                    addHeader("Content-Type", "application/json")
-                    setBody(Json.encodeToString(dto))
-                }
-            ) {
-
-                assertEquals(HttpStatusCode.OK, response.status())
-                val response = Json.decodeFromString<LeafReturnedDto>(response.content!!)
-                assertEquals(dto.name, response.name)
-                assertEquals(dto.value, response.value)
-                assertEquals(dto.valueType, response.valueType)
             }
         }
     }
@@ -70,15 +64,9 @@ internal class LeafIntegrationTest : AbstractIntegrationTest() {
     fun `Test Create Leaf With Old Version`() {
         testApplication {
             transaction {
-                val version = Version.new {}
-                Version.new {}
-                val group = Group.new {
-                    this.version = version
-                    this.name = "Группа1"
-                    this.parentVid = null
-                }
-                commit()
-
+                val version = createVersion()
+                createVersion()
+                val group = createGroup(version)
                 val dto = LeafCreationDto(
                     null,
                     "Имя1",
@@ -104,14 +92,8 @@ internal class LeafIntegrationTest : AbstractIntegrationTest() {
     fun `Test Create Leaf With Nonexistent Version`() {
         testApplication {
             transaction {
-                val version = Version.new {}
-                val group = Group.new {
-                    this.version = version
-                    this.name = "Группа1"
-                    this.parentVid = null
-                }
-                commit()
-
+                val version = createVersion()
+                val group = createGroup(version)
                 val dto = LeafCreationDto(
                     null,
                     "Имя1",
@@ -135,14 +117,8 @@ internal class LeafIntegrationTest : AbstractIntegrationTest() {
     fun `Test Create Leaf With Nonexistent Group`() {
         testApplication {
             transaction {
-                val version = Version.new {}
-                val group = Group.new {
-                    this.version = version
-                    this.name = "Группа1"
-                    this.parentVid = null
-                }
-                commit()
-
+                val version = createVersion()
+                val group = createGroup(version)
                 val dto = LeafCreationDto(
                     null,
                     "Имя1",
@@ -166,24 +142,9 @@ internal class LeafIntegrationTest : AbstractIntegrationTest() {
     fun `Test Update Leaf Without Group Vid`() {
         testApplication {
             transaction {
-                val version = Version.new {}
-                val group = Group.new {
-                    this.version = version
-                    this.name = "Группа1"
-                    this.parentVid = null
-                }
-                commit()
-
-                val leaf = Leaf.new {
-                    this.valueType = 1
-                    this.value = "Значение1"
-                    this.version = version
-                    this.name = "Лиф1"
-                    this.groupVid = group.vid
-                }
-
-                commit()
-
+                val version = createVersion()
+                val group = createGroup(version)
+                val leaf = createLeaf(version, group.vid)
                 val dto = LeafUpdateDto(
                     "Имя1",
                     1,
@@ -208,23 +169,9 @@ internal class LeafIntegrationTest : AbstractIntegrationTest() {
     fun `Test Update Leaf With Group Vid`() {
         testApplication {
             transaction {
-                val version = Version.new {}
-                val group = Group.new {
-                    this.version = version
-                    this.name = "Группа1"
-                    this.parentVid = null
-                }
-                commit()
-
-                val leaf = Leaf.new {
-                    this.valueType = 1
-                    this.value = "Значение1"
-                    this.version = version
-                    this.name = "Лиф1"
-                    this.groupVid = group.vid
-                }
-                commit()
-
+                val version = createVersion()
+                val group = createGroup(version)
+                val leaf = createLeaf(version, group.vid)
                 val dto = LeafUpdateDto(
                     "Лиф1",
                     1,
@@ -248,27 +195,10 @@ internal class LeafIntegrationTest : AbstractIntegrationTest() {
     fun `Test Update Leaf With Changing Group`() {
         testApplication {
             transaction {
-                val version = Version.new {}
-                val group1 = Group.new {
-                    this.version = version
-                    this.name = "Группа1"
-                    this.parentVid = null
-                }
-                val group2 = Group.new {
-                    this.version = version
-                    this.name = "Группа2"
-                    this.parentVid = null
-                }
-                commit()
-
-                val leaf = Leaf.new {
-                    this.valueType = 1
-                    this.value = "Значение1"
-                    this.version = version
-                    this.name = "Лиф1"
-                    this.groupVid = group1.vid
-                }
-                commit()
+                val version = createVersion()
+                val group1 = createGroup(version)
+                val group2 = createGroup(version)
+                val leaf = createLeaf(version, group1.vid)
 
                 val dto = LeafUpdateDto(
                     name = leaf.name,
@@ -293,22 +223,9 @@ internal class LeafIntegrationTest : AbstractIntegrationTest() {
     fun `Test Update Leaf With Nonexistent Version`() {
         testApplication {
             transaction {
-                val version = Version.new {}
-                val group = Group.new {
-                    this.version = version
-                    this.name = "Группа1"
-                    this.parentVid = null
-                }
-                commit()
-
-                val leaf = Leaf.new {
-                    this.valueType = 1
-                    this.value = "Значение1"
-                    this.version = version
-                    this.name = "Лиф1"
-                    this.groupVid = group.vid
-                }
-                commit()
+                val version = createVersion()
+                val group = createGroup(version)
+                val leaf = createLeaf(version, group.vid)
 
                 val dto = LeafUpdateDto(
                     "Лиф1",
@@ -333,23 +250,9 @@ internal class LeafIntegrationTest : AbstractIntegrationTest() {
     fun `Test Update Leaf With Nonexistent Group`() {
         testApplication {
             transaction {
-                val version = Version.new {}
-                val group = Group.new {
-                    this.version = version
-                    this.name = "Группа1"
-                    this.parentVid = null
-                }
-                commit()
-
-                val leaf = Leaf.new {
-                    this.valueType = 1
-                    this.value = "Значение1"
-                    this.version = version
-                    this.name = "Лиф1"
-                    this.groupVid = group.vid
-                }
-                commit()
-
+                val version = createVersion()
+                val group = createGroup(version)
+                val leaf = createLeaf(version, group.vid)
                 val dto = LeafUpdateDto(
                     "Лиф1",
                     1,
@@ -373,22 +276,9 @@ internal class LeafIntegrationTest : AbstractIntegrationTest() {
     fun `Test Delete Leaf`() {
         testApplication {
             transaction {
-                val version = Version.new {}
-                val group = Group.new {
-                    this.version = version
-                    this.name = "Группа1"
-                    this.parentVid = null
-                }
-                commit()
-
-                val leaf = Leaf.new {
-                    this.valueType = 1
-                    this.value = "Значение1"
-                    this.version = version
-                    this.name = "Лиф1"
-                    this.groupVid = group.vid
-                }
-                commit()
+                val version = createVersion()
+                val group = createGroup(version)
+                val leaf = createLeaf(version, group.vid)
 
                 with(
                     handleRequest(HttpMethod.Delete, "version/${version.id.value}/group/${group.id.value}/leaf/${leaf.id.value}")
@@ -404,23 +294,10 @@ internal class LeafIntegrationTest : AbstractIntegrationTest() {
     fun `Test Delete Leaf with Wrong Version`() {
         testApplication {
             transaction {
-                val version1 = Version.new {}
-                val version2 = Version.new {}
-                val group = Group.new {
-                    this.version = version1
-                    this.name = "Группа1"
-                    this.parentVid = null
-                }
-                commit()
-
-                val leaf = Leaf.new {
-                    this.valueType = 1
-                    this.value = "Значение1"
-                    this.version = version1
-                    this.name = "Лиф1"
-                    this.groupVid = group.vid
-                }
-                commit()
+                val version1 = createVersion()
+                val version2 = createVersion()
+                val group = createGroup(version1)
+                val leaf = createLeaf(version1, group.vid)
 
                 with(
                     handleRequest(HttpMethod.Delete, "version/${version2.id.value}/group/${group.id.value}/leaf/${leaf.id.value}")
@@ -436,26 +313,12 @@ internal class LeafIntegrationTest : AbstractIntegrationTest() {
     fun `Test Delete Nonexistent Leaf`() {
         testApplication {
             transaction {
-                val version1 = Version.new {}
-                val version2 = Version.new {}
-                val group = Group.new {
-                    this.version = version1
-                    this.name = "Группа1"
-                    this.parentVid = null
-                }
-                commit()
-
-                val leaf = Leaf.new {
-                    this.valueType = 1
-                    this.value = "Значение1"
-                    this.version = version1
-                    this.name = "Лиф1"
-                    this.groupVid = group.vid
-                }
-                commit()
+                val version1 = createVersion()
+                val group = createGroup(version1)
+                val leaf = createLeaf(version1, group.vid)
 
                 with(
-                    handleRequest(HttpMethod.Delete, "version/${version2.id.value}/group/${group.id.value}/leaf/${leaf.id.value + 1}")
+                    handleRequest(HttpMethod.Delete, "version/${version1.id.value}/group/${group.id.value}/leaf/${leaf.id.value + 1}")
                 ) {
                     assertEquals(HttpStatusCode.InternalServerError, response.status())
                 }
@@ -469,24 +332,24 @@ internal class LeafIntegrationTest : AbstractIntegrationTest() {
         testApplication {
             transaction {
                 val version = createVersion()
-                val group = createGroup(version, "Группа1")
-                val leaf1 = createLeaf(version, "Лиф1", 1, "Значение1", group.vid)
-                val leaf2 = createLeaf(version, "Лиф2", 2, "Значение2", group.vid)
+                val group = createGroup(version)
+                val leaf1 = createLeaf(version, group.vid)
+                val leaf2 = createLeaf(version, group.vid)
                 testMoveLeafPositive(version, group, leaf1, leaf2)
             }
             transaction {
                 val version = createVersion()
-                val group = createGroup(version, "Группа1")
-                val leaf1 = createLeaf(version, "Лиф1", 1, "Значение1", group.vid)
-                val leaf2 = createLeaf(version, "Лиф2", 2, "Значение2", group.vid)
+                val group = createGroup(version)
+                val leaf1 = createLeaf(version, group.vid)
+                val leaf2 = createLeaf(version, group.vid)
                 testMoveLeafPositive(version, group, leaf2, leaf1)
             }
             transaction {
                 val version = createVersion()
-                val group = createGroup(version, "Группа1")
-                val group2 = createGroup(version, "Группа2")
-                val leaf1 = createLeaf(version, "Лиф1", 1, "Значение1", group.vid)
-                val leaf2 = createLeaf(version, "Лиф2", 2, "Значение2", group2.vid)
+                val group = createGroup(version)
+                val group2 = createGroup(version)
+                val leaf1 = createLeaf(version, group.vid)
+                val leaf2 = createLeaf(version, group2.vid,)
                 testMoveLeafNegative(version, group, leaf2, leaf1)
             }
         }

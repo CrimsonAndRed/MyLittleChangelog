@@ -6,6 +6,7 @@ import io.ktor.server.testing.withTestApplication
 import io.ktor.util.KtorExperimentalAPI
 import my.little.changelog.model.group.Group
 import my.little.changelog.model.leaf.Leaf
+import my.little.changelog.model.leaf.LeafType
 import my.little.changelog.model.version.Version
 import org.jetbrains.exposed.sql.Transaction
 import org.testcontainers.containers.PostgreSQLContainer
@@ -41,19 +42,19 @@ abstract class AbstractIntegrationTest {
     protected fun Transaction.createVersion(): Version = Version
         .new { }.also { commit() }
 
-    protected fun Transaction.createGroup(version: Version, name: String, parentVid: Int? = null): Group = Group
+    protected fun Transaction.createGroup(version: Version, parentVid: Int? = null, name: String = "Test Group"): Group = Group
         .new {
             this.version = version
-            this.name = name
             this.parentVid = parentVid
+            this.name = name
         }.also { commit() }
 
-    protected fun Transaction.createLeaf(version: Version, name: String, valueType: Int, value: String, groupVid: Int): Leaf = Leaf
+    protected fun Transaction.createLeaf(version: Version, groupVid: Int, name: String = "Test Leaf", valueType: Int = LeafType.TEXTUAL.id, value: String = "Test Value"): Leaf = Leaf
         .new {
+            this.version = version
+            this.groupVid = groupVid
             this.name = name
             this.valueType = valueType
             this.value = value
-            this.version = version
-            this.groupVid = groupVid
         }.also { commit() }
 }

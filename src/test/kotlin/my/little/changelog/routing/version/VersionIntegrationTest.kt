@@ -6,11 +6,8 @@ import io.ktor.server.testing.handleRequest
 import io.ktor.util.KtorExperimentalAPI
 import kotlinx.serialization.decodeFromString
 import my.little.changelog.configuration.Json
-import my.little.changelog.model.group.Group
 import my.little.changelog.model.group.dto.external.WholeGroupDto
-import my.little.changelog.model.leaf.Leaf
 import my.little.changelog.model.leaf.dto.external.WholeLeafDto
-import my.little.changelog.model.version.Version
 import my.little.changelog.model.version.dto.external.PreviousVersionsDTO
 import my.little.changelog.model.version.dto.external.ReturnedVersionDto
 import my.little.changelog.model.version.dto.external.WholeVersion
@@ -29,12 +26,12 @@ internal class VersionIntegrationTest : AbstractIntegrationTest() {
     @Test
     fun `Test Create Version Success`() {
         testApplication {
-            val version = transaction {
-                Version.new {}
-            }
+            transaction {
+                val version = createVersion()
 
-            with(handleRequest(HttpMethod.Get, "version/${version.id.value}")) {
-                assertEquals(HttpStatusCode.OK, response.status())
+                with(handleRequest(HttpMethod.Get, "version/${version.id.value}")) {
+                    assertEquals(HttpStatusCode.OK, response.status())
+                }
             }
         }
     }
@@ -44,29 +41,10 @@ internal class VersionIntegrationTest : AbstractIntegrationTest() {
         testApplication {
             val version = transaction {
 
-                val version = Version.new {}
-                val group1 = Group.new {
-                    this.vid = 1
-                    this.version = version
-                    this.name = "Группа1"
-                    this.parentVid = null
-                }
-
-                val group2 = Group.new {
-                    this.vid = 2
-                    this.version = version
-                    this.name = "Группа2"
-                    this.parentVid = group1.vid
-                }
-
-                val leaf = Leaf.new {
-                    this.vid = 1
-                    this.name = "Значение1"
-                    this.valueType = 1
-                    this.value = "100"
-                    this.version = version
-                    this.groupVid = 1
-                }
+                val version = createVersion()
+                val group1 = createGroup(version)
+                val group2 = createGroup(version, group1.vid)
+                val leaf = createLeaf(version, group1.vid)
 
                 val group2Dto = WholeGroupDto(
                     id = group2.id.value,
@@ -115,14 +93,14 @@ internal class VersionIntegrationTest : AbstractIntegrationTest() {
     fun `Test Get Versions Success`() {
         testApplication {
             transaction {
-                Version.new {}
-                Version.new {}
-            }
+                createVersion()
+                createVersion()
 
-            with(handleRequest(HttpMethod.Get, "version")) {
-                assertEquals(HttpStatusCode.OK, response.status())
-                val jsonList: List<ReturnedVersionDto> = Json.decodeFromString(response.content!!)
-                assertEquals(2, jsonList.size)
+                with(handleRequest(HttpMethod.Get, "version")) {
+                    assertEquals(HttpStatusCode.OK, response.status())
+                    val jsonList: List<ReturnedVersionDto> = Json.decodeFromString(response.content!!)
+                    assertEquals(2, jsonList.size)
+                }
             }
         }
     }
@@ -130,36 +108,20 @@ internal class VersionIntegrationTest : AbstractIntegrationTest() {
     @Test
     fun `Test Delete Version Success`() {
         testApplication {
-            val latestVersion = transaction {
-                Version.new { }
-                val latestVersion = Version.new { }
-                val g1 = Group.new {
-                    name = "Test Group 1"
-                    version = latestVersion
-                }
+            transaction {
+                val firstVersion = createVersion()
+                val latestVersion = createVersion()
+                val g1 = createGroup(latestVersion)
+                createGroup(latestVersion, g1.vid)
+                createLeaf(latestVersion, g1.vid)
 
-                commit()
-
-                Group.new {
-                    name = "Test Group 2"
-                    version = latestVersion
-                    parentVid = g1.vid
-                }
-                Leaf.new {
-                    name = "Test Leaf 1"
-                    value = "Test Value 1"
-                    valueType = 0
-                    version = latestVersion
-                }
-                latestVersion
-            }
-
-            with(handleRequest(HttpMethod.Delete, "version/${latestVersion.id.value}")) {
-                transaction {
-                    assertEquals(HttpStatusCode.NoContent, response.status())
-                    assertNotEquals(latestVersion, VersionRepo.findLatest())
-                    assertEquals(0, GroupRepo.findAll().count())
-                    assertEquals(0, LeafRepo.findAll().count())
+                with(handleRequest(HttpMethod.Delete, "version/${latestVersion.id.value}")) {
+                    transaction {
+                        assertEquals(HttpStatusCode.NoContent, response.status())
+                        assertEquals(firstVersion.id, VersionRepo.findLatest().id)
+                        assertEquals(0, GroupRepo.findAll().count())
+                        assertEquals(0, LeafRepo.findAll().count())
+                    }
                 }
             }
         }
@@ -168,28 +130,19 @@ internal class VersionIntegrationTest : AbstractIntegrationTest() {
     @Test
     fun `Test Delete Not Latest Version Failure`() {
         testApplication {
-            val firstVersion = transaction {
-                val firstVersion = Version.new { }
-                val latestVersion = Version.new { }
-                Group.new {
-                    name = "Test Group 1"
-                    version = latestVersion
-                }
-                Leaf.new {
-                    name = "Test Leaf 1"
-                    value = "Test Value 1"
-                    valueType = 0
-                    version = latestVersion
-                }
-                firstVersion
-            }
+            transaction {
+                val firstVersion = createVersion()
+                val latestVersion = createVersion()
+                val group = createGroup(latestVersion)
+                createLeaf(latestVersion, group.vid)
 
-            with(handleRequest(HttpMethod.Delete, "version/${firstVersion.id.value}")) {
-                transaction {
-                    assertEquals(HttpStatusCode.BadRequest, response.status())
-                    assertNotEquals(firstVersion, VersionRepo.findLatest())
-                    assertEquals(1, GroupRepo.findAll().count())
-                    assertEquals(1, LeafRepo.findAll().count())
+                with(handleRequest(HttpMethod.Delete, "version/${firstVersion.id.value}")) {
+                    transaction {
+                        assertEquals(HttpStatusCode.BadRequest, response.status())
+                        assertNotEquals(firstVersion, VersionRepo.findLatest())
+                        assertEquals(1, GroupRepo.findAll().count())
+                        assertEquals(1, LeafRepo.findAll().count())
+                    }
                 }
             }
         }
@@ -198,18 +151,14 @@ internal class VersionIntegrationTest : AbstractIntegrationTest() {
     @Test
     fun `Test Delete Nonexistent Version Failure`() {
         testApplication {
-            val firstVersion = transaction {
-                val firstVersion = Version.new { }
-                Group.new {
-                    name = "Test Group 1"
-                    version = firstVersion
-                }
-                firstVersion
-            }
+            transaction {
+                val firstVersion = createVersion()
+                createGroup(firstVersion)
 
-            with(handleRequest(HttpMethod.Delete, "version/${firstVersion.id.value + 1}")) {
-                transaction {
-                    assertEquals(HttpStatusCode.InternalServerError, response.status())
+                with(handleRequest(HttpMethod.Delete, "version/${firstVersion.id.value + 1}")) {
+                    transaction {
+                        assertEquals(HttpStatusCode.InternalServerError, response.status())
+                    }
                 }
             }
         }
@@ -218,48 +167,33 @@ internal class VersionIntegrationTest : AbstractIntegrationTest() {
     @Test
     fun `Test Get Previous Version Success`() {
         testApplication {
-
-            lateinit var group: Group
-            lateinit var leaf: Leaf
-
             transaction {
-                val latestVersion = Version.new { }
-                group = Group.new {
-                    name = "Test Group 1"
-                    version = latestVersion
-                }
-                commit()
-                leaf = Leaf.new {
-                    name = "Test Leaf 1"
-                    value = "Test Value 1"
-                    valueType = 0
-                    version = latestVersion
-                    groupVid = group.vid
-                }
-            }
+                val latestVersion = createVersion()
+                val group = createGroup(latestVersion)
+                val leaf = createLeaf(latestVersion, group.vid)
+                with(handleRequest(HttpMethod.Get, "version/previous")) {
+                    transaction {
+                        assertEquals(HttpStatusCode.OK, response.status())
+                        val json: PreviousVersionsDTO = Json.decodeFromString(response.content!!)
+                        assertEquals(1, json.groupContent.size)
+                        assertEquals(1, json.groupContent[0].leafContent.size)
 
-            with(handleRequest(HttpMethod.Get, "version/previous")) {
-                transaction {
-                    assertEquals(HttpStatusCode.OK, response.status())
-                    val json: PreviousVersionsDTO = Json.decodeFromString(response.content!!)
-                    assertEquals(1, json.groupContent.size)
-                    assertEquals(1, json.groupContent[0].leafContent.size)
+                        val groupContent = json.groupContent[0]
 
-                    val groupContent = json.groupContent[0]
+                        assertEquals(groupContent.id, group.id.value)
+                        assertEquals(groupContent.vid, group.vid)
+                        assertEquals(groupContent.name, group.name)
+                        assertEquals(groupContent.groupContent.size, 0)
+                        assertEquals(groupContent.leafContent.size, 1)
 
-                    assertEquals(groupContent.id, group.id.value)
-                    assertEquals(groupContent.vid, group.vid)
-                    assertEquals(groupContent.name, group.name)
-                    assertEquals(groupContent.groupContent.size, 0)
-                    assertEquals(groupContent.leafContent.size, 1)
+                        val leafContent = json.groupContent[0].leafContent[0]
 
-                    val leafContent = json.groupContent[0].leafContent[0]
-
-                    assertEquals(leafContent.id, leaf.id.value)
-                    assertEquals(leafContent.vid, leaf.vid)
-                    assertEquals(leafContent.name, leaf.name)
-                    assertEquals(leafContent.valueType, leaf.valueType)
-                    assertEquals(leafContent.value, leaf.value)
+                        assertEquals(leafContent.id, leaf.id.value)
+                        assertEquals(leafContent.vid, leaf.vid)
+                        assertEquals(leafContent.name, leaf.name)
+                        assertEquals(leafContent.valueType, leaf.valueType)
+                        assertEquals(leafContent.value, leaf.value)
+                    }
                 }
             }
         }

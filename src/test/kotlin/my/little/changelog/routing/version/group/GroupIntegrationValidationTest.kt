@@ -8,10 +8,8 @@ import io.ktor.util.KtorExperimentalAPI
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import my.little.changelog.configuration.Json
-import my.little.changelog.model.group.Group
 import my.little.changelog.model.group.dto.external.GroupCreationDto
 import my.little.changelog.model.group.dto.external.GroupUpdateDto
-import my.little.changelog.model.version.Version
 import my.little.changelog.routing.AbstractIntegrationTest
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.junit.jupiter.api.Assertions
@@ -24,9 +22,7 @@ internal class GroupIntegrationValidationTest : AbstractIntegrationTest() {
     fun `Test Group Create With Blank Name`() {
         testApplication {
             transaction {
-                val version1 = Version.new { }
-                commit()
-
+                val version1 = createVersion()
                 val dto = GroupCreationDto(" ")
 
                 with(
@@ -47,13 +43,8 @@ internal class GroupIntegrationValidationTest : AbstractIntegrationTest() {
     fun `Test Group Update With Blank Name`() {
         testApplication {
             transaction {
-                val version1 = Version.new { }
-                val group = Group.new {
-                    this.version = version1
-                    this.name = "Test"
-                }
-                commit()
-
+                val version1 = createVersion()
+                val group = createGroup(version1)
                 val dto = GroupUpdateDto(" ")
 
                 with(
