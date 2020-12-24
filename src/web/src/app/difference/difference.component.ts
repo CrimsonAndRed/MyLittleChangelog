@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Difference } from 'app/model/difference';
 import { ActivatedRoute } from '@angular/router';
+import { DifferenceService } from './difference.service';
+import { tap } from 'rxjs/operators';
+import { PreloaderService } from 'app/preloader/preloader.service';
 
 @Component({
   selector: 'difference',
@@ -11,9 +14,16 @@ export class DifferenceComponent implements OnInit {
 
   difference: Difference = null;
 
-  constructor( private route: ActivatedRoute) { }
+  constructor(private route: ActivatedRoute,
+              private preloaderService: PreloaderService,
+              private differenceService: DifferenceService) { }
 
   ngOnInit(): void {
-    this.difference = this.route.snapshot.data.difference;
+    this.preloaderService.wrap(
+      this.differenceService.initDifference(this.route.snapshot.queryParams.from, this.route.snapshot.queryParams.to)
+        .pipe(
+          tap((diff) => this.difference = diff)
+        )
+    );
   }
 }

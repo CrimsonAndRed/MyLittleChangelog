@@ -5,6 +5,7 @@ import { RouterLink, ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { PreloaderService } from 'app/preloader/preloader.service';
+import { VersionsListService } from './versions-list.service';
 
 @Component({
   selector: 'versions-list',
@@ -15,11 +16,15 @@ export class VersionsListComponent implements OnInit {
 
   versions: Version[];
 
-  constructor(private http: Http, private route: ActivatedRoute, private preloaderService: PreloaderService) {
+  constructor(private http: Http, private route: ActivatedRoute, private preloaderService: PreloaderService, private versionsListService: VersionsListService) {
   }
 
   ngOnInit(): void {
-    this.versions = this.route.snapshot.data.versions;
+    this.preloaderService.wrap(
+      this.versionsListService.initVersions().pipe(
+        tap((versions) => this.versions = versions),
+      )
+    );
   }
 
   gotoVersionPage(version: Version): string {
@@ -29,7 +34,7 @@ export class VersionsListComponent implements OnInit {
   onNewVersionCreated(obs: Observable<Version>): void {
     this.preloaderService.wrap(
       obs.pipe(
-        tap((version) => this.versions.push(version)),
+        tap((version) => this.versionsListService.createVersion(version)),
       )
     );
   }
@@ -38,7 +43,7 @@ export class VersionsListComponent implements OnInit {
     this.preloaderService.wrap(
       this.http.delete(`http://localhost:8080/version/${version.id}`)
         .pipe(
-          tap(() => this.versions = this.versions.filter(v => v.id !== version.id)),
+          tap(() => this.versionsListService.deleteVersion(version)),
         )
     );
   }

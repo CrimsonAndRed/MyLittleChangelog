@@ -1,6 +1,8 @@
-<div>
-  <p>From {{ difference.from }} to {{ difference.to }}</p>
-</div>
-<div>
-  <groups-third [groups]="difference.groupContent"></groups-third>
+<div *ngIf="difference != null">
+  <div>
+    <p>From {{ difference.from }} to {{ difference.to }}</p>
+  </div>
+  <div>
+    <groups-third  [groups]="difference.groupContent"></groups-third>
+  </div>
 </div>
