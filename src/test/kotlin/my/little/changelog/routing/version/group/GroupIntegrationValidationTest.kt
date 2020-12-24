@@ -8,6 +8,7 @@ import io.ktor.util.KtorExperimentalAPI
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import my.little.changelog.configuration.Json
+import my.little.changelog.model.group.dto.external.ChangeGroupPositionDto
 import my.little.changelog.model.group.dto.external.GroupCreationDto
 import my.little.changelog.model.group.dto.external.GroupUpdateDto
 import my.little.changelog.routing.AbstractIntegrationTest
@@ -60,4 +61,28 @@ internal class GroupIntegrationValidationTest : AbstractIntegrationTest() {
             }
         }
     }
+
+    @Test
+    fun `Test Group Move To Child`() {
+        testApplication {
+            transaction {
+                val version1 = createVersion()
+                val group = createGroup(version1)
+                val group2 = createGroup(version1, group.vid)
+                val dto = ChangeGroupPositionDto(group2.vid)
+
+                with(
+                    handleRequest(HttpMethod.Patch, "version/${version1.id.value}/group/${group.id.value}/position") {
+                        addHeader("Content-Type", "application/json")
+                        setBody(Json.encodeToString(dto))
+                    }
+                ) {
+                    Assertions.assertEquals(HttpStatusCode.BadRequest, response.status())
+                    val response = Json.decodeFromString<List<String>>(response.content!!)
+                    assertTrue { 1 >= response.size }
+                }
+            }
+        }
+    }
+
 }

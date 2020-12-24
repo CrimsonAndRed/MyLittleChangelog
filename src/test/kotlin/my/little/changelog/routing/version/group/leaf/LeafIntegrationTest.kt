@@ -38,9 +38,9 @@ internal class LeafIntegrationTest : AbstractIntegrationTest() {
 
                 val dto = LeafCreationDto(
                     null,
-                    "Имя1",
+                    "Test Name 1",
                     1,
-                    "Значение1"
+                    "Test Value 1"
                 )
 
                 with(
@@ -69,9 +69,9 @@ internal class LeafIntegrationTest : AbstractIntegrationTest() {
                 val group = createGroup(version)
                 val dto = LeafCreationDto(
                     null,
-                    "Имя1",
+                    "Test Name 1",
                     1,
-                    "Значение1"
+                    "Test Value 1"
                 )
 
                 with(

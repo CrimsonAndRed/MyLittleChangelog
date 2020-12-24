@@ -7,6 +7,8 @@ import io.mockk.every
 import io.mockk.mockkObject
 import kotlinx.serialization.decodeFromString
 import my.little.changelog.configuration.Json
+import my.little.changelog.model.leaf.LeafType
+import my.little.changelog.model.leaf.dto.external.ChangeLeafPositionDto
 import my.little.changelog.model.leaf.dto.external.LeafCreationDto
 import my.little.changelog.model.leaf.dto.external.LeafReturnedDto
 import my.little.changelog.model.leaf.dto.external.LeafUpdateDto
@@ -55,7 +57,7 @@ internal class LeafRouterTest : AbstractRouterTest({
 
     @Test
     fun `Test Leaf Creation Exception`() {
-        val dto = LeafCreationDto(null, "Имя1", 1, "Значение1")
+        val dto = LeafCreationDto(null, "Test Name 1", 1, "Test Value 1")
 
         testExceptions(
             constructRequest(HttpMethod.Post, baseUrl(baseVgl.v, baseVgl.g), dto),
@@ -133,10 +135,31 @@ internal class LeafRouterTest : AbstractRouterTest({
 
     @Test
     fun `Test Leaf Delete Validation Error`() {
-        val dto = LeafCreationDto(null, "Имя1", 1, "Значение1")
+        val dto = LeafCreationDto(null, "Test Name 1", LeafType.TEXTUAL.id, "Test Value 1")
         every { LeafService.deleteLeaf(allAny()) } returns Err(listOf("Test error"))
 
         testRoute(HttpMethod.Delete, "${baseUrl(baseVgl.v, baseVgl.g)}/${baseVgl.l}", dto) {
+            assertEquals(HttpStatusCode.BadRequest, response.status())
+            val response = Json.decodeFromString<List<String>>(response.content!!)
+            assertTrue { 1 >= response.size }
+        }
+    }
+
+    @Test
+    fun `Test Leaf Change Version Exceptions`() = testExceptions(
+        constructRequest(HttpMethod.Patch, "${baseUrl(baseVgl.v, baseVgl.g)}/${baseVgl.l}/position", ChangeLeafPositionDto(0)),
+        listOf { LeafService.changePosition(allAny(), allAny()) },
+        listOf(
+            { RuntimeException() } to HttpStatusCode.InternalServerError,
+        )
+    )
+
+    @Test
+    fun `Test Leaf Change Version Validation Error`() {
+        val dto = ChangeLeafPositionDto(0)
+        every { LeafService.changePosition(allAny(), allAny()) } returns Err(listOf("Test error"))
+
+        testRoute(HttpMethod.Patch, "${baseUrl(baseVgl.v, baseVgl.g)}/${baseVgl.l}/position", dto) {
             assertEquals(HttpStatusCode.BadRequest, response.status())
             val response = Json.decodeFromString<List<String>>(response.content!!)
             assertTrue { 1 >= response.size }
