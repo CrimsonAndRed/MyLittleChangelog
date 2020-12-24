@@ -84,5 +84,4 @@ internal class GroupIntegrationValidationTest : AbstractIntegrationTest() {
             }
         }
     }
-
 }
