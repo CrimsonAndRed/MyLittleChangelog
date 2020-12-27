@@ -38,8 +38,7 @@ import { ExpandBlockComponent } from './expand-block/expand-block.component';
   ],
   exports: [
     GroupsSecComponent,
-    GlobalHeaderDr,
-    ExpandBlockComponent
+    GlobalHeaderDr
   ]
 })
 export class GroupsSecModule { }

@@ -7,12 +7,18 @@ import { MatSelectModule } from '@angular/material/select';
 
 import { TreeContainerComponent } from './tree-container.component';
 import { RootContainerDr, GroupContainerDr } from './tree-container.directive';
+import { ExpandBlockComponent } from './expand-block/expand-block.component';
+import { ExpandAllButtonComponent } from './expand-block/expand-all-button/expand-all-button.component';
+import { ExpandOneButtonComponent } from './expand-block/expand-one-button/expand-one-button.component';
 
 @NgModule({
   declarations: [
     TreeContainerComponent,
     RootContainerDr,
-    GroupContainerDr
+    GroupContainerDr,
+    ExpandBlockComponent,
+    ExpandAllButtonComponent,
+    ExpandOneButtonComponent
   ],
   imports: [
     BrowserModule,
@@ -25,6 +31,7 @@ import { RootContainerDr, GroupContainerDr } from './tree-container.directive';
     TreeContainerComponent,
     RootContainerDr,
     GroupContainerDr,
+    ExpandBlockComponent
   ]
 })
 export class TreeContainerModule { }
