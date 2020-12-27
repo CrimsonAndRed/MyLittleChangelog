@@ -44,5 +44,4 @@ export class LeafContentSecComponent implements OnInit {
       componentRef.instance.ctx = this.context;
     }
   }
-
 }

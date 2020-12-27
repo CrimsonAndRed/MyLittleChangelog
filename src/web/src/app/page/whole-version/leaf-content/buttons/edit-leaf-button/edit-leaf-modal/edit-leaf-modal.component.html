@@ -1,0 +1,23 @@
+<mat-dialog-content>
+  <div>
+    <div>
+      <label>Name</label><input type="text" [(ngModel)]="leaf.name"/>
+    </div>
+    <div>
+      <label>Value</label><input [(ngModel)]="leaf.value"/>
+    </div>
+    <div>
+      <label>Value type</label>
+      <mat-form-field appearance="fill">
+        <mat-select [(ngModel)]="leaf.valueType">
+          <mat-option *ngFor="let leafType of leafTypes" [value]="leafType.id"> {{ leafType.name }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <!-- <leaf-movement [parentVid]="parentGroupVid" (parentChange)="onParentChange($event)"></leaf-movement> -->
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button [mat-dialog-close]="null">Cancel</button>
+  <button [mat-dialog-close]="[leaf, newParentGroupVid]">Save</button>
+</mat-dialog-actions>

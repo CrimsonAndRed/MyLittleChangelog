@@ -1,0 +1,14 @@
+<div>
+  <div>
+    <label>Name:</label>
+    <label>{{ leaf.name }}</label>
+  </div>
+  <div>
+    <label>Value:</label>
+    <label>{{ leaf.value }}</label>
+  </div>
+  <div>
+    <label>Value type:</label>
+    <label>{{ leafTypeService.leafById(leaf.valueType)?.name }}</label>
+  </div>
+</div>

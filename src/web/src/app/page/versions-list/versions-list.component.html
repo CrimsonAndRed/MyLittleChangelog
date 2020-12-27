@@ -1,0 +1,11 @@
+<new-version-button (onNewVersion)="onNewVersionCreated($event)"></new-version-button>
+<div>
+  <ul>
+    <li *ngFor="let version of versions">
+      <a [routerLink]="gotoVersionPage(version)">{{version.id}}</a>
+      <button *ngIf="version.id === versions[versions.length - 1].id" (click)="onVersionDelete(version)">Delete version</button>
+    </li>
+  </ul>
+</div>
+<br>
+<difference-button [versions]="versions"></difference-button>

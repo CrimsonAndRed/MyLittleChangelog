@@ -1,0 +1,12 @@
+<mat-dialog-content>
+  <div>
+    <div>
+      <label>Name</label><input [(ngModel)]="_group.name"/>
+    </div>
+  </div>
+  <!-- <group-movement [node]="_node" (parentChange)="onParentChange($event)"></group-movement> -->
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button [mat-dialog-close]="null">Cancel</button>
+  <button [mat-dialog-close]="[_group, newParentGroupVid]">Save</button>
+</mat-dialog-actions>

@@ -12,6 +12,12 @@ TODO
 - дифференсные группы и лифы и groups-sec - это одна структура или нет?
 - Общие TODO
 - В сервисах на фронте модифицируется существующий элемент вместо Observera от нового элемента (например, в versions-list.service)
+- А правильно ли что запросы шлют не сервисы, а сами компоненты
+- localhost в запросах
+- сервисы должны формировать специальные subject'ы, на которые можно не только сабскрайбаться, но и получать последнее значение 
+- <!-- <group-movement [node]="_node" (parentChange)="onParentChange($event)"></group-movement> -->
+- <!-- <leaf-movement [parentVid]="parentGroupVid" (parentChange)="onParentChange($event)"></leaf-movement> -->
+- проверка на корректность сборки бэка в скрипте update
 
 TODO далеко
 - Другие типы лифов
