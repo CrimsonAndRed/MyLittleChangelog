@@ -2,16 +2,23 @@
   <div class="group {{ node.value?.realNode ? 'in-use-group' : 'not-in-use-group' }}">
     <group-header [node]="node"></group-header>
     <group-body [node]="node"></group-body>
-    <tree-container [node]="node">
-      <ng-template #groupContainer let-child>
-        <whole-version-node [node]="child"></whole-version-node>
-      </ng-template>
-    </tree-container>
-    <ng-container *ngFor="let leaf of node.value.leafContent">
-      <div class="leaf-content">
-        <leaf-header [node]="node" [leaf]="leaf"></leaf-header>
-        <leaf-body [node]="node" [leaf]="leaf"></leaf-body>
-      </div>
-    </ng-container>
+    <expand-block
+      *ngIf="isExpandButtonShowed()"
+      [isContentShowed]="isContentShowed()"
+      (localShowChange)="changeLocalContentShow($event)"
+      (globalShowChange)="changeGlobalContentShow($event)"></expand-block>
+    <div [hidden]="!isContentShowed()">
+      <tree-container [node]="node">
+        <ng-template #groupContainer let-child>
+          <whole-version-node [node]="child" [expandMap]="expandMap"></whole-version-node>
+        </ng-template>
+      </tree-container>
+      <ng-container *ngFor="let leaf of node.value.leafContent">
+        <div class="leaf-content">
+          <leaf-header [node]="node" [leaf]="leaf"></leaf-header>
+          <leaf-body [node]="node" [leaf]="leaf"></leaf-body>
+        </div>
+      </ng-container>
+    </div>
   </div>
 </div>

@@ -2,7 +2,7 @@
   <p *ngIf="wholeVersionService.wholeVersion"> Version {{ wholeVersionService.wholeVersion.id }}</p>
   <tree-container *ngIf="wholeVersionService.wholeVersionTree != null" [node]="wholeVersionService.wholeVersionTree">
     <ng-template #groupContainer let-child>
-      <whole-version-node [node]="child"></whole-version-node>
+      <whole-version-node [node]="child" [expandMap]="expandMap"></whole-version-node>
     </ng-template>
   </tree-container>
 </div>
