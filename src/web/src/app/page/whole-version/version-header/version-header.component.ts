@@ -1,9 +1,9 @@
-import { Component, Output, EventEmitter, Input } from '@angular/core';
+import { Component, Output, EventEmitter, Input, OnInit } from '@angular/core';
 import { GlobalHeader, GlobalHeaderData, GroupsSecContext } from 'app/groups-sec/groups-sec.model';
 import { GroupContent, Group } from 'app/model/group-content';
 import { WholeVersionService } from 'app/page/whole-version/whole-version.service';
 import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { tap, switchMap } from 'rxjs/operators';
 import { PreloaderService } from 'app/preloader/preloader.service';
 
 @Component({
@@ -11,17 +11,21 @@ import { PreloaderService } from 'app/preloader/preloader.service';
   templateUrl: './version-header.component.html',
   styleUrls: ['./version-header.component.scss']
 })
-export class VersionHeaderComponent implements GlobalHeader {
+export class VersionHeaderComponent implements OnInit {
 
-  data: GlobalHeaderData;
-  ctx: GroupsSecContext;
+  userGroupIds
 
-  constructor(private wholeVersionService: WholeVersionService, private preloaderService: PreloaderService) {}
+  constructor(public wholeVersionService: WholeVersionService,
+              private preloaderService: PreloaderService) {}
+
+  ngOnInit(): void {
+
+  }
 
   handleNewGroup(obs: Observable<Group>): void {
     this.preloaderService.wrap(
       obs.pipe(
-        tap(newGroupWithId => {
+        switchMap(newGroupWithId => {
           const newGroup: GroupContent = {
             id: newGroupWithId.id,
             name: newGroupWithId.name,
@@ -32,13 +36,19 @@ export class VersionHeaderComponent implements GlobalHeader {
             leafContent: []
           };
 
-          this.wholeVersionService.addGroupToParent(newGroup, null);
+          // this.wholeVersionService.addGroupToParent(newGroup, null);
+          return this.wholeVersionService.createNewGroup();
         })
       )
     );
   }
 
+  // TODO kindof strange
   onPreviousNodeChosen(obs: Observable<void>): void {
-    this.ctx.previousNodeChosen(obs);
+    this.preloaderService.wrap(
+      obs.pipe(
+        switchMap((c) => this.wholeVersionService.createNewGroup())
+      )
+    );
   }
 }

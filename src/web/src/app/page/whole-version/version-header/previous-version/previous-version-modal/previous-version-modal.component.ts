@@ -13,6 +13,8 @@ import {
   PreviousUsedGroupsAndLeaves,
   PreviousVersionModalData,
 } from 'app/model/previous-version';
+import { WholeVersionService } from 'app/page/whole-version/whole-version.service';
+import { TreeNode } from 'app/model/tree';
 
 @Component({
   selector: 'previous-version-modal',
@@ -33,11 +35,12 @@ export class PreviousVersionModalComponent implements OnInit {
   chosenPastElement: PastRadioEvent = null;
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) private data: PreviousVersionModalData
+    @Inject(MAT_DIALOG_DATA) private data: PreviousVersionModalData,
+    private wholeVersionService: WholeVersionService
   ) { }
 
   ngOnInit(): void {
-    this.usedIds = this.calculateUsedIds(this.data.currentGroups);
+    this.usedIds = this.calculateUsedIds();
     this.groups = this.data.version.groupContent.map(g => groupContentToPrevious(g, this.usedIds));
     this.context = {
       emitGroupCheck: this.onPastGroupCheck.bind(this),
@@ -64,11 +67,11 @@ export class PreviousVersionModalComponent implements OnInit {
     };
   }
 
-  private calculateUsedIds(groups: GroupContent[]): PreviousUsedGroupsAndLeaves {
+  private calculateUsedIds(): PreviousUsedGroupsAndLeaves {
     const groupIds: Set<number> = new Set();
     const leafIds: Set<number> = new Set();
 
-    groups.forEach(g => this.addUsedIdsRecursive(g, groupIds, leafIds));
+    this.wholeVersionService.wholeVersionTree.children.forEach(g => this.addUsedIdsRecursive(g, groupIds, leafIds));
 
     return {
       usedGroups: groupIds,
@@ -76,9 +79,9 @@ export class PreviousVersionModalComponent implements OnInit {
     };
   }
 
-  private addUsedIdsRecursive(group: GroupContent, groupIds: Set<number>, leafIds: Set<number>): void {
-    groupIds.add(group.id);
-    group.leafContent.forEach(l => leafIds.add(l.id));
-    group.groupContent.forEach(g => this.addUsedIdsRecursive(g, groupIds, leafIds));
+  private addUsedIdsRecursive(group: TreeNode<GroupContent>, groupIds: Set<number>, leafIds: Set<number>): void {
+    groupIds.add(group.value.id);
+    group.value.leafContent.forEach(l => leafIds.add(l.id));
+    group.children.forEach(g => this.addUsedIdsRecursive(g, groupIds, leafIds));
   }
 }

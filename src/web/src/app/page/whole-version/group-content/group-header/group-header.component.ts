@@ -27,7 +27,7 @@ export class GroupHeaderComponent implements GroupHeader {
   handleNewGroup(obs: Observable<Group>): void {
     this.preloaderService.wrap(
       obs.pipe(
-        tap(newGroupWithId => {
+        switchMap(newGroupWithId => {
           const newGroup: GroupContent = {
             id: newGroupWithId.id,
             name: newGroupWithId.name,
@@ -38,7 +38,9 @@ export class GroupHeaderComponent implements GroupHeader {
             leafContent: []
           };
 
-          this.wholeVersionService.addGroupToParent(newGroup, this.node.value.vid);
+          // TODO Тут должно быть по другому
+          // this.wholeVersionService.addGroupToParent(newGroup, this.node.value.vid);
+          return this.wholeVersionService.createNewGroup();
         })
       )
     );

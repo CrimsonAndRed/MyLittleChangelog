@@ -49,6 +49,10 @@ export class WholeVersionService {
     this.groupsByVid.get(parentVid).leafContent.push(leaf);
   }
 
+  createNewGroup(): Observable<WholeVersion> {
+    return this.initWholeVersion(this.wholeVersion.id);
+  }
+
   updateLeaf(): Observable<WholeVersion> {
     return this.initWholeVersion(this.wholeVersion.id);
   }

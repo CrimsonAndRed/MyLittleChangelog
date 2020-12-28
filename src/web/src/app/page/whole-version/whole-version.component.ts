@@ -21,13 +21,13 @@ import { GroupContent } from 'app/model/group-content';
 })
 export class WholeVersionComponent implements OnInit {
 
-  config: GroupsSecConfig;
+  // config: GroupsSecConfig;
 
   expandMap: Map<number, boolean> = new Map();
 
-  context: GroupsSecContext = {
-    allGroups: null
-  };
+  // context: GroupsSecContext = {
+  //   allGroups: null
+  // };
 
   constructor(private route: ActivatedRoute,
               public wholeVersionService: WholeVersionService,
@@ -35,9 +35,9 @@ export class WholeVersionComponent implements OnInit {
     // TODO некоторый хак?
     this.wholeVersionService.wholeVersionSubject.subscribe({
       next: (v) => {
-        this.config = this.recreateConfig(v);
-        this.context.allGroups = v.groupContent;
-        this.context.previousNodeChosen = this.handlePreviousNodeChosen.bind(this);
+        // this.config = this.recreateConfig(v);
+        // this.context.allGroups = v.groupContent;
+        // this.context.previousNodeChosen = this.handlePreviousNodeChosen.bind(this);
       }
     });
   }
@@ -59,29 +59,29 @@ export class WholeVersionComponent implements OnInit {
   refresh(): Observable<WholeVersion> {
     return this.wholeVersionService.initWholeVersion(this.route.snapshot.params.id)
       .pipe(
-        tap((v: WholeVersion) => this.config = this.recreateConfig(v)),
-        tap((v: WholeVersion) => this.context.allGroups = v.groupContent),
-        tap(() => this.context.previousNodeChosen = this.handlePreviousNodeChosen.bind(this)),
+        // tap((v: WholeVersion) => this.config = this.recreateConfig(v)),
+        // tap((v: WholeVersion) => this.context.allGroups = v.groupContent),
+        // tap(() => this.context.previousNodeChosen = this.handlePreviousNodeChosen.bind(this)),
       );
   }
 
-  private recreateConfig(v: WholeVersion): GroupsSecConfig {
-    let newExpandMap: Map<number, boolean> = new Map();
-    newExpandMap.set(null, this.expandMap.get(null) === true);
-    this.recreateExpandMap(v.groupContent, newExpandMap);
-    this.expandMap = newExpandMap;
-    return new GroupSecConfigBuilder()
-      .setGlobalHeader(v.canChange ? VersionHeaderComponent : PreviousVersionVersionHeaderComponent)
-      .setGroupHeader(v.canChange ? GroupHeaderComponent : PreviousVersionGroupHeaderComponent)
-      .setLeafHeader(v.canChange ? LeafHeaderComponent : PreviousVersionLeafHeaderComponent)
-      .setExpandMap(this.expandMap)
-      .build();
-  }
+  // private recreateConfig(v: WholeVersion): GroupsSecConfig {
+  //   let newExpandMap: Map<number, boolean> = new Map();
+  //   newExpandMap.set(null, this.expandMap.get(null) === true);
+  //   this.recreateExpandMap(v.groupContent, newExpandMap);
+  //   this.expandMap = newExpandMap;
+  //   return new GroupSecConfigBuilder()
+  //     .setGlobalHeader(v.canChange ? VersionHeaderComponent : PreviousVersionVersionHeaderComponent)
+  //     .setGroupHeader(v.canChange ? GroupHeaderComponent : PreviousVersionGroupHeaderComponent)
+  //     .setLeafHeader(v.canChange ? LeafHeaderComponent : PreviousVersionLeafHeaderComponent)
+  //     .setExpandMap(this.expandMap)
+  //     .build();
+  // }
 
-  private recreateExpandMap(groups: GroupContent[], map: Map<number, boolean>) {
-    groups.forEach(g => {
-      map.set(g.vid, this.expandMap.get(g.vid) === true);
-      this.recreateExpandMap(g.groupContent, map);
-    });
-  }
+  // private recreateExpandMap(groups: GroupContent[], map: Map<number, boolean>) {
+  //   groups.forEach(g => {
+  //     map.set(g.vid, this.expandMap.get(g.vid) === true);
+  //     this.recreateExpandMap(g.groupContent, map);
+  //   });
+  // }
 }

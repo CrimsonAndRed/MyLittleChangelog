@@ -38,7 +38,6 @@ export interface PreviousUsedGroupsAndLeaves {
 
 export interface PreviousVersionModalData {
   version: WholeVersion;
-  currentGroups: GroupContent[];
 }
 
 export function groupContentToPrevious(group: GroupContent, usedIds: PreviousUsedGroupsAndLeaves): PastGroupContent {

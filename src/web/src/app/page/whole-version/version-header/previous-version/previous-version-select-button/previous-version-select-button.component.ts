@@ -19,7 +19,6 @@ import { WholeVersionService } from 'app/page/whole-version/whole-version.servic
 export class PreviousVersionSelectButtonComponent {
 
   @Output() nodeChosen = new EventEmitter<Observable<void>>();
-  @Input() currentGroups: GroupContent[];
 
   constructor(
     private http: Http,
@@ -40,7 +39,6 @@ export class PreviousVersionSelectButtonComponent {
             minWidth: '80%',
             data: {
               version: v,
-              currentGroups: this.currentGroups,
             }
           });
 
