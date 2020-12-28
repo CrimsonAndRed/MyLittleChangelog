@@ -4,10 +4,10 @@ import { LeafContent } from 'app/model/leaf-content';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { GroupContent } from 'app/model/group-content';
 import { LeafTypeService } from 'app/service/leaf-type.service';
-import { Type } from '@angular/core';
-import { GroupHeader } from 'app/groups-sec/groups-sec.model';
-import { LeafMovementGroupHeaderComponent } from 'app/page/whole-version/common/node-movement/leaf-movement/group-header/group-header.component';
 import { LeafType } from 'app/model/leaf-content';
+import { Subject } from 'rxjs';
+import { TreeNode } from 'app/model/tree';
+import { WholeVersionService } from 'app/page/whole-version/whole-version.service';
 
 @Component({
   selector: 'edit-leaf-modal',
@@ -17,24 +17,25 @@ import { LeafType } from 'app/model/leaf-content';
 export class EditLeafModalComponent {
 
   leaf: LeafContent;
-  parentGroupVid: number;
+  _node: TreeNode<GroupContent>;
   newParentGroupVid: number;
-  groupHeader: Type<GroupHeader> = LeafMovementGroupHeaderComponent;
   leafTypes: LeafType[] = null;
 
-  constructor(@Inject(MAT_DIALOG_DATA) private data: EditLeafModalData, public leafTypeService: LeafTypeService) {
-    this.leaf = { ...this.data.leaf };
-    this.parentGroupVid = this.data.parentGroupVid;
-    this.newParentGroupVid = this.data.parentGroupVid;
-    this.leafTypes = [...leafTypeService.leafTypes()];
-  }
+  parentChangeSubject: Subject<number> = new Subject();
 
-  onParentChange(groupVid: number): void {
-    this.newParentGroupVid = groupVid;
+  constructor(@Inject(MAT_DIALOG_DATA) private data: EditLeafModalData,
+              public leafTypeService: LeafTypeService,
+              public wholeVersionService: WholeVersionService) {
+    this.leaf = { ...this.data.leaf };
+    this._node = this.data.node;
+    this.leafTypes = [...leafTypeService.leafTypes()];
+
+    this.newParentGroupVid = this._node.value?.vid;
+    this.parentChangeSubject.subscribe(parent => this.newParentGroupVid = parent);
   }
 }
 
 export interface EditLeafModalData {
   leaf: LeafContent;
-  parentGroupVid: number;
+  node: TreeNode<GroupContent>;
 }

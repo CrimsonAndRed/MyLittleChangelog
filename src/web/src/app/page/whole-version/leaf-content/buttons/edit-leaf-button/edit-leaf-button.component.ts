@@ -30,7 +30,7 @@ export class EditLeafButtonComponent {
       minWidth: '80%',
       data: {
         leaf: this.leaf,
-        parentGroupVid: this.node.value.vid,
+        node: this.node,
       }
     });
 

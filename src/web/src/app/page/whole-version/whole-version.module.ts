@@ -22,11 +22,7 @@ import { EditGroupModalComponent } from './group-content/buttons/edit-group-butt
 import { NewGroupModalComponent } from './group-content/buttons/new-group-button/new-group-modal/new-group-modal.component';
 import { NewLeafModalComponent } from './leaf-content/buttons/new-leaf-button/new-leaf-modal/new-leaf-modal.component';
 import { EditLeafModalComponent } from './leaf-content/buttons/edit-leaf-button/edit-leaf-modal/edit-leaf-modal.component';
-import { LeafMovementComponent } from './common/node-movement/leaf-movement/leaf-movement.component';
-import { GroupMovementComponent } from './common/node-movement/group-movement/group-movement.component';
-import { LeafMovementGroupHeaderComponent } from './common/node-movement/leaf-movement/group-header/group-header.component';
-import { GroupMovementGroupHeaderComponent } from './common/node-movement/group-movement/group-header/group-header.component';
-import { GroupMovementGlobalHeaderComponent } from './common/node-movement/group-movement/global-header/global-header.component';
+import { GroupMovementNodeComponent } from './common/node-movement/group-movement/group-movement-node.component';
 import { PreviousVersionGroupHeaderComponent } from './group-content/previous-version-group-header/previous-version-group-header.component';
 import { PreviousVersionLeafHeaderComponent } from './leaf-content/previous-version-leaf-header/previous-version-leaf-header.component';
 import { PreviousVersionVersionHeaderComponent } from './version-header/previous-version-version-header/previous-version-version-header.component';
@@ -62,11 +58,7 @@ import { LeafBodyComponent } from './leaf-content/leaf-body/leaf-body.component'
     EditLeafButtonComponent,
     EditLeafModalComponent,
 
-    LeafMovementComponent,
-    GroupMovementComponent,
-    LeafMovementGroupHeaderComponent,
-    GroupMovementGroupHeaderComponent,
-    GroupMovementGlobalHeaderComponent,
+    GroupMovementNodeComponent,
     MoveUpDownButtonComponent,
     GroupBodyComponent,
     LeafBodyComponent,

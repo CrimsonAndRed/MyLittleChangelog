@@ -14,7 +14,9 @@
         </mat-select>
       </mat-form-field>
     </div>
-    <!-- <leaf-movement [parentVid]="parentGroupVid" (parentChange)="onParentChange($event)"></leaf-movement> -->
+    <group-movement-node  [node]="wholeVersionService.wholeVersionTree"
+                          [original]="_node"
+                          [parentChangeSubject]="parentChangeSubject"></group-movement-node>
   </div>
 </mat-dialog-content>
 <mat-dialog-actions align="end">

@@ -1,0 +1,27 @@
+.group-container {
+    margin: 0px 15px 10px 15px;
+  }
+
+  .group {
+    border: 1px solid red;
+    padding: 5px;
+  }
+
+  .in-use-group {
+    background-color: rgba(255, 255, 255, 1);
+  }
+
+  .not-in-use-group {
+    background-color: rgb(255, 198, 198);
+  }
+
+  .group-content {
+    padding: 5px 5px;
+  }
+
+  .leaf-content {
+    border: 1px solid green;
+    padding: 5px 5px;
+    margin: 0px 15px 10px 15px;
+    background-color: rgba(255, 255, 255, 1);
+  }

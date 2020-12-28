@@ -1,0 +1,21 @@
+<div class="group-container">
+  <div class="group {{ node.value?.realNode ? 'in-use-group' : 'not-in-use-group' }}">
+    <input *ngIf="original !== node"
+      type="radio"
+      name="move-node-check"
+      (click)="onNodeCheckRadioClick()">
+    <group-body *ngIf="node.parent != null" [node]="node"></group-body>
+    <label *ngIf="node.parent == null">Root</label>
+    <!-- <expand-block
+      *ngIf="isExpandButtonShowed()"
+      [isContentShowed]="isContentShowed()"
+      (localShowChange)="changeLocalContentShow($event)"
+      (globalShowChange)="changeGlobalContentShow($event)"></expand-block> -->
+
+    <tree-container [node]="node">
+      <ng-template #groupContainer let-child>
+        <group-movement-node [node]="child" [original]="original" [parentChangeSubject]="parentChangeSubject"></group-movement-node>
+      </ng-template>
+    </tree-container>
+  </div>
+</div>
