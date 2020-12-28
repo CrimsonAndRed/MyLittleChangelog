@@ -1,6 +1,7 @@
 import { GroupContent } from 'app/model/group-content';
 import { LeafContent } from 'app/model/leaf-content';
 import { WholeVersion } from 'app/model/whole-version';
+import { TreeNode } from './tree';
 
 export interface PastGroupContent {
   id: number;
@@ -24,9 +25,8 @@ export interface PastLeafContent {
 
 
 export interface PastRadioEvent {
-  value: PastGroupContent | PastLeafContent;
-  parentId: number;
-  parentVid: number;
+  value: TreeNode<PastGroupContent> | PastLeafContent;
+  parentId: number | null;
   kind: 'leaf' | 'group';
 }
 
@@ -40,6 +40,7 @@ export interface PreviousVersionModalData {
   version: WholeVersion;
 }
 
+
 export function groupContentToPrevious(group: GroupContent, usedIds: PreviousUsedGroupsAndLeaves): PastGroupContent {
   return {
     id: group.id,
@@ -49,7 +50,7 @@ export function groupContentToPrevious(group: GroupContent, usedIds: PreviousUse
     isEarliest: group.isEarliest,
     inCurrentVersion: usedIds.usedGroups.has(group.id),
     groupContent: group.groupContent.map(g => groupContentToPrevious(g, usedIds)),
-    leafContent: group.leafContent.map(l => leafContentToPrevious(l, usedIds)),
+    leafContent: group.leafContent.map(l => leafContentToPrevious(l, usedIds))
   };
 }
 

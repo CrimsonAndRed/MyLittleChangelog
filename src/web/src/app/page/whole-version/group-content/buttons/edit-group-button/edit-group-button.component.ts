@@ -33,7 +33,6 @@ export class EditGroupButtonComponent {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log(result)
       if (result) {
         this.updateGroup(result[0], result[1]);
       }

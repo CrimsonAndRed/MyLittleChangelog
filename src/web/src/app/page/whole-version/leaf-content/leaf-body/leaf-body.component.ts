@@ -11,7 +11,6 @@ import { LeafTypeService } from 'app/service/leaf-type.service';
 })
 export class LeafBodyComponent {
 
-  @Input() node: TreeNode<GroupContent>;
   @Input() leaf: LeafContent;
 
   constructor(public leafTypeService: LeafTypeService) { }

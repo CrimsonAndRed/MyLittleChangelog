@@ -3,8 +3,6 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { GroupSecConfigBuilder, GroupsSecConfig, GroupsSecContext } from 'app/groups-sec/groups-sec.model';
 import { GroupContent } from 'app/model/group-content';
 import { tap } from 'rxjs/operators';
-import { GroupHeaderComponent } from '../header/group-header/group-header.component';
-import { LeafHeaderComponent } from '../header/leaf-header/leaf-header.component';
 import {
   groupContentToPrevious,
   PastGroupContent,
@@ -15,6 +13,7 @@ import {
 } from 'app/model/previous-version';
 import { WholeVersionService } from 'app/page/whole-version/whole-version.service';
 import { TreeNode } from 'app/model/tree';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'previous-version-modal',
@@ -23,16 +22,10 @@ import { TreeNode } from 'app/model/tree';
 })
 export class PreviousVersionModalComponent implements OnInit {
 
-  config: GroupsSecConfig = new GroupSecConfigBuilder()
-    .setGroupHeader(GroupHeaderComponent)
-    .setLeafHeader(LeafHeaderComponent)
-    .build();
-
-  context: GroupsSecContext;
-
-  usedIds: PreviousUsedGroupsAndLeaves;
-  groups: PastGroupContent[];
+  previousVersionRoot: TreeNode<PastGroupContent>;
   chosenPastElement: PastRadioEvent = null;
+
+  nodeChooseSubject: Subject<PastRadioEvent> = new Subject();
 
   constructor(
     @Inject(MAT_DIALOG_DATA) private data: PreviousVersionModalData,
@@ -40,31 +33,26 @@ export class PreviousVersionModalComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.usedIds = this.calculateUsedIds();
-    this.groups = this.data.version.groupContent.map(g => groupContentToPrevious(g, this.usedIds));
-    this.context = {
-      emitGroupCheck: this.onPastGroupCheck.bind(this),
-      emitLeafCheck: this.onPastLeafCheck.bind(this),
-      usedIds: this.usedIds
-    };
+    const usedIds = this.calculateUsedIds();
+
+    const rootChildren = this.data.version.groupContent.map(it => groupContentToPrevious(it, usedIds))
+
+    const root: TreeNode<PastGroupContent> = { parent: null, children: [], value: null };
+    this.formatTreeNode(root, rootChildren)
+    this.previousVersionRoot = root;
+
+    this.nodeChooseSubject.subscribe(e => {
+      this.chosenPastElement = e;
+    });
   }
 
-  onPastGroupCheck(group: PastGroupContent, parentGroup: GroupContent): void {
-    this.chosenPastElement = {
-      value: group,
-      parentId: parentGroup?.id,
-      parentVid: parentGroup?.vid,
-      kind: 'group',
-    };
-  }
 
-  onPastLeafCheck(leaf: PastLeafContent, parentGroup: GroupContent): void {
-    this.chosenPastElement = {
-      value: leaf,
-      parentId: parentGroup?.id,
-      parentVid: parentGroup?.vid,
-      kind: 'leaf',
-    };
+  private formatTreeNode(node: TreeNode<PastGroupContent>, groups: PastGroupContent[]) {
+    node.children = groups.map((g) => {
+      const newNode: TreeNode<PastGroupContent> = { parent: node, children: [], value: g }
+      this.formatTreeNode(newNode, g.groupContent)
+      return newNode;
+    })
   }
 
   private calculateUsedIds(): PreviousUsedGroupsAndLeaves {

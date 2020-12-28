@@ -5,7 +5,6 @@ import { RouterModule } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 import { GroupsSecModule } from 'app/groups-sec/groups-sec.module';
 import { VersionHeaderComponent } from './version-header/version-header.component';
-import { PreviousVersionModule } from './version-header/previous-version/previous-version.module';
 import { WholeVersionComponent } from './whole-version.component';
 import { GroupHeaderComponent } from './group-content/group-header/group-header.component';
 import { DeleteGroupButtonComponent } from './group-content/buttons/delete-group-button/delete-group-button.component';
@@ -23,8 +22,6 @@ import { NewGroupModalComponent } from './group-content/buttons/new-group-button
 import { NewLeafModalComponent } from './leaf-content/buttons/new-leaf-button/new-leaf-modal/new-leaf-modal.component';
 import { EditLeafModalComponent } from './leaf-content/buttons/edit-leaf-button/edit-leaf-modal/edit-leaf-modal.component';
 import { GroupMovementNodeComponent } from './common/tree-node/group-movement-node/group-movement-node.component';
-import { PreviousVersionGroupHeaderComponent } from './group-content/previous-version-group-header/previous-version-group-header.component';
-import { PreviousVersionLeafHeaderComponent } from './leaf-content/previous-version-leaf-header/previous-version-leaf-header.component';
 import { PreviousVersionVersionHeaderComponent } from './version-header/previous-version-version-header/previous-version-version-header.component';
 import { MatSelectModule } from '@angular/material/select';
 import { MoveUpDownButtonComponent } from './common/move-updown-button/move-updown-button.component';
@@ -32,6 +29,9 @@ import { TreeContainerModule } from 'app/tree-view/tree-container.module';
 import { WholeVersionNodeComponent } from './common/tree-node/whole-version-node/whole-version-node.component';
 import { GroupBodyComponent } from './group-content/group-body/group-body.component';
 import { LeafBodyComponent } from './leaf-content/leaf-body/leaf-body.component';
+import { PreviousVersionNodeComponent } from './common/tree-node/previus-version-node/previous-version-node.component';
+import { PreviousVersionSelectButtonComponent } from './version-header/previous-version/previous-version-select-button/previous-version-select-button.component';
+import { PreviousVersionModalComponent } from './version-header/previous-version/previous-version-modal/previous-version-modal.component';
 
 @NgModule({
   declarations: [
@@ -41,7 +41,6 @@ import { LeafBodyComponent } from './leaf-content/leaf-body/leaf-body.component'
     PreviousVersionVersionHeaderComponent,
 
     GroupHeaderComponent,
-    PreviousVersionGroupHeaderComponent,
     NewGroupButtonComponent,
     NewGroupModalComponent,
     DeleteGroupButtonComponent,
@@ -51,7 +50,6 @@ import { LeafBodyComponent } from './leaf-content/leaf-body/leaf-body.component'
     EditGroupModalComponent,
 
     LeafHeaderComponent,
-    PreviousVersionLeafHeaderComponent,
     NewLeafButtonComponent,
     NewLeafModalComponent,
     DeleteLeafButtonComponent,
@@ -63,7 +61,10 @@ import { LeafBodyComponent } from './leaf-content/leaf-body/leaf-body.component'
     GroupBodyComponent,
     LeafBodyComponent,
 
-    WholeVersionNodeComponent
+    WholeVersionNodeComponent,
+    PreviousVersionSelectButtonComponent,
+    PreviousVersionModalComponent,
+    PreviousVersionNodeComponent
   ],
   imports: [
     BrowserModule,
@@ -72,7 +73,6 @@ import { LeafBodyComponent } from './leaf-content/leaf-body/leaf-body.component'
     RouterModule,
     MatDialogModule,
     GroupsSecModule,
-    PreviousVersionModule,
     MatSelectModule,
     TreeContainerModule
   ],

@@ -8,7 +8,6 @@ TODO
 
 - реструктуризация фронта
 
-- move-movement можно схлопнуть обратно но используя как input функцию проставляющую контекст
 - дифференсные группы и лифы и groups-sec - это одна структура или нет?
 - Общие TODO
 - В сервисах на фронте модифицируется существующий элемент вместо Observera от нового элемента (например, в versions-list.service)
@@ -21,7 +20,7 @@ TODO
       *ngIf="isExpandButtonShowed()"
       [isContentShowed]="isContentShowed()"
       (localShowChange)="changeLocalContentShow($event)"
-      (globalShowChange)="changeGlobalContentShow($event)"></expand-block> - в group-movement-node
+      (globalShowChange)="changeGlobalContentShow($event)"></expand-block> - в group-movement-node и previous-version-node
 - Можно выбрать рут при передвижении лифа, надо исправить наследованием/композицией d group-movement-node
 - PreviousVersionModalData может не существовать (можно получать версию из сервиса)
 

@@ -1,15 +1,12 @@
 <mat-dialog-content>
-  <ng-container *ngIf="groups && context">
-    <groups-sec [groups]="groups"
-                [config]="config"
-                [context]="context"></groups-sec>
-  </ng-container>
+  <tree-container [node]="previousVersionRoot">
+    <ng-template #groupContainer let-child>
+      <previous-version-node [node]="child" [nodeCheckSubject]="nodeChooseSubject"></previous-version-node>
+    </ng-template>
+  </tree-container>
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
-  <div *ngIf="chosenPastElement">
-    Chosen Element: {{ chosenPastElement.value.name }}
-  </div>
   <button [mat-dialog-close]="null">Cancel</button>
   <button [mat-dialog-close]="chosenPastElement">Save</button>
 </mat-dialog-actions>

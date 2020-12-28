@@ -8,8 +8,7 @@ import { WholeVersionService } from 'app/page/whole-version/whole-version.servic
 import { PreloaderService } from 'app/preloader/preloader.service';
 import { Observable } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
-import { PreviousVersionGroupHeaderComponent } from './group-content/previous-version-group-header/previous-version-group-header.component';
-import { PreviousVersionLeafHeaderComponent } from './leaf-content/previous-version-leaf-header/previous-version-leaf-header.component';
+
 import { VersionHeaderComponent } from './version-header/version-header.component';
 import { PreviousVersionVersionHeaderComponent } from './version-header/previous-version-version-header/previous-version-version-header.component';
 import { GroupContent } from 'app/model/group-content';

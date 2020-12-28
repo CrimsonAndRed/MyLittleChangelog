@@ -10,6 +10,7 @@ import { Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { PreloaderService } from 'app/preloader/preloader.service';
 import { WholeVersionService } from 'app/page/whole-version/whole-version.service';
+import { TreeNode } from 'app/model/tree';
 
 @Component({
   selector: 'previous-version-select-button',
@@ -56,9 +57,9 @@ export class PreviousVersionSelectButtonComponent {
     switch (result?.kind) {
       case 'group':
         this.addGroupFromPast({
-          vid: result.value.vid,
-          name: result.value.name,
-          parentVid: result.parentVid
+          vid: result.value.value.vid,
+          name: result.value.value.name,
+          parentVid: result.value.parent?.vid
         });
         break;
       case 'leaf':
