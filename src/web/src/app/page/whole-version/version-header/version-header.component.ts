@@ -1,5 +1,4 @@
 import { Component, Output, EventEmitter, Input, OnInit } from '@angular/core';
-import { GlobalHeader, GlobalHeaderData, GroupsSecContext } from 'app/groups-sec/groups-sec.model';
 import { GroupContent, Group } from 'app/model/group-content';
 import { WholeVersionService } from 'app/page/whole-version/whole-version.service';
 import { Observable } from 'rxjs';
@@ -11,16 +10,12 @@ import { PreloaderService } from 'app/preloader/preloader.service';
   templateUrl: './version-header.component.html',
   styleUrls: ['./version-header.component.scss']
 })
-export class VersionHeaderComponent implements OnInit {
+export class VersionHeaderComponent {
 
   userGroupIds
 
   constructor(public wholeVersionService: WholeVersionService,
               private preloaderService: PreloaderService) {}
-
-  ngOnInit(): void {
-
-  }
 
   handleNewGroup(obs: Observable<Group>): void {
     this.preloaderService.wrap(

@@ -1,5 +1,4 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { GroupHeader, GroupHeaderData, GroupsSecContext } from 'app/groups-sec/groups-sec.model';
 import { WholeVersionService } from 'app/page/whole-version/whole-version.service';
 import { PreloaderService } from 'app/preloader/preloader.service';
 import { Http } from 'app/service/http.service';

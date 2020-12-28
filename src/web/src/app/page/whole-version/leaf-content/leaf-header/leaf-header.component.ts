@@ -1,5 +1,4 @@
 import { Component, Input } from '@angular/core';
-import { LeafHeader, LeafHeaderData, GroupsSecContext } from 'app/groups-sec/groups-sec.model';
 import { WholeVersionService } from 'app/page/whole-version/whole-version.service';
 import { Observable } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
@@ -15,11 +14,7 @@ import { LeafContent } from 'app/model/leaf-content';
   templateUrl: './leaf-header.component.html',
   styleUrls: ['./leaf-header.component.scss']
 })
-export class LeafHeaderComponent implements LeafHeader {
-
-  data: LeafHeaderData;
-  ctx: GroupsSecContext;
-
+export class LeafHeaderComponent {
   @Input() node: TreeNode<GroupContent>;
   @Input() leaf: LeafContent;
 

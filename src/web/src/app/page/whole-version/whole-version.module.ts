@@ -3,7 +3,6 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
-import { GroupsSecModule } from 'app/groups-sec/groups-sec.module';
 import { VersionHeaderComponent } from './version-header/version-header.component';
 import { WholeVersionComponent } from './whole-version.component';
 import { GroupHeaderComponent } from './group-content/group-header/group-header.component';
@@ -72,7 +71,6 @@ import { PreviousVersionModalComponent } from './version-header/previous-version
     HttpClientModule,
     RouterModule,
     MatDialogModule,
-    GroupsSecModule,
     MatSelectModule,
     TreeContainerModule
   ],

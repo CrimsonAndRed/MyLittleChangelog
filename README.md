@@ -23,6 +23,7 @@ TODO
       (globalShowChange)="changeGlobalContentShow($event)"></expand-block> - в group-movement-node и previous-version-node
 - Можно выбрать рут при передвижении лифа, надо исправить наследованием/композицией d group-movement-node
 - PreviousVersionModalData может не существовать (можно получать версию из сервиса)
+- перенос expandMap в сервис?
 
 - мув группы и order?
 

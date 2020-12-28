@@ -1,6 +1,5 @@
 import { Component, Inject, OnInit, Input, Type } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { GroupSecConfigBuilder, GroupsSecConfig, GroupsSecContext } from 'app/groups-sec/groups-sec.model';
 import { GroupContent } from 'app/model/group-content';
 import { tap } from 'rxjs/operators';
 import {

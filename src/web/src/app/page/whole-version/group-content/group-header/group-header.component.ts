@@ -1,7 +1,6 @@
 import { Component, EventEmitter, Input } from '@angular/core';
 import { GroupContent, Group } from 'app/model/group-content';
 import { LeafContent, NewLeafWithId } from 'app/model/leaf-content';
-import { GroupHeader, GroupHeaderData, GroupsSecContext } from 'app/groups-sec/groups-sec.model';
 import { WholeVersionService } from 'app/page/whole-version/whole-version.service';
 import { Observable } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
@@ -14,15 +13,13 @@ import { TreeNode } from 'app/model/tree';
   templateUrl: './group-header.component.html',
   styleUrls: ['./group-header.component.scss']
 })
-export class GroupHeaderComponent implements GroupHeader {
+export class GroupHeaderComponent {
 
   @Input() node: TreeNode<GroupContent>
 
   constructor(private wholeVersionService: WholeVersionService,
               private preloaderService: PreloaderService,
               private http: Http) { }
-  data: GroupHeaderData;
-  ctx: GroupsSecContext;
 
   handleNewGroup(obs: Observable<Group>): void {
     this.preloaderService.wrap(

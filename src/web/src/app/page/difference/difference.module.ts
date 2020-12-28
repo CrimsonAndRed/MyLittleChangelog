@@ -3,7 +3,6 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
-import { GroupsSecModule } from 'app/groups-sec/groups-sec.module';
 import { MatDialogModule } from '@angular/material/dialog';
 import { DifferenceComponent } from './difference.component';
 import { GroupsThirdComponent } from './groups-third/groups-third.component';
