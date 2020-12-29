@@ -1,7 +1,10 @@
 import { GroupContent } from 'app/model/group-content';
 import { LeafContent } from 'app/model/leaf-content';
-import { WholeVersion } from 'app/model/whole-version';
 import { TreeNode } from './tree';
+
+export interface PastVersion {
+  groupContent: GroupContent[]
+}
 
 export interface PastGroupContent {
   id: number;
@@ -37,7 +40,7 @@ export interface PreviousUsedGroupsAndLeaves {
 }
 
 export interface PreviousVersionModalData {
-  version: WholeVersion;
+  version: PastVersion;
 }
 
 

@@ -30,6 +30,7 @@ export class PreviousVersionNodeComponent {
   showLeafInput(leaf: PastLeafContent): boolean {
     return !leaf.inCurrentVersion;
   }
+
   changeGlobalContentShow(value: boolean): void {
     this.setGlobalExpandValue(this.node, value);
   }
