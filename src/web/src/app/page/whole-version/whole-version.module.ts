@@ -21,7 +21,6 @@ import { NewGroupModalComponent } from './group-content/buttons/new-group-button
 import { NewLeafModalComponent } from './leaf-content/buttons/new-leaf-button/new-leaf-modal/new-leaf-modal.component';
 import { EditLeafModalComponent } from './leaf-content/buttons/edit-leaf-button/edit-leaf-modal/edit-leaf-modal.component';
 import { GroupMovementNodeComponent } from './common/tree-node/group-movement-node/group-movement-node.component';
-import { PreviousVersionVersionHeaderComponent } from './version-header/previous-version-version-header/previous-version-version-header.component';
 import { MatSelectModule } from '@angular/material/select';
 import { MoveUpDownButtonComponent } from './common/move-updown-button/move-updown-button.component';
 import { TreeContainerModule } from 'app/tree-view/tree-container.module';
@@ -37,7 +36,6 @@ import { PreviousVersionModalComponent } from './version-header/previous-version
     WholeVersionComponent,
 
     VersionHeaderComponent,
-    PreviousVersionVersionHeaderComponent,
 
     GroupHeaderComponent,
     NewGroupButtonComponent,

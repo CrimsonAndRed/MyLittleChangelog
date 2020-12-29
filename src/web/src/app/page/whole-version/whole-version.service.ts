@@ -19,6 +19,8 @@ export class WholeVersionService {
 
   public wholeVersionTree: TreeNode<GroupContent> = null;
 
+  public canChange: boolean = false;
+
   private groupsByVid: Map<number, GroupContent> = new Map<number, GroupContent>();
 
   constructor(private http: Http, private preloaderService: PreloaderService) {  }
@@ -32,6 +34,7 @@ export class WholeVersionService {
         tap(res => this.wholeVersion = res),
         tap(res => this.wholeVersionTree = formatTree(this.wholeVersion.groupContent, (g) => g.groupContent)),
         tap(res => res.groupContent.forEach(g => this.addGroupToMap(g))),
+        tap(() => this.canChange = this.wholeVersion.canChange),
         tap(() => this.wholeVersionSubject.next(this.wholeVersion))
       );
   }

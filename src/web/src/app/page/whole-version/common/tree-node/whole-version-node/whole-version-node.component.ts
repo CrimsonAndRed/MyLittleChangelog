@@ -1,7 +1,5 @@
 import { Component, Input } from '@angular/core';
 import { WholeVersionService } from 'app/page/whole-version/whole-version.service';
-import { PreloaderService } from 'app/preloader/preloader.service';
-import { Http } from 'app/service/http.service';
 import { TreeNode } from 'app/model/tree';
 import { GroupContent } from 'app/model/group-content';
 
@@ -15,9 +13,7 @@ export class WholeVersionNodeComponent {
   @Input() node: TreeNode<GroupContent>;
   @Input() expandMap: Map<number, boolean>;
 
-  constructor(private wholeVersionService: WholeVersionService,
-              private preloaderService: PreloaderService,
-              private http: Http) { }
+  constructor(public wholeVersionService: WholeVersionService) { }
 
   changeGlobalContentShow(value: boolean): void {
     this.setGlobalExpandValue(this.node, value);
