@@ -14,10 +14,14 @@
         </mat-select>
       </mat-form-field>
     </div>
-    <group-movement-node  [node]="wholeVersionService.wholeVersionTree"
-                          [original]="_node"
-                          [parentChangeSubject]="parentChangeSubject"
-                          [expandMap]="_expandMap"></group-movement-node>
+    <tree-container [node]="wholeVersionService.wholeVersionTree">
+      <ng-template #groupContainer let-child>
+        <group-movement-node  [node]="child"
+                              [original]="_node"
+                              [parentChangeSubject]="parentChangeSubject"
+                              [expandMap]="_expandMap"></group-movement-node>
+      </ng-template>
+    </tree-container>
   </div>
 </mat-dialog-content>
 <mat-dialog-actions align="end">

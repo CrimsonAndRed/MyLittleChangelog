@@ -50,7 +50,6 @@ export class EditGroupButtonComponent {
     };
     this.onUpdateGroup.emit(this.http.put<void>(`http://localhost:8080/version/${versionId}/group/${groupId}`, groupToUpdate));
   }
-
 }
 
 export interface EditGroupModalData {
