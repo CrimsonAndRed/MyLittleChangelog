@@ -3,4 +3,7 @@
                      (isContentShowedChange)="onGlobalShowChange($event)"></expand-all-button>
   <expand-one-button [isContentShowed]="isContentShowed"
                      (isContentShowedChange)="onSingleShowChange($event)"></expand-one-button>
+  <div [hidden]="!isContentShowed">
+    <ng-content></ng-content>
+  </div>
 </div>

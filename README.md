@@ -10,17 +10,11 @@ TODO
 - А правильно ли что запросы шлют не сервисы, а сами компоненты
 - localhost в запросах
 - проверка на корректность сборки бэка в скрипте update
--    <!-- <expand-block
-      *ngIf="isExpandButtonShowed()"
-      [isContentShowed]="isContentShowed()"
-      (localShowChange)="changeLocalContentShow($event)"
-      (globalShowChange)="changeGlobalContentShow($event)"></expand-block> - в group-movement-node и previous-version-node
 - Можно выбрать рут при передвижении лифа, надо исправить наследованием/композицией d group-movement-node
-- PreviousVersionModalData может не существовать (можно получать версию из сервиса)
-- Можно добавить модель для возврата из модалки значения + родитель 
-- перенос expandMap в сервис?
+- Можно добавить модель для возврата из модалки значения + родитель
 - общие стили для иерархии групп
-
+- неправильная модель PreviousVersionModalData - там не WholeVersion
+- Много дубликации в expandMap
 - мув группы и order?
 
 TODO далеко

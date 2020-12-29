@@ -26,6 +26,7 @@ export class PreviousVersionModalComponent implements OnInit {
   chosenPastElement: PastRadioEvent = null;
 
   nodeChooseSubject: Subject<PastRadioEvent> = new Subject();
+  _expandMap: Map<number, boolean>;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) private data: PreviousVersionModalData,
@@ -43,6 +44,9 @@ export class PreviousVersionModalComponent implements OnInit {
     this.nodeChooseSubject.subscribe(e => {
       this.chosenPastElement = e;
     });
+
+    this._expandMap = new Map(this.wholeVersionService.expandMap);
+
   }
 
   private calculateUsedIds(): PreviousUsedGroupsAndLeaves {

@@ -1,10 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { WholeVersion } from 'app/model/whole-version';
 import { ActivatedRoute } from '@angular/router';
 import { WholeVersionService } from 'app/page/whole-version/whole-version.service';
 import { PreloaderService } from 'app/preloader/preloader.service';
-import { Observable } from 'rxjs';
-import { switchMap, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'whole-version',
@@ -22,31 +19,7 @@ export class WholeVersionComponent implements OnInit {
 
   ngOnInit(): void {
     this.preloaderService.wrap(
-      this.refresh()
+      this.wholeVersionService.initWholeVersion(this.route.snapshot.params.id)
     );
   }
-
-  handlePreviousNodeChosen(obs: Observable<void>): void {
-    this.preloaderService.wrap(
-      obs.pipe(
-        switchMap(() => this.refresh())
-      )
-    );
-  }
-
-  refresh(): Observable<WholeVersion> {
-    return this.wholeVersionService.initWholeVersion(this.route.snapshot.params.id)
-      .pipe(
-        // tap((v: WholeVersion) => this.config = this.recreateConfig(v)),
-        // tap((v: WholeVersion) => this.context.allGroups = v.groupContent),
-        // tap(() => this.context.previousNodeChosen = this.handlePreviousNodeChosen.bind(this)),
-      );
-  }
-
-  // private recreateExpandMap(groups: GroupContent[], map: Map<number, boolean>) {
-  //   groups.forEach(g => {
-  //     map.set(g.vid, this.expandMap.get(g.vid) === true);
-  //     this.recreateExpandMap(g.groupContent, map);
-  //   });
-  // }
 }

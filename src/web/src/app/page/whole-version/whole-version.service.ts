@@ -17,13 +17,13 @@ export class WholeVersionService {
 
   public wholeVersionTree: TreeNode<GroupContent> = null;
 
+  public expandMap: Map<number, boolean> = new Map<number, boolean>();
+
   private groupsByVid: Map<number, TreeNode<GroupContent>> = new Map<number, TreeNode<GroupContent>>();
 
   constructor(private http: Http, private preloaderService: PreloaderService) {  }
 
   initWholeVersion(versionId: number): Observable<WholeVersion> {
-
-
     return this.http.get<WholeVersion>(`http://localhost:8080/version/${versionId}`)
       .pipe(
         tap(res => this.wholeVersionHeader = res),
@@ -32,7 +32,6 @@ export class WholeVersionService {
           this.groupsByVid = new Map<number, TreeNode<GroupContent>>();
           this.wholeVersionTree.children.forEach(g => this.addGroupToMap(g))
         }),
-        // tap(() => this.wholeVersionSubject.next(this.wholeVersion))
       );
   }
 

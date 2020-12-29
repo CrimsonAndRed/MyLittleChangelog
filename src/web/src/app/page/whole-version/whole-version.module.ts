@@ -27,7 +27,7 @@ import { TreeContainerModule } from 'app/tree-view/tree-container.module';
 import { WholeVersionNodeComponent } from './common/tree-node/whole-version-node/whole-version-node.component';
 import { GroupBodyComponent } from './group-content/group-body/group-body.component';
 import { LeafBodyComponent } from './leaf-content/leaf-body/leaf-body.component';
-import { PreviousVersionNodeComponent } from './common/tree-node/previus-version-node/previous-version-node.component';
+import { PreviousVersionNodeComponent } from './common/tree-node/previous-version-node/previous-version-node.component';
 import { PreviousVersionSelectButtonComponent } from './version-header/previous-version/previous-version-select-button/previous-version-select-button.component';
 import { PreviousVersionModalComponent } from './version-header/previous-version/previous-version-modal/previous-version-modal.component';
 

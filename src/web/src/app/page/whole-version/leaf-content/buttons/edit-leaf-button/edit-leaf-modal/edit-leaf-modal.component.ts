@@ -20,6 +20,7 @@ export class EditLeafModalComponent {
   _node: TreeNode<GroupContent>;
   newParentGroupVid: number;
   leafTypes: LeafType[] = null;
+  _expandMap: Map<number, boolean>
 
   parentChangeSubject: Subject<number> = new Subject();
 
@@ -32,6 +33,9 @@ export class EditLeafModalComponent {
 
     this.newParentGroupVid = this._node.value?.vid;
     this.parentChangeSubject.subscribe(parent => this.newParentGroupVid = parent);
+    this._expandMap = new Map(wholeVersionService.expandMap);
+    // TODO special case for root?
+    this._expandMap.set(undefined, true);
   }
 }
 

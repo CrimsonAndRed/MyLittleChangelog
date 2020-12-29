@@ -15,10 +15,13 @@ import { formatTree } from 'app/service/tree.service';
 export class DifferenceService {
   public difference: Difference = null;
   public differenceTree: TreeNode<GroupDifference>
+  public expandMap: Map<number, boolean>
 
   constructor(private http: Http, private preloaderService: PreloaderService) {  }
 
   initDifference(fromVersion: number, toVersion: number): Observable<Difference> {
+
+    this.expandMap = new Map();
 
     let params = new HttpParams()
       .set('from', fromVersion.toString())

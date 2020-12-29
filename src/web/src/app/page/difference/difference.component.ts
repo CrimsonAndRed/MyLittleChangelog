@@ -16,7 +16,7 @@ export class DifferenceComponent implements OnInit {
 
   constructor(private route: ActivatedRoute,
               private preloaderService: PreloaderService,
-              private differenceService: DifferenceService) { }
+              public differenceService: DifferenceService) { }
 
   ngOnInit(): void {
     this.preloaderService.wrap(

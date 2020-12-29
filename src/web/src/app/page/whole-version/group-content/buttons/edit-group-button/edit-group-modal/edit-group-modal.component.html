@@ -6,7 +6,8 @@
   </div>
   <group-movement-node  [node]="wholeVersionService.wholeVersionTree"
                         [original]="_node"
-                        [parentChangeSubject]="parentChangeSubject"></group-movement-node>
+                        [parentChangeSubject]="parentChangeSubject"
+                        [expandMap]="_expandMap"></group-movement-node>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
   <button [mat-dialog-close]="null">Cancel</button>

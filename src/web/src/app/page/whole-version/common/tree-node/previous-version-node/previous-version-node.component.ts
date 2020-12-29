@@ -16,7 +16,7 @@ import { LeafContent } from 'app/model/leaf-content';
 export class PreviousVersionNodeComponent {
 
   @Input() node: TreeNode<PastGroupContent>;
-  // @Input() expandMap: Map<number, boolean>;
+  @Input() expandMap: Map<number, boolean>;
   @Input() nodeCheckSubject: Subject<PastRadioEvent>;
 
   constructor(private wholeVersionService: WholeVersionService,
@@ -30,32 +30,31 @@ export class PreviousVersionNodeComponent {
   showLeafInput(leaf: PastLeafContent): boolean {
     return !leaf.inCurrentVersion;
   }
+  changeGlobalContentShow(value: boolean): void {
+    this.setGlobalExpandValue(this.node, value);
+  }
 
-  // changeGlobalContentShow(value: boolean): void {
-  //   this.setGlobalExpandValue(this.node, value);
-  // }
+  changeLocalContentShow(value: boolean): void {
+    this.setLocalExpandValue(this.node, value);
+  }
 
-  // changeLocalContentShow(value: boolean): void {
-  //   this.setLocalExpandValue(this.node, value);
-  // }
+  setLocalExpandValue(node: TreeNode<GroupContent>, value: boolean) {
+    this.expandMap.set(node.value.vid, value);
+  }
 
-  // setLocalExpandValue(node: TreeNode<GroupContent>, value: boolean) {
-  //   this.expandMap.set(node.value.vid, value);
-  // }
+  setGlobalExpandValue(node: TreeNode<GroupContent>, value: boolean) {
+    this.expandMap.set(node.value.vid, value);
+    node.children.forEach(c => this.setGlobalExpandValue(c, value))
+  }
 
-  // setGlobalExpandValue(node: TreeNode<GroupContent>, value: boolean) {
-  //   this.expandMap.set(node.value.vid, value);
-  //   node.children.forEach(c => this.setGlobalExpandValue(c, value))
-  // }
+  isContentShowed(): boolean {
+    return this.expandMap.get(this.node.value.vid) === true;
+  }
 
-  // isContentShowed(): boolean {
-  //   return this.expandMap.get(this.node.value.vid) === true;
-  // }
-
-  // isExpandButtonShowed(): boolean {
-  //   return (this.node.value.groupContent.length !== 0) ||
-  //     ((this.node.value.leafContent.length !== 0));
-  // }
+  isExpandButtonShowed(): boolean {
+    return (this.node.value.groupContent.length !== 0) ||
+      ((this.node.value.leafContent.length !== 0));
+  }
 
   onGroupNodeCheckRadioClick() {
     this.nodeCheckSubject.next({

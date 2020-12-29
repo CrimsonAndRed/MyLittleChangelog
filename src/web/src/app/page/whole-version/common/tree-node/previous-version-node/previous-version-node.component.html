@@ -1,6 +1,10 @@
 <div class="group-container">
   <div class="group {{ node.value?.realNode ? 'in-use-group' : 'not-in-use-group' }}">
-    <group-header [node]="node" *ngIf="wholeVersionService.wholeVersionHeader.canChange"></group-header>
+    <input
+      *ngIf="showGroupInput()"
+      type="radio"
+      name="previous-version-node-check"
+      (click)="onGroupNodeCheckRadioClick()">
     <group-body [node]="node"></group-body>
     <expand-block
       *ngIf="isExpandButtonShowed()"
@@ -10,12 +14,16 @@
       <div>
         <tree-container [node]="node">
           <ng-template #groupContainer let-child>
-            <whole-version-node [node]="child" [expandMap]="expandMap"></whole-version-node>
+            <previous-version-node [node]="child" [nodeCheckSubject]="nodeCheckSubject" [expandMap]="expandMap"></previous-version-node>
           </ng-template>
         </tree-container>
         <ng-container *ngFor="let leaf of node.value.leafContent">
           <div class="leaf-content">
-            <leaf-header [node]="node" [leaf]="leaf" *ngIf="wholeVersionService.wholeVersionHeader.canChange"></leaf-header>
+            <input
+              *ngIf="showLeafInput(leaf)"
+              type="radio"
+              name="previous-version-node-check"
+              (click)="onLeafNodeCheckRadioClick(leaf)">
             <leaf-body [leaf]="leaf"></leaf-body>
           </div>
         </ng-container>
