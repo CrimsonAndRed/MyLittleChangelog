@@ -54,7 +54,7 @@ export class GroupHeaderComponent {
             valueType: newLeafWithId.valueType,
             value: newLeafWithId.value,
           };
-          this.wholeVersionService.addLeafToParent(newLeaf, this.node.value.vid);
+          this.wholeVersionService.addLeafToParent(newLeaf, this.node);
         })
       )
     );
@@ -120,7 +120,7 @@ export class GroupHeaderComponent {
   }
 
   private moveGroup(changeAgainstId: number): void {
-    const versionId = this.wholeVersionService.wholeVersion.id;
+    const versionId = this.wholeVersionService.wholeVersionHeader.id;
     const groupId = this.node.value.id;
 
     const dto = { changeAgainstId };

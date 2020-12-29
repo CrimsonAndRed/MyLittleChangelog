@@ -2,7 +2,6 @@ import { HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Http } from 'app/service/http.service';
 import { Difference, GroupDifference } from 'app/model/difference';
-import { Version } from 'app/model/version';
 import { PreloaderService } from 'app/preloader/preloader.service';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';

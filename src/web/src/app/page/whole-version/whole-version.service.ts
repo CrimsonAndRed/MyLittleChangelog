@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Http } from 'app/service/http.service';
-import { WholeVersion } from 'app/model/whole-version';
+import { WholeVersion, WholeVersionHeader } from 'app/model/whole-version';
 import { tap } from 'rxjs/operators';
 import { Observable, Subject } from 'rxjs';
 import { GroupContent, Group } from 'app/model/group-content';
@@ -13,67 +13,55 @@ import { formatTree } from 'app/service/tree.service';
 })
 export class WholeVersionService {
 
-  public wholeVersion: WholeVersion = null;
-
-  public wholeVersionSubject: Subject<WholeVersion> = new Subject();
+  public wholeVersionHeader: WholeVersionHeader = null;
 
   public wholeVersionTree: TreeNode<GroupContent> = null;
 
-  public canChange: boolean = false;
-
-  private groupsByVid: Map<number, GroupContent> = new Map<number, GroupContent>();
+  private groupsByVid: Map<number, TreeNode<GroupContent>> = new Map<number, TreeNode<GroupContent>>();
 
   constructor(private http: Http, private preloaderService: PreloaderService) {  }
 
   initWholeVersion(versionId: number): Observable<WholeVersion> {
-    this.wholeVersion = null;
-    this.groupsByVid = new Map<number, GroupContent>();
+
 
     return this.http.get<WholeVersion>(`http://localhost:8080/version/${versionId}`)
       .pipe(
-        tap(res => this.wholeVersion = res),
-        tap(res => this.wholeVersionTree = formatTree(this.wholeVersion.groupContent, (g) => g.groupContent)),
-        tap(res => res.groupContent.forEach(g => this.addGroupToMap(g))),
-        tap(() => this.canChange = this.wholeVersion.canChange),
-        tap(() => this.wholeVersionSubject.next(this.wholeVersion))
+        tap(res => this.wholeVersionHeader = res),
+        tap(res => this.wholeVersionTree = formatTree(res.groupContent, (g) => g.groupContent)),
+        tap(() => {
+          this.groupsByVid = new Map<number, TreeNode<GroupContent>>();
+          this.wholeVersionTree.children.forEach(g => this.addGroupToMap(g))
+        }),
+        // tap(() => this.wholeVersionSubject.next(this.wholeVersion))
       );
   }
 
-  addGroupToParent(group: GroupContent, parentVid: number): void {
-    if (parentVid !== null) {
-      this.groupsByVid.get(parentVid).groupContent.push(group);
-    } else {
-      this.wholeVersion.groupContent.push(group);
-    }
-    this.groupsByVid.set(group.vid, group);
-  }
-
-  addLeafToParent(leaf: LeafContent, parentVid: number): void {
-    this.groupsByVid.get(parentVid).leafContent.push(leaf);
+  addLeafToParent(leaf: LeafContent, parent: TreeNode<GroupContent>): void {
+    parent.value.leafContent.push(leaf);
   }
 
   createNewGroup(): Observable<WholeVersion> {
-    return this.initWholeVersion(this.wholeVersion.id);
+    return this.initWholeVersion(this.wholeVersionHeader.id);
   }
 
   updateLeaf(): Observable<WholeVersion> {
-    return this.initWholeVersion(this.wholeVersion.id);
+    return this.initWholeVersion(this.wholeVersionHeader.id);
   }
 
   deleteLeaf(): Observable<WholeVersion> {
-    return this.initWholeVersion(this.wholeVersion.id);
+    return this.initWholeVersion(this.wholeVersionHeader.id);
   }
 
   deleteGroup(): Observable<WholeVersion> {
-    return this.initWholeVersion(this.wholeVersion.id);
+    return this.initWholeVersion(this.wholeVersionHeader.id);
   }
 
   updateGroup(): Observable<WholeVersion> {
-    return this.initWholeVersion(this.wholeVersion.id);
+    return this.initWholeVersion(this.wholeVersionHeader.id);
   }
 
   materializeGroup(group: Group): void {
-    const updateGroup = this.groupsByVid.get(group.vid);
+    const updateGroup = this.groupsByVid.get(group.vid).value;
 
     updateGroup.name = group.name;
     updateGroup.vid = group.vid;
@@ -83,11 +71,11 @@ export class WholeVersionService {
   }
 
   dematerializeGroup(): Observable<WholeVersion> {
-    return this.initWholeVersion(this.wholeVersion.id);
+    return this.initWholeVersion(this.wholeVersionHeader.id);
   }
 
   swapLeaves(parentVid: number, id1: number, id2: number): void {
-    const group = this.groupsByVid.get(parentVid);
+    const group = this.groupsByVid.get(parentVid).value;
     const leafIdxFs = group.leafContent.findIndex(l => l.id === id1);
     const leafIdxSc = group.leafContent.findIndex(l => l.id === id2);
     const tmpLeaf = group.leafContent[leafIdxFs];
@@ -96,11 +84,11 @@ export class WholeVersionService {
   }
 
   swapGroups(groupVid: number, changeAgainstGroupVid: number): Observable<WholeVersion> {
-    return this.initWholeVersion(this.wholeVersion.id);
+    return this.initWholeVersion(this.wholeVersionHeader.id);
   }
 
-  private addGroupToMap(group: GroupContent): void {
-    this.groupsByVid.set(group.vid, group);
-    group.groupContent.forEach(g => this.addGroupToMap(g));
+  private addGroupToMap(group: TreeNode<GroupContent>): void {
+    this.groupsByVid.set(group.value.vid, group);
+    group.children.forEach(g => this.addGroupToMap(g));
   }
 }

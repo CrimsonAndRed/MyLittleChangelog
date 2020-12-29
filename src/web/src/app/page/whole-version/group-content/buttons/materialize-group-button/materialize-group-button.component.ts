@@ -19,7 +19,7 @@ export class MaterializeGroupButtonComponent {
   constructor(private http: Http, private route: ActivatedRoute, private wholeVersionService: WholeVersionService) {}
 
   onMaterializeClick(): void {
-    const versionId = this.wholeVersionService.wholeVersion.id;
+    const versionId = this.wholeVersionService.wholeVersionHeader.id;
 
     const newGroup: NewGroup = {
       vid: this.node.value.vid,

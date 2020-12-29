@@ -1,12 +1,9 @@
-import { PastGroupContent } from 'app/model/previous-version';
 import { GroupContent } from './group-content';
 
-export interface WholeVersion {
+export interface WholeVersionHeader {
   id: number;
   canChange: boolean;
-  groupContent: GroupContent[];
 }
-
-export interface PreviousVersionsContent {
-  groupContent: PastGroupContent[];
+export interface WholeVersion extends WholeVersionHeader {
+  groupContent: GroupContent[];
 }

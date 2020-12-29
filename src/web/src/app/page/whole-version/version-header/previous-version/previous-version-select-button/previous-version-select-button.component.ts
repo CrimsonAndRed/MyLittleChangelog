@@ -76,7 +76,7 @@ export class PreviousVersionSelectButtonComponent {
   }
 
   private addGroupFromPast(newGroup: NewGroup): void {
-    const versionId = this.wholeVersionService.wholeVersion.id;
+    const versionId = this.wholeVersionService.wholeVersionHeader.id;
 
     this.nodeChosen.emit(
       this.http.post<Group>(`http://localhost:8080/version/${versionId}/group`, newGroup)
@@ -85,7 +85,7 @@ export class PreviousVersionSelectButtonComponent {
   }
 
   private addLeafFromPast(newLeaf: NewLeaf, parentId: number): void {
-    const versionId = this.wholeVersionService.wholeVersion.id;
+    const versionId = this.wholeVersionService.wholeVersionHeader.id;
 
     this.nodeChosen.emit(
       this.http.post<NewLeafWithId>(`http://localhost:8080/version/${versionId}/group/${parentId}/leaf`, newLeaf)

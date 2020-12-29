@@ -59,7 +59,7 @@ export class LeafHeaderComponent {
   }
 
   private moveLeaf(changeAgainstId: number): void {
-    const versionId = this.wholeVersionService.wholeVersion.id;
+    const versionId = this.wholeVersionService.wholeVersionHeader.id;
     const parentId = this.node.value.id;
     const leafId = this.leaf.id;
 

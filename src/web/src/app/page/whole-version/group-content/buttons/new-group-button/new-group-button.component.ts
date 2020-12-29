@@ -39,7 +39,7 @@ export class NewGroupButtonComponent {
 
 
   createNewGroup(name: string) {
-    const versionId = this.wholeVersionService.wholeVersion.id;
+    const versionId = this.wholeVersionService.wholeVersionHeader.id;
     const parentVid = this.node.value?.vid;
 
     const newGroup: NewGroup = {

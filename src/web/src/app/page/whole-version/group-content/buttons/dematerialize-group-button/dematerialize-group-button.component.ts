@@ -20,7 +20,7 @@ export class DematerializeGroupButtonComponent {
   constructor(private http: Http, private route: ActivatedRoute, private wholeVersionService: WholeVersionService) {}
 
   onDematerializeClick(): void {
-    const versionId = this.wholeVersionService.wholeVersion.id;
+    const versionId = this.wholeVersionService.wholeVersionHeader.id;
     const groupId = this.node.value.id;
     const params = new HttpParams().set('hierarchy', 'false');
 

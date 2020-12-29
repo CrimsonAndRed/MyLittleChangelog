@@ -39,7 +39,7 @@ export class NewLeafButtonComponent {
   }
 
   createNewLeaf(newLeaf: NewLeaf): void {
-    const versionId = this.wholeVersionService.wholeVersion.id;
+    const versionId = this.wholeVersionService.wholeVersionHeader.id;
     const groupId = this.node.value.id;
 
     this.onNewLeaf.emit(

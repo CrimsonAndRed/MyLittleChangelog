@@ -42,7 +42,7 @@ export class EditLeafButtonComponent {
   }
 
   updateLeaf(leaf: LeafContent, newParentGroupVid: number): void {
-    const versionId = this.wholeVersionService.wholeVersion.id;
+    const versionId = this.wholeVersionService.wholeVersionHeader.id;
     const parentId = this.node.value.id;
     const leafId = leaf.id;
 

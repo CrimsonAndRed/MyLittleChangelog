@@ -40,7 +40,7 @@ export class EditGroupButtonComponent {
   }
 
   updateGroup(group: GroupContent, newParentVid: number): void {
-    const versionId = this.wholeVersionService.wholeVersion.id;
+    const versionId = this.wholeVersionService.wholeVersionHeader.id;
     const groupId = this.node.value.id;
 
     const groupToUpdate: GroupToUpdate = {
