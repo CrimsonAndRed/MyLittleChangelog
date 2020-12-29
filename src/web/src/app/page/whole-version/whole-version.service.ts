@@ -7,7 +7,7 @@ import { GroupContent, Group } from 'app/model/group-content';
 import { LeafContent } from 'app/model/leaf-content';
 import { PreloaderService } from 'app/preloader/preloader.service';
 import { TreeNode } from 'app/model/tree';
-
+import { formatTree } from 'app/service/tree.service';
 @Injectable({
   providedIn: 'root',
 })
@@ -30,7 +30,7 @@ export class WholeVersionService {
     return this.http.get<WholeVersion>(`http://localhost:8080/version/${versionId}`)
       .pipe(
         tap(res => this.wholeVersion = res),
-        tap(res => this.wholeVersionTree = this.formatTree()),
+        tap(res => this.wholeVersionTree = formatTree(this.wholeVersion.groupContent, (g) => g.groupContent)),
         tap(res => res.groupContent.forEach(g => this.addGroupToMap(g))),
         tap(() => this.wholeVersionSubject.next(this.wholeVersion))
       );
@@ -99,19 +99,5 @@ export class WholeVersionService {
   private addGroupToMap(group: GroupContent): void {
     this.groupsByVid.set(group.vid, group);
     group.groupContent.forEach(g => this.addGroupToMap(g));
-  }
-
-  private formatTree(): TreeNode<GroupContent> {
-    const root: TreeNode<GroupContent> = { parent: null, children: [], value: null };
-    this.formatTreeNode(root, this.wholeVersion.groupContent)
-    return root;
-  }
-
-  private formatTreeNode(node: TreeNode<GroupContent>, groups: GroupContent[]) {
-    node.children = groups.map((g) => {
-      const newNode: TreeNode<GroupContent> = { parent: node, children: [], value: g }
-      this.formatTreeNode(newNode, g.groupContent)
-      return newNode;
-    })
   }
 }

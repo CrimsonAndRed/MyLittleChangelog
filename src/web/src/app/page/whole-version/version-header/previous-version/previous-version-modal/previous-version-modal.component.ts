@@ -13,6 +13,7 @@ import {
 import { WholeVersionService } from 'app/page/whole-version/whole-version.service';
 import { TreeNode } from 'app/model/tree';
 import { Subject } from 'rxjs';
+import { formatTree } from 'app/service/tree.service';
 
 @Component({
   selector: 'previous-version-modal',
@@ -36,22 +37,12 @@ export class PreviousVersionModalComponent implements OnInit {
 
     const rootChildren = this.data.version.groupContent.map(it => groupContentToPrevious(it, usedIds))
 
-    const root: TreeNode<PastGroupContent> = { parent: null, children: [], value: null };
-    this.formatTreeNode(root, rootChildren)
+    const root: TreeNode<PastGroupContent> = formatTree(rootChildren, (g) => g.groupContent)
     this.previousVersionRoot = root;
 
     this.nodeChooseSubject.subscribe(e => {
       this.chosenPastElement = e;
     });
-  }
-
-
-  private formatTreeNode(node: TreeNode<PastGroupContent>, groups: PastGroupContent[]) {
-    node.children = groups.map((g) => {
-      const newNode: TreeNode<PastGroupContent> = { parent: node, children: [], value: g }
-      this.formatTreeNode(newNode, g.groupContent)
-      return newNode;
-    })
   }
 
   private calculateUsedIds(): PreviousUsedGroupsAndLeaves {

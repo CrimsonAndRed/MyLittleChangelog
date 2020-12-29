@@ -3,6 +3,10 @@
     <p>From {{ difference.from }} to {{ difference.to }}</p>
   </div>
   <div>
-    <groups-third  [groups]="difference.groupContent"></groups-third>
+    <tree-container [node]="differenceService.differenceTree">
+      <ng-template #groupContainer let-child>
+        <difference-node [node]="child"></difference-node>
+      </ng-template>
+    </tree-container>
   </div>
 </div>

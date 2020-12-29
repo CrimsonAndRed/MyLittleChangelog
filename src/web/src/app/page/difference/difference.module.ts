@@ -5,18 +5,13 @@ import { RouterModule } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 import { MatDialogModule } from '@angular/material/dialog';
 import { DifferenceComponent } from './difference.component';
-import { GroupsThirdComponent } from './groups-third/groups-third.component';
-import { GroupThirdComponent } from './groups-third/group-third/group-third.component';
-import { GroupsLeavesThirdComponent } from './groups-third/groups-leaves-third/groups-leaves-third.component';
-import { LeafThirdComponent } from './groups-third/leaf-third/leaf-third.component';
+import { TreeContainerModule } from 'app/tree-view/tree-container.module';
+import { DifferenceNodeComponent } from './difference-node/difference-node.component';
 
 @NgModule({
   declarations: [
     DifferenceComponent,
-    GroupThirdComponent,
-    GroupsLeavesThirdComponent,
-    LeafThirdComponent,
-    GroupsThirdComponent
+    DifferenceNodeComponent
   ],
   imports: [
     BrowserModule,
@@ -24,6 +19,7 @@ import { LeafThirdComponent } from './groups-third/leaf-third/leaf-third.compone
     HttpClientModule,
     RouterModule,
     MatDialogModule,
+    TreeContainerModule
   ],
 })
 export class DifferenceModule { }
