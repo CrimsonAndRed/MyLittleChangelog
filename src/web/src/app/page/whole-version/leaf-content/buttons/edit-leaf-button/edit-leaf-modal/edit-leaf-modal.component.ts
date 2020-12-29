@@ -8,6 +8,7 @@ import { LeafType } from 'app/model/leaf-content';
 import { Subject } from 'rxjs';
 import { TreeNode } from 'app/model/tree';
 import { WholeVersionService } from 'app/page/whole-version/whole-version.service';
+import { EditLeafModalData, EditLeafModalReturned } from '../edit-leaf-button.component';
 
 @Component({
   selector: 'edit-leaf-modal',
@@ -37,9 +38,11 @@ export class EditLeafModalComponent {
     // TODO special case for root?
     this._expandMap.set(undefined, true);
   }
-}
 
-export interface EditLeafModalData {
-  leaf: LeafContent;
-  node: TreeNode<GroupContent>;
+  returnValue(): EditLeafModalReturned {
+    return {
+      leaf: this.leaf,
+      newParentGroupVid: this.newParentGroupVid
+    }
+  }
 }

@@ -36,12 +36,13 @@ export class EditLeafButtonComponent {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.updateLeaf(result[0], result[1]);
+        this.updateLeaf(result);
       }
     });
   }
 
-  updateLeaf(leaf: LeafContent, newParentGroupVid: number): void {
+  updateLeaf(data: EditLeafModalReturned): void {
+    const { leaf, newParentGroupVid } = data;
     const versionId = this.wholeVersionService.wholeVersionHeader.id;
     const parentId = this.node.value.id;
     const leafId = leaf.id;
@@ -56,4 +57,15 @@ export class EditLeafButtonComponent {
       this.http.put<void>(`http://localhost:8080/version/${versionId}/group/${parentId}/leaf/${leafId}`, leafToUpdate)
     );
   }
+}
+
+export interface EditLeafModalReturned {
+  leaf: LeafContent,
+  newParentGroupVid: number
+}
+
+
+export interface EditLeafModalData {
+  leaf: LeafContent;
+  node: TreeNode<GroupContent>;
 }

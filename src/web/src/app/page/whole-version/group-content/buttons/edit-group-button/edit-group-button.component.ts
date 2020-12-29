@@ -34,12 +34,13 @@ export class EditGroupButtonComponent {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.updateGroup(result[0], result[1]);
+        this.updateGroup(result);
       }
     });
   }
 
-  updateGroup(group: GroupContent, newParentVid: number): void {
+  updateGroup(data: EditGroupModalReturned): void {
+    const { group, newParentVid } = data;
     const versionId = this.wholeVersionService.wholeVersionHeader.id;
     const groupId = this.node.value.id;
 
@@ -50,4 +51,13 @@ export class EditGroupButtonComponent {
     this.onUpdateGroup.emit(this.http.put<void>(`http://localhost:8080/version/${versionId}/group/${groupId}`, groupToUpdate));
   }
 
+}
+
+export interface EditGroupModalData {
+  node: TreeNode<GroupContent>;
+}
+
+export interface EditGroupModalReturned {
+  group: GroupContent;
+  newParentVid: number;
 }

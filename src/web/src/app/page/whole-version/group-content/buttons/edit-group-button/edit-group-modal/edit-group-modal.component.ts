@@ -4,6 +4,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { TreeNode } from 'app/model/tree';
 import { WholeVersionService } from 'app/page/whole-version/whole-version.service';
 import { Subject } from 'rxjs';
+import { EditGroupModalData, EditGroupModalReturned } from '../edit-group-button.component';
 
 @Component({
   selector: 'edit-group-modal',
@@ -29,8 +30,11 @@ export class EditGroupModalComponent {
     // TODO special case for root?
     this._expandMap.set(undefined, true);
   }
-}
 
-export interface EditGroupModalData {
-  node: TreeNode<GroupContent>;
+  returnValue(): EditGroupModalReturned {
+    return {
+      group: this._group,
+      newParentVid: this.newParentGroupVid
+    }
+  }
 }
