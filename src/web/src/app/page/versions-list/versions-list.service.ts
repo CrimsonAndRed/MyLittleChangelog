@@ -21,12 +21,21 @@ export class VersionsListService {
       );
   }
 
-  createVersion(version: Version) {
-    this.versions.push(version)
+  createVersion(): Observable<Version> {
+    return this.http.post<Version>('http://localhost:8080/version')
+      .pipe(
+        tap((version) => this.versions.push(version))
+      );
   }
 
-  deleteVersion(version: Version) {
-    let index = this.versions.map((v) => v.id).indexOf(version.id)
-    this.versions.splice(index)
+  deleteVersion(version: Version): Observable<any> {
+    return this.http.delete(`http://localhost:8080/version/${version.id}`)
+      .pipe(
+        tap(() => {
+          let index = this.versions.map((v) => v.id).indexOf(version.id)
+          this.versions.splice(index)
+        }),
+      )
+
   }
 }

@@ -7,6 +7,7 @@ import { GroupContent } from 'app/model/group-content';
 import { Observable } from 'rxjs';
 import { WholeVersionService } from 'app/page/whole-version/whole-version.service';
 import { TreeNode } from 'app/model/tree';
+import { WholeVersion } from 'app/model/whole-version';
 
 @Component({
   selector: 'edit-leaf-button',
@@ -17,7 +18,7 @@ export class EditLeafButtonComponent {
 
   @Input() leaf: LeafContent;
   @Input() node: TreeNode<GroupContent>;
-  @Output() onUpdateLeaf = new EventEmitter<Observable<void>>();
+  @Output() onUpdateLeaf = new EventEmitter<Observable<WholeVersion>>();
 
   constructor(private http: Http,
               private dialog: MatDialog,
@@ -43,7 +44,6 @@ export class EditLeafButtonComponent {
 
   updateLeaf(data: EditLeafModalReturned): void {
     const { leaf, newParentGroupVid } = data;
-    const versionId = this.wholeVersionService.wholeVersionHeader.id;
     const parentId = this.node.value.id;
     const leafId = leaf.id;
 
@@ -54,7 +54,7 @@ export class EditLeafButtonComponent {
       parentVid: newParentGroupVid,
     };
     this.onUpdateLeaf.emit(
-      this.http.put<void>(`http://localhost:8080/version/${versionId}/group/${parentId}/leaf/${leafId}`, leafToUpdate)
+      this.wholeVersionService.updateLeaf(leafToUpdate, parentId, leafId)
     );
   }
 }

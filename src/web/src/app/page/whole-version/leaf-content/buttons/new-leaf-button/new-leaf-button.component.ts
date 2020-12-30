@@ -8,6 +8,7 @@ import { Observable } from 'rxjs';
 import { WholeVersionService } from 'app/page/whole-version/whole-version.service';
 import { GroupContent } from 'app/model/group-content';
 import { TreeNode } from 'app/model/tree';
+import { WholeVersion } from 'app/model/whole-version';
 
 @Component({
   selector: 'new-leaf-button',
@@ -16,7 +17,7 @@ import { TreeNode } from 'app/model/tree';
 })
 export class NewLeafButtonComponent {
 
-  @Output() onNewLeaf = new EventEmitter<Observable<NewLeafWithId>>();
+  @Output() onNewLeaf = new EventEmitter<Observable<WholeVersion>>();
 
   @Input() node: TreeNode<GroupContent>;
 
@@ -39,11 +40,8 @@ export class NewLeafButtonComponent {
   }
 
   createNewLeaf(newLeaf: NewLeaf): void {
-    const versionId = this.wholeVersionService.wholeVersionHeader.id;
-    const groupId = this.node.value.id;
-
     this.onNewLeaf.emit(
-      this.http.post<NewLeafWithId>(`http://localhost:8080/version/${versionId}/group/${groupId}/leaf`, newLeaf)
+      this.wholeVersionService.createNewLeaf(newLeaf, this.node.value.vid)
     );
   }
 

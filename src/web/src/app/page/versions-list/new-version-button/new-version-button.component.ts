@@ -2,6 +2,8 @@ import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 import { Http } from 'app/service/http.service';
 import { Version } from 'app/model/version';
 import { Observable } from 'rxjs';
+import { VersionsListService } from '../versions-list.service';
+import { PreloaderService } from 'app/preloader/preloader.service';
 
 @Component({
   selector: 'new-version-button',
@@ -10,12 +12,13 @@ import { Observable } from 'rxjs';
 })
 export class NewVersionButtonComponent {
 
-  @Output() onNewVersion = new EventEmitter<Observable<Version>>();
-
-  constructor(private http: Http) {
+  constructor(private versionsListService: VersionsListService,
+              private preloaderService: PreloaderService) {
   }
 
   onNewVersionButtonClick(): void {
-     this.onNewVersion.emit(this.http.post<Version>('http://localhost:8080/version'));
+    this.preloaderService.wrap(
+      this.versionsListService.createVersion()
+    );
   }
 }

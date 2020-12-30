@@ -19,31 +19,13 @@ export class VersionHeaderComponent {
 
   handleNewGroup(obs: Observable<Group>): void {
     this.preloaderService.wrap(
-      obs.pipe(
-        switchMap(newGroupWithId => {
-          const newGroup: GroupContent = {
-            id: newGroupWithId.id,
-            name: newGroupWithId.name,
-            vid: newGroupWithId.vid,
-            realNode: true,
-            isEarliest: true,
-            groupContent: [],
-            leafContent: []
-          };
-
-          // this.wholeVersionService.addGroupToParent(newGroup, null);
-          return this.wholeVersionService.createNewGroup();
-        })
-      )
+      obs
     );
   }
 
-  // TODO kindof strange
   onPreviousNodeChosen(obs: Observable<void>): void {
     this.preloaderService.wrap(
-      obs.pipe(
-        switchMap((c) => this.wholeVersionService.createNewGroup())
-      )
+      obs
     );
   }
 }

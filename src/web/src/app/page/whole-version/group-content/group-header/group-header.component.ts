@@ -23,72 +23,37 @@ export class GroupHeaderComponent {
 
   handleNewGroup(obs: Observable<Group>): void {
     this.preloaderService.wrap(
-      obs.pipe(
-        switchMap(newGroupWithId => {
-          const newGroup: GroupContent = {
-            id: newGroupWithId.id,
-            name: newGroupWithId.name,
-            vid: newGroupWithId.vid,
-            realNode: true,
-            isEarliest: true,
-            groupContent: [],
-            leafContent: []
-          };
-
-          // TODO Тут должно быть по другому
-          // this.wholeVersionService.addGroupToParent(newGroup, this.node.value.vid);
-          return this.wholeVersionService.createNewGroup();
-        })
-      )
+      obs
     );
   }
 
   handleNewLeaf(obs: Observable<NewLeafWithId>): void {
     this.preloaderService.wrap(
-      obs.pipe(
-        tap(newLeafWithId => {
-          const newLeaf: LeafContent = {
-            id: newLeafWithId.id,
-            name: newLeafWithId.name,
-            vid: newLeafWithId.vid,
-            valueType: newLeafWithId.valueType,
-            value: newLeafWithId.value,
-          };
-          this.wholeVersionService.addLeafToParent(newLeaf, this.node);
-        })
-      )
+      obs
     );
   }
 
   handleDeleteGroup(obs: Observable<void>): void {
     this.preloaderService.wrap(
-      obs.pipe(
-        switchMap(() => this.wholeVersionService.deleteGroup())
-      )
+      obs
     );
   }
 
   handleUpdateGroup(obs: Observable<void>): void {
     this.preloaderService.wrap(
-      obs.pipe(
-        switchMap(() => this.wholeVersionService.updateGroup())
-      )
+      obs
     );
   }
 
   handleMaterializeGroup(obs: Observable<Group>): void {
     this.preloaderService.wrap(
-      obs.pipe(
-        tap(group => this.wholeVersionService.materializeGroup(group))
-      )
+      obs
     );
   }
 
   handleDematerializeGroup(obs: Observable<void>): void {
     this.preloaderService.wrap(
-      obs.pipe(
-        switchMap(() => this.wholeVersionService.dematerializeGroup()),
-      )
+      obs
     );
   }
 

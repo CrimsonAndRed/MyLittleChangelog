@@ -44,26 +44,26 @@ export interface PreviousVersionModalData {
 }
 
 
-export function groupContentToPrevious(group: GroupContent, usedIds: PreviousUsedGroupsAndLeaves): PastGroupContent {
+export function groupContentToPrevious(group: GroupContent, usedVids: PreviousUsedGroupsAndLeaves): PastGroupContent {
   return {
     id: group.id,
     vid: group.vid,
     name: group.name,
     realNode: group.realNode,
     isEarliest: group.isEarliest,
-    inCurrentVersion: usedIds.usedGroups.has(group.id),
-    groupContent: group.groupContent.map(g => groupContentToPrevious(g, usedIds)),
-    leafContent: group.leafContent.map(l => leafContentToPrevious(l, usedIds))
+    inCurrentVersion: usedVids.usedGroups.has(group.vid),
+    groupContent: group.groupContent.map(g => groupContentToPrevious(g, usedVids)),
+    leafContent: group.leafContent.map(l => leafContentToPrevious(l, usedVids))
   };
 }
 
-export function leafContentToPrevious(leaf: LeafContent, usedIds: PreviousUsedGroupsAndLeaves): PastLeafContent {
+export function leafContentToPrevious(leaf: LeafContent, usedVids: PreviousUsedGroupsAndLeaves): PastLeafContent {
   return {
     id: leaf.id,
     vid: leaf.vid,
     name: leaf.name,
     valueType: leaf.valueType,
     value: leaf.value,
-    inCurrentVersion: usedIds.usedLeaves.has(leaf.id),
+    inCurrentVersion: usedVids.usedLeaves.has(leaf.id),
   };
 }

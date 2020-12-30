@@ -34,9 +34,9 @@ export class PreviousVersionModalComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    const usedIds = this.calculateUsedIds();
+    const usedVids = this.calculateUsedVids();
 
-    const rootChildren = this.data.version.groupContent.map(it => groupContentToPrevious(it, usedIds))
+    const rootChildren = this.data.version.groupContent.map(it => groupContentToPrevious(it, usedVids))
 
     const root: TreeNode<PastGroupContent> = formatTree(rootChildren, (g) => g.groupContent)
     this.previousVersionRoot = root;
@@ -46,24 +46,23 @@ export class PreviousVersionModalComponent implements OnInit {
     });
 
     this._expandMap = new Map(this.wholeVersionService.expandMap);
-
   }
 
-  private calculateUsedIds(): PreviousUsedGroupsAndLeaves {
-    const groupIds: Set<number> = new Set();
-    const leafIds: Set<number> = new Set();
+  private calculateUsedVids(): PreviousUsedGroupsAndLeaves {
+    const groupVids: Set<number> = new Set();
+    const leafVids: Set<number> = new Set();
 
-    this.wholeVersionService.wholeVersionTree.children.forEach(g => this.addUsedIdsRecursive(g, groupIds, leafIds));
+    this.wholeVersionService.wholeVersionTree.children.forEach(g => this.addUsedIdsRecursive(g, groupVids, leafVids));
 
     return {
-      usedGroups: groupIds,
-      usedLeaves: leafIds
+      usedGroups: groupVids,
+      usedLeaves: leafVids
     };
   }
 
-  private addUsedIdsRecursive(group: TreeNode<GroupContent>, groupIds: Set<number>, leafIds: Set<number>): void {
-    groupIds.add(group.value.id);
-    group.value.leafContent.forEach(l => leafIds.add(l.id));
-    group.children.forEach(g => this.addUsedIdsRecursive(g, groupIds, leafIds));
+  private addUsedIdsRecursive(group: TreeNode<GroupContent>, groupVids: Set<number>, leafVids: Set<number>): void {
+    groupVids.add(group.value.vid);
+    group.value.leafContent.forEach(l => leafVids.add(l.vid));
+    group.children.forEach(g => this.addUsedIdsRecursive(g, groupVids, leafVids));
   }
 }

@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
 import { WholeVersionService } from 'app/page/whole-version/whole-version.service';
 import { GroupContent } from 'app/model/group-content';
 import { TreeNode } from 'app/model/tree';
+import { WholeVersion } from 'app/model/whole-version';
 
 @Component({
   selector: 'delete-group-button',
@@ -15,15 +16,11 @@ import { TreeNode } from 'app/model/tree';
 export class DeleteGroupButtonComponent {
 
   @Input() node: TreeNode<GroupContent>;
-  @Output() onDeleteGroup = new EventEmitter<Observable<void>>();
+  @Output() onDeleteGroup = new EventEmitter<Observable<WholeVersion>>();
 
-  constructor(private http: Http, private route: ActivatedRoute, private wholeVersionService: WholeVersionService) {}
+  constructor(private wholeVersionService: WholeVersionService) {}
 
   onDeleteClick(): void {
-    const versionId = this.wholeVersionService.wholeVersionHeader.id;
-    const groupId = this.node.value.id;
-    const params = new HttpParams().set('hierarchy', 'true');
-
-    this.onDeleteGroup.emit(this.http.delete(`http://localhost:8080/version/${versionId}/group/${groupId}`, params));
+    this.onDeleteGroup.emit(this.wholeVersionService.deleteGroup(this.node.value.id));
   }
 }

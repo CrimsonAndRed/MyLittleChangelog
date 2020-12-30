@@ -14,18 +14,16 @@ import { TreeNode } from 'app/model/tree';
 export class MaterializeGroupButtonComponent {
 
   @Input() node: TreeNode<GroupContent>;
-  @Output() onMaterializeGroup = new EventEmitter<Observable<Group>>();
+  @Output() onMaterializeGroup = new EventEmitter<Observable<void>>();
 
-  constructor(private http: Http, private route: ActivatedRoute, private wholeVersionService: WholeVersionService) {}
+  constructor(private wholeVersionService: WholeVersionService) {}
 
   onMaterializeClick(): void {
-    const versionId = this.wholeVersionService.wholeVersionHeader.id;
-
     const newGroup: NewGroup = {
       vid: this.node.value.vid,
       name: this.node.value.name,
       parentVid: this.node.parent?.value?.vid,
     };
-    this.onMaterializeGroup.emit(this.http.post<Group>(`http://localhost:8080/version/${versionId}/group`, newGroup));
+    this.onMaterializeGroup.emit(this.wholeVersionService.materializeGroup(newGroup));
   }
 }

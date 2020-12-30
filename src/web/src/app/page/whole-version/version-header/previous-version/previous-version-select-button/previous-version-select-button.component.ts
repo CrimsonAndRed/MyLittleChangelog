@@ -11,6 +11,7 @@ import { map, tap } from 'rxjs/operators';
 import { PreloaderService } from 'app/preloader/preloader.service';
 import { WholeVersionService } from 'app/page/whole-version/whole-version.service';
 import { TreeNode } from 'app/model/tree';
+import { PastGroupContent, PastLeafContent, PastRadioEvent } from 'app/model/previous-version';
 
 @Component({
   selector: 'previous-version-select-button',
@@ -53,21 +54,23 @@ export class PreviousVersionSelectButtonComponent {
     );
   }
 
-  handleResult(result: any): void {
+  handleResult(result: PastRadioEvent): void {
     switch (result?.kind) {
       case 'group':
+        const value = result.value as TreeNode<PastGroupContent>;
         this.addGroupFromPast({
-          vid: result.value.value.vid,
-          name: result.value.value.name,
-          parentVid: result.value.parent?.vid
+          vid: value.value.vid,
+          name: value.value.name,
+          parentVid: value.parent?.value?.vid
         });
         break;
       case 'leaf':
+        const valueLeaf = result.value as PastLeafContent;
         this.addLeafFromPast({
-          vid: result.value.vid,
-          name: result.value.name,
-          value: result.value.value,
-          valueType: result.value.valueType
+          vid: valueLeaf.vid,
+          name: valueLeaf.name,
+          value: valueLeaf.value,
+          valueType: valueLeaf.valueType
         }, result.parentId);
         break;
       default:
@@ -76,20 +79,16 @@ export class PreviousVersionSelectButtonComponent {
   }
 
   private addGroupFromPast(newGroup: NewGroup): void {
-    const versionId = this.wholeVersionService.wholeVersionHeader.id;
-
     this.nodeChosen.emit(
-      this.http.post<Group>(`http://localhost:8080/version/${versionId}/group`, newGroup)
-        .pipe(map((res) => { return; }))
+      this.wholeVersionService.createNewGroup(newGroup)
+        .pipe(map(() => {}))
     );
   }
 
   private addLeafFromPast(newLeaf: NewLeaf, parentId: number): void {
-    const versionId = this.wholeVersionService.wholeVersionHeader.id;
-
     this.nodeChosen.emit(
-      this.http.post<NewLeafWithId>(`http://localhost:8080/version/${versionId}/group/${parentId}/leaf`, newLeaf)
-        .pipe(map((res) => { return; }))
+      this.wholeVersionService.createNewLeaf(newLeaf, parentId)
+        .pipe(map(() => {}))
     );
   }
 }

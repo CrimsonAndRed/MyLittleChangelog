@@ -21,11 +21,10 @@ export class DeleteLeafButtonComponent {
   constructor(private http: Http, private route: ActivatedRoute, private wholeVersionService: WholeVersionService) {}
 
   onDeleteClick(): void {
-    const versionId = this.wholeVersionService.wholeVersionHeader.id;
-    const groupId = this.node.value.id;
+    const groupVid = this.node.value.vid;
     const leafId = this.leaf.id;
 
-    this.onDeleteLeaf.emit(this.http.delete(`http://localhost:8080/version/${versionId}/group/${groupId}/leaf/${leafId}`));
+    this.onDeleteLeaf.emit(this.wholeVersionService.deleteLeaf(leafId, groupVid));
   }
 
 }

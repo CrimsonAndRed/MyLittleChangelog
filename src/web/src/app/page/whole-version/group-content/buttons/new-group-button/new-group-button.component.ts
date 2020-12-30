@@ -8,6 +8,7 @@ import { NewGroupModalComponent } from './new-group-modal/new-group-modal.compon
 import { Observable } from 'rxjs';
 import { WholeVersionService } from 'app/page/whole-version/whole-version.service';
 import { TreeNode } from 'app/model/tree';
+import { WholeVersion } from 'app/model/whole-version';
 
 @Component({
   selector: 'new-group-button',
@@ -16,7 +17,7 @@ import { TreeNode } from 'app/model/tree';
 })
 export class NewGroupButtonComponent {
 
-  @Output() onNewGroup = new EventEmitter<Observable<Group>>();
+  @Output() onNewGroup = new EventEmitter<Observable<WholeVersion>>();
 
   @Input() node: TreeNode<GroupContent>;
 
@@ -39,7 +40,6 @@ export class NewGroupButtonComponent {
 
 
   createNewGroup(name: string) {
-    const versionId = this.wholeVersionService.wholeVersionHeader.id;
     const parentVid = this.node.value?.vid;
 
     const newGroup: NewGroup = {
@@ -47,6 +47,6 @@ export class NewGroupButtonComponent {
       parentVid,
       name,
     };
-    this.onNewGroup.emit(this.http.post<Group>(`http://localhost:8080/version/${versionId}/group`, newGroup));
+    this.onNewGroup.emit(this.wholeVersionService.createNewGroup(newGroup));
   }
 }

@@ -24,17 +24,13 @@ export class LeafHeaderComponent {
 
   handleDeleteLeaf(obs: Observable<void>): void {
     this.preloaderService.wrap(
-      obs.pipe(
-        switchMap(() => this.wholeVersionService.deleteLeaf())
-      )
+      obs
     );
   }
 
   handleUpdateLeaf(obs: Observable<void>): void {
     this.preloaderService.wrap(
-      obs.pipe(
-        switchMap(() => this.wholeVersionService.updateLeaf())
-      )
+      obs
     );
   }
 

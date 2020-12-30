@@ -7,6 +7,7 @@ import { GroupContent, GroupToUpdate, Group } from 'app/model/group-content';
 import { Observable } from 'rxjs';
 import { WholeVersionService } from 'app/page/whole-version/whole-version.service';
 import { TreeNode } from 'app/model/tree';
+import { WholeVersion } from 'app/model/whole-version';
 
 @Component({
   selector: 'edit-group-button',
@@ -16,7 +17,7 @@ import { TreeNode } from 'app/model/tree';
 export class EditGroupButtonComponent {
 
   @Input() node: TreeNode<GroupContent>;
-  @Output() onUpdateGroup = new EventEmitter<Observable<void>>();
+  @Output() onUpdateGroup = new EventEmitter<Observable<WholeVersion>>();
 
   constructor(private http: Http,
               private dialog: MatDialog,
@@ -41,14 +42,13 @@ export class EditGroupButtonComponent {
 
   updateGroup(data: EditGroupModalReturned): void {
     const { group, newParentVid } = data;
-    const versionId = this.wholeVersionService.wholeVersionHeader.id;
     const groupId = this.node.value.id;
 
     const groupToUpdate: GroupToUpdate = {
       name: group.name,
       parentVid: newParentVid
     };
-    this.onUpdateGroup.emit(this.http.put<void>(`http://localhost:8080/version/${versionId}/group/${groupId}`, groupToUpdate));
+    this.onUpdateGroup.emit(this.wholeVersionService.updateGroup(groupToUpdate, groupId));
   }
 }
 

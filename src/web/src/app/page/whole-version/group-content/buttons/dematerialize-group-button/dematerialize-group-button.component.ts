@@ -6,6 +6,7 @@ import { HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { WholeVersionService } from 'app/page/whole-version/whole-version.service';
 import { TreeNode } from 'app/model/tree';
+import { WholeVersion } from 'app/model/whole-version';
 
 @Component({
   selector: 'dematerialize-group-button',
@@ -15,15 +16,11 @@ import { TreeNode } from 'app/model/tree';
 export class DematerializeGroupButtonComponent {
 
   @Input() node: TreeNode<GroupContent>;
-  @Output() onDematerializeGroup = new EventEmitter<Observable<void>>();
+  @Output() onDematerializeGroup = new EventEmitter<Observable<WholeVersion>>();
 
   constructor(private http: Http, private route: ActivatedRoute, private wholeVersionService: WholeVersionService) {}
 
   onDematerializeClick(): void {
-    const versionId = this.wholeVersionService.wholeVersionHeader.id;
-    const groupId = this.node.value.id;
-    const params = new HttpParams().set('hierarchy', 'false');
-
-    this.onDematerializeGroup.emit(this.http.delete<void>(`http://localhost:8080/version/${versionId}/group/${groupId}`, params));
+    this.onDematerializeGroup.emit(this.wholeVersionService.dematerializeGroup(this.node.value.id));
   }
 }
