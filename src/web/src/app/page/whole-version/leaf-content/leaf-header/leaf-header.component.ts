@@ -6,7 +6,7 @@ import { PreloaderService } from 'app/preloader/preloader.service';
 import { Http } from 'app/service/http.service';
 import { TreeNode } from 'app/model/tree';
 import { GroupContent } from 'app/model/group-content';
-import { LeafContent } from 'app/model/leaf-content';
+import { LeafContent, LeafToUpdate } from 'app/model/leaf-content';
 
 
 @Component({
@@ -18,20 +18,14 @@ export class LeafHeaderComponent {
   @Input() node: TreeNode<GroupContent>;
   @Input() leaf: LeafContent;
 
-  constructor(private http: Http,
-              private wholeVersionService: WholeVersionService,
-              private preloaderService: PreloaderService) {}
+  constructor(private wholeVersionService: WholeVersionService) {}
 
-  handleDeleteLeaf(obs: Observable<void>): void {
-    this.preloaderService.wrap(
-      obs
-    );
+  handleDeleteLeaf(): void {
+    this.wholeVersionService.deleteLeaf(this.leaf.id, this.node.value.vid);
   }
 
-  handleUpdateLeaf(obs: Observable<void>): void {
-    this.preloaderService.wrap(
-      obs
-    );
+  handleUpdateLeaf(leaf: LeafToUpdate): void {
+    this.wholeVersionService.updateLeaf(leaf, this.node.value.id, this.leaf.id);
   }
 
   isUpButtonShowed(): boolean {
@@ -57,11 +51,7 @@ export class LeafHeaderComponent {
   private moveLeaf(changeAgainstId: number): void {
     const groupVid = this.node.value.vid;
     const leafId = this.leaf.id;
-
     const dto = { changeAgainstId };
-
-    this.preloaderService.wrap(
-      this.wholeVersionService.moveLeaf(leafId, groupVid, dto)
-    );
+    this.wholeVersionService.moveLeaf(leafId, groupVid, dto)
   }
 }

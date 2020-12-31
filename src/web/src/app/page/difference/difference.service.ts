@@ -8,6 +8,7 @@ import { tap } from 'rxjs/operators';
 import { TreeNode } from 'app/model/tree';
 import { formatTree } from 'app/service/tree.service';
 import { ActivatedRoute } from '@angular/router';
+import { OperatorFunction } from 'rxjs';
 
 
 @Injectable({
@@ -19,19 +20,23 @@ export class DifferenceService {
   public expandMap: Map<number, boolean>
 
   constructor(private http: Http,
-              private route: ActivatedRoute) {  }
+              private route: ActivatedRoute,
+              private preloaderService: PreloaderService) {  }
 
-  initDifference(): Observable<Difference> {
+  initDifference(cb: OperatorFunction<Difference, Difference> = tap()) {
     this.expandMap = new Map();
 
     let params = new HttpParams()
       .set('from', this.route.snapshot.queryParams.from.toString())
       .set('to', this.route.snapshot.queryParams.to.toString());
 
-    return this.http.get<Difference>('http://localhost:8080/difference', params)
-      .pipe(
-        tap(res => this.difference = res),
-        tap(() => this.differenceTree = formatTree(this.difference.groupContent, (g) => g.groupContent))
-      )
+    this.preloaderService.wrap(
+      this.http.get<Difference>('http://localhost:8080/difference', params)
+        .pipe(
+          cb,
+          tap(res => this.difference = res),
+          tap(() => this.differenceTree = formatTree(this.difference.groupContent, (g) => g.groupContent))
+        )
+    )
   }
 }

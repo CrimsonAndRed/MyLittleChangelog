@@ -1,14 +1,15 @@
 import { Injectable } from '@angular/core';
 import { Http } from 'app/service/http.service';
 import { WholeVersion, WholeVersionHeader } from 'app/model/whole-version';
-import { tap, switchMap, map } from 'rxjs/operators';
-import { Observable, Subject } from 'rxjs';
+import { tap, switchMap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 import { GroupContent, Group, GroupToUpdate, NewGroup } from 'app/model/group-content';
-import { LeafContent, LeafToUpdate, NewLeaf, NewLeafWithId } from 'app/model/leaf-content';
+import { LeafToUpdate, NewLeaf, NewLeafWithId } from 'app/model/leaf-content';
 import { PreloaderService } from 'app/preloader/preloader.service';
 import { TreeNode } from 'app/model/tree';
 import { formatTree } from 'app/service/tree.service';
 import { HttpParams } from '@angular/common/http';
+import { OperatorFunction } from 'rxjs';
 @Injectable({
   providedIn: 'root',
 })
@@ -37,105 +38,135 @@ export class WholeVersionService {
   }
 
 
-  createNewLeaf(newLeaf: NewLeaf, groupId: number): Observable<WholeVersion> {
-    return this.http.post<NewLeafWithId>(`http://localhost:8080/version/${this.wholeVersionHeader.id}/group/${groupId}/leaf`, newLeaf)
-      .pipe(
-        switchMap(() => this.initWholeVersion(this.wholeVersionHeader.id))
-      );
+  createNewLeaf(newLeaf: NewLeaf, groupId: number, cb: OperatorFunction<NewLeafWithId, NewLeafWithId> = tap()) {
+    this.preloaderService.wrap(
+      this.http.post<NewLeafWithId>(`http://localhost:8080/version/${this.wholeVersionHeader.id}/group/${groupId}/leaf`, newLeaf)
+        .pipe(
+          cb,
+          switchMap(() => this.initWholeVersion(this.wholeVersionHeader.id))
+        )
+      )
   }
 
-  createNewGroup(newGroup: NewGroup): Observable<WholeVersion> {
-    return this.http.post<Group>(`http://localhost:8080/version/${this.wholeVersionHeader.id}/group`, newGroup)
-      .pipe(
-        switchMap(() => this.initWholeVersion(this.wholeVersionHeader.id))
-      );
+  createNewGroup(newGroup: NewGroup, cb: OperatorFunction<Group, Group> = tap()) {
+    this.preloaderService.wrap(
+      this.http.post<Group>(`http://localhost:8080/version/${this.wholeVersionHeader.id}/group`, newGroup)
+        .pipe(
+          cb,
+          switchMap(() => this.initWholeVersion(this.wholeVersionHeader.id))
+        )
+    );
   }
 
-  updateLeaf(leafToUpdate: LeafToUpdate, groupId: number, leafId: number): Observable<WholeVersion> {
-    return this.http.put<void>(`http://localhost:8080/version/${this.wholeVersionHeader.id}/group/${groupId}/leaf/${leafId}`, leafToUpdate)
-      .pipe(
-        switchMap(() => this.initWholeVersion(this.wholeVersionHeader.id))
-      );
+  updateLeaf(leafToUpdate: LeafToUpdate, groupId: number, leafId: number, cb: OperatorFunction<void, void> = tap()) {
+    this.preloaderService.wrap(
+      this.http.put<void>(`http://localhost:8080/version/${this.wholeVersionHeader.id}/group/${groupId}/leaf/${leafId}`, leafToUpdate)
+        .pipe(
+          cb,
+          switchMap(() => this.initWholeVersion(this.wholeVersionHeader.id))
+        )
+      )
   }
 
-  deleteLeaf(leafId: number, groupVid: number): Observable<void> {
+  deleteLeaf(leafId: number, groupVid: number, cb: OperatorFunction<void, void> = tap()) {
     const groupId = this.groupsByVid.get(groupVid).value.id;
-    return this.http.delete(`http://localhost:8080/version/${this.wholeVersionHeader.id}/group/${groupId}/leaf/${leafId}`)
-    .pipe(
-      switchMap(() => this.initWholeVersion(this.wholeVersionHeader.id)),
-      map(() => {})
+    this.preloaderService.wrap(
+     this.http.delete<void>(`http://localhost:8080/version/${this.wholeVersionHeader.id}/group/${groupId}/leaf/${leafId}`)
+      .pipe(
+        cb,
+        switchMap(() => this.initWholeVersion(this.wholeVersionHeader.id))
+      )
     )
   }
 
-  deleteGroup(groupId: number): Observable<WholeVersion> {
+  deleteGroup(groupId: number, cb: OperatorFunction<void, void> = tap()) {
     const params = new HttpParams().set('hierarchy', 'true');
 
-    return this.http.delete(`http://localhost:8080/version/${this.wholeVersionHeader.id}/group/${groupId}`, params)
-      .pipe(
-        switchMap(() => this.initWholeVersion(this.wholeVersionHeader.id))
-      );
+    this.preloaderService.wrap(
+      this.http.delete<void>(`http://localhost:8080/version/${this.wholeVersionHeader.id}/group/${groupId}`, params)
+        .pipe(
+          cb,
+          switchMap(() => this.initWholeVersion(this.wholeVersionHeader.id))
+        )
+    );
   }
 
-  dematerializeGroup(groupId: number): Observable<WholeVersion> {
+  dematerializeGroup(groupId: number, cb: OperatorFunction<void, void> = tap()) {
     const params = new HttpParams().set('hierarchy', 'false');
 
-    return this.http.delete(`http://localhost:8080/version/${this.wholeVersionHeader.id}/group/${groupId}`, params)
-      .pipe(
-        switchMap(() => this.initWholeVersion(this.wholeVersionHeader.id))
+    this.preloaderService.wrap(
+      this.http.delete<void>(`http://localhost:8080/version/${this.wholeVersionHeader.id}/group/${groupId}`, params)
+        .pipe(
+          cb,
+          switchMap(() => this.initWholeVersion(this.wholeVersionHeader.id))
+        )
       );
   }
 
-  updateGroup(group: GroupToUpdate, groupId: number): Observable<WholeVersion> {
-    return this.http.put<void>(`http://localhost:8080/version/${this.wholeVersionHeader.id}/group/${groupId}`, group)
-      .pipe(
-        switchMap(() => this.initWholeVersion(this.wholeVersionHeader.id))
-      )
+  updateGroup(group: GroupToUpdate, groupId: number, cb: OperatorFunction<void, void> = tap()) {
+    this.preloaderService.wrap(
+      this.http.put<void>(`http://localhost:8080/version/${this.wholeVersionHeader.id}/group/${groupId}`, group)
+        .pipe(
+          cb,
+          switchMap(() => this.initWholeVersion(this.wholeVersionHeader.id))
+        )
+    );
   }
 
-  materializeGroup(newGroup: NewGroup): Observable<void> {
-    return this.http.post<Group>(`http://localhost:8080/version/${this.wholeVersionHeader.id}/group`, newGroup)
-      .pipe(
-        tap((group) => {
-          const updateGroup = this.groupsByVid.get(group.vid).value;
+  materializeGroup(newGroup: NewGroup, cb: OperatorFunction<Group, Group> = tap()) {
+    this.preloaderService.wrap(
+      this.http.post<Group>(`http://localhost:8080/version/${this.wholeVersionHeader.id}/group`, newGroup)
+        .pipe(
+          cb,
+          tap((group) => {
+            const updateGroup = this.groupsByVid.get(group.vid).value;
 
-          updateGroup.name = group.name;
-          updateGroup.vid = group.vid;
-          updateGroup.id = group.id;
-          updateGroup.realNode = true;
-          updateGroup.isEarliest = false;
-        }),
-        map(() => {})
-      )
+            updateGroup.name = group.name;
+            updateGroup.vid = group.vid;
+            updateGroup.id = group.id;
+            updateGroup.realNode = true;
+            updateGroup.isEarliest = false;
+          })
+        )
+    );
   }
 
-  getPrevoiusVersion(): Observable<WholeVersion> {
-    return this.http.get<WholeVersion>('http://localhost:8080/version/previous');
+  getPrevoiusVersion(cb: OperatorFunction<WholeVersion, WholeVersion> = tap()) {
+    this.preloaderService.wrap(
+      this.http.get<WholeVersion>('http://localhost:8080/version/previous')
+        .pipe(cb)
+    )
   }
 
-  moveLeaf(leafId: number, groupVid: number, dto: any): Observable<void> {
+  moveLeaf(leafId: number, groupVid: number, dto: any, cb: OperatorFunction<void, void> = tap()) {
     const group = this.groupsByVid.get(groupVid).value;
-    return this.http.patch(`http://localhost:8080/version/${this.wholeVersionHeader.id}/group/${group.vid}/leaf/${leafId}/position`, dto)
-      .pipe(
-        tap(() => {
+    this.preloaderService.wrap(
+      this.http.patch(`http://localhost:8080/version/${this.wholeVersionHeader.id}/group/${group.vid}/leaf/${leafId}/position`, dto)
+        .pipe(
+          cb,
+          tap(() => {
 
-          const leafIdxFs = group.leafContent.findIndex(l => l.id === leafId);
-          const leafIdxSc = group.leafContent.findIndex(l => l.id === dto.changeAgainstId);
-          const tmpLeaf = group.leafContent[leafIdxFs];
-          group.leafContent[leafIdxFs] = group.leafContent[leafIdxSc];
-          group.leafContent[leafIdxSc] = tmpLeaf;
-        }),
-        map(() => {})
-      )
+            const leafIdxFs = group.leafContent.findIndex(l => l.id === leafId);
+            const leafIdxSc = group.leafContent.findIndex(l => l.id === dto.changeAgainstId);
+            const tmpLeaf = group.leafContent[leafIdxFs];
+            group.leafContent[leafIdxFs] = group.leafContent[leafIdxSc];
+            group.leafContent[leafIdxSc] = tmpLeaf;
+          })
+        )
+    );
   }
 
-  moveGroup(dto: any, groupId: number): Observable<WholeVersion> {
-    return this.http.patch(`http://localhost:8080/version/${this.wholeVersionHeader.id}/group/${groupId}/position`, dto)
-      .pipe(
-        switchMap(() => this.initWholeVersion(this.wholeVersionHeader.id))
-      );
+  moveGroup(dto: any, groupId: number, cb: OperatorFunction<void, void> = tap()) {
+    this.preloaderService.wrap(
+      this.http.patch(`http://localhost:8080/version/${this.wholeVersionHeader.id}/group/${groupId}/position`, dto)
+        .pipe(
+          cb,
+          switchMap(() => this.initWholeVersion(this.wholeVersionHeader.id))
+        )
+    );
   }
 
-  private addGroupToMap(group: TreeNode<GroupContent>): void {
+  private addGroupToMap(group: TreeNode<GroupContent>) {
     this.groupsByVid.set(group.value.vid, group);
     group.children.forEach(g => this.addGroupToMap(g));
   }

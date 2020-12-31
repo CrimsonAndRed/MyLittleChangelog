@@ -17,8 +17,7 @@ import { WholeVersion } from 'app/model/whole-version';
 export class EditGroupButtonComponent {
 
   @Input() node: TreeNode<GroupContent>;
-  @Output() onUpdateGroup = new EventEmitter<Observable<WholeVersion>>();
-
+  @Output() onUpdateGroup = new EventEmitter<GroupToUpdate>();
   constructor(private http: Http,
               private dialog: MatDialog,
               private wholeVersionService: WholeVersionService) {
@@ -48,7 +47,7 @@ export class EditGroupButtonComponent {
       name: group.name,
       parentVid: newParentVid
     };
-    this.onUpdateGroup.emit(this.wholeVersionService.updateGroup(groupToUpdate, groupId));
+    this.onUpdateGroup.emit(groupToUpdate);
   }
 }
 

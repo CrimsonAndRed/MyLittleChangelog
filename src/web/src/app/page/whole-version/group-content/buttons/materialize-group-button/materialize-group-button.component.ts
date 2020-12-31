@@ -14,7 +14,7 @@ import { TreeNode } from 'app/model/tree';
 export class MaterializeGroupButtonComponent {
 
   @Input() node: TreeNode<GroupContent>;
-  @Output() onMaterializeGroup = new EventEmitter<Observable<void>>();
+  @Output() onMaterializeGroup = new EventEmitter<NewGroup>();
 
   constructor(private wholeVersionService: WholeVersionService) {}
 
@@ -24,6 +24,6 @@ export class MaterializeGroupButtonComponent {
       name: this.node.value.name,
       parentVid: this.node.parent?.value?.vid,
     };
-    this.onMaterializeGroup.emit(this.wholeVersionService.materializeGroup(newGroup));
+    this.onMaterializeGroup.emit(newGroup);
   }
 }

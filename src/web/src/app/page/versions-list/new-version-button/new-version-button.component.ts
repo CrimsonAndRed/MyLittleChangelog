@@ -1,9 +1,5 @@
-import { Component, OnInit, EventEmitter, Output } from '@angular/core';
-import { Http } from 'app/service/http.service';
-import { Version } from 'app/model/version';
-import { Observable } from 'rxjs';
+import { Component } from '@angular/core';
 import { VersionsListService } from '../versions-list.service';
-import { PreloaderService } from 'app/preloader/preloader.service';
 
 @Component({
   selector: 'new-version-button',
@@ -12,13 +8,10 @@ import { PreloaderService } from 'app/preloader/preloader.service';
 })
 export class NewVersionButtonComponent {
 
-  constructor(private versionsListService: VersionsListService,
-              private preloaderService: PreloaderService) {
+  constructor(private versionsListService: VersionsListService) {
   }
 
   onNewVersionButtonClick(): void {
-    this.preloaderService.wrap(
-      this.versionsListService.createVersion()
-    );
+    this.versionsListService.createVersion()
   }
 }

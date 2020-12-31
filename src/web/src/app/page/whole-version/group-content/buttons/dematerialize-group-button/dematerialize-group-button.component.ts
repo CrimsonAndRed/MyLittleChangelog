@@ -16,11 +16,11 @@ import { WholeVersion } from 'app/model/whole-version';
 export class DematerializeGroupButtonComponent {
 
   @Input() node: TreeNode<GroupContent>;
-  @Output() onDematerializeGroup = new EventEmitter<Observable<WholeVersion>>();
+  @Output() onDematerializeGroup = new EventEmitter<number>();
 
   constructor(private http: Http, private route: ActivatedRoute, private wholeVersionService: WholeVersionService) {}
 
   onDematerializeClick(): void {
-    this.onDematerializeGroup.emit(this.wholeVersionService.dematerializeGroup(this.node.value.id));
+    this.onDematerializeGroup.emit(this.node.value.id);
   }
 }

@@ -1,8 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { Version } from 'app/model/version';
-import { Http } from 'app/service/http.service';
-import { ActivatedRoute } from '@angular/router';
-import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { PreloaderService } from 'app/preloader/preloader.service';
 import { VersionsListService } from './versions-list.service';
@@ -33,8 +30,6 @@ export class VersionsListComponent implements OnInit {
   }
 
   onVersionDelete(version: Version): void {
-    this.preloaderService.wrap(
-      this.versionsListService.deleteVersion(version)
-    );
+    this.versionsListService.deleteVersion(version)
   }
 }

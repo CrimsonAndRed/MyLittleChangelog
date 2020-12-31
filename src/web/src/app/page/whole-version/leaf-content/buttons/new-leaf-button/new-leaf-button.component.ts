@@ -40,9 +40,6 @@ export class NewLeafButtonComponent {
   }
 
   createNewLeaf(newLeaf: NewLeaf): void {
-    this.onNewLeaf.emit(
-      this.wholeVersionService.createNewLeaf(newLeaf, this.node.value.id)
-    );
+    this.wholeVersionService.createNewLeaf(newLeaf, this.node.value.id);
   }
-
 }

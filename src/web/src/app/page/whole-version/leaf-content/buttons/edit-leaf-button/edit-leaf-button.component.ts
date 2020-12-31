@@ -53,9 +53,7 @@ export class EditLeafButtonComponent {
       value: leaf.value,
       parentVid: newParentGroupVid,
     };
-    this.onUpdateLeaf.emit(
-      this.wholeVersionService.updateLeaf(leafToUpdate, parentId, leafId)
-    );
+    this.wholeVersionService.updateLeaf(leafToUpdate, parentId, leafId)
   }
 }
 

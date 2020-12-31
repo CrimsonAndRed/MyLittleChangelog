@@ -20,38 +20,27 @@ import { PastGroupContent, PastLeafContent, PastRadioEvent } from 'app/model/pre
 })
 export class PreviousVersionSelectButtonComponent {
 
-  @Output() nodeChosen = new EventEmitter<Observable<void>>();
-
   constructor(
-    private http: Http,
-    private route: ActivatedRoute,
     private dialog: MatDialog,
-    private preloaderService: PreloaderService,
     private wholeVersionService: WholeVersionService
   ) { }
 
   onButtonClick(): void {
+    this.wholeVersionService.getPrevoiusVersion(tap((v) => {
+      const dialogRef = this.dialog.open(PreviousVersionModalComponent, {
+        hasBackdrop: true,
+        minWidth: '80%',
+        data: {
+          version: v,
+        }
+      });
 
-    this.preloaderService.wrap(
-      this.wholeVersionService.getPrevoiusVersion()
-      .pipe(
-        tap(v => {
-          const dialogRef = this.dialog.open(PreviousVersionModalComponent, {
-            hasBackdrop: true,
-            minWidth: '80%',
-            data: {
-              version: v,
-            }
-          });
-
-          dialogRef.afterClosed().subscribe(res => {
-            if (res) {
-              this.handleResult(res);
-            }
-          });
-        })
-      )
-    );
+      dialogRef.afterClosed().subscribe(res => {
+        if (res) {
+          this.handleResult(res);
+        }
+      });
+    }));
   }
 
   handleResult(result: PastRadioEvent): void {
@@ -79,16 +68,10 @@ export class PreviousVersionSelectButtonComponent {
   }
 
   private addGroupFromPast(newGroup: NewGroup): void {
-    this.nodeChosen.emit(
-      this.wholeVersionService.createNewGroup(newGroup)
-        .pipe(map(() => {}))
-    );
+    this.wholeVersionService.createNewGroup(newGroup);
   }
 
   private addLeafFromPast(newLeaf: NewLeaf, parentId: number): void {
-    this.nodeChosen.emit(
-      this.wholeVersionService.createNewLeaf(newLeaf, parentId)
-        .pipe(map(() => {}))
-    );
+    this.wholeVersionService.createNewLeaf(newLeaf, parentId);
   }
 }

@@ -13,15 +13,9 @@ export class DifferenceComponent implements OnInit {
 
   difference: Difference = null;
 
-  constructor(private preloaderService: PreloaderService,
-              public differenceService: DifferenceService) { }
+  constructor(public differenceService: DifferenceService) { }
 
   ngOnInit(): void {
-    this.preloaderService.wrap(
-      this.differenceService.initDifference()
-        .pipe(
-          tap((diff) => this.difference = diff)
-        )
-    );
+    this.differenceService.initDifference(tap(diff => this.difference = diff))
   }
 }

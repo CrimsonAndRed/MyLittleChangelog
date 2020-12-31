@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input } from '@angular/core';
-import { GroupContent, Group } from 'app/model/group-content';
+import { GroupContent, Group, GroupToUpdate, NewGroup } from 'app/model/group-content';
 import { LeafContent, NewLeafWithId } from 'app/model/leaf-content';
 import { WholeVersionService } from 'app/page/whole-version/whole-version.service';
 import { Observable } from 'rxjs';
@@ -21,40 +21,28 @@ export class GroupHeaderComponent {
               private preloaderService: PreloaderService,
               private http: Http) { }
 
-  handleNewGroup(obs: Observable<Group>): void {
-    this.preloaderService.wrap(
-      obs
-    );
+  handleNewGroup(group: Group): void {
+    this.wholeVersionService.createNewGroup(group)
   }
 
-  handleNewLeaf(obs: Observable<NewLeafWithId>): void {
-    this.preloaderService.wrap(
-      obs
-    );
+  handleNewLeaf(leaf: NewLeafWithId): void {
+    this.wholeVersionService.createNewLeaf(leaf, this.node.value.id);
   }
 
-  handleDeleteGroup(obs: Observable<void>): void {
-    this.preloaderService.wrap(
-      obs
-    );
+  handleDeleteGroup(): void {
+    this.wholeVersionService.deleteGroup(this.node.value.id);
   }
 
-  handleUpdateGroup(obs: Observable<void>): void {
-    this.preloaderService.wrap(
-      obs
-    );
+  handleUpdateGroup(group: GroupToUpdate): void {
+    this.wholeVersionService.updateGroup(group, this.node.value.id);
   }
 
-  handleMaterializeGroup(obs: Observable<Group>): void {
-    this.preloaderService.wrap(
-      obs
-    );
+  handleMaterializeGroup(group: NewGroup): void {
+    this.wholeVersionService.materializeGroup(group);
   }
 
   handleDematerializeGroup(obs: Observable<void>): void {
-    this.preloaderService.wrap(
-      obs
-    );
+    this.wholeVersionService.dematerializeGroup(this.node.value.id);
   }
 
   isUpButtonShowed(): boolean {
@@ -86,11 +74,7 @@ export class GroupHeaderComponent {
 
   private moveGroup(changeAgainstId: number): void {
     const groupId = this.node.value.id;
-
     const dto = { changeAgainstId };
-
-    this.preloaderService.wrap(
-      this.wholeVersionService.moveGroup(dto, groupId)
-    );
+    this.wholeVersionService.moveGroup(dto, groupId)
   }
 }

@@ -17,7 +17,7 @@ import { WholeVersion } from 'app/model/whole-version';
 })
 export class NewGroupButtonComponent {
 
-  @Output() onNewGroup = new EventEmitter<Observable<WholeVersion>>();
+  @Output() onNewGroup = new EventEmitter<NewGroup>();
 
   @Input() node: TreeNode<GroupContent>;
 
@@ -47,6 +47,6 @@ export class NewGroupButtonComponent {
       parentVid,
       name,
     };
-    this.onNewGroup.emit(this.wholeVersionService.createNewGroup(newGroup));
+    this.onNewGroup.emit(newGroup);
   }
 }

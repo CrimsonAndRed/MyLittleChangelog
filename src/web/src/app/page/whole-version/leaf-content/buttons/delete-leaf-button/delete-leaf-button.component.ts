@@ -16,7 +16,7 @@ export class DeleteLeafButtonComponent {
 
   @Input() node: TreeNode<GroupContent>;
   @Input() leaf: LeafContent;
-  @Output() onDeleteLeaf = new EventEmitter<Observable<void>>();
+  @Output() onDeleteLeaf = new EventEmitter<void>();
 
   constructor(private http: Http, private route: ActivatedRoute, private wholeVersionService: WholeVersionService) {}
 
@@ -24,7 +24,7 @@ export class DeleteLeafButtonComponent {
     const groupVid = this.node.value.vid;
     const leafId = this.leaf.id;
 
-    this.onDeleteLeaf.emit(this.wholeVersionService.deleteLeaf(leafId, groupVid));
+    this.onDeleteLeaf.emit();
   }
 
 }
