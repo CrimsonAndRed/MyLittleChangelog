@@ -108,17 +108,31 @@ export class WholeVersionService {
       )
   }
 
-  swapLeaves(parentVid: number, id1: number, id2: number): void {
-    const group = this.groupsByVid.get(parentVid).value;
-    const leafIdxFs = group.leafContent.findIndex(l => l.id === id1);
-    const leafIdxSc = group.leafContent.findIndex(l => l.id === id2);
-    const tmpLeaf = group.leafContent[leafIdxFs];
-    group.leafContent[leafIdxFs] = group.leafContent[leafIdxSc];
-    group.leafContent[leafIdxSc] = tmpLeaf;
+  getPrevoiusVersion(): Observable<WholeVersion> {
+    return this.http.get<WholeVersion>('http://localhost:8080/version/previous');
   }
 
-  swapGroups(groupVid: number, changeAgainstGroupVid: number): Observable<WholeVersion> {
-    return this.initWholeVersion(this.wholeVersionHeader.id);
+  moveLeaf(leafId: number, groupVid: number, dto: any): Observable<void> {
+    const group = this.groupsByVid.get(groupVid).value;
+    return this.http.patch(`http://localhost:8080/version/${this.wholeVersionHeader.id}/group/${group.vid}/leaf/${leafId}/position`, dto)
+      .pipe(
+        tap(() => {
+
+          const leafIdxFs = group.leafContent.findIndex(l => l.id === leafId);
+          const leafIdxSc = group.leafContent.findIndex(l => l.id === dto.changeAgainstId);
+          const tmpLeaf = group.leafContent[leafIdxFs];
+          group.leafContent[leafIdxFs] = group.leafContent[leafIdxSc];
+          group.leafContent[leafIdxSc] = tmpLeaf;
+        }),
+        map(() => {})
+      )
+  }
+
+  moveGroup(dto: any, groupId: number): Observable<WholeVersion> {
+    return this.http.patch(`http://localhost:8080/version/${this.wholeVersionHeader.id}/group/${groupId}/position`, dto)
+      .pipe(
+        switchMap(() => this.initWholeVersion(this.wholeVersionHeader.id))
+      );
   }
 
   private addGroupToMap(group: TreeNode<GroupContent>): void {

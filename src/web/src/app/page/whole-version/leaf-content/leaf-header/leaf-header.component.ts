@@ -55,17 +55,13 @@ export class LeafHeaderComponent {
   }
 
   private moveLeaf(changeAgainstId: number): void {
-    const versionId = this.wholeVersionService.wholeVersionHeader.id;
-    const parentId = this.node.value.id;
+    const groupVid = this.node.value.vid;
     const leafId = this.leaf.id;
 
     const dto = { changeAgainstId };
 
     this.preloaderService.wrap(
-      this.http.patch(`http://localhost:8080/version/${versionId}/group/${parentId}/leaf/${leafId}/position`, dto)
-        .pipe(
-          tap(() => this.wholeVersionService.swapLeaves(this.node.value.vid, leafId, changeAgainstId))
-        )
+      this.wholeVersionService.moveLeaf(leafId, groupVid, dto)
     );
   }
 }

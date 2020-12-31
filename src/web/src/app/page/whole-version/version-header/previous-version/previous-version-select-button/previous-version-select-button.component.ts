@@ -33,7 +33,7 @@ export class PreviousVersionSelectButtonComponent {
   onButtonClick(): void {
 
     this.preloaderService.wrap(
-      this.http.get<WholeVersion>('http://localhost:8080/version/previous')
+      this.wholeVersionService.getPrevoiusVersion()
       .pipe(
         tap(v => {
           const dialogRef = this.dialog.open(PreviousVersionModalComponent, {

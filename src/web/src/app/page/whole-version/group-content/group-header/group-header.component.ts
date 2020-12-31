@@ -85,16 +85,12 @@ export class GroupHeaderComponent {
   }
 
   private moveGroup(changeAgainstId: number): void {
-    const versionId = this.wholeVersionService.wholeVersionHeader.id;
     const groupId = this.node.value.id;
 
     const dto = { changeAgainstId };
 
     this.preloaderService.wrap(
-      this.http.patch(`http://localhost:8080/version/${versionId}/group/${groupId}/position`, dto)
-        .pipe(
-          switchMap(() => this.wholeVersionService.swapGroups(groupId, changeAgainstId))
-        )
+      this.wholeVersionService.moveGroup(dto, groupId)
     );
   }
 }
