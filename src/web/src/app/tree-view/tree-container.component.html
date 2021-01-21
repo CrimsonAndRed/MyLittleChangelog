@@ -1,0 +1,7 @@
+<div *ngFor="let child of node.children">
+  <ng-container
+    [ngTemplateOutlet]="groupContainerTemplateRef"
+    [ngTemplateOutletContext]="{ $implicit: child }"
+  >
+  </ng-container>
+</div>

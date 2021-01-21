@@ -1,0 +1,22 @@
+<mat-dialog-content>
+  <div>
+    <div>
+      <label>Name</label><input [(ngModel)]="leaf.name"/>
+    </div>
+    <div>
+      <label>Value</label><input [(ngModel)]="leaf.value"/>
+    </div>
+    <div>
+      <label>Value type</label>
+      <mat-form-field appearance="fill">
+        <mat-select [(ngModel)]="leaf.valueType">
+          <mat-option *ngFor="let leafType of leafTypes" [value]="leafType.id"> {{ leafType.name }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button [mat-dialog-close]="null">Cancel</button>
+  <button [mat-dialog-close]="leaf">Save</button>
+</mat-dialog-actions>

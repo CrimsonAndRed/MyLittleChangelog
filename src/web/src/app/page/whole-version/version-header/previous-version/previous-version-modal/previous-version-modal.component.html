@@ -1,0 +1,12 @@
+<mat-dialog-content>
+  <tree-container [node]="previousVersionRoot">
+    <ng-template #groupContainer let-child>
+      <previous-version-node [node]="child" [nodeCheckSubject]="nodeChooseSubject" [expandMap]="_expandMap"></previous-version-node>
+    </ng-template>
+  </tree-container>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button [mat-dialog-close]="null">Cancel</button>
+  <button [mat-dialog-close]="chosenPastElement">Save</button>
+</mat-dialog-actions>

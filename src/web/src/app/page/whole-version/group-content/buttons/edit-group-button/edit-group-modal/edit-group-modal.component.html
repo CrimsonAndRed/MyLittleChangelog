@@ -1,0 +1,15 @@
+<mat-dialog-content>
+  <div>
+    <div>
+      <label>Name</label><input [(ngModel)]="_group.name"/>
+    </div>
+  </div>
+  <group-movement-node  [node]="wholeVersionService.wholeVersionTree"
+                        [original]="_node"
+                        [parentChangeSubject]="parentChangeSubject"
+                        [expandMap]="_expandMap"></group-movement-node>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button [mat-dialog-close]="null">Cancel</button>
+  <button [mat-dialog-close]="returnValue()">Save</button>
+</mat-dialog-actions>

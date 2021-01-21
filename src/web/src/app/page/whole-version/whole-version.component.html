@@ -1,0 +1,9 @@
+<div *ngIf="wholeVersionService.wholeVersionHeader">
+  <p> Version {{ wholeVersionService.wholeVersionHeader.id }}</p>
+  <version-header *ngIf="wholeVersionService.wholeVersionHeader.canChange"></version-header>
+  <tree-container *ngIf="wholeVersionService.wholeVersionTree != null" [node]="wholeVersionService.wholeVersionTree">
+    <ng-template #groupContainer let-child>
+      <whole-version-node [node]="child" [expandMap]="wholeVersionService.expandMap"></whole-version-node>
+    </ng-template>
+  </tree-container>
+</div>

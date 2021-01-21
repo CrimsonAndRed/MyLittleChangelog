@@ -1,0 +1,29 @@
+<div class="group-container">
+  <div class="group">
+    <div class="group-content">
+      <label>{{ node.value.name }}</label>
+    </div>
+    <expand-block
+      *ngIf="isExpandButtonShowed()"
+      [isContentShowed]="isContentShowed()"
+      (localShowChange)="changeLocalContentShow($event)"
+      (globalShowChange)="changeGlobalContentShow($event)">
+
+      <tree-container [node]="node">
+        <ng-template #groupContainer let-child>
+          <difference-node [node]="child" [expandMap]="expandMap"></difference-node>
+        </ng-template>
+      </tree-container>
+      <div class="leaf-content" *ngFor="let leaf of node.value.leafContent">
+        <div>
+          <label>Name:</label>
+          <label>{{ leaf.name }}</label>
+        </div>
+        <div>
+          <label>Diff:</label>
+          <label>{{ leaf.valueDiff }}</label>
+        </div>
+      </div>
+    </expand-block>
+  </div>
+</div>
