@@ -7,7 +7,6 @@ TODO
 - TODO(#4)
 
 - Общие TODO
-- localhost в запросах
 - Много дубликации при использовании expand-block
 - мув группы и order?
 - dto для мувов

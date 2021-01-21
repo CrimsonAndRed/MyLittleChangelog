@@ -5,6 +5,7 @@ import { PreloaderService } from 'app/preloader/preloader.service';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { OperatorFunction } from 'rxjs';
+import { environment } from 'environments/environment';
 
 
 @Injectable({
@@ -17,7 +18,7 @@ export class VersionsListService {
               private preloaderService: PreloaderService) {  }
 
   initVersions(): Observable<Version[]> {
-    return this.http.get<Version[]>('http://localhost:8080/version')
+    return this.http.get<Version[]>(`${environment.backendPath}/version`)
       .pipe(
         tap(res => this.versions = res),
       );
@@ -25,7 +26,7 @@ export class VersionsListService {
 
   createVersion(cb: OperatorFunction<Version, Version> = tap()) {
     this.preloaderService.wrap(
-      this.http.post<Version>('http://localhost:8080/version')
+      this.http.post<Version>(`${environment.backendPath}/version`)
         .pipe(
           cb,
           tap((version) => this.versions.push(version))
@@ -35,7 +36,7 @@ export class VersionsListService {
 
   deleteVersion(version: Version, cb: OperatorFunction<void, void> = tap()) {
     this.preloaderService.wrap(
-      this.http.delete(`http://localhost:8080/version/${version.id}`)
+      this.http.delete(`${environment.backendPath}/version/${version.id}`)
         .pipe(
           cb,
           tap(() => {

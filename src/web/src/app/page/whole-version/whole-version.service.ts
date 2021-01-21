@@ -10,6 +10,7 @@ import { TreeNode } from 'app/model/tree';
 import { formatTree } from 'app/service/tree.service';
 import { HttpParams } from '@angular/common/http';
 import { OperatorFunction } from 'rxjs';
+import { environment } from 'environments/environment';
 @Injectable({
   providedIn: 'root',
 })
@@ -26,7 +27,7 @@ export class WholeVersionService {
   constructor(private http: Http, private preloaderService: PreloaderService) {  }
 
   initWholeVersion(versionId: number): Observable<WholeVersion> {
-    return this.http.get<WholeVersion>(`http://localhost:8080/version/${versionId}`)
+    return this.http.get<WholeVersion>(`${environment.backendPath}/version/${versionId}`)
       .pipe(
         tap(res => this.wholeVersionHeader = res),
         tap(res => this.wholeVersionTree = formatTree(res.groupContent, (g) => g.groupContent)),
@@ -40,7 +41,7 @@ export class WholeVersionService {
 
   createNewLeaf(newLeaf: NewLeaf, groupId: number, cb: OperatorFunction<NewLeafWithId, NewLeafWithId> = tap()) {
     this.preloaderService.wrap(
-      this.http.post<NewLeafWithId>(`http://localhost:8080/version/${this.wholeVersionHeader.id}/group/${groupId}/leaf`, newLeaf)
+      this.http.post<NewLeafWithId>(`${environment.backendPath}/version/${this.wholeVersionHeader.id}/group/${groupId}/leaf`, newLeaf)
         .pipe(
           cb,
           switchMap(() => this.initWholeVersion(this.wholeVersionHeader.id))
@@ -50,7 +51,7 @@ export class WholeVersionService {
 
   createNewGroup(newGroup: NewGroup, cb: OperatorFunction<Group, Group> = tap()) {
     this.preloaderService.wrap(
-      this.http.post<Group>(`http://localhost:8080/version/${this.wholeVersionHeader.id}/group`, newGroup)
+      this.http.post<Group>(`${environment.backendPath}/version/${this.wholeVersionHeader.id}/group`, newGroup)
         .pipe(
           cb,
           switchMap(() => this.initWholeVersion(this.wholeVersionHeader.id))
@@ -60,7 +61,7 @@ export class WholeVersionService {
 
   updateLeaf(leafToUpdate: LeafToUpdate, groupId: number, leafId: number, cb: OperatorFunction<void, void> = tap()) {
     this.preloaderService.wrap(
-      this.http.put<void>(`http://localhost:8080/version/${this.wholeVersionHeader.id}/group/${groupId}/leaf/${leafId}`, leafToUpdate)
+      this.http.put<void>(`${environment.backendPath}/version/${this.wholeVersionHeader.id}/group/${groupId}/leaf/${leafId}`, leafToUpdate)
         .pipe(
           cb,
           switchMap(() => this.initWholeVersion(this.wholeVersionHeader.id))
@@ -71,7 +72,7 @@ export class WholeVersionService {
   deleteLeaf(leafId: number, groupVid: number, cb: OperatorFunction<void, void> = tap()) {
     const groupId = this.groupsByVid.get(groupVid).value.id;
     this.preloaderService.wrap(
-     this.http.delete<void>(`http://localhost:8080/version/${this.wholeVersionHeader.id}/group/${groupId}/leaf/${leafId}`)
+     this.http.delete<void>(`${environment.backendPath}/version/${this.wholeVersionHeader.id}/group/${groupId}/leaf/${leafId}`)
       .pipe(
         cb,
         switchMap(() => this.initWholeVersion(this.wholeVersionHeader.id))
@@ -83,7 +84,7 @@ export class WholeVersionService {
     const params = new HttpParams().set('hierarchy', 'true');
 
     this.preloaderService.wrap(
-      this.http.delete<void>(`http://localhost:8080/version/${this.wholeVersionHeader.id}/group/${groupId}`, params)
+      this.http.delete<void>(`${environment.backendPath}/version/${this.wholeVersionHeader.id}/group/${groupId}`, params)
         .pipe(
           cb,
           switchMap(() => this.initWholeVersion(this.wholeVersionHeader.id))
@@ -95,7 +96,7 @@ export class WholeVersionService {
     const params = new HttpParams().set('hierarchy', 'false');
 
     this.preloaderService.wrap(
-      this.http.delete<void>(`http://localhost:8080/version/${this.wholeVersionHeader.id}/group/${groupId}`, params)
+      this.http.delete<void>(`${environment.backendPath}/version/${this.wholeVersionHeader.id}/group/${groupId}`, params)
         .pipe(
           cb,
           switchMap(() => this.initWholeVersion(this.wholeVersionHeader.id))
@@ -105,7 +106,7 @@ export class WholeVersionService {
 
   updateGroup(group: GroupToUpdate, groupId: number, cb: OperatorFunction<void, void> = tap()) {
     this.preloaderService.wrap(
-      this.http.put<void>(`http://localhost:8080/version/${this.wholeVersionHeader.id}/group/${groupId}`, group)
+      this.http.put<void>(`${environment.backendPath}/version/${this.wholeVersionHeader.id}/group/${groupId}`, group)
         .pipe(
           cb,
           switchMap(() => this.initWholeVersion(this.wholeVersionHeader.id))
@@ -115,7 +116,7 @@ export class WholeVersionService {
 
   materializeGroup(newGroup: NewGroup, cb: OperatorFunction<Group, Group> = tap()) {
     this.preloaderService.wrap(
-      this.http.post<Group>(`http://localhost:8080/version/${this.wholeVersionHeader.id}/group`, newGroup)
+      this.http.post<Group>(`${environment.backendPath}/version/${this.wholeVersionHeader.id}/group`, newGroup)
         .pipe(
           cb,
           tap((group) => {
@@ -133,7 +134,7 @@ export class WholeVersionService {
 
   getPrevoiusVersion(cb: OperatorFunction<WholeVersion, WholeVersion> = tap()) {
     this.preloaderService.wrap(
-      this.http.get<WholeVersion>('http://localhost:8080/version/previous')
+      this.http.get<WholeVersion>('${environment.backendPath}/version/previous')
         .pipe(cb)
     )
   }
@@ -141,7 +142,7 @@ export class WholeVersionService {
   moveLeaf(leafId: number, groupVid: number, dto: any, cb: OperatorFunction<void, void> = tap()) {
     const group = this.groupsByVid.get(groupVid).value;
     this.preloaderService.wrap(
-      this.http.patch(`http://localhost:8080/version/${this.wholeVersionHeader.id}/group/${group.vid}/leaf/${leafId}/position`, dto)
+      this.http.patch(`${environment.backendPath}/version/${this.wholeVersionHeader.id}/group/${group.vid}/leaf/${leafId}/position`, dto)
         .pipe(
           cb,
           tap(() => {
@@ -158,7 +159,7 @@ export class WholeVersionService {
 
   moveGroup(dto: any, groupId: number, cb: OperatorFunction<void, void> = tap()) {
     this.preloaderService.wrap(
-      this.http.patch(`http://localhost:8080/version/${this.wholeVersionHeader.id}/group/${groupId}/position`, dto)
+      this.http.patch(`${environment.backendPath}/version/${this.wholeVersionHeader.id}/group/${groupId}/position`, dto)
         .pipe(
           cb,
           switchMap(() => this.initWholeVersion(this.wholeVersionHeader.id))
