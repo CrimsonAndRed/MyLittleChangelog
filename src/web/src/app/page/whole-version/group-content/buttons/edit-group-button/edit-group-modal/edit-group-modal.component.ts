@@ -27,7 +27,6 @@ export class EditGroupModalComponent {
     this.newParentGroupVid = data.node.parent?.value?.vid;
     this.parentChangeSubject.subscribe(parent => this.newParentGroupVid = parent);
     this._expandMap = new Map(this.wholeVersionService.expandMap);
-    // TODO special case for root?
     this._expandMap.set(undefined, true);
   }
 
