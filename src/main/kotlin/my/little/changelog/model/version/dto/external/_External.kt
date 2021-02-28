@@ -7,3 +7,7 @@ import org.jetbrains.exposed.dao.id.EntityID
 fun ReturnedVersionDto.toModel() = Version(
     id = EntityID(id, Versions)
 )
+
+fun VersionCreationDto.toServiceDto() = my.little.changelog.model.version.dto.service.VersionCreationDto(
+    name = name
+)

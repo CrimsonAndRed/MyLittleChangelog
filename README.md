@@ -37,7 +37,7 @@ npm start
 
 - Other types of leaves?
 - A lot of DTOs used in project. It was interesting to try, but mistakes were made.
-- Names of versions? And sorting of versions.
+- Sorting of versions.
 - Should root contain leaves or groups only?
 - Using RxJs BehaviorSubject in services.
 - Deleting group "totally" (the way this group can not be chosen in "choose from previous").

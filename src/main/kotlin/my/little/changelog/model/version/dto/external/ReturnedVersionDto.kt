@@ -4,5 +4,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class ReturnedVersionDto(
-    val id: Int
+    val id: Int,
+    val name: String
 )

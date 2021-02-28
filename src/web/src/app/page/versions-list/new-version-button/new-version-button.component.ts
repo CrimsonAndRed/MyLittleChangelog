@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { VersionsListService } from '../versions-list.service';
+import { NewVersionModalComponent } from './new-version-modal/new-version-modal.component';
 
 @Component({
   selector: 'new-version-button',
@@ -8,10 +10,21 @@ import { VersionsListService } from '../versions-list.service';
 })
 export class NewVersionButtonComponent {
 
-  constructor(private versionsListService: VersionsListService) {
+  constructor(private versionsListService: VersionsListService,
+              private dialog: MatDialog) {
   }
 
+
   onNewVersionButtonClick(): void {
-    this.versionsListService.createVersion()
+
+    const dialogRef = this.dialog.open(NewVersionModalComponent, {
+      hasBackdrop: true
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.versionsListService.createVersion(result)
+      }
+    });
   }
 }

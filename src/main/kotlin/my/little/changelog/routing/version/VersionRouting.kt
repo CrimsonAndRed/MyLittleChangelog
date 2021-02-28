@@ -1,6 +1,7 @@
 package my.little.changelog.routing.version
 
 import io.ktor.application.call
+import io.ktor.request.receive
 import io.ktor.response.respond
 import io.ktor.routing.Routing
 import io.ktor.routing.delete
@@ -9,6 +10,8 @@ import io.ktor.routing.post
 import io.ktor.routing.route
 import io.ktor.util.KtorExperimentalAPI
 import io.ktor.util.getOrFail
+import my.little.changelog.model.version.dto.external.VersionCreationDto
+import my.little.changelog.model.version.dto.external.toServiceDto
 import my.little.changelog.model.version.dto.service.VersionDeletionDto
 import my.little.changelog.model.version.dto.service.toExternalDto
 import my.little.changelog.routing.ofEmptyResponse
@@ -23,7 +26,8 @@ fun Routing.versionRouting() {
         }
 
         post {
-            call.respond(VersionService.createVersion().toExternalDto())
+            val dto = call.receive<VersionCreationDto>()
+            call.respond(VersionService.createVersion(dto.toServiceDto()).toExternalDto())
         }
 
         route("/previous") {

@@ -10,7 +10,9 @@ import my.little.changelog.model.leaf.dto.service.LeafDeletionDto
 import my.little.changelog.model.version.dto.external.PreviousVersionsDTO
 import my.little.changelog.model.version.dto.external.WholeVersion
 import my.little.changelog.model.version.dto.service.ReturnedVersionDto
+import my.little.changelog.model.version.dto.service.VersionCreationDto
 import my.little.changelog.model.version.dto.service.VersionDeletionDto
+import my.little.changelog.model.version.dto.service.toRepoDto
 import my.little.changelog.model.version.toReturnedDto
 import my.little.changelog.persistence.repo.GroupLatestRepo
 import my.little.changelog.persistence.repo.GroupRepo
@@ -30,8 +32,8 @@ object VersionService {
         }
     }
 
-    fun createVersion(): ReturnedVersionDto = transaction {
-        VersionRepo.create().toReturnedDto()
+    fun createVersion(versionCreationDto: VersionCreationDto): ReturnedVersionDto = transaction {
+        VersionRepo.create(versionCreationDto.toRepoDto()).toReturnedDto()
     }
 
     fun deleteVersion(deletionDto: VersionDeletionDto): Response<Unit> = transaction {
