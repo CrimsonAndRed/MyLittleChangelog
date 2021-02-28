@@ -20,8 +20,6 @@ object DifferenceService {
         val groupsTo = GroupRepo.findGroupsAffectedByLeaves(leavesTo, toVersion)
 
         val leavesFrom = LeafRepo.findPreDifferentialLeaves(fromVersion, leavesTo)
-        // TODO groupsFrom нужны?
-//        val groupsFrom = GroupRepo.findGroupsAffectedByLeaves(leavesFrom, fromVersion)
 
         createDtosRecursive(
             groupsTo.groupBy { it.parentVid },

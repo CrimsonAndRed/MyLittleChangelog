@@ -22,6 +22,7 @@ import my.little.changelog.persistence.repo.VersionRepo
 import my.little.changelog.service.leaf.LeafService
 import my.little.changelog.validator.Response
 import my.little.changelog.validator.VersionValidator
+import org.jetbrains.exposed.dao.with
 import org.jetbrains.exposed.sql.transactions.transaction
 
 object VersionService {
@@ -57,7 +58,7 @@ object VersionService {
         val latestVersion = VersionRepo.findLatest()
 
         val leaves = LeafRepo.findByVersion(version)
-        val groups = GroupRepo.findGroupsAffectedByVersion(version) // TODO(#4) - eager loading- работает, но ломает тест .toList().with(Group::version)
+        val groups = GroupRepo.findGroupsAffectedByVersion(version).with(Group::version).toList()
         val earliestIds = GroupRepo.findEarliestByVids(groups.map { it.vid }).toSet()
 
         createDtosRecursive(
@@ -109,7 +110,6 @@ object VersionService {
         }
     }
 
-    // TODO duplication
     private fun createLatestDtosRecursive(
         groupsMap: Map<Int?, List<GroupLatest>>,
         leavesMap: Map<Int?, List<LeafLatest>>,

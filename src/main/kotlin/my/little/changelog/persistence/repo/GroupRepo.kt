@@ -5,6 +5,7 @@ import my.little.changelog.model.group.Groups
 import my.little.changelog.model.leaf.Leaf
 import my.little.changelog.model.version.Version
 import my.little.changelog.persistence.AbstractCrudRepository
+import org.jetbrains.exposed.sql.SizedIterable
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.statements.jdbc.iterate
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -62,7 +63,7 @@ object GroupRepo : AbstractCrudRepository<Group, Int>(Group) {
             WHERE grouped.version_id=grouped.min
         """
 
-    fun findGroupsAffectedByVersion(version: Version): Iterable<Group> = transaction {
+    fun findGroupsAffectedByVersion(version: Version): SizedIterable<Group> = transaction {
         connection.prepareStatement(FIND_GROUPS_AFFECTED_BY_VERSION_QUERY, arrayOf("id"))
             .apply {
                 set(1, version.id.value)

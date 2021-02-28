@@ -31,8 +31,8 @@ npm start
 ```
 
 # Things to do
-- TODO in code
-- using expand-block requires to duplicate a lot of code.
+- using expand-block requires duplication a lot of code.
+- SizedIterable should be returned from repository level since only it has .with function.
 
 - Other types of leaves?
 - A lot of DTOs used in project. It was interesting to try, but mistakes were made.
