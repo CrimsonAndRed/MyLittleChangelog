@@ -33,7 +33,6 @@ npm start
 # Things to do
 - TODO in code
 - using expand-block requires to duplicate a lot of code.
-- when moving group we have to preserve order. It is a bit complicated.
 
 - Other types of leaves?
 - A lot of DTOs used in project. It was interesting to try, but mistakes were made.

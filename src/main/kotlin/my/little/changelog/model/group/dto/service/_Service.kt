@@ -8,6 +8,7 @@ fun GroupCreationDto.toRepoDto(version: Version) = my.little.changelog.model.gro
     vid = vid,
     parentVid = parentVid,
     version = version,
+    order = order
 )
 
 fun ReturnedGroupDto.toExternalDto() = my.little.changelog.model.group.dto.external.ReturnedGroupDto(

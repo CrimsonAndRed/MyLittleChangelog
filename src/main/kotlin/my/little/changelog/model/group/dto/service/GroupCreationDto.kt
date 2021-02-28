@@ -4,5 +4,6 @@ data class GroupCreationDto(
     val name: String,
     val vid: Int? = null,
     val parentVid: Int? = null,
-    val versionId: Int
+    val versionId: Int,
+    val order: Int? = null
 )

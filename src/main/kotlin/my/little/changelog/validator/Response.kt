@@ -8,6 +8,11 @@ sealed class Response<T> {
     }
 
     fun mapEmpty(): Response<Unit> = map { Unit }
+
+    fun mapValidation(): ValidatorResponse = when (this) {
+        is Valid -> ValidatorResponse(emptyList())
+        is Err -> ValidatorResponse(this.errors)
+    }
 }
 
 class Err<T>(val errors: List<String>) : Response<T>()
