@@ -31,7 +31,6 @@ npm start
 ```
 
 # Things to do
-- using expand-block requires duplication a lot of code.
 - SizedIterable should be returned from repository level since only it has .with function.
 
 - Other types of leaves?

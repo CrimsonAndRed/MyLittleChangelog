@@ -1,0 +1,8 @@
+<div *ngIf="isExpandButtonShowed()">
+  <expand-block
+    [isContentShowed]="isContentShowed()"
+    (localShowChange)="changeLocalContentShow($event)"
+    (globalShowChange)="changeGlobalContentShow($event)">
+    <ng-content></ng-content>
+  </expand-block>
+</div>

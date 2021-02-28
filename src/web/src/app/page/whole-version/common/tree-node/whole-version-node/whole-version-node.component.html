@@ -2,15 +2,11 @@
   <div class="group {{ node.value?.realNode ? 'in-use-group' : 'not-in-use-group' }}">
     <group-header [node]="node" *ngIf="wholeVersionService.wholeVersionHeader.canChange"></group-header>
     <group-body [node]="node"></group-body>
-    <expand-block
-      *ngIf="isExpandButtonShowed()"
-      [isContentShowed]="isContentShowed()"
-      (localShowChange)="changeLocalContentShow($event)"
-      (globalShowChange)="changeGlobalContentShow($event)">
+    <version-expand-block [node]="node">
       <div>
         <tree-container [node]="node">
           <ng-template #groupContainer let-child>
-            <whole-version-node [node]="child" [expandMap]="expandMap"></whole-version-node>
+            <whole-version-node [node]="child"></whole-version-node>
           </ng-template>
         </tree-container>
         <ng-container *ngFor="let leaf of node.value.leafContent">
@@ -20,6 +16,6 @@
           </div>
         </ng-container>
       </div>
-    </expand-block>
+    </version-expand-block>
   </div>
 </div>

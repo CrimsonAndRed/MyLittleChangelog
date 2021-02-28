@@ -30,6 +30,7 @@ import { LeafBodyComponent } from './leaf-content/leaf-body/leaf-body.component'
 import { PreviousVersionNodeComponent } from './common/tree-node/previous-version-node/previous-version-node.component';
 import { PreviousVersionSelectButtonComponent } from './version-header/previous-version/previous-version-select-button/previous-version-select-button.component';
 import { PreviousVersionModalComponent } from './version-header/previous-version/previous-version-modal/previous-version-modal.component';
+import { VersionExpandBlockComponent } from './common/version-expand-block/version-expand-block.component';
 
 @NgModule({
   declarations: [
@@ -57,6 +58,7 @@ import { PreviousVersionModalComponent } from './version-header/previous-version
     MoveUpDownButtonComponent,
     GroupBodyComponent,
     LeafBodyComponent,
+    VersionExpandBlockComponent,
 
     WholeVersionNodeComponent,
     PreviousVersionSelectButtonComponent,

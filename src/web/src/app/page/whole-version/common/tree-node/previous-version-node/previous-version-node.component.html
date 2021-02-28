@@ -6,11 +6,7 @@
       name="previous-version-node-check"
       (click)="onGroupNodeCheckRadioClick()">
     <group-body [node]="node"></group-body>
-    <expand-block
-      *ngIf="isExpandButtonShowed()"
-      [isContentShowed]="isContentShowed()"
-      (localShowChange)="changeLocalContentShow($event)"
-      (globalShowChange)="changeGlobalContentShow($event)">
+    <version-expand-block [node]="node" [expandMap]="expandMap">
       <div>
         <tree-container [node]="node">
           <ng-template #groupContainer let-child>
@@ -28,6 +24,6 @@
           </div>
         </ng-container>
       </div>
-    </expand-block>
+    </version-expand-block>
   </div>
 </div>
