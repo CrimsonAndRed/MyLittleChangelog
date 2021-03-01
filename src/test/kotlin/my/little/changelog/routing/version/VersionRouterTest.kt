@@ -28,9 +28,9 @@ internal class VersionRouterTest : AbstractRouterTest(
 
     @Test
     fun `Test Version Create Success`() {
-        val dto = ReturnedVersionDto(0)
+        val dto = ReturnedVersionDto(0, "test")
 
-        every { VersionService.createVersion() } returns dto
+        every { VersionService.createVersion(any()) } returns dto
 
         testRoute(HttpMethod.Post, baseUrl) {
             assertEquals(HttpStatusCode.OK, response.status())
@@ -40,7 +40,7 @@ internal class VersionRouterTest : AbstractRouterTest(
     @Test
     fun `Test Version Create Exception`() = testExceptions(
         constructRequest(HttpMethod.Post, baseUrl),
-        listOf { VersionService.createVersion() },
+        listOf { VersionService.createVersion(any()) },
         listOf(
             { RuntimeException() } to HttpStatusCode.InternalServerError
         )
@@ -71,7 +71,7 @@ internal class VersionRouterTest : AbstractRouterTest(
 
     @Test
     fun `Test Versions Get Success`() {
-        val dto = ReturnedVersionDto(0)
+        val dto = ReturnedVersionDto(0, "test")
 
         every { VersionService.getVersions() } returns listOf(dto)
 

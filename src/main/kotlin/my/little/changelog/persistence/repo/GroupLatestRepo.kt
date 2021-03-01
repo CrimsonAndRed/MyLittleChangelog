@@ -3,6 +3,7 @@ package my.little.changelog.persistence.repo
 import my.little.changelog.model.group.GroupLatest
 import my.little.changelog.model.group.GroupsLatest
 import my.little.changelog.persistence.AbstractCrudRepository
+import org.jetbrains.exposed.sql.SizedIterable
 import org.jetbrains.exposed.sql.statements.jdbc.iterate
 import org.jetbrains.exposed.sql.transactions.transaction
 
@@ -32,7 +33,7 @@ object GroupLatestRepo : AbstractCrudRepository<GroupLatest, Int>(GroupLatest) {
         GroupLatest.find { GroupsLatest.vid eq vid }.single()
     }
 
-    fun findHierarchyToChildByVid(vid: Int): Iterable<GroupLatest> = transaction {
+    fun findHierarchyToChildByVid(vid: Int): SizedIterable<GroupLatest> = transaction {
         connection.prepareStatement(FIND_GROUPS_AFFECTED_BY_GROUP_QUERY, arrayOf("id"))
             .apply {
                 set(1, vid)
@@ -40,7 +41,7 @@ object GroupLatestRepo : AbstractCrudRepository<GroupLatest, Int>(GroupLatest) {
             .executeQuery().iterate { getInt("id") }.let { GroupLatest.forIds(it) }
     }
 
-    fun findParentIds(vid: Int?): Iterable<Int> = transaction {
+    fun findParentIds(vid: Int?): List<Int> = transaction {
         connection.prepareStatement(FIND_PARENT_GROUPS_QUERY, arrayOf("id"))
             .apply {
                 set(1, vid)

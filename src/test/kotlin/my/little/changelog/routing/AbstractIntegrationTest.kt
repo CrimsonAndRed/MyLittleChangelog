@@ -39,8 +39,10 @@ abstract class AbstractIntegrationTest {
         )
     }
 
-    protected fun Transaction.createVersion(): Version = Version
-        .new { }.also { commit() }
+    protected fun Transaction.createVersion(name: String = "Test version"): Version = Version
+        .new {
+            this.name = name
+        }.also { commit() }
 
     protected fun Transaction.createGroup(version: Version, parentVid: Int? = null, name: String = "Test Group"): Group = Group
         .new {

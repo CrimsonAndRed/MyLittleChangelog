@@ -73,7 +73,7 @@ object GroupRepo : AbstractCrudRepository<Group, Int>(Group) {
             .executeQuery().iterate { getInt("id") }.let { Group.forIds(it) }
     }
 
-    fun findGroupsAffectedByLeaves(leaves: Iterable<Leaf>, version: Version): Iterable<Group> = transaction {
+    fun findGroupsAffectedByLeaves(leaves: Iterable<Leaf>, version: Version): SizedIterable<Group> = transaction {
         val groupVids: List<Int?> = leaves.map {
             it.groupVid
         }.distinct()
@@ -109,7 +109,7 @@ object GroupRepo : AbstractCrudRepository<Group, Int>(Group) {
             }
     }
 
-    fun findEarliestByVids(vids: Iterable<Int>): Iterable<Int> = transaction {
+    fun findEarliestByVids(vids: Iterable<Int>): List<Int> = transaction {
         connection.prepareStatement(FIND_EARLIEST_GROUP_QUERY, arrayOf("id"))
             .apply {
                 set(1, (connection.connection as java.sql.Connection).createArrayOf("INTEGER", vids.toList().toTypedArray()))
@@ -120,15 +120,15 @@ object GroupRepo : AbstractCrudRepository<Group, Int>(Group) {
             }
     }
 
-    fun findByVids(vids: Iterable<Int>, version: Version): Iterable<Group> = transaction {
+    fun findByVids(vids: Iterable<Int>, version: Version): SizedIterable<Group> = transaction {
         Group.find { (Groups.vid inList vids) and (Groups.version eq version.id.value) }
     }
 
-    fun findByVersion(version: Version): Iterable<Group> = transaction {
+    fun findByVersion(version: Version): SizedIterable<Group> = transaction {
         Group.find { Groups.version eq version.id.value }
     }
 
-    fun findParents(vid: Int?): Iterable<Group> = transaction {
+    fun findParents(vid: Int?): SizedIterable<Group> = transaction {
         GroupLatestRepo.findParentIds(vid)
             .let { Group.forIds(it.toList()) }
     }
