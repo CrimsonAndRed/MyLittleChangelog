@@ -31,7 +31,6 @@ npm start
 ```
 
 # Things to do
-- tests?
 - Other types of leaves?
 - A lot of DTOs used in project. It was interesting to try, but mistakes were made.
 - Sorting of versions.

@@ -8,6 +8,7 @@ import io.mockk.mockkObject
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import my.little.changelog.model.version.dto.external.PreviousVersionsDTO
+import my.little.changelog.model.version.dto.external.VersionCreationDto
 import my.little.changelog.model.version.dto.external.WholeVersion
 import my.little.changelog.model.version.dto.service.ReturnedVersionDto
 import my.little.changelog.routing.AbstractRouterTest
@@ -29,22 +30,26 @@ internal class VersionRouterTest : AbstractRouterTest(
     @Test
     fun `Test Version Create Success`() {
         val dto = ReturnedVersionDto(0, "test")
+        val createDto = VersionCreationDto("test")
 
         every { VersionService.createVersion(any()) } returns dto
 
-        testRoute(HttpMethod.Post, baseUrl) {
+        testRoute(HttpMethod.Post, baseUrl, createDto) {
             assertEquals(HttpStatusCode.OK, response.status())
         }
     }
 
     @Test
-    fun `Test Version Create Exception`() = testExceptions(
-        constructRequest(HttpMethod.Post, baseUrl),
-        listOf { VersionService.createVersion(any()) },
-        listOf(
-            { RuntimeException() } to HttpStatusCode.InternalServerError
+    fun `Test Version Create Exception`() {
+        val createDto = VersionCreationDto("test")
+        testExceptions(
+            constructRequest(HttpMethod.Post, baseUrl, createDto),
+            listOf { VersionService.createVersion(any()) },
+            listOf(
+                { RuntimeException() } to HttpStatusCode.InternalServerError
+            )
         )
-    )
+    }
 
     @Test
     fun `Test Version Read Success`() {
