@@ -9,8 +9,10 @@ class Version(id: EntityID<Int>) : IntEntity(id) {
     companion object : IntEntityClass<Version>(Versions)
 
     var name by Versions.name
+    var order by Versions.order
 }
 
 object Versions : IntIdTable() {
     val name = text("name")
+    val order = integer("order").autoIncrement("versions_order_seq")
 }

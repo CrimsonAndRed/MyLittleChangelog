@@ -28,7 +28,9 @@ import org.jetbrains.exposed.sql.transactions.transaction
 object VersionService {
 
     fun getVersions(): List<ReturnedVersionDto> = transaction {
-        VersionRepo.findAll().map {
+        VersionRepo.findAll().sortedBy {
+            it.order
+        }.map {
             it.toReturnedDto()
         }
     }

@@ -33,9 +33,9 @@ npm start
 # Things to do
 - Other types of leaves?
 - A lot of DTOs used in project. It was interesting to try, but mistakes were made.
-- Sorting of versions.
 - Should root contain leaves or groups only?
 - Using RxJs BehaviorSubject in services.
 - Deleting group "totally" (the way this group can not be chosen in "choose from previous").
 - Differences between 400 and 500 return code. Is referencing missing ID a 500 or 400?
 - Authentication and login page?
+- Init database vs current migration scripts?

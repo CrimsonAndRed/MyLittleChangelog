@@ -198,4 +198,22 @@ internal class VersionIntegrationTest : AbstractIntegrationTest() {
             }
         }
     }
+
+    @Test
+    fun `Test Get Versions Preserve Order Success`() {
+        testApplication {
+            transaction {
+                val v1 = createVersion()
+                val v2 = createVersion()
+
+                with(handleRequest(HttpMethod.Get, "version")) {
+                    assertEquals(HttpStatusCode.OK, response.status())
+                    val jsonList: List<ReturnedVersionDto> = Json.decodeFromString(response.content!!)
+                    assertEquals(2, jsonList.size)
+                    assertEquals(v1.id.value, jsonList[0].id)
+                    assertEquals(v2.id.value, jsonList[1].id)
+                }
+            }
+        }
+    }
 }
