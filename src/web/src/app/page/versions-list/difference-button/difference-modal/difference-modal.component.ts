@@ -25,13 +25,13 @@ export class DifferenceModalComponent  {
   }
 
   onToChanged(event: MatSelectChange) {
-    if (this.fromVersion != null && this.fromVersion.id >= event.value.id) {
+    if (this.fromVersion != null && this.fromVersion.order >= event.value.order) {
       this.fromVersion = null;
     }
   }
 
   onFromChanged(event: MatSelectChange) {
-    if (this.toVersion != null && this.toVersion.id <= event.value.id) {
+    if (this.toVersion != null && this.toVersion.order <= event.value.order) {
       this.toVersion = null;
     }
   }

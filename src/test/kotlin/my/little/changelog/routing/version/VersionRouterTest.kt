@@ -29,7 +29,7 @@ internal class VersionRouterTest : AbstractRouterTest(
 
     @Test
     fun `Test Version Create Success`() {
-        val dto = ReturnedVersionDto(0, "test")
+        val dto = ReturnedVersionDto(0, "test", 0)
         val createDto = VersionCreationDto("test")
 
         every { VersionService.createVersion(any()) } returns dto
@@ -76,7 +76,7 @@ internal class VersionRouterTest : AbstractRouterTest(
 
     @Test
     fun `Test Versions Get Success`() {
-        val dto = ReturnedVersionDto(0, "test")
+        val dto = ReturnedVersionDto(0, "test", 0)
 
         every { VersionService.getVersions() } returns listOf(dto)
 
