@@ -69,7 +69,7 @@ object VersionService {
             earliestIds,
             version.id.value,
         ).let {
-            WholeVersion(version.id.value, version.id.value == latestVersion.id.value, it.first)
+            WholeVersion(version.id.value, version.id.value == latestVersion.id.value, it.first, version.name)
         }
     }
 
