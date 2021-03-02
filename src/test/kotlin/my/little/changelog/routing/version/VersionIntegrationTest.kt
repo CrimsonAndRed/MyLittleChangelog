@@ -78,6 +78,7 @@ internal class VersionIntegrationTest : AbstractIntegrationTest() {
                     id = version.id.value,
                     canChange = true,
                     groupContent = listOf(group1Dto),
+                    name = version.name
                 )
             }
 
