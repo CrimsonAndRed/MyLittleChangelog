@@ -6,6 +6,7 @@ import io.ktor.util.KtorExperimentalAPI
 import io.mockk.every
 import io.mockk.mockkObject
 import my.little.changelog.model.diff.dto.service.ReturnedDifferenceDto
+import my.little.changelog.model.version.dto.service.ReturnedVersionDto
 import my.little.changelog.routing.AbstractRouterTest
 import my.little.changelog.routing.diff.differenceRouting
 import my.little.changelog.service.diff.DifferenceService
@@ -27,7 +28,9 @@ internal class DifferenceRouterTest : AbstractRouterTest(
 
     @Test
     fun `Test Difference Read Success`() {
-        val returnedDto = ReturnedDifferenceDto(0, 1, emptyList(), emptyList())
+        val v1 = ReturnedVersionDto(1, "test1", 1)
+        val v2 = ReturnedVersionDto(2, "test2", 2)
+        val returnedDto = ReturnedDifferenceDto(v1, v2, emptyList(), emptyList())
 
         every { DifferenceService.findDifference(allAny()) } returns returnedDto
 
@@ -47,7 +50,9 @@ internal class DifferenceRouterTest : AbstractRouterTest(
 
     @Test
     fun `Test Difference Missing From`() {
-        val returnedDto = ReturnedDifferenceDto(0, 1, emptyList(), emptyList())
+        val v1 = ReturnedVersionDto(1, "test1", 1)
+        val v2 = ReturnedVersionDto(2, "test2", 2)
+        val returnedDto = ReturnedDifferenceDto(v1, v2, emptyList(), emptyList())
 
         every { DifferenceService.findDifference(allAny()) } returns returnedDto
         testRoute(HttpMethod.Get, "difference?to=${difference.to}") {
@@ -57,7 +62,9 @@ internal class DifferenceRouterTest : AbstractRouterTest(
 
     @Test
     fun `Test Difference Missing To`() {
-        val returnedDto = ReturnedDifferenceDto(0, 1, emptyList(), emptyList())
+        val v1 = ReturnedVersionDto(1, "test1", 1)
+        val v2 = ReturnedVersionDto(2, "test2", 2)
+        val returnedDto = ReturnedDifferenceDto(v1, v2, emptyList(), emptyList())
 
         every { DifferenceService.findDifference(allAny()) } returns returnedDto
         testRoute(HttpMethod.Get, "difference?from=${difference.from}") {
@@ -67,7 +74,9 @@ internal class DifferenceRouterTest : AbstractRouterTest(
 
     @Test
     fun `Test Difference Missing Params`() {
-        val returnedDto = ReturnedDifferenceDto(0, 1, emptyList(), emptyList())
+        val v1 = ReturnedVersionDto(1, "test1", 1)
+        val v2 = ReturnedVersionDto(2, "test2", 2)
+        val returnedDto = ReturnedDifferenceDto(v1, v2, emptyList(), emptyList())
 
         every { DifferenceService.findDifference(allAny()) } returns returnedDto
         testRoute(HttpMethod.Get, "difference") {
@@ -77,7 +86,9 @@ internal class DifferenceRouterTest : AbstractRouterTest(
 
     @Test
     fun `Test Difference Wrong From Param Type`() {
-        val returnedDto = ReturnedDifferenceDto(0, 1, emptyList(), emptyList())
+        val v1 = ReturnedVersionDto(1, "test1", 1)
+        val v2 = ReturnedVersionDto(2, "test2", 2)
+        val returnedDto = ReturnedDifferenceDto(v1, v2, emptyList(), emptyList())
 
         every { DifferenceService.findDifference(allAny()) } returns returnedDto
         testRoute(HttpMethod.Get, "difference?from=aa&to=${difference.to}") {
@@ -87,7 +98,9 @@ internal class DifferenceRouterTest : AbstractRouterTest(
 
     @Test
     fun `Test Difference Wrong To Param Type`() {
-        val returnedDto = ReturnedDifferenceDto(0, 1, emptyList(), emptyList())
+        val v1 = ReturnedVersionDto(1, "test1", 1)
+        val v2 = ReturnedVersionDto(2, "test2", 2)
+        val returnedDto = ReturnedDifferenceDto(v1, v2, emptyList(), emptyList())
 
         every { DifferenceService.findDifference(allAny()) } returns returnedDto
         testRoute(HttpMethod.Get, "difference?to=aa&from=${difference.from}") {

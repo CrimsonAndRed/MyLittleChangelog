@@ -25,8 +25,8 @@ internal class DifferenceIntegrationTest : AbstractIntegrationTest() {
                 with(handleRequest(HttpMethod.Get, "difference?from=${version1.id.value}&to=${version2.id.value}")) {
                     assertEquals(HttpStatusCode.OK, response.status())
                     val responseBody = Json.decodeFromString<ReturnedDifferenceDto>(response.content!!)
-                    assertEquals(version1.id.value, responseBody.from)
-                    assertEquals(version2.id.value, responseBody.to)
+                    assertEquals(version1.id.value, responseBody.from.id)
+                    assertEquals(version2.id.value, responseBody.to.id)
                     assertEquals(0, responseBody.groupContent.size)
                     assertEquals(0, responseBody.leafContent.size)
                 }
@@ -46,8 +46,8 @@ internal class DifferenceIntegrationTest : AbstractIntegrationTest() {
                 with(handleRequest(HttpMethod.Get, "difference?from=${version1.id.value}&to=${version2.id.value}")) {
                     assertEquals(HttpStatusCode.OK, response.status())
                     val responseBody = Json.decodeFromString<ReturnedDifferenceDto>(response.content!!)
-                    assertEquals(version1.id.value, responseBody.from)
-                    assertEquals(version2.id.value, responseBody.to)
+                    assertEquals(version1.id.value, responseBody.from.id)
+                    assertEquals(version2.id.value, responseBody.to.id)
                     assertEquals(1, responseBody.groupContent.size)
                     assertEquals(0, responseBody.leafContent.size)
                     val groupDiff = responseBody.groupContent[0]

@@ -1,6 +1,8 @@
+import { Version } from "./version";
+
 export interface Difference {
-  from: number;
-  to: number;
+  from: Version;
+  to: Version;
   groupContent: GroupDifference[];
   leafContent: LeafDifference[];
 }
