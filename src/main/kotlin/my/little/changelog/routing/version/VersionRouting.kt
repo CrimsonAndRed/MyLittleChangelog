@@ -1,6 +1,8 @@
 package my.little.changelog.routing.version
 
 import io.ktor.application.call
+import io.ktor.auth.*
+import io.ktor.auth.jwt.*
 import io.ktor.request.receive
 import io.ktor.response.respond
 import io.ktor.routing.Routing
@@ -20,32 +22,34 @@ import my.little.changelog.validator.Response
 
 @KtorExperimentalAPI
 fun Routing.versionRouting() {
-    route("/version") {
-        get {
-            call.respond(VersionService.getVersions().map { it.toExternalDto() })
-        }
-
-        post {
-            val dto = call.receive<VersionCreationDto>()
-            call.respond(VersionService.createVersion(dto.toServiceDto()).toExternalDto())
-        }
-
-        route("/previous") {
+    authenticate {
+        route("/version") {
             get {
-                call.respond(VersionService.getPreviousVersions())
+                call.respond(VersionService.getVersions().map { it.toExternalDto() })
+            }
+
+            post {
+                val dto = call.receive<VersionCreationDto>()
+                call.respond(VersionService.createVersion(dto.toServiceDto()).toExternalDto())
+            }
+
+            route("/previous") {
+                get {
+                    call.respond(VersionService.getPreviousVersions())
+                }
             }
         }
-    }
 
-    route("/version/{versionId}") {
-        get {
-            val idParam = call.parameters.getOrFail("versionId")
-            call.respond(VersionService.getWholeVersion(idParam.toInt()))
-        }
-        delete {
-            val idParam = call.parameters.getOrFail("versionId")
-            val resp: Response<Unit> = VersionService.deleteVersion(VersionDeletionDto(idParam.toInt()))
-            call.ofEmptyResponse(resp)
+        route("/version/{versionId}") {
+            get {
+                val idParam = call.parameters.getOrFail("versionId")
+                call.respond(VersionService.getWholeVersion(idParam.toInt()))
+            }
+            delete {
+                val idParam = call.parameters.getOrFail("versionId")
+                val resp: Response<Unit> = VersionService.deleteVersion(VersionDeletionDto(idParam.toInt()))
+                call.ofEmptyResponse(resp)
+            }
         }
     }
 }

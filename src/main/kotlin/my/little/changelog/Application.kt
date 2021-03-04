@@ -3,41 +3,32 @@ package my.little.changelog
 import io.ktor.application.Application
 import io.ktor.application.call
 import io.ktor.application.install
-import io.ktor.auth.Authentication
-import io.ktor.features.CORS
-import io.ktor.features.CallLogging
-import io.ktor.features.ContentNegotiation
-import io.ktor.features.DefaultHeaders
-import io.ktor.features.StatusPages
+import io.ktor.auth.*
+import io.ktor.auth.jwt.*
+import io.ktor.config.*
+import io.ktor.features.*
 import io.ktor.http.ContentType
 import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
 import io.ktor.request.path
 import io.ktor.response.respond
 import io.ktor.serialization.json
-import io.ktor.sessions.Sessions
-import io.ktor.sessions.cookie
-import io.ktor.util.error
+import io.ktor.util.*
 import my.little.changelog.configuration.Json
+import my.little.changelog.configuration.auth.JwtConfig
+import my.little.changelog.exception.UnauthException
 import org.slf4j.event.Level
 import kotlin.collections.set
 
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 
+@KtorExperimentalAPI
 fun Application.module(testing: Boolean = false) {
-    install(Authentication)
-
     install(ContentNegotiation) {
         json(
             Json,
             ContentType.Application.Json
         )
-    }
-
-    install(Sessions) {
-        cookie<MySession>("MY_SESSION") {
-            cookie.extensions["SameSite"] = "lax"
-        }
     }
 
     install(CallLogging) {
@@ -50,20 +41,35 @@ fun Application.module(testing: Boolean = false) {
         method(HttpMethod.Put)
         method(HttpMethod.Delete)
         method(HttpMethod.Patch)
+        header("Authorization")
         allowNonSimpleContentTypes = true
         anyHost()
-    }
-
-    install(DefaultHeaders) {
-        header("X-Engine", "Ktor") // will send this header with each response
+        allowCredentials = true
+        allowNonSimpleContentTypes = true
     }
 
     install(StatusPages) {
+        exception<UnauthException> {
+            environment.log.error("unauthorized")
+            call.respond(HttpStatusCode.Unauthorized)
+        }
         exception<Throwable> {
             environment.log.error(it)
             call.respond(HttpStatusCode.InternalServerError)
         }
     }
-}
 
-data class MySession(val count: Int = 0)
+    install(Authentication) {
+        jwt {
+            realm = environment.config.property("jwt.realm").getString()
+            verifier(JwtConfig.verifier)
+            validate { credential ->
+                val userId = credential.payload.getClaim("id").asInt()
+                when {
+                    userId > 0 -> JWTPrincipal(credential.payload)
+                    else -> null
+                }
+            }
+        }
+    }
+}

@@ -1,6 +1,7 @@
 package my.little.changelog.routing.version.group.leaf
 
 import io.ktor.application.call
+import io.ktor.auth.*
 import io.ktor.request.receive
 import io.ktor.routing.Routing
 import io.ktor.routing.delete
@@ -24,45 +25,47 @@ import my.little.changelog.validator.dto.LeafDtoValidator
 
 @KtorExperimentalAPI
 fun Routing.leafRouting() {
-    route("version/{versionId}/group/{groupId}/leaf") {
-        post {
-            val groupId = call.parameters.getOrFail("groupId").toInt()
-            val versionId = call.parameters.getOrFail("versionId").toInt()
-            val dto = call.receive<LeafCreationDto>()
-            LeafDtoValidator.validateDtoNew(dto)
-                .ifValidResponse {
-                    LeafService.createLeaf(dto.toServiceDto(groupId, versionId)).map { it.toExternalDto() }
-                }.let {
-                    call.ofResponse(it)
-                }
+    authenticate {
+        route("version/{versionId}/group/{groupId}/leaf") {
+            post {
+                val groupId = call.parameters.getOrFail("groupId").toInt()
+                val versionId = call.parameters.getOrFail("versionId").toInt()
+                val dto = call.receive<LeafCreationDto>()
+                LeafDtoValidator.validateDtoNew(dto)
+                    .ifValidResponse {
+                        LeafService.createLeaf(dto.toServiceDto(groupId, versionId)).map { it.toExternalDto() }
+                    }.let {
+                        call.ofResponse(it)
+                    }
+            }
         }
-    }
 
-    route("version/{versionId}/group/{groupId}/leaf/{leafId}") {
-        put {
-            val leafId = call.parameters.getOrFail("leafId").toInt()
-            val dto = call.receive<LeafUpdateDto>()
-            LeafDtoValidator.validateDtoUpdate(dto)
-                .ifValidResponse {
-                    LeafService.updateLeaf(dto.toServiceDto(leafId))
-                }.let {
-                    call.ofEmptyResponse(it)
-                }
+        route("version/{versionId}/group/{groupId}/leaf/{leafId}") {
+            put {
+                val leafId = call.parameters.getOrFail("leafId").toInt()
+                val dto = call.receive<LeafUpdateDto>()
+                LeafDtoValidator.validateDtoUpdate(dto)
+                    .ifValidResponse {
+                        LeafService.updateLeaf(dto.toServiceDto(leafId))
+                    }.let {
+                        call.ofEmptyResponse(it)
+                    }
+            }
+            delete {
+                val leafDeletionDto = LeafDeletionDto(call.parameters.getOrFail("leafId").toInt())
+                val resp: Response<Unit> = LeafService.deleteLeaf(leafDeletionDto.toServiceDto())
+                call.ofEmptyResponse(resp)
+            }
         }
-        delete {
-            val leafDeletionDto = LeafDeletionDto(call.parameters.getOrFail("leafId").toInt())
-            val resp: Response<Unit> = LeafService.deleteLeaf(leafDeletionDto.toServiceDto())
-            call.ofEmptyResponse(resp)
-        }
-    }
 
-    route("version/{versionId}/group/{groupId}/leaf/{leafId}/position") {
-        patch {
-            val leafId = call.parameters.getOrFail("leafId").toInt()
-            val changePositionDto = call.receive<ChangeLeafPositionDto>()
+        route("version/{versionId}/group/{groupId}/leaf/{leafId}/position") {
+            patch {
+                val leafId = call.parameters.getOrFail("leafId").toInt()
+                val changePositionDto = call.receive<ChangeLeafPositionDto>()
 
-            val resp = LeafService.changePosition(leafId, changePositionDto.changeAgainstId)
-            call.ofEmptyResponse(resp)
+                val resp = LeafService.changePosition(leafId, changePositionDto.changeAgainstId)
+                call.ofEmptyResponse(resp)
+            }
         }
     }
 }

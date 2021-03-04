@@ -39,3 +39,4 @@ npm start
 - Differences between 400 and 500 return code. Is referencing missing ID a 500 or 400?
 - Authentication and login page?
 - Init database vs current migration scripts?
+- Setup internal logging

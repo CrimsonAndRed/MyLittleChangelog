@@ -11,6 +11,7 @@ import { WholeVersionModule } from './page/whole-version/whole-version.module';
 import { Preloader } from './preloader/preloader.component';
 import { ErrorModule } from 'app/error/error.module';
 import { DifferenceModule } from 'app/page/difference/difference.module';
+import { LoginModule } from './page/login/login.module';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import { DifferenceModule } from 'app/page/difference/difference.module';
     FormsModule,
     HttpClientModule,
     NoopAnimationsModule,
-    ErrorModule
+    ErrorModule,
+    LoginModule
   ],
   bootstrap: [AppComponent]
 })

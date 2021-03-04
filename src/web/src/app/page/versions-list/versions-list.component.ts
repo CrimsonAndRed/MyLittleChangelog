@@ -26,7 +26,7 @@ export class VersionsListComponent implements OnInit {
   }
 
   gotoVersionPage(version: Version): string {
-    return `version/${version.id}`;
+    return `/version/${version.id}`;
   }
 
   onVersionDelete(version: Version): void {

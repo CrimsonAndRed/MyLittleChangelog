@@ -1,6 +1,7 @@
 package my.little.changelog.routing.diff
 
 import io.ktor.application.call
+import io.ktor.auth.*
 import io.ktor.response.respond
 import io.ktor.routing.Routing
 import io.ktor.routing.get
@@ -14,14 +15,15 @@ import my.little.changelog.service.diff.DifferenceService
 
 @KtorExperimentalAPI
 fun Routing.differenceRouting() {
+    authenticate {
+        route("/difference") {
+            get {
+                val from = call.request.queryParameters.getOrFail("from").toInt()
+                val to = call.request.queryParameters.getOrFail("to").toInt()
 
-    route("/difference") {
-        get {
-            val from = call.request.queryParameters.getOrFail("from").toInt()
-            val to = call.request.queryParameters.getOrFail("to").toInt()
-
-            val dto = DifferenceDto(from, to)
-            call.respond(DifferenceService.findDifference(dto.toServiceDto()).toExternalDto())
+                val dto = DifferenceDto(from, to)
+                call.respond(DifferenceService.findDifference(dto.toServiceDto()).toExternalDto())
+            }
         }
     }
 }

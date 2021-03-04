@@ -3,10 +3,15 @@ import { RouterModule, Routes } from '@angular/router';
 import { VersionsListComponent } from './page/versions-list/versions-list.component';
 import { WholeVersionComponent } from './page/whole-version/whole-version.component';
 import { DifferenceComponent } from './page/difference/difference.component';
+import { LoginComponent } from './page/login/login.component';
 
 const routes: Routes = [
   {
     path: '',
+    component: LoginComponent,
+  },
+  {
+    path: 'versions',
     component: VersionsListComponent,
   },
   {
