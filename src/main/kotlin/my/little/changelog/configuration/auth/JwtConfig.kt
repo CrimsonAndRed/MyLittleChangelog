@@ -7,18 +7,18 @@ import java.util.*
 
 object JwtConfig {
 
-    private const val secret = "secret"
-    private const val issuer = "https://jwt-provider-domain/"
-    private const val audience = "jwt-audience"
+    var secret = ""
+    var issuer = ""
+    var audience = ""
+    var subject = ""
 
-    private const val validityInMs = 36_000_00 * 10 // 10 hours
-    private val algorithm = Algorithm.HMAC256(secret)
+    private const val validityInMs = 3_600_000 * 10
 
-    val verifier: JWTVerifier = JWT
-        .require(algorithm)
+    fun generateVerifier(): JWTVerifier = JWT
+        .require(generateAlgorithm())
         .withIssuer(issuer)
         .withAudience(audience)
-        .withSubject("Authentication")
+        .withSubject(subject)
         .build()
 
     /**
@@ -30,10 +30,8 @@ object JwtConfig {
         .withClaim("id", user.id.value)
         .withAudience(audience)
         .withExpiresAt(getExpiration())
-        .sign(algorithm)
+        .sign(generateAlgorithm())
 
-    /**
-     * Calculate the expiration Date based on current time + the given validity
-     */
     private fun getExpiration() = Date(System.currentTimeMillis() + validityInMs)
+    private fun generateAlgorithm(): Algorithm = Algorithm.HMAC256(secret)
 }

@@ -24,6 +24,12 @@ fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 
 @KtorExperimentalAPI
 fun Application.module(testing: Boolean = false) {
+
+    JwtConfig.audience = environment.config.property("jwt.audience").getString()
+    JwtConfig.issuer = environment.config.property("jwt.issuer").getString()
+    JwtConfig.subject = environment.config.property("jwt.subject").getString()
+    JwtConfig.secret = environment.config.property("jwt.secret").getString()
+
     install(ContentNegotiation) {
         json(
             Json,
@@ -62,7 +68,7 @@ fun Application.module(testing: Boolean = false) {
     install(Authentication) {
         jwt {
             realm = environment.config.property("jwt.realm").getString()
-            verifier(JwtConfig.verifier)
+            verifier(JwtConfig.generateVerifier())
             validate { credential ->
                 val userId = credential.payload.getClaim("id").asInt()
                 when {
