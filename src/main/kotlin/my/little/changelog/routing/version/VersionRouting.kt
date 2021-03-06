@@ -12,6 +12,7 @@ import io.ktor.routing.post
 import io.ktor.routing.route
 import io.ktor.util.KtorExperimentalAPI
 import io.ktor.util.getOrFail
+import my.little.changelog.configuration.auth.CustomPrincipal
 import my.little.changelog.model.version.dto.external.VersionCreationDto
 import my.little.changelog.model.version.dto.external.toServiceDto
 import my.little.changelog.model.version.dto.service.VersionDeletionDto
@@ -25,29 +26,34 @@ fun Routing.versionRouting() {
     authenticate {
         route("/version") {
             get {
-                call.respond(VersionService.getVersions().map { it.toExternalDto() })
+                val principal = call.principal<CustomPrincipal>()!!
+                call.respond(VersionService.getVersions(principal).map { it.toExternalDto() })
             }
 
             post {
+                val principal = call.principal<CustomPrincipal>()!!
                 val dto = call.receive<VersionCreationDto>()
-                call.respond(VersionService.createVersion(dto.toServiceDto()).toExternalDto())
+                call.respond(VersionService.createVersion(dto.toServiceDto(), principal).toExternalDto())
             }
 
             route("/previous") {
                 get {
-                    call.respond(VersionService.getPreviousVersions())
+                    val principal = call.principal<CustomPrincipal>()!!
+                    call.respond(VersionService.getPreviousVersions(principal))
                 }
             }
         }
 
         route("/version/{versionId}") {
             get {
+                val principal = call.principal<CustomPrincipal>()!!
                 val idParam = call.parameters.getOrFail("versionId")
-                call.respond(VersionService.getWholeVersion(idParam.toInt()))
+                call.respond(VersionService.getWholeVersion(idParam.toInt(), principal))
             }
             delete {
+                val principal = call.principal<CustomPrincipal>()!!
                 val idParam = call.parameters.getOrFail("versionId")
-                val resp: Response<Unit> = VersionService.deleteVersion(VersionDeletionDto(idParam.toInt()))
+                val resp: Response<Unit> = VersionService.deleteVersion(VersionDeletionDto(idParam.toInt()), principal)
                 call.ofEmptyResponse(resp)
             }
         }

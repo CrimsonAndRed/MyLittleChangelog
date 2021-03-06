@@ -1,5 +1,6 @@
 package my.little.changelog.service.diff
 
+import my.little.changelog.configuration.auth.CustomPrincipal
 import my.little.changelog.model.diff.dto.service.DifferenceDto
 import my.little.changelog.model.diff.dto.service.ReturnedDifferenceDto
 import my.little.changelog.model.group.Group
@@ -7,16 +8,22 @@ import my.little.changelog.model.group.dto.service.GroupDifferenceDto
 import my.little.changelog.model.leaf.Leaf
 import my.little.changelog.model.leaf.dto.service.LeafDifferenceDto
 import my.little.changelog.model.version.toReturnedDto
+import my.little.changelog.persistence.repo.AuthRepo
 import my.little.changelog.persistence.repo.GroupRepo
 import my.little.changelog.persistence.repo.LeafRepo
 import my.little.changelog.persistence.repo.VersionRepo
+import my.little.changelog.validator.AuthValidator
 import org.jetbrains.exposed.sql.transactions.transaction
 
 object DifferenceService {
 
-    fun findDifference(dto: DifferenceDto): ReturnedDifferenceDto = transaction {
+    fun findDifference(dto: DifferenceDto, cp: CustomPrincipal): ReturnedDifferenceDto = transaction {
+        val user = AuthRepo.findById(cp.userId)
         val toVersion = VersionRepo.findById(dto.toVersion)
         val fromVersion = VersionRepo.findById(dto.fromVersion)
+
+        AuthValidator.validateAuthority(user, fromVersion.user)
+        AuthValidator.validateAuthority(user, toVersion.user)
         val leavesTo = LeafRepo.findDifferentialLeaves(fromVersion, toVersion)
         val groupsTo = GroupRepo.findGroupsAffectedByLeaves(leavesTo, toVersion)
 

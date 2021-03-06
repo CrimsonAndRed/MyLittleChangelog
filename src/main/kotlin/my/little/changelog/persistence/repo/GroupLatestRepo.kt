@@ -1,5 +1,6 @@
 package my.little.changelog.persistence.repo
 
+import my.little.changelog.model.auth.User
 import my.little.changelog.model.group.GroupLatest
 import my.little.changelog.model.group.GroupsLatest
 import my.little.changelog.persistence.AbstractCrudRepository
@@ -29,6 +30,13 @@ object GroupLatestRepo : AbstractCrudRepository<GroupLatest, Int>(GroupLatest) {
             ) SELECT id FROM parents
         """
 
+    private const val FIND_GROUPS_BY_USER_QUERY =
+        """
+           SELECT groups_latest.id FROM groups_latest
+           JOIN versions ON groups_latest.version_id = versions.id
+           WHERE versions.user_id = ?
+        """
+
     fun findByVid(vid: Int): GroupLatest = transaction {
         GroupLatest.find { GroupsLatest.vid eq vid }.single()
     }
@@ -48,5 +56,14 @@ object GroupLatestRepo : AbstractCrudRepository<GroupLatest, Int>(GroupLatest) {
             }
             .executeQuery()
             .iterate { getInt("id") }
+    }
+
+    fun findAllByUser(user: User): SizedIterable<GroupLatest> = transaction {
+        connection.prepareStatement(FIND_GROUPS_BY_USER_QUERY, arrayOf("id"))
+            .apply {
+                set(1, user.id.value)
+            }
+            .executeQuery()
+            .iterate { getInt("id") }.let { GroupLatest.forIds(it) }
     }
 }

@@ -15,7 +15,9 @@ import io.ktor.response.respond
 import io.ktor.serialization.json
 import io.ktor.util.*
 import my.little.changelog.configuration.Json
+import my.little.changelog.configuration.auth.CustomPrincipal
 import my.little.changelog.configuration.auth.JwtConfig
+import my.little.changelog.exception.ForbiddenException
 import my.little.changelog.exception.UnauthException
 import org.slf4j.event.Level
 import kotlin.collections.set
@@ -59,6 +61,10 @@ fun Application.module(testing: Boolean = false) {
             environment.log.error("unauthorized")
             call.respond(HttpStatusCode.Unauthorized)
         }
+        exception<ForbiddenException> {
+            environment.log.error("forbidden")
+            call.respond(HttpStatusCode.Forbidden)
+        }
         exception<Throwable> {
             environment.log.error(it)
             call.respond(HttpStatusCode.InternalServerError)
@@ -72,7 +78,7 @@ fun Application.module(testing: Boolean = false) {
             validate { credential ->
                 val userId = credential.payload.getClaim("id").asInt()
                 when {
-                    userId > 0 -> JWTPrincipal(credential.payload)
+                    userId > 0 -> CustomPrincipal(credential.payload, userId)
                     else -> null
                 }
             }

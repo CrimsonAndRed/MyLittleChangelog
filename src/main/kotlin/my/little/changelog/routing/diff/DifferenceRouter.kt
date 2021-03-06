@@ -8,6 +8,7 @@ import io.ktor.routing.get
 import io.ktor.routing.route
 import io.ktor.util.KtorExperimentalAPI
 import io.ktor.util.getOrFail
+import my.little.changelog.configuration.auth.CustomPrincipal
 import my.little.changelog.model.diff.dto.external.DifferenceDto
 import my.little.changelog.model.diff.dto.external.toServiceDto
 import my.little.changelog.model.diff.dto.service.toExternalDto
@@ -18,11 +19,12 @@ fun Routing.differenceRouting() {
     authenticate {
         route("/difference") {
             get {
+                val principal = call.principal<CustomPrincipal>()!!
                 val from = call.request.queryParameters.getOrFail("from").toInt()
                 val to = call.request.queryParameters.getOrFail("to").toInt()
 
                 val dto = DifferenceDto(from, to)
-                call.respond(DifferenceService.findDifference(dto.toServiceDto()).toExternalDto())
+                call.respond(DifferenceService.findDifference(dto.toServiceDto(), principal).toExternalDto())
             }
         }
     }

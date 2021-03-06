@@ -1,26 +1,25 @@
 package my.little.changelog.service.group
 
+import my.little.changelog.configuration.auth.CustomPrincipal
 import my.little.changelog.model.group.dto.external.GroupDeletionDto
 import my.little.changelog.model.group.dto.service.GroupCreationDto
 import my.little.changelog.model.group.dto.service.GroupUpdateDto
 import my.little.changelog.model.group.dto.service.ReturnedGroupDto
 import my.little.changelog.model.group.dto.service.toRepoDto
 import my.little.changelog.model.group.toReturnedDto
-import my.little.changelog.persistence.repo.GroupLatestRepo
-import my.little.changelog.persistence.repo.GroupRepo
-import my.little.changelog.persistence.repo.LeafRepo
-import my.little.changelog.persistence.repo.VersionRepo
-import my.little.changelog.validator.GroupValidator
-import my.little.changelog.validator.Response
-import my.little.changelog.validator.ValidatorResponse
-import my.little.changelog.validator.VersionValidator
+import my.little.changelog.persistence.repo.*
+import my.little.changelog.validator.*
 import org.jetbrains.exposed.sql.transactions.transaction
 
 object GroupService {
 
-    fun createGroup(group: GroupCreationDto): Response<ReturnedGroupDto> = transaction {
+    fun createGroup(group: GroupCreationDto, cp: CustomPrincipal): Response<ReturnedGroupDto> = transaction {
+        val user = AuthRepo.findById(cp.userId)
         val version = VersionRepo.findById(group.versionId)
-        VersionValidator.validateLatest(version)
+        AuthValidator.validateAuthority(user, version.user)
+            .chain {
+                VersionValidator.validateLatest(version, user)
+            }
             .chain {
                 GroupValidator.validateNew(group)
             }
@@ -29,9 +28,13 @@ object GroupService {
             }
     }
 
-    fun updateGroup(groupUpdate: GroupUpdateDto): Response<Unit> = transaction {
+    fun updateGroup(groupUpdate: GroupUpdateDto, cp: CustomPrincipal): Response<Unit> = transaction {
+        val user = AuthRepo.findById(cp.userId)
         val group = GroupRepo.findById(groupUpdate.id)
-        VersionValidator.validateLatest(group.version)
+        AuthValidator.validateAuthority(user, group.version.user)
+            .chain {
+                VersionValidator.validateLatest(group.version, user)
+            }
             .chain {
                 GroupValidator.validateUpdate(groupUpdate, group)
             }
@@ -46,10 +49,14 @@ object GroupService {
             }
     }
 
-    fun deleteGroup(groupDelete: GroupDeletionDto, dropHierarchy: Boolean): Response<Unit> = transaction {
+    fun deleteGroup(groupDelete: GroupDeletionDto, cp: CustomPrincipal, dropHierarchy: Boolean): Response<Unit> = transaction {
+        val user = AuthRepo.findById(cp.userId)
         val group = GroupRepo.findById(groupDelete.id)
         val versionId = group.version.id.value
-        VersionValidator.validateLatest(group.version)
+        AuthValidator.validateAuthority(user, group.version.user)
+            .chain {
+                VersionValidator.validateLatest(group.version, user)
+            }
             .chain {
                 if (!dropHierarchy) {
                     GroupRepo.findSublatestGroup(group.vid, versionId)
@@ -79,12 +86,19 @@ object GroupService {
             }
     }
 
-    fun changePosition(groupId: Int, changeAgainstId: Int): Response<Unit> = transaction {
+    fun changePosition(groupId: Int, changeAgainstId: Int, cp: CustomPrincipal): Response<Unit> = transaction {
+        val user = AuthRepo.findById(cp.userId)
         val group = GroupRepo.findById(groupId)
 
         val groupChangeAgainst = GroupRepo.findById(changeAgainstId)
-        val latestVersion = VersionRepo.findLatest()
-        val validator = VersionValidator.validateLatest(group.version)
+        val latestVersion = VersionRepo.findLatestByUser(user)
+        val validator = AuthValidator.validateAuthority(user, group.version.user)
+            .chain {
+                AuthValidator.validateAuthority(user, groupChangeAgainst.version.user)
+            }
+            .chain {
+                VersionValidator.validateLatest(group.version, user)
+            }
             .chain {
                 ValidatorResponse
                     .ofSimple("Could not modify groups that is not in the same parent group. IDs [${group.id.value}] [${groupChangeAgainst.id.value}]") {
@@ -101,7 +115,8 @@ object GroupService {
                         groupChangeAgainst.parentVid,
                         latestVersion.id.value,
                         group.order
-                    )
+                    ),
+                    cp
                 ).mapValidation()
                     .chain {
                         group.apply { order = groupChangeAgainst.order }

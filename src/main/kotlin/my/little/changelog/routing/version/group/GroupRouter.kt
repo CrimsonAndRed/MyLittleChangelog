@@ -11,6 +11,7 @@ import io.ktor.routing.put
 import io.ktor.routing.route
 import io.ktor.util.KtorExperimentalAPI
 import io.ktor.util.getOrFail
+import my.little.changelog.configuration.auth.CustomPrincipal
 import my.little.changelog.model.group.dto.external.ChangeGroupPositionDto
 import my.little.changelog.model.group.dto.external.GroupCreationDto
 import my.little.changelog.model.group.dto.external.GroupDeletionDto
@@ -27,11 +28,12 @@ fun Routing.groupRouting() {
     authenticate {
         route("/version/{versionId}/group") {
             post {
+                val principal = call.principal<CustomPrincipal>()!!
                 val versionId = call.parameters.getOrFail("versionId").toInt()
                 val dto = call.receive<GroupCreationDto>()
                 GroupDtoValidator.validateDtoNew(dto)
                     .ifValidResponse {
-                        GroupService.createGroup(dto.toServiceDto(versionId)).map { it.toExternalDto() }
+                        GroupService.createGroup(dto.toServiceDto(versionId), principal).map { it.toExternalDto() }
                     }.let {
                         call.ofResponse(it)
                     }
@@ -40,30 +42,33 @@ fun Routing.groupRouting() {
 
         route("/version/{versionId}/group/{groupId}") {
             put {
+                val principal = call.principal<CustomPrincipal>()!!
                 val groupId = call.parameters.getOrFail("groupId").toInt()
                 val dto = call.receive<GroupUpdateDto>()
                 GroupDtoValidator.validateDtoUpdate(dto)
                     .ifValidResponse {
-                        GroupService.updateGroup(dto.toServiceDto(groupId))
+                        GroupService.updateGroup(dto.toServiceDto(groupId), principal)
                     }.let {
                         call.ofEmptyResponse(it)
                     }
             }
 
             delete {
+                val principal = call.principal<CustomPrincipal>()!!
                 val groupId = call.parameters.getOrFail("groupId").toInt()
                 val dropHierarchy = call.request.queryParameters["hierarchy"]?.toBoolean() ?: true
-                val resp = GroupService.deleteGroup(GroupDeletionDto(groupId), dropHierarchy)
+                val resp = GroupService.deleteGroup(GroupDeletionDto(groupId), principal, dropHierarchy)
                 call.ofEmptyResponse(resp)
             }
         }
 
         route("version/{versionId}/group/{groupId}/position") {
             patch {
+                val principal = call.principal<CustomPrincipal>()!!
                 val leafId = call.parameters.getOrFail("groupId").toInt()
                 val changePositionDto = call.receive<ChangeGroupPositionDto>()
 
-                val resp = GroupService.changePosition(leafId, changePositionDto.changeAgainstId)
+                val resp = GroupService.changePosition(leafId, changePositionDto.changeAgainstId, principal)
                 call.ofEmptyResponse(resp)
             }
         }
