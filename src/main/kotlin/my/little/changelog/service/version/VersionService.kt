@@ -26,8 +26,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 object VersionService {
 
     fun getVersions(cp: CustomPrincipal): List<ReturnedVersionDto> = transaction {
-        val user = AuthRepo.findById(cp.userId)
-        VersionRepo.findAllByUser(user).sortedBy {
+        VersionRepo.findAllByUser(cp.user).sortedBy {
             it.order
         }.map {
             it.toReturnedDto()
@@ -35,17 +34,15 @@ object VersionService {
     }
 
     fun createVersion(versionCreationDto: VersionCreationDto, cp: CustomPrincipal): ReturnedVersionDto = transaction {
-        val user = AuthRepo.findById(cp.userId)
-        VersionRepo.create(versionCreationDto.toRepoDto(user)).toReturnedDto()
+        VersionRepo.create(versionCreationDto.toRepoDto(cp.user)).toReturnedDto()
     }
 
     fun deleteVersion(deletionDto: VersionDeletionDto, cp: CustomPrincipal): Response<Unit> = transaction {
-        val user = AuthRepo.findById(cp.userId)
         val version = VersionRepo.findById(deletionDto.id)
         VersionValidator
-            .validateLatest(version, user)
+            .validateLatest(version, cp.user)
             .chain {
-                AuthValidator.validateAuthority(version.user, user)
+                AuthValidator.validateAuthority(version.user, cp.user)
             }
             .ifValid {
                 LeafRepo.findByVersion(version).forEach {
@@ -60,11 +57,10 @@ object VersionService {
     }
 
     fun getWholeVersion(id: Int, cp: CustomPrincipal): WholeVersion = transaction {
-        val user = AuthRepo.findById(cp.userId)
         val version = VersionRepo.findById(id)
-        val latestVersion = VersionRepo.findLatestByUser(user)
+        val latestVersion = VersionRepo.findLatestByUser(cp.user)
 
-        AuthValidator.validateAuthority(version.user, user)
+        AuthValidator.validateAuthority(version.user, cp.user)
 
         val leaves = LeafRepo.findByVersion(version)
         val groups = GroupRepo.findGroupsAffectedByVersion(version).with(Group::version).toList()
@@ -104,10 +100,9 @@ object VersionService {
     }
 
     fun getPreviousVersions(cp: CustomPrincipal): PreviousVersionsDTO = transaction {
-        val user = AuthRepo.findById(cp.userId)
-        val version = VersionRepo.findLatestByUser(user)
-        val groups = GroupLatestRepo.findAllByUser(user)
-        val leaves = LeafLatestRepo.findAllByUser(user)
+        val version = VersionRepo.findLatestByUser(cp.user)
+        val groups = GroupLatestRepo.findAllByUser(cp.user)
+        val leaves = LeafLatestRepo.findAllByUser(cp.user)
         val earliestIds = GroupRepo.findEarliestByVids(groups.map { it.vid }).toSet()
 
         createLatestDtosRecursive(

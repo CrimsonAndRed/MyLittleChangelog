@@ -41,3 +41,4 @@ npm start
 - Repositories are definitely not optimal (going to DB several times per method)
 - Salt hash
 - principal to dto?
+- unique user login

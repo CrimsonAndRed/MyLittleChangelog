@@ -16,16 +16,16 @@ object JwtConfig {
 
     fun generateVerifier(): JWTVerifier = JWT
         .require(generateAlgorithm())
+        .withSubject(subject)
         .withIssuer(issuer)
         .withAudience(audience)
-        .withSubject(subject)
         .build()
 
     /**
      * Produce a token for this combination of User and Account
      */
     fun makeToken(user: User): String = JWT.create()
-        .withSubject("Authentication")
+        .withSubject(subject)
         .withIssuer(issuer)
         .withClaim("id", user.id.value)
         .withAudience(audience)

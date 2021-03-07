@@ -4,11 +4,16 @@ import io.ktor.config.MapApplicationConfig
 import io.ktor.server.testing.TestApplicationEngine
 import io.ktor.server.testing.withTestApplication
 import io.ktor.util.KtorExperimentalAPI
+import my.little.changelog.configuration.auth.JwtConfig
+import my.little.changelog.model.auth.User
 import my.little.changelog.model.group.Group
 import my.little.changelog.model.leaf.Leaf
 import my.little.changelog.model.leaf.LeafType
 import my.little.changelog.model.version.Version
+import my.little.changelog.service.auth.AuthService
 import org.jetbrains.exposed.sql.Transaction
+import org.jetbrains.exposed.sql.statements.api.ExposedBlob
+import org.jetbrains.exposed.sql.transactions.transaction
 import org.testcontainers.containers.PostgreSQLContainer
 import org.testcontainers.junit.jupiter.Testcontainers
 import my.little.changelog.module as applicationModule
@@ -30,6 +35,12 @@ abstract class AbstractIntegrationTest {
                     put("database.url", postgres.jdbcUrl)
                     put("database.username", postgres.username)
                     put("database.password", postgres.password)
+
+                    put("jwt.audience", "test")
+                    put("jwt.issuer", "test")
+                    put("jwt.subject", "test")
+                    put("jwt.secret", "test")
+                    put("jwt.realm", "test")
                 }
                 applicationModule(testing = true)
                 routingModule()
@@ -39,9 +50,25 @@ abstract class AbstractIntegrationTest {
         )
     }
 
+    protected fun authorizedTest(test: TestApplicationEngine.(User, String, Transaction) -> Unit) {
+        testApplication {
+            transaction {
+                val user = this.createUser()
+                val token = JwtConfig.makeToken(user)
+                this@testApplication.test(user, token, this)
+            }
+        }
+    }
+
     protected fun Transaction.createVersion(name: String = "Test version"): Version = Version
         .new {
             this.name = name
+        }.also { commit() }
+
+    protected fun Transaction.createVersion(user: User, name: String = "Test version"): Version = Version
+        .new {
+            this.name = name
+            this.user = user
         }.also { commit() }
 
     protected fun Transaction.createGroup(version: Version, parentVid: Int? = null, name: String = "Test Group"): Group = Group
@@ -58,5 +85,11 @@ abstract class AbstractIntegrationTest {
             this.name = name
             this.valueType = valueType
             this.value = value
+        }.also { commit() }
+
+    protected fun Transaction.createUser(login: String = "Test user", password: String = "password"): User = User
+        .new {
+            this.login = login
+            this.password = ExposedBlob(AuthService.generateHash(password))
         }.also { commit() }
 }

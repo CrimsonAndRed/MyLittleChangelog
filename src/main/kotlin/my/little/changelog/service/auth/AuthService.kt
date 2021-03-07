@@ -27,15 +27,20 @@ object AuthService {
     }
 
     fun newUser(dto: UserCreateDto) {
-        val digest = MessageDigest.getInstance("SHA-256")
+
         val user = UserRepo.create(
             dto.toRepoDto {
                 ExposedBlob(
-                    digest.digest(
-                        dto.password.toByteArray(StandardCharsets.UTF_8)
-                    )
+                    generateHash(dto.password)
                 )
             }
+        )
+    }
+
+    fun generateHash(password: String): ByteArray {
+        val digest = MessageDigest.getInstance("SHA-256")
+        return digest.digest(
+            password.toByteArray(StandardCharsets.UTF_8)
         )
     }
 }

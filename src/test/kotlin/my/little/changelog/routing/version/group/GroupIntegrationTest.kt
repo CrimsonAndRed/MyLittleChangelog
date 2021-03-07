@@ -30,326 +30,330 @@ internal class GroupIntegrationTest : AbstractIntegrationTest() {
 
     @Test
     fun `Test Root Group Creation Success`() {
-        testApplication {
-            transaction {
-                val version = createVersion()
-                val dto = GroupCreationDto("Test Name 1")
+        authorizedTest { user, token, transaction ->
+            val version = transaction.createVersion(user)
+            val dto = GroupCreationDto("Test Name 1")
 
-                with(
-                    handleRequest(HttpMethod.Post, "version/${version.id.value}/group") {
-                        addHeader("Content-Type", "application/json")
-                        setBody(Json.encodeToString(dto))
-                    }
-                ) {
-                    assertEquals(HttpStatusCode.OK, response.status())
-
-                    val response: ReturnedGroupDto = Json.decodeFromString(response.content!!)
-                    assertEquals(dto.name, response.name)
-                    assertNull(response.parentVid)
+            with(
+                handleRequest(HttpMethod.Post, "version/${version.id.value}/group") {
+                    addHeader("Content-Type", "application/json")
+                    addHeader("Authorization", "Bearer $token")
+                    setBody(Json.encodeToString(dto))
                 }
+            ) {
+                assertEquals(HttpStatusCode.OK, response.status())
+
+                val response: ReturnedGroupDto = Json.decodeFromString(response.content!!)
+                assertEquals(dto.name, response.name)
+                assertNull(response.parentVid)
             }
         }
     }
 
     @Test
     fun `Test Subgroup Creation Success`() {
-        testApplication {
-            transaction {
-                val version = createVersion()
-                val group = createGroup(version)
-                val dto = GroupCreationDto("Test Name 1", parentVid = group.vid)
+        authorizedTest { user, token, transaction ->
+            val version = transaction.createVersion(user)
+            val group = transaction.createGroup(version)
+            val dto = GroupCreationDto("Test Name 1", parentVid = group.vid)
 
-                with(
-                    handleRequest(HttpMethod.Post, "version/${version.id.value}/group") {
-                        addHeader("Content-Type", "application/json")
-                        setBody(Json.encodeToString(dto))
-                    }
-                ) {
-                    assertEquals(HttpStatusCode.OK, response.status())
-
-                    val response: ReturnedGroupDto = Json.decodeFromString(response.content!!)
-                    assertEquals(dto.name, response.name)
-                    assertEquals(dto.parentVid, response.parentVid)
+            with(
+                handleRequest(HttpMethod.Post, "version/${version.id.value}/group") {
+                    addHeader("Authorization", "Bearer $token")
+                    addHeader("Content-Type", "application/json")
+                    setBody(Json.encodeToString(dto))
                 }
+            ) {
+                assertEquals(HttpStatusCode.OK, response.status())
+
+                val response: ReturnedGroupDto = Json.decodeFromString(response.content!!)
+                assertEquals(dto.name, response.name)
+                assertEquals(dto.parentVid, response.parentVid)
             }
         }
     }
 
     @Test
     fun `Test Group Append to New Version`() {
-        testApplication {
-            transaction {
-                val version1 = createVersion()
-                val version2 = createVersion()
-                val group = createGroup(version1)
-                val dto = GroupCreationDto(group.name, vid = group.vid)
+        authorizedTest { user, token, transaction ->
+            val version1 = transaction.createVersion(user)
+            val version2 = transaction.createVersion(user)
+            val group = transaction.createGroup(version1)
+            val dto = GroupCreationDto(group.name, vid = group.vid)
 
-                with(
-                    handleRequest(HttpMethod.Post, "version/${version2.id.value}/group") {
-                        addHeader("Content-Type", "application/json")
-                        setBody(Json.encodeToString(dto))
-                    }
-                ) {
-                    assertEquals(HttpStatusCode.OK, response.status())
-
-                    val response: ReturnedGroupDto = Json.decodeFromString(response.content!!)
-                    assertEquals(dto.name, response.name)
-                    assertEquals(dto.parentVid, response.parentVid)
-                    assertEquals(dto.vid, response.vid)
-                    assertNotEquals(group.id.value, response.id)
+            with(
+                handleRequest(HttpMethod.Post, "version/${version2.id.value}/group") {
+                    addHeader("Authorization", "Bearer $token")
+                    addHeader("Content-Type", "application/json")
+                    setBody(Json.encodeToString(dto))
                 }
+            ) {
+                assertEquals(HttpStatusCode.OK, response.status())
+
+                val response: ReturnedGroupDto = Json.decodeFromString(response.content!!)
+                assertEquals(dto.name, response.name)
+                assertEquals(dto.parentVid, response.parentVid)
+                assertEquals(dto.vid, response.vid)
+                assertNotEquals(group.id.value, response.id)
             }
         }
     }
 
     @Test
     fun `Test Group Create With Nonexistent Version`() {
-        testApplication {
-            transaction {
-                val version1 = createVersion()
-                val version2 = createVersion()
-                val group = createGroup(version1)
-                val dto = GroupCreationDto(group.name, vid = group.vid)
+        authorizedTest { user, token, transaction ->
+            val version1 = transaction.createVersion(user)
+            val version2 = transaction.createVersion(user)
+            val group = transaction.createGroup(version1)
+            val dto = GroupCreationDto(group.name, vid = group.vid)
 
-                with(
-                    handleRequest(HttpMethod.Post, "version/${version2.id.value + 1}/group") {
-                        addHeader("Content-Type", "application/json")
-                        setBody(Json.encodeToString(dto))
-                    }
-                ) {
-                    assertEquals(HttpStatusCode.InternalServerError, response.status())
+            with(
+                handleRequest(HttpMethod.Post, "version/${version2.id.value + 1}/group") {
+                    addHeader("Authorization", "Bearer $token")
+                    addHeader("Content-Type", "application/json")
+                    setBody(Json.encodeToString(dto))
                 }
+            ) {
+                assertEquals(HttpStatusCode.InternalServerError, response.status())
             }
         }
     }
 
     @Test
     fun `Test Group Create With Nonexistent Parent Group Failure`() {
-        testApplication {
-            transaction {
-                val version1 = createVersion()
-                val version2 = createVersion()
-                val group = createGroup(version1)
-                val dto = GroupCreationDto(group.name, vid = group.vid + 1)
+        authorizedTest { user, token, transaction ->
+            val version1 = transaction.createVersion(user)
+            val version2 = transaction.createVersion(user)
+            val group = transaction.createGroup(version1)
+            val dto = GroupCreationDto(group.name, vid = group.vid + 1)
 
-                with(
-                    handleRequest(HttpMethod.Post, "version/$version2/group") {
-                        addHeader("Content-Type", "application/json")
-                        setBody(Json.encodeToString(dto))
-                    }
-                ) {
-                    assertEquals(HttpStatusCode.InternalServerError, response.status())
+            with(
+                handleRequest(HttpMethod.Post, "version/$version2/group") {
+                    addHeader("Authorization", "Bearer $token")
+                    addHeader("Content-Type", "application/json")
+                    setBody(Json.encodeToString(dto))
                 }
+            ) {
+                assertEquals(HttpStatusCode.InternalServerError, response.status())
             }
         }
     }
 
     @Test
     fun `Test Group Update Name Success`() {
-        testApplication {
-            transaction {
-                val version = createVersion()
-                val group = createGroup(version)
-                val dto = GroupUpdateDto("Test Base Group 2", null)
+        authorizedTest { user, token, transaction ->
+            val version = transaction.createVersion(user)
+            val group = transaction.createGroup(version)
+            val dto = GroupUpdateDto("Test Base Group 2", null)
 
-                with(
-                    handleRequest(HttpMethod.Put, "version/${version.id.value}/group/${group.id.value}") {
-                        addHeader("Content-Type", "application/json")
-                        setBody(Json.encodeToString(dto))
-                    }
-                ) {
-                    assertEquals(HttpStatusCode.NoContent, response.status())
+            with(
+                handleRequest(HttpMethod.Put, "version/${version.id.value}/group/${group.id.value}") {
+                    addHeader("Authorization", "Bearer $token")
+                    addHeader("Content-Type", "application/json")
+                    setBody(Json.encodeToString(dto))
                 }
+            ) {
+                assertEquals(HttpStatusCode.NoContent, response.status())
             }
         }
     }
 
     @Test
     fun `Test Group Update Parent Success`() {
-        testApplication {
-            transaction {
-                val version = createVersion()
-                val groupRoot = createGroup(version)
-                val groupSub = createGroup(version)
+        authorizedTest { user, token, transaction ->
+            val version = transaction.createVersion(user)
+            val groupRoot = transaction.createGroup(version)
+            val groupSub = transaction.createGroup(version)
 
-                val dto = GroupUpdateDto("Test Base Group 2", groupRoot.id.value)
+            val dto = GroupUpdateDto("Test Base Group 2", groupRoot.id.value)
 
-                with(
-                    handleRequest(HttpMethod.Put, "version/${version.id.value}/group/${groupSub.id.value}") {
-                        addHeader("Content-Type", "application/json")
-                        setBody(Json.encodeToString(dto))
-                    }
-                ) {
-                    assertEquals(HttpStatusCode.NoContent, response.status())
+            with(
+                handleRequest(HttpMethod.Put, "version/${version.id.value}/group/${groupSub.id.value}") {
+                    addHeader("Authorization", "Bearer $token")
+                    addHeader("Content-Type", "application/json")
+                    setBody(Json.encodeToString(dto))
                 }
+            ) {
+                assertEquals(HttpStatusCode.NoContent, response.status())
             }
+
         }
     }
 
     @Test
     fun `Test Group Update With Old Version Failure`() {
-        testApplication {
-            transaction {
-                val version = createVersion()
-                createVersion()
-                val group = createGroup(version)
-                val dto = GroupUpdateDto("Test Base Group 2", null)
+        authorizedTest { user, token, transaction ->
+            val version = transaction.createVersion(user)
+            transaction.createVersion(user)
+            val group = transaction.createGroup(version)
+            val dto = GroupUpdateDto("Test Base Group 2", null)
 
-                with(
-                    handleRequest(HttpMethod.Put, "version/${version.id.value}/group/${group.id.value}") {
-                        addHeader("Content-Type", "application/json")
-                        setBody(Json.encodeToString(dto))
-                    }
-                ) {
-                    assertEquals(HttpStatusCode.BadRequest, response.status())
-                    val response = Json.decodeFromString<List<String>>(response.content!!)
-                    assertTrue { 1 >= response.size }
+            with(
+                handleRequest(HttpMethod.Put, "version/${version.id.value}/group/${group.id.value}") {
+                    addHeader("Authorization", "Bearer $token")
+                    addHeader("Content-Type", "application/json")
+                    setBody(Json.encodeToString(dto))
                 }
+            ) {
+                assertEquals(HttpStatusCode.BadRequest, response.status())
+                val response = Json.decodeFromString<List<String>>(response.content!!)
+                assertTrue { 1 >= response.size }
             }
         }
     }
 
     @Test
     fun `Test Group Delete Success`() {
-        testApplication {
-            transaction {
-                val version = createVersion()
-                val group = createGroup(version)
-                with(
-                    handleRequest(HttpMethod.Delete, "version/${version.id.value}/group/${group.id.value}?hierarchy=true") {
-                        addHeader("Content-Type", "application/json")
-                    }
+        authorizedTest { user, token, transaction ->
+            val version = transaction.createVersion(user)
+            val group = transaction.createGroup(version)
+            with(
+                handleRequest(
+                    HttpMethod.Delete,
+                    "version/${version.id.value}/group/${group.id.value}?hierarchy=true"
                 ) {
-                    assertEquals(HttpStatusCode.NoContent, response.status())
+                    addHeader("Authorization", "Bearer $token")
+                    addHeader("Content-Type", "application/json")
                 }
+            ) {
+                assertEquals(HttpStatusCode.NoContent, response.status())
             }
         }
     }
 
     @Test
     fun `Test Group Delete With Old Version Failure`() {
-        testApplication {
-            transaction {
-                val version = createVersion()
-                val version2 = createVersion()
-                val group = createGroup(version)
+        authorizedTest { user, token, transaction ->
+            val version = transaction.createVersion(user)
+            val version2 = transaction.createVersion(user)
+            val group = transaction.createGroup(version)
 
-                with(
-                    handleRequest(HttpMethod.Delete, "version/${version2.id.value}/group/${group.id.value}?hierarchy=true") {
-                        addHeader("Content-Type", "application/json")
-                    }
+            with(
+                handleRequest(
+                    HttpMethod.Delete,
+                    "version/${version2.id.value}/group/${group.id.value}?hierarchy=true"
                 ) {
-                    assertEquals(HttpStatusCode.BadRequest, response.status())
-                    val response = Json.decodeFromString<List<String>>(response.content!!)
-                    assertTrue { 1 >= response.size }
+                    addHeader("Authorization", "Bearer $token")
+                    addHeader("Content-Type", "application/json")
                 }
+            ) {
+                assertEquals(HttpStatusCode.BadRequest, response.status())
+                val response = Json.decodeFromString<List<String>>(response.content!!)
+                assertTrue { 1 >= response.size }
             }
         }
     }
 
     @Test
     fun `Test Group Dematerialize Sublatest Failure`() {
-        testApplication {
-            transaction {
-                val version = createVersion()
-                val group = createGroup(version)
-                createLeaf(version, group.vid)
-                with(
-                    handleRequest(HttpMethod.Delete, "version/${version.id.value}/group/${group.id.value}?hierarchy=false") {
-                        addHeader("Content-Type", "application/json")
-                    }
+        authorizedTest { user, token, transaction ->
+            val version = transaction.createVersion(user)
+            val group = transaction.createGroup(version)
+            transaction.createLeaf(version, group.vid)
+            with(
+                handleRequest(
+                    HttpMethod.Delete,
+                    "version/${version.id.value}/group/${group.id.value}?hierarchy=false"
                 ) {
-                    assertEquals(HttpStatusCode.BadRequest, response.status())
+                    addHeader("Authorization", "Bearer $token")
+                    addHeader("Content-Type", "application/json")
                 }
+            ) {
+                assertEquals(HttpStatusCode.BadRequest, response.status())
             }
         }
     }
 
     @Test
     fun `Test Group Delete Hierarchy Success`() {
-        testApplication {
-            transaction {
-                val version = createVersion()
-                val group = createGroup(version)
-                val leaf = createLeaf(version, group.vid)
-                with(
-                    handleRequest(HttpMethod.Delete, "version/${version.id.value}/group/${group.id.value}?hierarchy=true") {
-                        addHeader("Content-Type", "application/json")
-                    }
+        authorizedTest { user, token, transaction ->
+            val version = transaction.createVersion(user)
+            val group = transaction.createGroup(version)
+            val leaf = transaction.createLeaf(version, group.vid)
+            with(
+                handleRequest(
+                    HttpMethod.Delete,
+                    "version/${version.id.value}/group/${group.id.value}?hierarchy=true"
                 ) {
-                    assertEquals(HttpStatusCode.NoContent, response.status())
+                    addHeader("Authorization", "Bearer $token")
+                    addHeader("Content-Type", "application/json")
                 }
-
-                assertNull(Leaf.findById(leaf.id.value))
+            ) {
+                assertEquals(HttpStatusCode.NoContent, response.status())
             }
+
+            assertNull(Leaf.findById(leaf.id.value))
         }
     }
 
     @Test
     fun `Test Group Delete With Nonexistent Version Success`() {
-        testApplication {
-            transaction {
-                val version = createVersion()
-                val group = createGroup(version)
-                with(
-                    handleRequest(HttpMethod.Delete, "version/${version.id.value + 1}/group/${group.id.value}?hierarchy=true") {
-                        addHeader("Content-Type", "application/json")
-                    }
+        authorizedTest { user, token, transaction ->
+            val version = transaction.createVersion(user)
+            val group = transaction.createGroup(version)
+            with(
+                handleRequest(
+                    HttpMethod.Delete,
+                    "version/${version.id.value + 1}/group/${group.id.value}?hierarchy=true"
                 ) {
-                    assertEquals(HttpStatusCode.NoContent, response.status())
+                    addHeader("Authorization", "Bearer $token")
+                    addHeader("Content-Type", "application/json")
                 }
+            ) {
+                assertEquals(HttpStatusCode.NoContent, response.status())
             }
         }
     }
 
     @Test
     fun `Test Group Delete With Nonexistent Group`() {
-        testApplication {
-            transaction {
-                val version = createVersion()
-                val group = createGroup(version)
-                with(
-                    handleRequest(HttpMethod.Delete, "version/${version.id.value}/group/${group.id.value + 1}?hierarchy=true") {
-                        addHeader("Content-Type", "application/json")
-                    }
+        authorizedTest { user, token, transaction ->
+            val version = transaction.createVersion(user)
+            val group = transaction.createGroup(version)
+            with(
+                handleRequest(
+                    HttpMethod.Delete,
+                    "version/${version.id.value}/group/${group.id.value + 1}?hierarchy=true"
                 ) {
-                    assertEquals(HttpStatusCode.InternalServerError, response.status())
+                    addHeader("Authorization", "Bearer $token")
+                    addHeader("Content-Type", "application/json")
                 }
+            ) {
+                assertEquals(HttpStatusCode.InternalServerError, response.status())
             }
         }
     }
 
     @Test
     fun `Test Move group`() {
-        testApplication {
-            transaction {
-                val version = createVersion()
-                val parentGroup = createGroup(version)
-                val group1 = createGroup(version, parentGroup.vid)
-                val group2 = createGroup(version, parentGroup.vid)
-                testMoveGroupPositive(version, group1, group2)
-            }
-            transaction {
-                val version = createVersion()
-                val parentGroup = createGroup(version)
-                val group1 = createGroup(version, parentGroup.vid)
-                val group2 = createGroup(version, parentGroup.vid)
-                testMoveGroupPositive(version, group2, group1)
-            }
-            transaction {
-                val version = createVersion()
-                val parentGroup1 = createGroup(version)
-                val parentGroup2 = createGroup(version)
-                val group1 = createGroup(version, parentGroup1.vid)
-                val group2 = createGroup(version, parentGroup2.vid)
-                testMoveGroupNegative(version, group1, group2)
-            }
+        authorizedTest { user, token, transaction ->
+            val version = transaction.createVersion(user)
+            val parentGroup = transaction.createGroup(version)
+            val group1 = transaction.createGroup(version, parentGroup.vid)
+            val group2 = transaction.createGroup(version, parentGroup.vid)
+            testMoveGroupPositive(version, group1, group2, token)
+        }
+        authorizedTest { user, token, transaction ->
+            val version = transaction.createVersion(user)
+            val parentGroup = transaction.createGroup(version)
+            val group1 = transaction.createGroup(version, parentGroup.vid)
+            val group2 = transaction.createGroup(version, parentGroup.vid)
+            testMoveGroupPositive(version, group2, group1, token)
+        }
+        authorizedTest { user, token, transaction ->
+            val version = transaction.createVersion(user)
+            val parentGroup1 = transaction.createGroup(version)
+            val parentGroup2 = transaction.createGroup(version)
+            val group1 = transaction.createGroup(version, parentGroup1.vid)
+            val group2 = transaction.createGroup(version, parentGroup2.vid)
+            testMoveGroupNegative(version, group1, group2, token)
         }
     }
 
-    private fun TestApplicationEngine.testMoveGroupPositive(version: Version, group1: Group, group2: Group) {
+    private fun TestApplicationEngine.testMoveGroupPositive(version: Version, group1: Group, group2: Group, token: String) {
         val dto = ChangeGroupPositionDto(group2.id.value)
         handleRequest(HttpMethod.Patch, "/version/${version.id}/group/${group1.id}/position") {
+            addHeader("Authorization", "Bearer $token")
             addHeader("Content-Type", "application/json")
             setBody(Json.encodeToString(dto))
         }.apply {
@@ -359,9 +363,10 @@ internal class GroupIntegrationTest : AbstractIntegrationTest() {
         }
     }
 
-    private fun TestApplicationEngine.testMoveGroupNegative(version: Version, group1: Group, group2: Group) {
+    private fun TestApplicationEngine.testMoveGroupNegative(version: Version, group1: Group, group2: Group, token: String) {
         val dto = ChangeGroupPositionDto(group2.id.value)
         handleRequest(HttpMethod.Patch, "/version/${version.id}/group/${group1.id}/position") {
+            addHeader("Authorization", "Bearer $token")
             addHeader("Content-Type", "application/json")
             setBody(Json.encodeToString(dto))
         }.apply {

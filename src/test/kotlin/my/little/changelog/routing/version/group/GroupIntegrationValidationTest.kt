@@ -21,66 +21,63 @@ import kotlin.test.assertTrue
 internal class GroupIntegrationValidationTest : AbstractIntegrationTest() {
     @Test
     fun `Test Group Create With Blank Name`() {
-        testApplication {
-            transaction {
-                val version1 = createVersion()
-                val dto = GroupCreationDto(" ")
+        authorizedTest { user, token, transaction ->
+            val version1 = transaction.createVersion(user)
+            val dto = GroupCreationDto(" ")
 
-                with(
-                    handleRequest(HttpMethod.Post, "version/${version1.id.value}/group") {
-                        addHeader("Content-Type", "application/json")
-                        setBody(Json.encodeToString(dto))
-                    }
-                ) {
-                    Assertions.assertEquals(HttpStatusCode.BadRequest, response.status())
-                    val response = Json.decodeFromString<List<String>>(response.content!!)
-                    assertTrue { 1 >= response.size }
+            with(
+                handleRequest(HttpMethod.Post, "version/${version1.id.value}/group") {
+                    addHeader("Authorization", "Bearer $token")
+                    addHeader("Content-Type", "application/json")
+                    setBody(Json.encodeToString(dto))
                 }
+            ) {
+                Assertions.assertEquals(HttpStatusCode.BadRequest, response.status())
+                val response = Json.decodeFromString<List<String>>(response.content!!)
+                assertTrue { 1 >= response.size }
             }
         }
     }
 
     @Test
     fun `Test Group Update With Blank Name`() {
-        testApplication {
-            transaction {
-                val version1 = createVersion()
-                val group = createGroup(version1)
-                val dto = GroupUpdateDto(" ")
+        authorizedTest { user, token, transaction ->
+            val version1 = transaction.createVersion(user)
+            val group = transaction.createGroup(version1)
+            val dto = GroupUpdateDto(" ")
 
-                with(
-                    handleRequest(HttpMethod.Put, "version/${version1.id.value}/group/${group.id.value}") {
-                        addHeader("Content-Type", "application/json")
-                        setBody(Json.encodeToString(dto))
-                    }
-                ) {
-                    Assertions.assertEquals(HttpStatusCode.BadRequest, response.status())
-                    val response = Json.decodeFromString<List<String>>(response.content!!)
-                    assertTrue { 1 >= response.size }
+            with(
+                handleRequest(HttpMethod.Put, "version/${version1.id.value}/group/${group.id.value}") {
+                    addHeader("Authorization", "Bearer $token")
+                    addHeader("Content-Type", "application/json")
+                    setBody(Json.encodeToString(dto))
                 }
+            ) {
+                Assertions.assertEquals(HttpStatusCode.BadRequest, response.status())
+                val response = Json.decodeFromString<List<String>>(response.content!!)
+                assertTrue { 1 >= response.size }
             }
         }
     }
 
     @Test
     fun `Test Group Move To Child`() {
-        testApplication {
-            transaction {
-                val version1 = createVersion()
-                val group = createGroup(version1)
-                val group2 = createGroup(version1, group.vid)
-                val dto = ChangeGroupPositionDto(group2.vid)
+        authorizedTest { user, token, transaction ->
+            val version1 = transaction.createVersion(user)
+            val group = transaction.createGroup(version1)
+            val group2 = transaction.createGroup(version1, group.vid)
+            val dto = ChangeGroupPositionDto(group2.vid)
 
-                with(
-                    handleRequest(HttpMethod.Patch, "version/${version1.id.value}/group/${group.id.value}/position") {
-                        addHeader("Content-Type", "application/json")
-                        setBody(Json.encodeToString(dto))
-                    }
-                ) {
-                    Assertions.assertEquals(HttpStatusCode.BadRequest, response.status())
-                    val response = Json.decodeFromString<List<String>>(response.content!!)
-                    assertTrue { 1 >= response.size }
+            with(
+                handleRequest(HttpMethod.Patch, "version/${version1.id.value}/group/${group.id.value}/position") {
+                    addHeader("Authorization", "Bearer $token")
+                    addHeader("Content-Type", "application/json")
+                    setBody(Json.encodeToString(dto))
                 }
+            ) {
+                Assertions.assertEquals(HttpStatusCode.BadRequest, response.status())
+                val response = Json.decodeFromString<List<String>>(response.content!!)
+                assertTrue { 1 >= response.size }
             }
         }
     }

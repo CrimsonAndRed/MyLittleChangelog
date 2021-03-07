@@ -7,6 +7,8 @@ import io.mockk.every
 import io.mockk.mockkObject
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
+import my.little.changelog.exception.ForbiddenException
+import my.little.changelog.exception.UnauthException
 import my.little.changelog.model.version.dto.external.PreviousVersionsDTO
 import my.little.changelog.model.version.dto.external.VersionCreationDto
 import my.little.changelog.model.version.dto.external.WholeVersion
@@ -32,9 +34,9 @@ internal class VersionRouterTest : AbstractRouterTest(
         val dto = ReturnedVersionDto(0, "test", 0)
         val createDto = VersionCreationDto("test")
 
-        every { VersionService.createVersion(any()) } returns dto
+        every { VersionService.createVersion(any(), any()) } returns dto
 
-        testRoute(HttpMethod.Post, baseUrl, createDto) {
+        testAuthorizedRoute(HttpMethod.Post, baseUrl, createDto) {
             assertEquals(HttpStatusCode.OK, response.status())
         }
     }
@@ -42,11 +44,13 @@ internal class VersionRouterTest : AbstractRouterTest(
     @Test
     fun `Test Version Create Exception`() {
         val createDto = VersionCreationDto("test")
-        testExceptions(
-            constructRequest(HttpMethod.Post, baseUrl, createDto),
-            listOf { VersionService.createVersion(any()) },
+        testAuthorizedExceptions(
+            constructAuthorizedRequest(HttpMethod.Post, baseUrl, createDto),
+            listOf { VersionService.createVersion(any(), any()) },
             listOf(
-                { RuntimeException() } to HttpStatusCode.InternalServerError
+                { RuntimeException() } to HttpStatusCode.InternalServerError,
+                { UnauthException() } to HttpStatusCode.Unauthorized,
+                { ForbiddenException() } to HttpStatusCode.Forbidden,
             )
         )
     }
@@ -55,9 +59,9 @@ internal class VersionRouterTest : AbstractRouterTest(
     fun `Test Version Read Success`() {
         val dto = WholeVersion(0, true, emptyList(), "test")
 
-        every { VersionService.getWholeVersion(any()) } returns dto
+        every { VersionService.getWholeVersion(any(), allAny()) } returns dto
 
-        testRoute(HttpMethod.Get, "$baseUrl/${dto.id}") {
+        testAuthorizedRoute(HttpMethod.Get, "$baseUrl/${dto.id}") {
             assertEquals(HttpStatusCode.OK, response.status())
             val resp = Json.decodeFromString<WholeVersion>(response.content!!)
             assertEquals(dto.id, resp.id)
@@ -66,31 +70,38 @@ internal class VersionRouterTest : AbstractRouterTest(
     }
 
     @Test
-    fun `Test Version Read Exception`() = testExceptions(
-        constructRequest(HttpMethod.Get, "$baseUrl/$0"),
-        listOf { VersionService.getWholeVersion(any()) },
-        listOf(
-            { RuntimeException() } to HttpStatusCode.InternalServerError
+    fun `Test Version Read Exception`() {
+        val dto = WholeVersion(0, true, emptyList(), "test")
+        testAuthorizedExceptions(
+            constructAuthorizedRequest(HttpMethod.Get, "$baseUrl/${dto.id}"),
+            listOf { VersionService.getWholeVersion(any(), allAny()) },
+            listOf(
+                { RuntimeException() } to HttpStatusCode.InternalServerError,
+                { UnauthException() } to HttpStatusCode.Unauthorized,
+                { ForbiddenException() } to HttpStatusCode.Forbidden,
+            )
         )
-    )
+    }
 
     @Test
     fun `Test Versions Get Success`() {
         val dto = ReturnedVersionDto(0, "test", 0)
 
-        every { VersionService.getVersions() } returns listOf(dto)
+        every { VersionService.getVersions(allAny()) } returns listOf(dto)
 
-        testRoute(HttpMethod.Get, baseUrl) {
+        testAuthorizedRoute(HttpMethod.Get, baseUrl) {
             assertEquals(HttpStatusCode.OK, response.status())
         }
     }
 
     @Test
-    fun `Test Versions Get Exception`() = testExceptions(
-        constructRequest(HttpMethod.Get, baseUrl),
-        listOf { VersionService.getVersions() },
+    fun `Test Versions Get Exception`() = testAuthorizedExceptions(
+        constructAuthorizedRequest(HttpMethod.Get, baseUrl),
+        listOf { VersionService.getVersions(allAny()) },
         listOf(
-            { RuntimeException() } to HttpStatusCode.InternalServerError
+            { RuntimeException() } to HttpStatusCode.InternalServerError,
+            { UnauthException() } to HttpStatusCode.Unauthorized,
+            { ForbiddenException() } to HttpStatusCode.Forbidden,
         )
     )
 
@@ -98,19 +109,21 @@ internal class VersionRouterTest : AbstractRouterTest(
     fun `Test Previous Versions Get Success`() {
         val dto = PreviousVersionsDTO(emptyList())
 
-        every { VersionService.getPreviousVersions() } returns dto
+        every { VersionService.getPreviousVersions(allAny()) } returns dto
 
-        testRoute(HttpMethod.Get, "$baseUrl/previous") {
+        testAuthorizedRoute(HttpMethod.Get, "$baseUrl/previous") {
             assertEquals(HttpStatusCode.OK, response.status())
         }
     }
 
     @Test
-    fun `Test Previous Versions Get Exception`() = testExceptions(
-        constructRequest(HttpMethod.Get, "$baseUrl/previous"),
-        listOf { VersionService.getPreviousVersions() },
+    fun `Test Previous Versions Get Exception`() = testAuthorizedExceptions(
+        constructAuthorizedRequest(HttpMethod.Get, "$baseUrl/previous"),
+        listOf { VersionService.getPreviousVersions(allAny()) },
         listOf(
             { RuntimeException() } to HttpStatusCode.InternalServerError,
+            { UnauthException() } to HttpStatusCode.Unauthorized,
+            { ForbiddenException() } to HttpStatusCode.Forbidden,
         )
     )
 }

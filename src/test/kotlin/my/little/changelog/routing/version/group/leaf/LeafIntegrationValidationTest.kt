@@ -21,109 +21,114 @@ import kotlin.test.assertTrue
 internal class LeafIntegrationValidationTest : AbstractIntegrationTest() {
     @Test
     fun `Test Create Leaf With Blank Name`() {
-        testApplication {
-            transaction {
-                val version = createVersion()
-                val group = createGroup(version)
-                val dto = LeafCreationDto(
-                    null,
-                    " ",
-                    LeafType.TEXTUAL.id,
-                    "Test Value 1"
-                )
+        authorizedTest { user, token, transaction ->
+            val version = transaction.createVersion(user)
+            val group = transaction.createGroup(version)
+            val dto = LeafCreationDto(
+                null,
+                " ",
+                LeafType.TEXTUAL.id,
+                "Test Value 1"
+            )
 
-                with(
-                    handleRequest(HttpMethod.Post, "version/${version.id.value}/group/${group.id.value}/leaf") {
-                        addHeader("Content-Type", "application/json")
-                        setBody(Json.encodeToString(dto))
-                    }
-                ) {
-                    Assertions.assertEquals(HttpStatusCode.BadRequest, response.status())
-                    val response = Json.decodeFromString<List<String>>(response.content!!)
-                    assertTrue { 1 >= response.size }
+            with(
+                handleRequest(HttpMethod.Post, "version/${version.id.value}/group/${group.id.value}/leaf") {
+                    addHeader("Authorization", "Bearer $token")
+                    addHeader("Content-Type", "application/json")
+                    setBody(Json.encodeToString(dto))
                 }
+            ) {
+                Assertions.assertEquals(HttpStatusCode.BadRequest, response.status())
+                val response = Json.decodeFromString<List<String>>(response.content!!)
+                assertTrue { 1 >= response.size }
             }
         }
     }
 
     @Test
     fun `Test Update Leaf With Blank Name`() {
-        testApplication {
-            transaction {
-                val version = createVersion()
-                val group = createGroup(version)
-                val leaf = createLeaf(version, group.vid)
-                val dto = LeafUpdateDto(
-                    " ",
-                    LeafType.TEXTUAL.id,
-                    "Test Value 1",
-                    group.vid
-                )
+        authorizedTest { user, token, transaction ->
+            val version = transaction.createVersion(user)
+            val group = transaction.createGroup(version)
+            val leaf = transaction.createLeaf(version, group.vid)
+            val dto = LeafUpdateDto(
+                " ",
+                LeafType.TEXTUAL.id,
+                "Test Value 1",
+                group.vid
+            )
 
-                with(
-                    handleRequest(HttpMethod.Put, "version/${version.id.value}/group/${group.id.value}/leaf/${leaf.id.value}") {
-                        addHeader("Content-Type", "application/json")
-                        setBody(Json.encodeToString(dto))
-                    }
+            with(
+                handleRequest(
+                    HttpMethod.Put,
+                    "version/${version.id.value}/group/${group.id.value}/leaf/${leaf.id.value}"
                 ) {
-                    Assertions.assertEquals(HttpStatusCode.BadRequest, response.status())
-                    val response = Json.decodeFromString<List<String>>(response.content!!)
-                    assertTrue { 1 >= response.size }
+                    addHeader("Authorization", "Bearer $token")
+                    addHeader("Content-Type", "application/json")
+                    setBody(Json.encodeToString(dto))
                 }
+            ) {
+                Assertions.assertEquals(HttpStatusCode.BadRequest, response.status())
+                val response = Json.decodeFromString<List<String>>(response.content!!)
+                assertTrue { 1 >= response.size }
             }
         }
     }
 
     @Test
     fun `Test Update Leaf With Textual Type`() {
-        testApplication {
-            transaction {
-                val version = createVersion()
-                val group = createGroup(version)
-                val leaf = createLeaf(version, group.vid)
-                val dto = LeafUpdateDto(
-                    "Test Name 1",
-                    LeafType.TEXTUAL.id,
-                    "Test Value 1",
-                    group.vid
-                )
+        authorizedTest { user, token, transaction ->
+            val version = transaction.createVersion(user)
+            val group = transaction.createGroup(version)
+            val leaf = transaction.createLeaf(version, group.vid)
+            val dto = LeafUpdateDto(
+                "Test Name 1",
+                LeafType.TEXTUAL.id,
+                "Test Value 1",
+                group.vid
+            )
 
-                with(
-                    handleRequest(HttpMethod.Put, "version/${version.id.value}/group/${group.id.value}/leaf/${leaf.id.value}") {
-                        addHeader("Content-Type", "application/json")
-                        setBody(Json.encodeToString(dto))
-                    }
+            with(
+                handleRequest(
+                    HttpMethod.Put,
+                    "version/${version.id.value}/group/${group.id.value}/leaf/${leaf.id.value}"
                 ) {
-                    Assertions.assertEquals(HttpStatusCode.NoContent, response.status())
+                    addHeader("Authorization", "Bearer $token")
+                    addHeader("Content-Type", "application/json")
+                    setBody(Json.encodeToString(dto))
                 }
+            ) {
+                Assertions.assertEquals(HttpStatusCode.NoContent, response.status())
             }
         }
     }
 
     @Test
     fun `Test Update Leaf With Wrong Leaf Type`() {
-        testApplication {
-            transaction {
-                val version = createVersion()
-                val group = createGroup(version)
-                val leaf = createLeaf(version, group.vid)
-                val dto = LeafUpdateDto(
-                    "Test Name 1",
-                    0,
-                    "Test Value 1",
-                    group.vid
-                )
+        authorizedTest { user, token, transaction ->
+            val version = transaction.createVersion(user)
+            val group = transaction.createGroup(version)
+            val leaf = transaction.createLeaf(version, group.vid)
+            val dto = LeafUpdateDto(
+                "Test Name 1",
+                0,
+                "Test Value 1",
+                group.vid
+            )
 
-                with(
-                    handleRequest(HttpMethod.Put, "version/${version.id.value}/group/${group.id.value}/leaf/${leaf.id.value}") {
-                        addHeader("Content-Type", "application/json")
-                        setBody(Json.encodeToString(dto))
-                    }
+            with(
+                handleRequest(
+                    HttpMethod.Put,
+                    "version/${version.id.value}/group/${group.id.value}/leaf/${leaf.id.value}"
                 ) {
-                    Assertions.assertEquals(HttpStatusCode.BadRequest, response.status())
-                    val response = Json.decodeFromString<List<String>>(response.content!!)
-                    assertTrue { 1 >= response.size }
+                    addHeader("Authorization", "Bearer $token")
+                    addHeader("Content-Type", "application/json")
+                    setBody(Json.encodeToString(dto))
                 }
+            ) {
+                Assertions.assertEquals(HttpStatusCode.BadRequest, response.status())
+                val response = Json.decodeFromString<List<String>>(response.content!!)
+                assertTrue { 1 >= response.size }
             }
         }
     }

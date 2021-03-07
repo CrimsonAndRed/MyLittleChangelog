@@ -7,7 +7,6 @@ import my.little.changelog.model.leaf.dto.service.LeafReturnedDto
 import my.little.changelog.model.leaf.dto.service.LeafUpdateDto
 import my.little.changelog.model.leaf.dto.service.toRepoDto
 import my.little.changelog.model.leaf.toReturnedDto
-import my.little.changelog.persistence.repo.AuthRepo
 import my.little.changelog.persistence.repo.GroupRepo
 import my.little.changelog.persistence.repo.LeafRepo
 import my.little.changelog.persistence.repo.VersionRepo
@@ -21,9 +20,8 @@ object LeafService {
 
     fun createLeaf(leaf: LeafCreationDto, cp: CustomPrincipal): Response<LeafReturnedDto> = transaction {
         val version = VersionRepo.findById(leaf.versionId)
-        val user = AuthRepo.findById(cp.userId)
 
-        VersionValidator.validateLatest(version, user)
+        VersionValidator.validateLatest(version, cp.user)
             .chain {
                 LeafValidator.validateNew(leaf)
             }
@@ -34,10 +32,9 @@ object LeafService {
     }
 
     fun updateLeaf(leafUpdate: LeafUpdateDto, cp: CustomPrincipal): Response<Unit> = transaction {
-        val user = AuthRepo.findById(cp.userId)
         val leaf = LeafRepo.findById(leafUpdate.id)
         val newParentGroup = GroupRepo.findLatestGroupByVid(leafUpdate.parentVid)
-        VersionValidator.validateLatest(leaf.version, user)
+        VersionValidator.validateLatest(leaf.version, cp.user)
             .chain {
                 LeafValidator.validateUpdate(leafUpdate)
             }
@@ -54,20 +51,18 @@ object LeafService {
     }
 
     fun deleteLeaf(leafDeletionDto: LeafDeletionDto, cp: CustomPrincipal): Response<Unit> = transaction {
-        val user = AuthRepo.findById(cp.userId)
         val leaf = LeafRepo.findById(leafDeletionDto.id)
-        VersionValidator.validateLatest(leaf.version, user)
+        VersionValidator.validateLatest(leaf.version, cp.user)
             .ifValid {
                 LeafRepo.delete(leaf)
             }
     }
 
     fun changePosition(leafId: Int, changeAgainstId: Int, cp: CustomPrincipal): Response<Unit> = transaction {
-        val user = AuthRepo.findById(cp.userId)
         val leaf = LeafRepo.findById(leafId)
         val leafChangeAgainst = LeafRepo.findById(changeAgainstId)
-        VersionValidator.validateLatest(leaf.version, user)
-            .chain { VersionValidator.validateLatest(leafChangeAgainst.version, user) }
+        VersionValidator.validateLatest(leaf.version, cp.user)
+            .chain { VersionValidator.validateLatest(leafChangeAgainst.version, cp.user) }
             .chain {
                 ValidatorResponse
                     .ofSimple("Could not modify leaves that is not in the same group. IDs [${leaf.id.value}] [${leafChangeAgainst.id.value}]") {

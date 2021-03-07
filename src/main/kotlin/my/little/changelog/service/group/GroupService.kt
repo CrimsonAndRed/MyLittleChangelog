@@ -14,11 +14,10 @@ import org.jetbrains.exposed.sql.transactions.transaction
 object GroupService {
 
     fun createGroup(group: GroupCreationDto, cp: CustomPrincipal): Response<ReturnedGroupDto> = transaction {
-        val user = AuthRepo.findById(cp.userId)
         val version = VersionRepo.findById(group.versionId)
-        AuthValidator.validateAuthority(user, version.user)
+        AuthValidator.validateAuthority(cp.user, version.user)
             .chain {
-                VersionValidator.validateLatest(version, user)
+                VersionValidator.validateLatest(version, cp.user)
             }
             .chain {
                 GroupValidator.validateNew(group)
@@ -29,11 +28,10 @@ object GroupService {
     }
 
     fun updateGroup(groupUpdate: GroupUpdateDto, cp: CustomPrincipal): Response<Unit> = transaction {
-        val user = AuthRepo.findById(cp.userId)
         val group = GroupRepo.findById(groupUpdate.id)
-        AuthValidator.validateAuthority(user, group.version.user)
+        AuthValidator.validateAuthority(cp.user, group.version.user)
             .chain {
-                VersionValidator.validateLatest(group.version, user)
+                VersionValidator.validateLatest(group.version, cp.user)
             }
             .chain {
                 GroupValidator.validateUpdate(groupUpdate, group)
@@ -50,12 +48,11 @@ object GroupService {
     }
 
     fun deleteGroup(groupDelete: GroupDeletionDto, cp: CustomPrincipal, dropHierarchy: Boolean): Response<Unit> = transaction {
-        val user = AuthRepo.findById(cp.userId)
         val group = GroupRepo.findById(groupDelete.id)
         val versionId = group.version.id.value
-        AuthValidator.validateAuthority(user, group.version.user)
+        AuthValidator.validateAuthority(cp.user, group.version.user)
             .chain {
-                VersionValidator.validateLatest(group.version, user)
+                VersionValidator.validateLatest(group.version, cp.user)
             }
             .chain {
                 if (!dropHierarchy) {
@@ -87,17 +84,16 @@ object GroupService {
     }
 
     fun changePosition(groupId: Int, changeAgainstId: Int, cp: CustomPrincipal): Response<Unit> = transaction {
-        val user = AuthRepo.findById(cp.userId)
         val group = GroupRepo.findById(groupId)
 
         val groupChangeAgainst = GroupRepo.findById(changeAgainstId)
-        val latestVersion = VersionRepo.findLatestByUser(user)
-        val validator = AuthValidator.validateAuthority(user, group.version.user)
+        val latestVersion = VersionRepo.findLatestByUser(cp.user)
+        val validator = AuthValidator.validateAuthority(cp.user, group.version.user)
             .chain {
-                AuthValidator.validateAuthority(user, groupChangeAgainst.version.user)
+                AuthValidator.validateAuthority(cp.user, groupChangeAgainst.version.user)
             }
             .chain {
-                VersionValidator.validateLatest(group.version, user)
+                VersionValidator.validateLatest(group.version, cp.user)
             }
             .chain {
                 ValidatorResponse

@@ -46,9 +46,9 @@ internal class LeafRouterTest : AbstractRouterTest({
             groupVid = baseVgl.g
         )
 
-        every { LeafService.createLeaf(allAny()) } returns Valid(serviceReturnedDto)
+        every { LeafService.createLeaf(allAny(), allAny()) } returns Valid(serviceReturnedDto)
 
-        testRoute(HttpMethod.Post, baseUrl(baseVgl.v, baseVgl.g), dto) {
+        testAuthorizedRoute(HttpMethod.Post, baseUrl(baseVgl.v, baseVgl.g), dto) {
             assertEquals(HttpStatusCode.OK, response.status())
             val response = Json.decodeFromString<LeafReturnedDto>(response.content!!)
             assertEquals(serviceReturnedDto.toExternalDto(), response)
@@ -60,8 +60,8 @@ internal class LeafRouterTest : AbstractRouterTest({
         val dto = LeafCreationDto(null, "Test Name 1", 1, "Test Value 1")
 
         testExceptions(
-            constructRequest(HttpMethod.Post, baseUrl(baseVgl.v, baseVgl.g), dto),
-            listOf { LeafService.createLeaf(allAny()) },
+            constructAuthorizedRequest(HttpMethod.Post, baseUrl(baseVgl.v, baseVgl.g), dto),
+            listOf { LeafService.createLeaf(allAny(), allAny()) },
             listOf(
                 { RuntimeException() } to HttpStatusCode.InternalServerError,
             )
@@ -71,9 +71,9 @@ internal class LeafRouterTest : AbstractRouterTest({
     @Test
     fun `Test Leaf Creation Validation Error`() {
         val dto = LeafCreationDto(null, "Test Name 1", 1, "Test Value 1")
-        every { LeafService.createLeaf(allAny()) } returns Err(listOf("Test error"))
+        every { LeafService.createLeaf(allAny(), allAny()) } returns Err(listOf("Test error"))
 
-        testRoute(HttpMethod.Post, baseUrl(baseVgl.v, baseVgl.g), dto) {
+        testAuthorizedRoute(HttpMethod.Post, baseUrl(baseVgl.v, baseVgl.g), dto) {
             assertEquals(HttpStatusCode.BadRequest, response.status())
             val response = Json.decodeFromString<List<String>>(response.content!!)
             assertTrue { 1 >= response.size }
@@ -84,8 +84,8 @@ internal class LeafRouterTest : AbstractRouterTest({
     fun `Test Leaf Update Success`() {
         val dto = LeafUpdateDto("Test Name 1", 1, "Test Value 1", 0)
 
-        every { LeafService.updateLeaf(allAny()) } returns Valid(Unit)
-        testRoute(HttpMethod.Put, "${baseUrl(baseVgl.v, baseVgl.g)}/${baseVgl.l}", dto) {
+        every { LeafService.updateLeaf(allAny(), allAny()) } returns Valid(Unit)
+        testAuthorizedRoute(HttpMethod.Put, "${baseUrl(baseVgl.v, baseVgl.g)}/${baseVgl.l}", dto) {
             assertEquals(HttpStatusCode.NoContent, response.status())
         }
     }
@@ -95,8 +95,8 @@ internal class LeafRouterTest : AbstractRouterTest({
         val dto = LeafUpdateDto("Test Name 1", 1, "Test Value 1", 0)
 
         testExceptions(
-            constructRequest(HttpMethod.Put, "${baseUrl(baseVgl.v, baseVgl.g)}/${baseVgl.l}", dto),
-            listOf { LeafService.updateLeaf(allAny()) },
+            constructAuthorizedRequest(HttpMethod.Put, "${baseUrl(baseVgl.v, baseVgl.g)}/${baseVgl.l}", dto),
+            listOf { LeafService.updateLeaf(allAny(), allAny()) },
             listOf(
                 { RuntimeException() } to HttpStatusCode.InternalServerError,
             )
@@ -106,9 +106,9 @@ internal class LeafRouterTest : AbstractRouterTest({
     @Test
     fun `Test Leaf Update Validation Error`() {
         val dto = LeafUpdateDto("Test Name 1", 1, "Test Value 1", 0)
-        every { LeafService.updateLeaf(allAny()) } returns Err(listOf("Test error"))
+        every { LeafService.updateLeaf(allAny(), allAny()) } returns Err(listOf("Test error"))
 
-        testRoute(HttpMethod.Put, "${baseUrl(baseVgl.v, baseVgl.g)}/${baseVgl.l}", dto) {
+        testAuthorizedRoute(HttpMethod.Put, "${baseUrl(baseVgl.v, baseVgl.g)}/${baseVgl.l}", dto) {
             assertEquals(HttpStatusCode.BadRequest, response.status())
             val response = Json.decodeFromString<List<String>>(response.content!!)
             assertTrue { 1 >= response.size }
@@ -117,8 +117,8 @@ internal class LeafRouterTest : AbstractRouterTest({
 
     @Test
     fun `Test Leaf Delete Success`() {
-        every { LeafService.deleteLeaf(allAny()) } returns Valid(Unit)
-        testRoute(HttpMethod.Delete, "${baseUrl(baseVgl.v, baseVgl.g)}/${baseVgl.l}") {
+        every { LeafService.deleteLeaf(allAny(), allAny()) } returns Valid(Unit)
+        testAuthorizedRoute(HttpMethod.Delete, "${baseUrl(baseVgl.v, baseVgl.g)}/${baseVgl.l}") {
             assertEquals(HttpStatusCode.NoContent, response.status())
             assertNull(response.content)
         }
@@ -126,8 +126,8 @@ internal class LeafRouterTest : AbstractRouterTest({
 
     @Test
     fun `Test Leaf Delete Exceptions`() = testExceptions(
-        constructRequest(HttpMethod.Delete, "${baseUrl(baseVgl.v, baseVgl.g)}/${baseVgl.l}"),
-        listOf { LeafService.deleteLeaf(allAny()) },
+        constructAuthorizedRequest(HttpMethod.Delete, "${baseUrl(baseVgl.v, baseVgl.g)}/${baseVgl.l}"),
+        listOf { LeafService.deleteLeaf(allAny(), allAny()) },
         listOf(
             { RuntimeException() } to HttpStatusCode.InternalServerError,
         )
@@ -136,9 +136,9 @@ internal class LeafRouterTest : AbstractRouterTest({
     @Test
     fun `Test Leaf Delete Validation Error`() {
         val dto = LeafCreationDto(null, "Test Name 1", LeafType.TEXTUAL.id, "Test Value 1")
-        every { LeafService.deleteLeaf(allAny()) } returns Err(listOf("Test error"))
+        every { LeafService.deleteLeaf(allAny(), allAny()) } returns Err(listOf("Test error"))
 
-        testRoute(HttpMethod.Delete, "${baseUrl(baseVgl.v, baseVgl.g)}/${baseVgl.l}", dto) {
+        testAuthorizedRoute(HttpMethod.Delete, "${baseUrl(baseVgl.v, baseVgl.g)}/${baseVgl.l}", dto) {
             assertEquals(HttpStatusCode.BadRequest, response.status())
             val response = Json.decodeFromString<List<String>>(response.content!!)
             assertTrue { 1 >= response.size }
@@ -147,8 +147,8 @@ internal class LeafRouterTest : AbstractRouterTest({
 
     @Test
     fun `Test Leaf Change Version Exceptions`() = testExceptions(
-        constructRequest(HttpMethod.Patch, "${baseUrl(baseVgl.v, baseVgl.g)}/${baseVgl.l}/position", ChangeLeafPositionDto(0)),
-        listOf { LeafService.changePosition(allAny(), allAny()) },
+        constructAuthorizedRequest(HttpMethod.Patch, "${baseUrl(baseVgl.v, baseVgl.g)}/${baseVgl.l}/position", ChangeLeafPositionDto(0)),
+        listOf { LeafService.changePosition(allAny(), allAny(), allAny()) },
         listOf(
             { RuntimeException() } to HttpStatusCode.InternalServerError,
         )
@@ -157,9 +157,9 @@ internal class LeafRouterTest : AbstractRouterTest({
     @Test
     fun `Test Leaf Change Version Validation Error`() {
         val dto = ChangeLeafPositionDto(0)
-        every { LeafService.changePosition(allAny(), allAny()) } returns Err(listOf("Test error"))
+        every { LeafService.changePosition(allAny(), allAny(), allAny()) } returns Err(listOf("Test error"))
 
-        testRoute(HttpMethod.Patch, "${baseUrl(baseVgl.v, baseVgl.g)}/${baseVgl.l}/position", dto) {
+        testAuthorizedRoute(HttpMethod.Patch, "${baseUrl(baseVgl.v, baseVgl.g)}/${baseVgl.l}/position", dto) {
             assertEquals(HttpStatusCode.BadRequest, response.status())
             val response = Json.decodeFromString<List<String>>(response.content!!)
             assertTrue { 1 >= response.size }
