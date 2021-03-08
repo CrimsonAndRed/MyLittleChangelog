@@ -69,7 +69,7 @@ internal class LeafRouterTest : AbstractRouterTest({
     }
 
     @Test
-    fun `Test Leaf Creation Validation Error`() {
+    fun `Test Leaf Creation Validation Failure`() {
         val dto = LeafCreationDto(null, "Test Name 1", 1, "Test Value 1")
         every { LeafService.createLeaf(allAny(), allAny()) } returns Err(listOf("Test error"))
 
@@ -104,7 +104,7 @@ internal class LeafRouterTest : AbstractRouterTest({
     }
 
     @Test
-    fun `Test Leaf Update Validation Error`() {
+    fun `Test Leaf Update Validation Failure`() {
         val dto = LeafUpdateDto("Test Name 1", 1, "Test Value 1", 0)
         every { LeafService.updateLeaf(allAny(), allAny()) } returns Err(listOf("Test error"))
 
@@ -134,7 +134,7 @@ internal class LeafRouterTest : AbstractRouterTest({
     )
 
     @Test
-    fun `Test Leaf Delete Validation Error`() {
+    fun `Test Leaf Delete Validation Failure`() {
         val dto = LeafCreationDto(null, "Test Name 1", LeafType.TEXTUAL.id, "Test Value 1")
         every { LeafService.deleteLeaf(allAny(), allAny()) } returns Err(listOf("Test error"))
 
@@ -155,7 +155,7 @@ internal class LeafRouterTest : AbstractRouterTest({
     )
 
     @Test
-    fun `Test Leaf Change Version Validation Error`() {
+    fun `Test Leaf Change Version Validation Failure`() {
         val dto = ChangeLeafPositionDto(0)
         every { LeafService.changePosition(allAny(), allAny(), allAny()) } returns Err(listOf("Test error"))
 

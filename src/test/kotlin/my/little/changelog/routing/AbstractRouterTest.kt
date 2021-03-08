@@ -57,7 +57,7 @@ abstract class AbstractRouterTest(
         )
     }
 
-    public fun getTestUser(): User {
+    fun getTestUser(): User {
         return User(EntityID(0, Users))
     }
 

@@ -20,7 +20,7 @@ import kotlin.test.assertTrue
 @KtorExperimentalAPI
 internal class GroupIntegrationValidationTest : AbstractIntegrationTest() {
     @Test
-    fun `Test Group Create With Blank Name`() {
+    fun `Test Group Create With Blank Name Failure`() {
         authorizedTest { user, token, transaction ->
             val version1 = transaction.createVersion(user)
             val dto = GroupCreationDto(" ")
@@ -40,7 +40,7 @@ internal class GroupIntegrationValidationTest : AbstractIntegrationTest() {
     }
 
     @Test
-    fun `Test Group Update With Blank Name`() {
+    fun `Test Group Update With Blank Name Failure`() {
         authorizedTest { user, token, transaction ->
             val version1 = transaction.createVersion(user)
             val group = transaction.createGroup(version1)
@@ -61,7 +61,7 @@ internal class GroupIntegrationValidationTest : AbstractIntegrationTest() {
     }
 
     @Test
-    fun `Test Group Move To Child`() {
+    fun `Test Group Move To Child Failure`() {
         authorizedTest { user, token, transaction ->
             val version1 = transaction.createVersion(user)
             val group = transaction.createGroup(version1)

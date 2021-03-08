@@ -15,7 +15,7 @@ import org.junit.jupiter.api.Test
 @KtorExperimentalAPI
 internal class AuthIntegrationValidationTest : AbstractIntegrationTest() {
     @Test
-    fun `Test Auth With Blank Name`() {
+    fun `Test Auth With Blank Name Failure`() {
         testApplication {
             transaction {
                 val dto: AuthDto = AuthDto(
@@ -36,7 +36,7 @@ internal class AuthIntegrationValidationTest : AbstractIntegrationTest() {
     }
 
     @Test
-    fun `Test Auth With Blank Password`() {
+    fun `Test Auth With Blank Password Failure`() {
         testApplication {
             transaction {
                 val dto: AuthDto = AuthDto(
@@ -57,7 +57,7 @@ internal class AuthIntegrationValidationTest : AbstractIntegrationTest() {
     }
 
     @Test
-    fun `Test New User With Blank Login`() {
+    fun `Test New User With Blank Login Failure`() {
         testApplication {
             transaction {
                 val dto: UserCreationDto = UserCreationDto(
@@ -78,7 +78,7 @@ internal class AuthIntegrationValidationTest : AbstractIntegrationTest() {
     }
 
     @Test
-    fun `Test New User With Blank Password`() {
+    fun `Test New User With Blank Password Failure`() {
         testApplication {
             transaction {
                 val dto: UserCreationDto = UserCreationDto(

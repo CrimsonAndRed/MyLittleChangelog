@@ -52,7 +52,7 @@ internal class DifferenceRouterTest : AbstractRouterTest(
     )
 
     @Test
-    fun `Test Difference Missing From`() {
+    fun `Test Difference Missing From Failure`() {
         val v1 = ReturnedVersionDto(1, "test1", 1)
         val v2 = ReturnedVersionDto(2, "test2", 2)
         val returnedDto = ReturnedDifferenceDto(v1, v2, emptyList(), emptyList())
@@ -64,7 +64,7 @@ internal class DifferenceRouterTest : AbstractRouterTest(
     }
 
     @Test
-    fun `Test Difference Missing To`() {
+    fun `Test Difference Missing To Failure`() {
         val v1 = ReturnedVersionDto(1, "test1", 1)
         val v2 = ReturnedVersionDto(2, "test2", 2)
         val returnedDto = ReturnedDifferenceDto(v1, v2, emptyList(), emptyList())
@@ -76,7 +76,7 @@ internal class DifferenceRouterTest : AbstractRouterTest(
     }
 
     @Test
-    fun `Test Difference Missing Params`() {
+    fun `Test Difference Missing Params Failure`() {
         val v1 = ReturnedVersionDto(1, "test1", 1)
         val v2 = ReturnedVersionDto(2, "test2", 2)
         val returnedDto = ReturnedDifferenceDto(v1, v2, emptyList(), emptyList())
@@ -88,7 +88,7 @@ internal class DifferenceRouterTest : AbstractRouterTest(
     }
 
     @Test
-    fun `Test Difference Wrong From Param Type`() {
+    fun `Test Difference Wrong From Param Type Failure`() {
         val v1 = ReturnedVersionDto(1, "test1", 1)
         val v2 = ReturnedVersionDto(2, "test2", 2)
         val returnedDto = ReturnedDifferenceDto(v1, v2, emptyList(), emptyList())
@@ -100,7 +100,7 @@ internal class DifferenceRouterTest : AbstractRouterTest(
     }
 
     @Test
-    fun `Test Difference Wrong To Param Type`() {
+    fun `Test Difference Wrong To Param Type Failure`() {
         val v1 = ReturnedVersionDto(1, "test1", 1)
         val v2 = ReturnedVersionDto(2, "test2", 2)
         val returnedDto = ReturnedDifferenceDto(v1, v2, emptyList(), emptyList())

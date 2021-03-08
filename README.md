@@ -38,4 +38,3 @@ npm start
 - Setup internal logging
 - Repositories are definitely not optimal (going to DB several times per method)
 - principal to dto?
-- Test names?

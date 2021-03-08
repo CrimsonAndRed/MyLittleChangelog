@@ -36,7 +36,7 @@ fun initMigration(dataSource: DataSource) {
     flyway.migrate()
 }
 
-public object Db {
+object Db {
     lateinit var source: DataSource
     lateinit var flyway: Flyway
 }

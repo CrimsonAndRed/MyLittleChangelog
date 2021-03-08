@@ -1,11 +1,8 @@
 package my.little.changelog.routing.version.group
 
-import io.ktor.http.HttpMethod
-import io.ktor.http.HttpStatusCode
-import io.ktor.server.testing.TestApplicationEngine
-import io.ktor.server.testing.handleRequest
-import io.ktor.server.testing.setBody
-import io.ktor.util.KtorExperimentalAPI
+import io.ktor.http.*
+import io.ktor.server.testing.*
+import io.ktor.util.*
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import my.little.changelog.configuration.Json
@@ -18,7 +15,6 @@ import my.little.changelog.model.leaf.Leaf
 import my.little.changelog.model.version.Version
 import my.little.changelog.persistence.repo.GroupRepo
 import my.little.changelog.routing.AbstractIntegrationTest
-import org.jetbrains.exposed.sql.transactions.transaction
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import kotlin.test.assertNotEquals
@@ -74,7 +70,7 @@ internal class GroupIntegrationTest : AbstractIntegrationTest() {
     }
 
     @Test
-    fun `Test Group Append to New Version`() {
+    fun `Test Group Append to New Version Success`() {
         authorizedTest { user, token, transaction ->
             val version1 = transaction.createVersion(user)
             val version2 = transaction.createVersion(user)
@@ -100,7 +96,7 @@ internal class GroupIntegrationTest : AbstractIntegrationTest() {
     }
 
     @Test
-    fun `Test Group Create With Nonexistent Version`() {
+    fun `Test Group Create With Nonexistent Version Failure`() {
         authorizedTest { user, token, transaction ->
             val version1 = transaction.createVersion(user)
             val version2 = transaction.createVersion(user)
@@ -305,7 +301,7 @@ internal class GroupIntegrationTest : AbstractIntegrationTest() {
     }
 
     @Test
-    fun `Test Group Delete With Nonexistent Group`() {
+    fun `Test Group Delete With Nonexistent Group Failure`() {
         authorizedTest { user, token, transaction ->
             val version = transaction.createVersion(user)
             val group = transaction.createGroup(version)
@@ -324,7 +320,7 @@ internal class GroupIntegrationTest : AbstractIntegrationTest() {
     }
 
     @Test
-    fun `Test Move group`() {
+    fun `Test Move group Mixed`() {
         authorizedTest { user, token, transaction ->
             val version = transaction.createVersion(user)
             val parentGroup = transaction.createGroup(version)

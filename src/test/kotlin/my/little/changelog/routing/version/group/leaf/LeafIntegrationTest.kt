@@ -35,7 +35,7 @@ internal class LeafIntegrationTest : AbstractIntegrationTest() {
             val dto = LeafCreationDto(
                 null,
                 "Test Name 1",
-                1,
+                LeafType.TEXTUAL.id,
                 "Test Value 1"
             )
 
@@ -57,7 +57,7 @@ internal class LeafIntegrationTest : AbstractIntegrationTest() {
     }
 
     @Test
-    fun `Test Create Leaf With Old Version`() {
+    fun `Test Create Leaf With Old Version Failure`() {
         authorizedTest { user, token, transaction ->
             val version = transaction.createVersion(user)
             transaction.createVersion(user)
@@ -65,7 +65,7 @@ internal class LeafIntegrationTest : AbstractIntegrationTest() {
             val dto = LeafCreationDto(
                 null,
                 "Test Name 1",
-                1,
+                LeafType.TEXTUAL.id,
                 "Test Value 1"
             )
 
@@ -84,7 +84,7 @@ internal class LeafIntegrationTest : AbstractIntegrationTest() {
     }
 
     @Test
-    fun `Test Create Leaf With Nonexistent Version`() {
+    fun `Test Create Leaf With Nonexistent Version Failure`() {
         authorizedTest { user, token, transaction ->
             val version = transaction.createVersion(user)
             val group = transaction.createGroup(version)
@@ -108,7 +108,7 @@ internal class LeafIntegrationTest : AbstractIntegrationTest() {
     }
 
     @Test
-    fun `Test Create Leaf With Nonexistent Group`() {
+    fun `Test Create Leaf With Nonexistent Group Failure`() {
         authorizedTest { user, token, transaction ->
             val version = transaction.createVersion(user)
             val group = transaction.createGroup(version)
@@ -132,7 +132,7 @@ internal class LeafIntegrationTest : AbstractIntegrationTest() {
     }
 
     @Test
-    fun `Test Update Leaf Without Group Vid`() {
+    fun `Test Update Leaf Without Group Vid Success`() {
         authorizedTest { user, token, transaction ->
             val version = transaction.createVersion(user)
             val group = transaction.createGroup(version)
@@ -161,7 +161,7 @@ internal class LeafIntegrationTest : AbstractIntegrationTest() {
     }
 
     @Test
-    fun `Test Update Leaf With Group Vid`() {
+    fun `Test Update Leaf With Group Vid Success`() {
         authorizedTest { user, token, transaction ->
             val version = transaction.createVersion(user)
             val group = transaction.createGroup(version)
@@ -169,7 +169,7 @@ internal class LeafIntegrationTest : AbstractIntegrationTest() {
             val dto = LeafUpdateDto(
                 "Test Name 1",
                 LeafType.TEXTUAL.id,
-                "Значение1",
+                "Value1",
                 group.vid
             )
 
@@ -189,7 +189,7 @@ internal class LeafIntegrationTest : AbstractIntegrationTest() {
     }
 
     @Test
-    fun `Test Update Leaf With Changing Group`() {
+    fun `Test Update Leaf With Changing Group Success`() {
         authorizedTest { user, token, transaction ->
             val version = transaction.createVersion(user)
             val group1 = transaction.createGroup(version)
@@ -219,16 +219,16 @@ internal class LeafIntegrationTest : AbstractIntegrationTest() {
     }
 
     @Test
-    fun `Test Update Leaf With Nonexistent Version`() {
+    fun `Test Update Leaf With Nonexistent Version Success`() {
         authorizedTest { user, token, transaction ->
             val version = transaction.createVersion(user)
             val group = transaction.createGroup(version)
             val leaf = transaction.createLeaf(version, group.vid)
 
             val dto = LeafUpdateDto(
-                "Лиф1",
+                "Leaf1",
                 1,
-                "Значение1",
+                "Value1",
                 group.vid
             )
 
@@ -248,15 +248,15 @@ internal class LeafIntegrationTest : AbstractIntegrationTest() {
     }
 
     @Test
-    fun `Test Update Leaf With Nonexistent Group`() {
+    fun `Test Update Leaf With Nonexistent Group Failure`() {
         authorizedTest { user, token, transaction ->
             val version = transaction.createVersion(user)
             val group = transaction.createGroup(version)
             val leaf = transaction.createLeaf(version, group.vid)
             val dto = LeafUpdateDto(
-                "Лиф1",
-                1,
-                "Значение1",
+                "Leaf1",
+                LeafType.TEXTUAL.id,
+                "Value1",
                 group.vid + 1
             )
 
@@ -276,7 +276,7 @@ internal class LeafIntegrationTest : AbstractIntegrationTest() {
     }
 
     @Test
-    fun `Test Delete Leaf`() {
+    fun `Test Delete Leaf Success`() {
         authorizedTest { user, token, transaction ->
             val version = transaction.createVersion(user)
             val group = transaction.createGroup(version)
@@ -298,7 +298,7 @@ internal class LeafIntegrationTest : AbstractIntegrationTest() {
     }
 
     @Test
-    fun `Test Delete Leaf with Wrong Version`() {
+    fun `Test Delete Leaf with Wrong Version Failure`() {
         authorizedTest { user, token, transaction ->
             val version1 = transaction.createVersion(user)
             val version2 = transaction.createVersion(user)
@@ -321,7 +321,7 @@ internal class LeafIntegrationTest : AbstractIntegrationTest() {
     }
 
     @Test
-    fun `Test Delete Nonexistent Leaf`() {
+    fun `Test Delete Nonexistent Leaf Failure`() {
         authorizedTest { user, token, transaction ->
             val version1 = transaction.createVersion(user)
             val group = transaction.createGroup(version1)
@@ -343,7 +343,7 @@ internal class LeafIntegrationTest : AbstractIntegrationTest() {
     }
 
     @Test
-    fun `Test Move leaf`() {
+    fun `Test Move leaf Mixed`() {
         authorizedTest { user, token, transaction ->
             val version = transaction.createVersion(user)
             val group = transaction.createGroup(version)

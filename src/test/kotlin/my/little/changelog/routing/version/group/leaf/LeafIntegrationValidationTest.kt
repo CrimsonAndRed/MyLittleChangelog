@@ -20,7 +20,7 @@ import kotlin.test.assertTrue
 @KtorExperimentalAPI
 internal class LeafIntegrationValidationTest : AbstractIntegrationTest() {
     @Test
-    fun `Test Create Leaf With Blank Name`() {
+    fun `Test Create Leaf With Blank Name Failure`() {
         authorizedTest { user, token, transaction ->
             val version = transaction.createVersion(user)
             val group = transaction.createGroup(version)
@@ -46,7 +46,7 @@ internal class LeafIntegrationValidationTest : AbstractIntegrationTest() {
     }
 
     @Test
-    fun `Test Update Leaf With Blank Name`() {
+    fun `Test Update Leaf With Blank Name Failure`() {
         authorizedTest { user, token, transaction ->
             val version = transaction.createVersion(user)
             val group = transaction.createGroup(version)
@@ -76,7 +76,7 @@ internal class LeafIntegrationValidationTest : AbstractIntegrationTest() {
     }
 
     @Test
-    fun `Test Update Leaf With Textual Type`() {
+    fun `Test Update Leaf With Textual Type Success`() {
         authorizedTest { user, token, transaction ->
             val version = transaction.createVersion(user)
             val group = transaction.createGroup(version)
@@ -104,7 +104,7 @@ internal class LeafIntegrationValidationTest : AbstractIntegrationTest() {
     }
 
     @Test
-    fun `Test Update Leaf With Wrong Leaf Type`() {
+    fun `Test Update Leaf With Wrong Leaf Type Failure`() {
         authorizedTest { user, token, transaction ->
             val version = transaction.createVersion(user)
             val group = transaction.createGroup(version)
