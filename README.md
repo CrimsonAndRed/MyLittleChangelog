@@ -40,3 +40,4 @@ npm start
 - Salt hash
 - principal to dto?
 - unique user login
+- auth dto validation

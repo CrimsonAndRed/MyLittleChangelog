@@ -27,8 +27,7 @@ object AuthService {
     }
 
     fun newUser(dto: UserCreateDto) {
-
-        val user = UserRepo.create(
+        UserRepo.create(
             dto.toRepoDto {
                 ExposedBlob(
                     generateHash(dto.password)

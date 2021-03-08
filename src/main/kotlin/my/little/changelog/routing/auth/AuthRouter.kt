@@ -1,6 +1,7 @@
 package my.little.changelog.routing.auth
 
 import io.ktor.application.*
+import io.ktor.http.*
 import io.ktor.request.*
 import io.ktor.response.*
 import io.ktor.routing.*
@@ -24,8 +25,8 @@ fun Routing.authRouting() {
     route("/user") {
         post {
             val dto = call.receive<UserCreateDto>()
-            val user = AuthService.newUser(dto.toServiceDto())
-            call.respond(user)
+            AuthService.newUser(dto.toServiceDto())
+            call.response.status(HttpStatusCode.NoContent)
         }
     }
 }
