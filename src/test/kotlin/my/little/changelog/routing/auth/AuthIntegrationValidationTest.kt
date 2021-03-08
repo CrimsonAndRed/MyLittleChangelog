@@ -3,11 +3,9 @@ package my.little.changelog.routing.auth
 import io.ktor.http.*
 import io.ktor.server.testing.*
 import io.ktor.util.*
-import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import my.little.changelog.configuration.Json
 import my.little.changelog.model.auth.dto.external.AuthDto
-import my.little.changelog.model.auth.dto.external.Token
 import my.little.changelog.model.auth.dto.external.UserCreationDto
 import my.little.changelog.routing.AbstractIntegrationTest
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -15,18 +13,14 @@ import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 
 @KtorExperimentalAPI
-class AuthIntegrationTest : AbstractIntegrationTest() {
-
+internal class AuthIntegrationValidationTest : AbstractIntegrationTest() {
     @Test
-    fun `Test Auth User Success`() {
+    fun `Test Auth With Blank Name`() {
         testApplication {
             transaction {
-                val pw = "Password"
-                val login = "Login"
-                createUser(login = login, password = pw)
                 val dto: AuthDto = AuthDto(
-                    login = login,
-                    password = pw
+                    login = "",
+                    password = "Password"
                 )
 
                 with(
@@ -35,24 +29,19 @@ class AuthIntegrationTest : AbstractIntegrationTest() {
                         setBody(Json.encodeToString(dto))
                     }
                 ) {
-                    Assertions.assertEquals(HttpStatusCode.OK, response.status())
-                    val token: Token = Json.decodeFromString(response.content!!)
-                    Assertions.assertNotNull(token)
+                    Assertions.assertEquals(HttpStatusCode.BadRequest, response.status())
                 }
             }
         }
     }
 
     @Test
-    fun `Test Auth User Wrong Credentials Failure`() {
+    fun `Test Auth With Blank Password`() {
         testApplication {
             transaction {
-                val pw = "Password"
-                val login = "Login"
-                createUser(login = login, password = pw)
                 val dto: AuthDto = AuthDto(
-                    login = login,
-                    password = "1_$pw"
+                    login = "Login",
+                    password = ""
                 )
 
                 with(
@@ -61,21 +50,19 @@ class AuthIntegrationTest : AbstractIntegrationTest() {
                         setBody(Json.encodeToString(dto))
                     }
                 ) {
-                    Assertions.assertEquals(HttpStatusCode.Unauthorized, response.status())
+                    Assertions.assertEquals(HttpStatusCode.BadRequest, response.status())
                 }
             }
         }
     }
 
     @Test
-    fun `Test Create User Success`() {
+    fun `Test New User With Blank Login`() {
         testApplication {
             transaction {
-                val pw = "Password"
-                val login = "Login"
                 val dto: UserCreationDto = UserCreationDto(
-                    login = login,
-                    password = pw
+                    login = "",
+                    password = "Password"
                 )
 
                 with(
@@ -84,7 +71,28 @@ class AuthIntegrationTest : AbstractIntegrationTest() {
                         setBody(Json.encodeToString(dto))
                     }
                 ) {
-                    Assertions.assertEquals(HttpStatusCode.NoContent, response.status())
+                    Assertions.assertEquals(HttpStatusCode.BadRequest, response.status())
+                }
+            }
+        }
+    }
+
+    @Test
+    fun `Test New User With Blank Password`() {
+        testApplication {
+            transaction {
+                val dto: UserCreationDto = UserCreationDto(
+                    login = "Login",
+                    password = ""
+                )
+
+                with(
+                    handleRequest(HttpMethod.Post, "/user") {
+                        addHeader("Content-Type", "application/json")
+                        setBody(Json.encodeToString(dto))
+                    }
+                ) {
+                    Assertions.assertEquals(HttpStatusCode.BadRequest, response.status())
                 }
             }
         }

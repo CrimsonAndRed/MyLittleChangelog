@@ -31,7 +31,7 @@ import my.little.changelog.routing.module as routingModule
 abstract class AbstractIntegrationTest {
 
     @BeforeEach
-    public fun createSchemas() {
+    fun createSchemas() {
         transaction {
             SchemaUtils.createSchema(Schema("public"), inBatch = true)
             Db.flyway.migrate()
@@ -39,7 +39,7 @@ abstract class AbstractIntegrationTest {
     }
 
     @AfterEach
-    public fun dropSchemas() {
+    fun dropSchemas() {
         transaction {
             SchemaUtils.dropSchema(Schema("public"), cascade = true, inBatch = true)
         }
@@ -98,9 +98,9 @@ abstract class AbstractIntegrationTest {
         }.also { commit() }
 
     companion object Pg {
-        lateinit var pg: PostgreSQLContainer<Nothing>
+        var pg: PostgreSQLContainer<Nothing>
 
-        lateinit var engine: TestApplicationEngine
+        var engine: TestApplicationEngine
 
         init {
             // Initialize db first
@@ -129,7 +129,7 @@ abstract class AbstractIntegrationTest {
         }
 
         @AfterAll
-        public fun stopEngine() {
+        fun stopEngine() {
             Pg.engine.stop(0, 0)
             pg.stop()
         }

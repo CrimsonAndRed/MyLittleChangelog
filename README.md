@@ -39,4 +39,3 @@ npm start
 - Repositories are definitely not optimal (going to DB several times per method)
 - principal to dto?
 - unique user login
-- auth dto validation

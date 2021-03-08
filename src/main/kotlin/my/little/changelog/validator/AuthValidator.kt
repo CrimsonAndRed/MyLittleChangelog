@@ -6,7 +6,7 @@ import my.little.changelog.model.auth.User
 object AuthValidator {
 
     @Throws(ForbiddenException::class)
-    public fun validateAuthority(expectedUser: User, currentUser: User): ValidatorResponse {
+    fun validateAuthority(expectedUser: User, currentUser: User): ValidatorResponse {
         if (expectedUser.id.value != currentUser.id.value) {
             throw ForbiddenException()
         }
