@@ -33,7 +33,7 @@ fun Routing.versionRouting() {
             post {
                 val principal = call.principal<CustomPrincipal>()!!
                 val dto = call.receive<VersionCreationDto>()
-                call.respond(VersionService.createVersion(dto.toServiceDto(), principal).toExternalDto())
+                call.respond(VersionService.createVersion(dto.toServiceDto(principal)).toExternalDto())
             }
 
             route("/previous") {
@@ -53,7 +53,7 @@ fun Routing.versionRouting() {
             delete {
                 val principal = call.principal<CustomPrincipal>()!!
                 val idParam = call.parameters.getOrFail("versionId")
-                val resp: Response<Unit> = VersionService.deleteVersion(VersionDeletionDto(idParam.toInt()), principal)
+                val resp: Response<Unit> = VersionService.deleteVersion(VersionDeletionDto(idParam.toInt(), principal))
                 call.ofEmptyResponse(resp)
             }
         }

@@ -33,7 +33,7 @@ internal class DifferenceRouterTest : AbstractRouterTest(
         val v2 = ReturnedVersionDto(2, "test2", 2)
         val returnedDto = ReturnedDifferenceDto(v1, v2, emptyList(), emptyList())
 
-        every { DifferenceService.findDifference(allAny(), allAny()) } returns returnedDto
+        every { DifferenceService.findDifference(allAny()) } returns returnedDto
 
         testAuthorizedRoute(HttpMethod.Get, baseUrl(difference.from, difference.to)) {
             assertEquals(HttpStatusCode.OK, response.status())
@@ -43,7 +43,7 @@ internal class DifferenceRouterTest : AbstractRouterTest(
     @Test
     fun `Test Difference Read Exception`() = testAuthorizedExceptions(
         constructAuthorizedRequest(HttpMethod.Get, baseUrl(difference.from, difference.to)),
-        listOf { DifferenceService.findDifference(allAny(), allAny()) },
+        listOf { DifferenceService.findDifference(allAny()) },
         listOf(
             { RuntimeException() } to HttpStatusCode.InternalServerError,
             { UnauthException() } to HttpStatusCode.Unauthorized,
@@ -57,7 +57,7 @@ internal class DifferenceRouterTest : AbstractRouterTest(
         val v2 = ReturnedVersionDto(2, "test2", 2)
         val returnedDto = ReturnedDifferenceDto(v1, v2, emptyList(), emptyList())
 
-        every { DifferenceService.findDifference(allAny(), allAny()) } returns returnedDto
+        every { DifferenceService.findDifference(allAny()) } returns returnedDto
         testAuthorizedRoute(HttpMethod.Get, "difference?to=${difference.to}") {
             assertEquals(HttpStatusCode.InternalServerError, response.status())
         }
@@ -69,7 +69,7 @@ internal class DifferenceRouterTest : AbstractRouterTest(
         val v2 = ReturnedVersionDto(2, "test2", 2)
         val returnedDto = ReturnedDifferenceDto(v1, v2, emptyList(), emptyList())
 
-        every { DifferenceService.findDifference(allAny(), allAny()) } returns returnedDto
+        every { DifferenceService.findDifference(allAny()) } returns returnedDto
         testAuthorizedRoute(HttpMethod.Get, "difference?from=${difference.from}") {
             assertEquals(HttpStatusCode.InternalServerError, response.status())
         }
@@ -81,7 +81,7 @@ internal class DifferenceRouterTest : AbstractRouterTest(
         val v2 = ReturnedVersionDto(2, "test2", 2)
         val returnedDto = ReturnedDifferenceDto(v1, v2, emptyList(), emptyList())
 
-        every { DifferenceService.findDifference(allAny(), allAny()) } returns returnedDto
+        every { DifferenceService.findDifference(allAny()) } returns returnedDto
         testAuthorizedRoute(HttpMethod.Get, "difference") {
             assertEquals(HttpStatusCode.InternalServerError, response.status())
         }
@@ -93,7 +93,7 @@ internal class DifferenceRouterTest : AbstractRouterTest(
         val v2 = ReturnedVersionDto(2, "test2", 2)
         val returnedDto = ReturnedDifferenceDto(v1, v2, emptyList(), emptyList())
 
-        every { DifferenceService.findDifference(allAny(), allAny()) } returns returnedDto
+        every { DifferenceService.findDifference(allAny()) } returns returnedDto
         testAuthorizedRoute(HttpMethod.Get, "difference?from=aa&to=${difference.to}") {
             assertEquals(HttpStatusCode.InternalServerError, response.status())
         }
@@ -105,7 +105,7 @@ internal class DifferenceRouterTest : AbstractRouterTest(
         val v2 = ReturnedVersionDto(2, "test2", 2)
         val returnedDto = ReturnedDifferenceDto(v1, v2, emptyList(), emptyList())
 
-        every { DifferenceService.findDifference(allAny(), allAny()) } returns returnedDto
+        every { DifferenceService.findDifference(allAny()) } returns returnedDto
         testAuthorizedRoute(HttpMethod.Get, "difference?to=aa&from=${difference.from}") {
             assertEquals(HttpStatusCode.InternalServerError, response.status())
         }

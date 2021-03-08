@@ -35,7 +35,7 @@ fun Routing.leafRouting() {
                 val dto = call.receive<LeafCreationDto>()
                 LeafDtoValidator.validateDtoNew(dto)
                     .ifValidResponse {
-                        LeafService.createLeaf(dto.toServiceDto(groupId, versionId), principal).map { it.toExternalDto() }
+                        LeafService.createLeaf(dto.toServiceDto(groupId, versionId, principal)).map { it.toExternalDto() }
                     }.let {
                         call.ofResponse(it)
                     }
@@ -49,7 +49,7 @@ fun Routing.leafRouting() {
                 val dto = call.receive<LeafUpdateDto>()
                 LeafDtoValidator.validateDtoUpdate(dto)
                     .ifValidResponse {
-                        LeafService.updateLeaf(dto.toServiceDto(leafId), principal)
+                        LeafService.updateLeaf(dto.toServiceDto(leafId, principal))
                     }.let {
                         call.ofEmptyResponse(it)
                     }
@@ -57,7 +57,7 @@ fun Routing.leafRouting() {
             delete {
                 val principal = call.principal<CustomPrincipal>()!!
                 val leafDeletionDto = LeafDeletionDto(call.parameters.getOrFail("leafId").toInt())
-                val resp: Response<Unit> = LeafService.deleteLeaf(leafDeletionDto.toServiceDto(), principal)
+                val resp: Response<Unit> = LeafService.deleteLeaf(leafDeletionDto.toServiceDto(principal))
                 call.ofEmptyResponse(resp)
             }
         }

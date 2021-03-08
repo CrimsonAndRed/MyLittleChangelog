@@ -33,7 +33,7 @@ fun Routing.groupRouting() {
                 val dto = call.receive<GroupCreationDto>()
                 GroupDtoValidator.validateDtoNew(dto)
                     .ifValidResponse {
-                        GroupService.createGroup(dto.toServiceDto(versionId), principal).map { it.toExternalDto() }
+                        GroupService.createGroup(dto.toServiceDto(versionId, principal)).map { it.toExternalDto() }
                     }.let {
                         call.ofResponse(it)
                     }
@@ -47,7 +47,7 @@ fun Routing.groupRouting() {
                 val dto = call.receive<GroupUpdateDto>()
                 GroupDtoValidator.validateDtoUpdate(dto)
                     .ifValidResponse {
-                        GroupService.updateGroup(dto.toServiceDto(groupId), principal)
+                        GroupService.updateGroup(dto.toServiceDto(groupId, principal))
                     }.let {
                         call.ofEmptyResponse(it)
                     }
@@ -57,7 +57,7 @@ fun Routing.groupRouting() {
                 val principal = call.principal<CustomPrincipal>()!!
                 val groupId = call.parameters.getOrFail("groupId").toInt()
                 val dropHierarchy = call.request.queryParameters["hierarchy"]?.toBoolean() ?: true
-                val resp = GroupService.deleteGroup(GroupDeletionDto(groupId), principal, dropHierarchy)
+                val resp = GroupService.deleteGroup(GroupDeletionDto(groupId, principal), dropHierarchy)
                 call.ofEmptyResponse(resp)
             }
         }

@@ -35,7 +35,7 @@ internal class GroupRouterTest : AbstractRouterTest(
         val dto = GroupCreationDto("Test")
         val serviceDto = my.little.changelog.model.group.dto.service.ReturnedGroupDto(0, 0, "Test")
 
-        every { GroupService.createGroup(any(), allAny()) } returns Valid(serviceDto)
+        every { GroupService.createGroup(any()) } returns Valid(serviceDto)
 
         testAuthorizedRoute(HttpMethod.Post, baseUrl(vg.v), dto) {
             assertEquals(HttpStatusCode.OK, response.status())
@@ -53,7 +53,7 @@ internal class GroupRouterTest : AbstractRouterTest(
         val dto = GroupCreationDto("Test", 0, 0)
         testExceptions(
             constructAuthorizedRequest(HttpMethod.Post, baseUrl(vg.v), dto),
-            listOf { GroupService.createGroup(any(), allAny()) },
+            listOf { GroupService.createGroup(any()) },
             listOf(
                 { RuntimeException() } to HttpStatusCode.InternalServerError,
                 { UnauthException() } to HttpStatusCode.Unauthorized,
@@ -66,7 +66,7 @@ internal class GroupRouterTest : AbstractRouterTest(
     fun `Test Update Group Success`() {
         val dto = GroupUpdateDto("Test")
 
-        every { GroupService.updateGroup(any(), allAny()) } returns Valid(Unit)
+        every { GroupService.updateGroup(any()) } returns Valid(Unit)
 
         testAuthorizedRoute(HttpMethod.Put, "${baseUrl(vg.v)}/${vg.g}", dto) {
             assertEquals(HttpStatusCode.NoContent, response.status())
@@ -78,7 +78,7 @@ internal class GroupRouterTest : AbstractRouterTest(
         val dto = GroupUpdateDto("Test", 0)
         testExceptions(
             constructAuthorizedRequest(HttpMethod.Put, "${baseUrl(vg.v)}/${vg.g}", dto),
-            listOf { GroupService.updateGroup(any(), allAny()) },
+            listOf { GroupService.updateGroup(any()) },
             listOf(
                 { RuntimeException() } to HttpStatusCode.InternalServerError,
                 { UnauthException() } to HttpStatusCode.Unauthorized,

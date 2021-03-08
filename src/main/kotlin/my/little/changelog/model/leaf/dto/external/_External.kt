@@ -1,6 +1,8 @@
 package my.little.changelog.model.leaf.dto.external
 
-fun LeafCreationDto.toServiceDto(groupId: Int, versionId: Int) =
+import my.little.changelog.configuration.auth.CustomPrincipal
+
+fun LeafCreationDto.toServiceDto(groupId: Int, versionId: Int, cp: CustomPrincipal) =
     my.little.changelog.model.leaf.dto.service.LeafCreationDto(
         vid = vid,
         name = name!!,
@@ -8,16 +10,19 @@ fun LeafCreationDto.toServiceDto(groupId: Int, versionId: Int) =
         value = value!!,
         groupId = groupId,
         versionId = versionId,
+        principal = cp
     )
 
-fun LeafUpdateDto.toServiceDto(leafId: Int) = my.little.changelog.model.leaf.dto.service.LeafUpdateDto(
+fun LeafUpdateDto.toServiceDto(leafId: Int, cp: CustomPrincipal) = my.little.changelog.model.leaf.dto.service.LeafUpdateDto(
     id = leafId,
     name = name!!,
     valueType = valueType!!,
     value = value!!,
     parentVid = parentVid,
+    principal = cp
 )
 
-fun LeafDeletionDto.toServiceDto() = my.little.changelog.model.leaf.dto.service.LeafDeletionDto(
-    id = id
+fun LeafDeletionDto.toServiceDto(cp: CustomPrincipal) = my.little.changelog.model.leaf.dto.service.LeafDeletionDto(
+    id = id,
+    principal = cp
 )

@@ -18,10 +18,10 @@ import org.jetbrains.exposed.sql.transactions.transaction
 
 object LeafService {
 
-    fun createLeaf(leaf: LeafCreationDto, cp: CustomPrincipal): Response<LeafReturnedDto> = transaction {
+    fun createLeaf(leaf: LeafCreationDto): Response<LeafReturnedDto> = transaction {
         val version = VersionRepo.findById(leaf.versionId)
 
-        VersionValidator.validateLatest(version, cp.user)
+        VersionValidator.validateLatest(version, leaf.principal.user)
             .chain {
                 LeafValidator.validateNew(leaf)
             }
@@ -31,10 +31,10 @@ object LeafService {
             }
     }
 
-    fun updateLeaf(leafUpdate: LeafUpdateDto, cp: CustomPrincipal): Response<Unit> = transaction {
+    fun updateLeaf(leafUpdate: LeafUpdateDto): Response<Unit> = transaction {
         val leaf = LeafRepo.findById(leafUpdate.id)
         val newParentGroup = GroupRepo.findLatestGroupByVid(leafUpdate.parentVid)
-        VersionValidator.validateLatest(leaf.version, cp.user)
+        VersionValidator.validateLatest(leaf.version, leafUpdate.principal.user)
             .chain {
                 LeafValidator.validateUpdate(leafUpdate)
             }
@@ -50,9 +50,9 @@ object LeafService {
             .mapEmpty()
     }
 
-    fun deleteLeaf(leafDeletionDto: LeafDeletionDto, cp: CustomPrincipal): Response<Unit> = transaction {
+    fun deleteLeaf(leafDeletionDto: LeafDeletionDto): Response<Unit> = transaction {
         val leaf = LeafRepo.findById(leafDeletionDto.id)
-        VersionValidator.validateLatest(leaf.version, cp.user)
+        VersionValidator.validateLatest(leaf.version, leafDeletionDto.principal.user)
             .ifValid {
                 LeafRepo.delete(leaf)
             }

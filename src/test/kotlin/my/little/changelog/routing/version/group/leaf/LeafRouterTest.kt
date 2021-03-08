@@ -46,7 +46,7 @@ internal class LeafRouterTest : AbstractRouterTest({
             groupVid = baseVgl.g
         )
 
-        every { LeafService.createLeaf(allAny(), allAny()) } returns Valid(serviceReturnedDto)
+        every { LeafService.createLeaf(allAny()) } returns Valid(serviceReturnedDto)
 
         testAuthorizedRoute(HttpMethod.Post, baseUrl(baseVgl.v, baseVgl.g), dto) {
             assertEquals(HttpStatusCode.OK, response.status())
@@ -61,7 +61,7 @@ internal class LeafRouterTest : AbstractRouterTest({
 
         testExceptions(
             constructAuthorizedRequest(HttpMethod.Post, baseUrl(baseVgl.v, baseVgl.g), dto),
-            listOf { LeafService.createLeaf(allAny(), allAny()) },
+            listOf { LeafService.createLeaf(allAny()) },
             listOf(
                 { RuntimeException() } to HttpStatusCode.InternalServerError,
             )
@@ -71,7 +71,7 @@ internal class LeafRouterTest : AbstractRouterTest({
     @Test
     fun `Test Leaf Creation Validation Failure`() {
         val dto = LeafCreationDto(null, "Test Name 1", 1, "Test Value 1")
-        every { LeafService.createLeaf(allAny(), allAny()) } returns Err(listOf("Test error"))
+        every { LeafService.createLeaf(allAny()) } returns Err(listOf("Test error"))
 
         testAuthorizedRoute(HttpMethod.Post, baseUrl(baseVgl.v, baseVgl.g), dto) {
             assertEquals(HttpStatusCode.BadRequest, response.status())
@@ -84,7 +84,7 @@ internal class LeafRouterTest : AbstractRouterTest({
     fun `Test Leaf Update Success`() {
         val dto = LeafUpdateDto("Test Name 1", 1, "Test Value 1", 0)
 
-        every { LeafService.updateLeaf(allAny(), allAny()) } returns Valid(Unit)
+        every { LeafService.updateLeaf(allAny()) } returns Valid(Unit)
         testAuthorizedRoute(HttpMethod.Put, "${baseUrl(baseVgl.v, baseVgl.g)}/${baseVgl.l}", dto) {
             assertEquals(HttpStatusCode.NoContent, response.status())
         }
@@ -96,7 +96,7 @@ internal class LeafRouterTest : AbstractRouterTest({
 
         testExceptions(
             constructAuthorizedRequest(HttpMethod.Put, "${baseUrl(baseVgl.v, baseVgl.g)}/${baseVgl.l}", dto),
-            listOf { LeafService.updateLeaf(allAny(), allAny()) },
+            listOf { LeafService.updateLeaf(allAny()) },
             listOf(
                 { RuntimeException() } to HttpStatusCode.InternalServerError,
             )
@@ -106,7 +106,7 @@ internal class LeafRouterTest : AbstractRouterTest({
     @Test
     fun `Test Leaf Update Validation Failure`() {
         val dto = LeafUpdateDto("Test Name 1", 1, "Test Value 1", 0)
-        every { LeafService.updateLeaf(allAny(), allAny()) } returns Err(listOf("Test error"))
+        every { LeafService.updateLeaf(allAny()) } returns Err(listOf("Test error"))
 
         testAuthorizedRoute(HttpMethod.Put, "${baseUrl(baseVgl.v, baseVgl.g)}/${baseVgl.l}", dto) {
             assertEquals(HttpStatusCode.BadRequest, response.status())
@@ -117,7 +117,7 @@ internal class LeafRouterTest : AbstractRouterTest({
 
     @Test
     fun `Test Leaf Delete Success`() {
-        every { LeafService.deleteLeaf(allAny(), allAny()) } returns Valid(Unit)
+        every { LeafService.deleteLeaf(allAny()) } returns Valid(Unit)
         testAuthorizedRoute(HttpMethod.Delete, "${baseUrl(baseVgl.v, baseVgl.g)}/${baseVgl.l}") {
             assertEquals(HttpStatusCode.NoContent, response.status())
             assertNull(response.content)
@@ -127,7 +127,7 @@ internal class LeafRouterTest : AbstractRouterTest({
     @Test
     fun `Test Leaf Delete Exceptions`() = testExceptions(
         constructAuthorizedRequest(HttpMethod.Delete, "${baseUrl(baseVgl.v, baseVgl.g)}/${baseVgl.l}"),
-        listOf { LeafService.deleteLeaf(allAny(), allAny()) },
+        listOf { LeafService.deleteLeaf(allAny()) },
         listOf(
             { RuntimeException() } to HttpStatusCode.InternalServerError,
         )
@@ -136,7 +136,7 @@ internal class LeafRouterTest : AbstractRouterTest({
     @Test
     fun `Test Leaf Delete Validation Failure`() {
         val dto = LeafCreationDto(null, "Test Name 1", LeafType.TEXTUAL.id, "Test Value 1")
-        every { LeafService.deleteLeaf(allAny(), allAny()) } returns Err(listOf("Test error"))
+        every { LeafService.deleteLeaf(allAny()) } returns Err(listOf("Test error"))
 
         testAuthorizedRoute(HttpMethod.Delete, "${baseUrl(baseVgl.v, baseVgl.g)}/${baseVgl.l}", dto) {
             assertEquals(HttpStatusCode.BadRequest, response.status())

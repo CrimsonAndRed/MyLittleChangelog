@@ -24,7 +24,7 @@ fun Routing.differenceRouting() {
                 val to = call.request.queryParameters.getOrFail("to").toInt()
 
                 val dto = DifferenceDto(from, to)
-                call.respond(DifferenceService.findDifference(dto.toServiceDto(), principal).toExternalDto())
+                call.respond(DifferenceService.findDifference(dto.toServiceDto(principal)).toExternalDto())
             }
         }
     }

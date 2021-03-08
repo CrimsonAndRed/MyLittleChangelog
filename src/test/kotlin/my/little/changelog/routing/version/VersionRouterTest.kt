@@ -34,7 +34,7 @@ internal class VersionRouterTest : AbstractRouterTest(
         val dto = ReturnedVersionDto(0, "test", 0)
         val createDto = VersionCreationDto("test")
 
-        every { VersionService.createVersion(any(), any()) } returns dto
+        every { VersionService.createVersion(any()) } returns dto
 
         testAuthorizedRoute(HttpMethod.Post, baseUrl, createDto) {
             assertEquals(HttpStatusCode.OK, response.status())
@@ -46,7 +46,7 @@ internal class VersionRouterTest : AbstractRouterTest(
         val createDto = VersionCreationDto("test")
         testAuthorizedExceptions(
             constructAuthorizedRequest(HttpMethod.Post, baseUrl, createDto),
-            listOf { VersionService.createVersion(any(), any()) },
+            listOf { VersionService.createVersion(any()) },
             listOf(
                 { RuntimeException() } to HttpStatusCode.InternalServerError,
                 { UnauthException() } to HttpStatusCode.Unauthorized,

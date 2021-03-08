@@ -1,14 +1,18 @@
 package my.little.changelog.model.group.dto.external
 
-fun GroupCreationDto.toServiceDto(versionId: Int) = my.little.changelog.model.group.dto.service.GroupCreationDto(
+import my.little.changelog.configuration.auth.CustomPrincipal
+
+fun GroupCreationDto.toServiceDto(versionId: Int, cp: CustomPrincipal) = my.little.changelog.model.group.dto.service.GroupCreationDto(
     name = name!!,
     vid = vid,
     parentVid = parentVid,
     versionId = versionId,
+    principal = cp
 )
 
-fun GroupUpdateDto.toServiceDto(groupId: Int) = my.little.changelog.model.group.dto.service.GroupUpdateDto(
+fun GroupUpdateDto.toServiceDto(groupId: Int, cp: CustomPrincipal) = my.little.changelog.model.group.dto.service.GroupUpdateDto(
     name = name!!,
     parentVid = parentVid,
     id = groupId,
+    principal = cp
 )

@@ -33,20 +33,20 @@ object VersionService {
         }
     }
 
-    fun createVersion(versionCreationDto: VersionCreationDto, cp: CustomPrincipal): ReturnedVersionDto = transaction {
-        VersionRepo.create(versionCreationDto.toRepoDto(cp.user)).toReturnedDto()
+    fun createVersion(versionCreationDto: VersionCreationDto): ReturnedVersionDto = transaction {
+        VersionRepo.create(versionCreationDto.toRepoDto(versionCreationDto.principal.user)).toReturnedDto()
     }
 
-    fun deleteVersion(deletionDto: VersionDeletionDto, cp: CustomPrincipal): Response<Unit> = transaction {
+    fun deleteVersion(deletionDto: VersionDeletionDto): Response<Unit> = transaction {
         val version = VersionRepo.findById(deletionDto.id)
         VersionValidator
-            .validateLatest(version, cp.user)
+            .validateLatest(version, deletionDto.principal.user)
             .chain {
-                AuthValidator.validateAuthority(version.user, cp.user)
+                AuthValidator.validateAuthority(version.user, deletionDto.principal.user)
             }
             .ifValid {
                 LeafRepo.findByVersion(version).forEach {
-                    LeafService.deleteLeaf(LeafDeletionDto(it.id.value), cp)
+                    LeafService.deleteLeaf(LeafDeletionDto(it.id.value, deletionDto.principal))
                 }
                 GroupRepo.findByVersion(version).forEach {
                     GroupRepo.delete(it)
