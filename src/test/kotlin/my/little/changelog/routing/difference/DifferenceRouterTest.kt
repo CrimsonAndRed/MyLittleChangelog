@@ -11,7 +11,6 @@ import my.little.changelog.model.version.dto.service.ReturnedVersionDto
 import my.little.changelog.routing.AbstractRouterTest
 import my.little.changelog.routing.diff.differenceRouting
 import my.little.changelog.service.diff.DifferenceService
-import org.jetbrains.exposed.sql.transactions.transaction
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 

@@ -1,6 +1,8 @@
 import { OnInit } from "@angular/core";
 import { Component } from "@angular/core";
+import { MatDialog } from "@angular/material/dialog";
 import { LoginService } from "./login.service";
+import { NewUserModalComponent } from "./new-user-modal/new-user-modal.component";
 
 @Component({
     selector: 'login',
@@ -9,7 +11,7 @@ import { LoginService } from "./login.service";
   })
   export class LoginComponent {
 
-    constructor(private loginService: LoginService) { }
+    constructor(private loginService: LoginService, private dialog: MatDialog) { }
 
     login = '';
     password = '';
@@ -19,6 +21,19 @@ import { LoginService } from "./login.service";
       this.loginService.login({
           login: this.login,
           password: this.password
+      });
+    }
+
+    onNewUserClick(): void {
+
+      const dialogRef = this.dialog.open(NewUserModalComponent, {
+        hasBackdrop: true
+      });
+
+      dialogRef.afterClosed().subscribe(result => {
+        if (result) {
+          this.loginService.newUser(result);
+        }
       });
     }
   }

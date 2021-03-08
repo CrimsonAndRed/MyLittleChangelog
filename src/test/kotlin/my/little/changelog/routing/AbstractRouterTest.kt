@@ -21,7 +21,6 @@ abstract class AbstractRouterTest(
     private val routing: Routing.() -> Unit
 ) {
 
-
     protected fun testApplication(test: TestApplicationEngine.() -> Unit) {
         withTestApplication(
             {

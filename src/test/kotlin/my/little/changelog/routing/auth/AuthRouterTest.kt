@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
 @KtorExperimentalAPI
-class AuthRouterTest: AbstractRouterTest(
+class AuthRouterTest : AbstractRouterTest(
     { authRouting() }
 ) {
 

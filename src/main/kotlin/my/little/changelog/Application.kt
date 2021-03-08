@@ -104,4 +104,3 @@ fun Application.module(testing: Boolean = false, authTest: Boolean = false) {
 public fun getTestUser(): User {
     return User(EntityID(0, Users))
 }
-

@@ -176,7 +176,6 @@ internal class GroupIntegrationTest : AbstractIntegrationTest() {
             ) {
                 assertEquals(HttpStatusCode.NoContent, response.status())
             }
-
         }
     }
 

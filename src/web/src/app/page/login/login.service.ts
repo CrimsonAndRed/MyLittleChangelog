@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
-import { Auth, Token } from "app/model/auth";
+import { Auth, NewUser, Token } from "app/model/auth";
 import { PreloaderService } from "app/preloader/preloader.service";
 import { AuthService } from "app/service/auth.service";
 import { Http } from "app/service/http.service";
@@ -22,6 +22,12 @@ export class LoginService {
             this.router.navigate(['versions'], {skipLocationChange: false});
           })
         )
-      )
+    )
+  }
+
+  newUser(newUser: NewUser) {
+    this.preloaderService.wrap(
+      this.http.post<NewUser>(`${environment.backendPath}/user`, newUser)
+    )
   }
 }

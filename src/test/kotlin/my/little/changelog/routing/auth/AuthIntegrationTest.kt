@@ -9,14 +9,13 @@ import my.little.changelog.configuration.Json
 import my.little.changelog.model.auth.dto.external.AuthDto
 import my.little.changelog.model.auth.dto.external.Token
 import my.little.changelog.model.auth.dto.external.UserCreateDto
-import my.little.changelog.model.version.dto.external.ReturnedVersionDto
 import my.little.changelog.routing.AbstractIntegrationTest
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 
 @KtorExperimentalAPI
-class AuthIntegrationTest: AbstractIntegrationTest() {
+class AuthIntegrationTest : AbstractIntegrationTest() {
 
     @Test
     fun `Test Auth User Success`() {
@@ -29,7 +28,6 @@ class AuthIntegrationTest: AbstractIntegrationTest() {
                     login = login,
                     password = pw
                 )
-
 
                 with(
                     handleRequest(HttpMethod.Post, "/auth") {
@@ -57,7 +55,6 @@ class AuthIntegrationTest: AbstractIntegrationTest() {
                     password = "1_$pw"
                 )
 
-
                 with(
                     handleRequest(HttpMethod.Post, "/auth") {
                         addHeader("Content-Type", "application/json")
@@ -80,7 +77,6 @@ class AuthIntegrationTest: AbstractIntegrationTest() {
                     login = login,
                     password = pw
                 )
-
 
                 with(
                     handleRequest(HttpMethod.Post, "/user") {

@@ -26,7 +26,6 @@ import my.little.changelog.module as applicationModule
 import my.little.changelog.persistence.module as persistenceModule
 import my.little.changelog.routing.module as routingModule
 
-
 @KtorExperimentalAPI
 @Testcontainers
 abstract class AbstractIntegrationTest {
@@ -98,7 +97,6 @@ abstract class AbstractIntegrationTest {
             this.password = ExposedBlob(AuthService.generateHash(password))
         }.also { commit() }
 
-
     companion object Pg {
         lateinit var pg: PostgreSQLContainer<Nothing>
 
@@ -129,7 +127,6 @@ abstract class AbstractIntegrationTest {
             e.application.persistenceModule()
             Pg.engine = e
         }
-
 
         @AfterAll
         public fun stopEngine() {

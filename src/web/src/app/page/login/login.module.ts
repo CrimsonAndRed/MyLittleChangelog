@@ -5,16 +5,20 @@ import { RouterModule } from '@angular/router';
 
 import { HttpClientModule } from '@angular/common/http';
 import { LoginComponent } from './login.component';
+import { NewUserModalComponent } from './new-user-modal/new-user-modal.component';
+import { MatDialogModule } from '@angular/material/dialog';
 
 @NgModule({
   declarations: [
-    LoginComponent
+    LoginComponent,
+    NewUserModalComponent
   ],
   imports: [
     BrowserModule,
     FormsModule,
     HttpClientModule,
     RouterModule,
+    MatDialogModule
   ],
 })
 export class LoginModule { }
