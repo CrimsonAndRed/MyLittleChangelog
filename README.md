@@ -37,7 +37,6 @@ npm start
 - Init database vs current migration scripts?
 - Setup internal logging
 - Repositories are definitely not optimal (going to DB several times per method)
-- Salt hash
 - principal to dto?
 - unique user login
 - auth dto validation

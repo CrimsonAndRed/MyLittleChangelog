@@ -8,7 +8,7 @@ import kotlinx.serialization.encodeToString
 import my.little.changelog.configuration.Json
 import my.little.changelog.model.auth.dto.external.AuthDto
 import my.little.changelog.model.auth.dto.external.Token
-import my.little.changelog.model.auth.dto.external.UserCreateDto
+import my.little.changelog.model.auth.dto.external.UserCreationDto
 import my.little.changelog.routing.AbstractIntegrationTest
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.junit.jupiter.api.Assertions
@@ -73,7 +73,7 @@ class AuthIntegrationTest : AbstractIntegrationTest() {
             transaction {
                 val pw = "Password"
                 val login = "Login"
-                val dto: UserCreateDto = UserCreateDto(
+                val dto: UserCreationDto = UserCreationDto(
                     login = login,
                     password = pw
                 )

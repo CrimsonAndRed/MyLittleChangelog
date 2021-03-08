@@ -7,7 +7,7 @@ import io.mockk.mockkObject
 import my.little.changelog.exception.ForbiddenException
 import my.little.changelog.exception.UnauthException
 import my.little.changelog.model.auth.dto.external.AuthDto
-import my.little.changelog.model.auth.dto.external.UserCreateDto
+import my.little.changelog.model.auth.dto.external.UserCreationDto
 import my.little.changelog.routing.AbstractRouterTest
 import my.little.changelog.service.auth.AuthService
 import org.junit.jupiter.api.Test
@@ -59,7 +59,7 @@ class AuthRouterTest : AbstractRouterTest(
 
     @Test
     fun `Test New User Success`() {
-        val dto: UserCreateDto = UserCreateDto(
+        val dto: UserCreationDto = UserCreationDto(
             login = "Test Login",
             password = "Test password"
         )
@@ -73,7 +73,7 @@ class AuthRouterTest : AbstractRouterTest(
 
     @Test
     fun `Test New User Exception`() {
-        val dto: UserCreateDto = UserCreateDto(
+        val dto: UserCreationDto = UserCreationDto(
             login = "Test Login",
             password = "Test password"
         )

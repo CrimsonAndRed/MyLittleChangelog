@@ -17,6 +17,7 @@ import my.little.changelog.exception.UnauthException
 import my.little.changelog.model.auth.User
 import my.little.changelog.model.auth.Users
 import my.little.changelog.persistence.repo.AuthRepo
+import my.little.changelog.service.auth.AuthService
 import org.jetbrains.exposed.dao.id.EntityID
 import org.slf4j.event.Level
 
@@ -63,6 +64,8 @@ fun Application.module(testing: Boolean = false, authTest: Boolean = false) {
             call.respond(HttpStatusCode.InternalServerError)
         }
     }
+
+    AuthService.salt = environment.config.propertyOrNull("application.salt")?.getString() ?: ""
 
     if (authTest) {
         install(Authentication) {
