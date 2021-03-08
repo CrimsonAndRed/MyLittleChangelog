@@ -89,4 +89,28 @@ class AuthIntegrationTest : AbstractIntegrationTest() {
             }
         }
     }
+
+    @Test
+    fun `Test Create User With Same Login Failure`() {
+        testApplication {
+            transaction {
+
+                val user = createUser("Login")
+                val pw = "Password"
+                val dto: UserCreationDto = UserCreationDto(
+                    login = user.login,
+                    password = pw
+                )
+
+                with(
+                    handleRequest(HttpMethod.Post, "/user") {
+                        addHeader("Content-Type", "application/json")
+                        setBody(Json.encodeToString(dto))
+                    }
+                ) {
+                    Assertions.assertEquals(HttpStatusCode.BadRequest, response.status())
+                }
+            }
+        }
+    }
 }

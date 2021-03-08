@@ -32,7 +32,7 @@ fun Routing.authRouting() {
         post {
             val dto = call.receive<UserCreationDto>()
             AuthDtoValidator.validateNewUser(dto)
-                .ifValid {
+                .ifValidResponse {
                     AuthService.newUser(dto.toServiceDto())
                 }.let {
                     call.ofEmptyResponse(it)

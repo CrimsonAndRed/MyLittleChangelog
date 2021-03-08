@@ -10,6 +10,7 @@ import my.little.changelog.model.auth.dto.external.AuthDto
 import my.little.changelog.model.auth.dto.external.UserCreationDto
 import my.little.changelog.routing.AbstractRouterTest
 import my.little.changelog.service.auth.AuthService
+import my.little.changelog.validator.Valid
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
@@ -64,7 +65,7 @@ class AuthRouterTest : AbstractRouterTest(
             password = "Test password"
         )
 
-        every { AuthService.newUser(allAny()) } returns Unit
+        every { AuthService.newUser(allAny()) } returns Valid(Unit)
 
         testRoute(HttpMethod.Post, userBaseUrl, dto) {
             assertEquals(HttpStatusCode.NoContent, response.status())
