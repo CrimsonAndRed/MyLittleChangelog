@@ -28,12 +28,11 @@ internal class VersionIntegrationTest : AbstractIntegrationTest() {
         authorizedTest { user, token, transaction ->
             val version = transaction.createVersion(user)
 
-            with(handleRequest(HttpMethod.Get, "version/${version.id.value}"){
+            with(handleRequest(HttpMethod.Get, "version/${version.id.value}") {
                 addHeader("Authorization", "Bearer $token")
             }) {
                 assertEquals(HttpStatusCode.OK, response.status())
             }
-
         }
     }
 
@@ -82,7 +81,7 @@ internal class VersionIntegrationTest : AbstractIntegrationTest() {
             )
 
 
-            with(handleRequest(HttpMethod.Get, "version/${version.id}"){
+            with(handleRequest(HttpMethod.Get, "version/${version.id}") {
                 addHeader("Authorization", "Bearer $token")
             }) {
                 assertEquals(HttpStatusCode.OK, response.status())
@@ -98,7 +97,7 @@ internal class VersionIntegrationTest : AbstractIntegrationTest() {
             transaction.createVersion(user)
             transaction.createVersion(user)
 
-            with(handleRequest(HttpMethod.Get, "version"){
+            with(handleRequest(HttpMethod.Get, "version") {
                 addHeader("Authorization", "Bearer $token")
             }) {
                 assertEquals(HttpStatusCode.OK, response.status())
@@ -117,7 +116,7 @@ internal class VersionIntegrationTest : AbstractIntegrationTest() {
             transaction.createGroup(latestVersion, g1.vid)
             transaction.createLeaf(latestVersion, g1.vid)
 
-            with(handleRequest(HttpMethod.Delete, "version/${latestVersion.id.value}"){
+            with(handleRequest(HttpMethod.Delete, "version/${latestVersion.id.value}") {
                 addHeader("Authorization", "Bearer $token")
             }) {
                 transaction {
@@ -138,12 +137,12 @@ internal class VersionIntegrationTest : AbstractIntegrationTest() {
             val group = transaction.createGroup(latestVersion)
             transaction.createLeaf(latestVersion, group.vid)
 
-            with(handleRequest(HttpMethod.Delete, "version/${firstVersion.id.value}"){
+            with(handleRequest(HttpMethod.Delete, "version/${firstVersion.id.value}") {
                 addHeader("Authorization", "Bearer $token")
             }) {
                 transaction {
                     assertEquals(HttpStatusCode.BadRequest, response.status())
-                    assertNotEquals(firstVersion, VersionRepo.findLatest())
+                    assertNotEquals(firstVersion, VersionRepo.findLatestByUser(user))
                     assertEquals(1, GroupRepo.findAll().count())
                     assertEquals(1, LeafRepo.findAll().count())
                 }
@@ -154,10 +153,10 @@ internal class VersionIntegrationTest : AbstractIntegrationTest() {
     @Test
     fun `Test Delete Nonexistent Version Failure`() {
         authorizedTest { user, token, transaction ->
-            val firstVersion = transaction.createVersion()
+            val firstVersion = transaction.createVersion(user)
             transaction.createGroup(firstVersion)
 
-            with(handleRequest(HttpMethod.Delete, "version/${firstVersion.id.value + 1}"){
+            with(handleRequest(HttpMethod.Delete, "version/${firstVersion.id.value + 1}") {
                 addHeader("Authorization", "Bearer $token")
             }) {
                 transaction {
@@ -173,7 +172,7 @@ internal class VersionIntegrationTest : AbstractIntegrationTest() {
             val latestVersion = transaction.createVersion(user)
             val group = transaction.createGroup(latestVersion)
             val leaf = transaction.createLeaf(latestVersion, group.vid)
-            with(handleRequest(HttpMethod.Get, "version/previous"){
+            with(handleRequest(HttpMethod.Get, "version/previous") {
                 addHeader("Authorization", "Bearer $token")
             }) {
                 transaction {
@@ -208,7 +207,7 @@ internal class VersionIntegrationTest : AbstractIntegrationTest() {
             val v1 = transaction.createVersion(user)
             val v2 = transaction.createVersion(user)
 
-            with(handleRequest(HttpMethod.Get, "version"){
+            with(handleRequest(HttpMethod.Get, "version") {
                 addHeader("Authorization", "Bearer $token")
             }) {
                 assertEquals(HttpStatusCode.OK, response.status())

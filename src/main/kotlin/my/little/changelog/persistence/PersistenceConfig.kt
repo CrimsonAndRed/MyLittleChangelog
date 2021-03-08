@@ -12,6 +12,7 @@ import javax.sql.DataSource
 @KtorExperimentalAPI
 fun Application.module() {
     val dataSource = initDb(environment.config.config("database"))
+    Db.source = dataSource
     initMigration(dataSource)
 }
 
@@ -31,5 +32,11 @@ fun initDb(conf: ApplicationConfig): DataSource {
 
 fun initMigration(dataSource: DataSource) {
     val flyway: Flyway = Flyway.configure().dataSource(dataSource).load()
+    Db.flyway = flyway
     flyway.migrate()
+}
+
+public object Db {
+    lateinit var source: DataSource
+    lateinit var flyway: Flyway
 }
