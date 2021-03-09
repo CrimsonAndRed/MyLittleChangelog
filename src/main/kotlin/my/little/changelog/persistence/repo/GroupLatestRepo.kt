@@ -42,28 +42,20 @@ object GroupLatestRepo : AbstractCrudRepository<GroupLatest, Int>(GroupLatest) {
     }
 
     fun findHierarchyToChildByVid(vid: Int): SizedIterable<GroupLatest> = transaction {
-        connection.prepareStatement(FIND_GROUPS_AFFECTED_BY_GROUP_QUERY, arrayOf("id"))
-            .apply {
-                set(1, vid)
-            }
-            .executeQuery().iterate { getInt("id") }.let { GroupLatest.forIds(it) }
+        raw(FIND_GROUPS_AFFECTED_BY_GROUP_QUERY, arrayOf("id")) {
+            set(1, vid)
+        }.iterate { getInt("id") }.let { GroupLatest.forIds(it) }
     }
 
     fun findParentIds(vid: Int?): List<Int> = transaction {
-        connection.prepareStatement(FIND_PARENT_GROUPS_QUERY, arrayOf("id"))
-            .apply {
-                set(1, vid)
-            }
-            .executeQuery()
-            .iterate { getInt("id") }
+        raw(FIND_PARENT_GROUPS_QUERY, arrayOf("id")) {
+            set(1, vid)
+        }.iterate { getInt("id") }
     }
 
     fun findAllByUser(user: User): SizedIterable<GroupLatest> = transaction {
-        connection.prepareStatement(FIND_GROUPS_BY_USER_QUERY, arrayOf("id"))
-            .apply {
-                set(1, user.id.value)
-            }
-            .executeQuery()
-            .iterate { getInt("id") }.let { GroupLatest.forIds(it) }
+        raw(FIND_GROUPS_BY_USER_QUERY, arrayOf("id")) {
+            set(1, user.id.value)
+        }.iterate { getInt("id") }.let { GroupLatest.forIds(it) }
     }
 }

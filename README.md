@@ -35,6 +35,5 @@ npm start
 - A lot of DTOs used in project. It was interesting to try, but mistakes were made.
 - Deleting group "totally" (the way this group can not be chosen in "choose from previous").
 - Init database vs current migration scripts?
-- Setup internal logging
 - Repositories are definitely not optimal (going to DB several times per method)
 - Tinker authorized tests

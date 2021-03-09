@@ -17,11 +17,8 @@ object LeafLatestRepo : AbstractCrudRepository<LeafLatest, Int>(LeafLatest) {
         """
 
     fun findAllByUser(user: User): SizedIterable<LeafLatest> = transaction {
-        connection.prepareStatement(FIND_LEAVES_BY_USER_QUERY, arrayOf("id"))
-            .apply {
-                set(1, user.id.value)
-            }
-            .executeQuery()
-            .iterate { getInt("id") }.let { LeafLatest.forIds(it) }
+        raw(FIND_LEAVES_BY_USER_QUERY, arrayOf("id")) {
+            set(1, user.id.value)
+        }.iterate { getInt("id") }.let { LeafLatest.forIds(it) }
     }
 }

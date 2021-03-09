@@ -47,22 +47,18 @@ object LeafRepo : AbstractCrudRepository<Leaf, Int>(Leaf) {
     }
 
     fun findDifferentialLeaves(fromVersion: Version, toVersion: Version): SizedIterable<Leaf> = transaction {
-        connection.prepareStatement(DIFFERENTIAL_LEAVES_QUERY, arrayOf("id"))
-            .apply {
-                set(1, fromVersion.id.value)
-                set(2, toVersion.id.value)
-            }
-            .executeQuery().iterate { getInt("id") }.let { Leaf.forIds(it) }
+        raw(DIFFERENTIAL_LEAVES_QUERY, arrayOf("id")) {
+            set(1, fromVersion.id.value)
+            set(2, toVersion.id.value)
+        }.iterate { getInt("id") }.let { Leaf.forIds(it) }
     }
 
     fun findPreDifferentialLeaves(fromVersion: Version, leaves: Iterable<Leaf>): SizedIterable<Leaf> = transaction {
         if (leaves.iterator().hasNext()) {
-            connection.prepareStatement(PREDIFFERENTIAL_LEAVES_QUERY, arrayOf("id"))
-                .apply {
-                    set(1, fromVersion.id.value)
-                    set(2, (connection.connection as java.sql.Connection).createArrayOf("INTEGER", leaves.map { it.vid }.toList().toTypedArray()))
-                }
-                .executeQuery().iterate { getInt("id") }.let { Leaf.forIds(it) }
+            raw(PREDIFFERENTIAL_LEAVES_QUERY, arrayOf("id")) {
+                set(1, fromVersion.id.value)
+                set(2, (connection.connection as java.sql.Connection).createArrayOf("INTEGER", leaves.map { it.vid }.toList().toTypedArray()))
+            }.iterate { getInt("id") }.let { Leaf.forIds(it) }
         } else {
             emptySized()
         }

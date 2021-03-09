@@ -14,19 +14,19 @@ object GroupRepo : AbstractCrudRepository<Group, Int>(Group) {
 
     private const val FIND_GROUPS_AFFECTED_BY_VERSION_QUERY =
         """
-        WITH RECURSIVE sublatest AS (
-                SELECT grouped.* FROM (
-                    SELECT g.*, max(version_id) OVER (PARTITION BY vid) FROM groups AS g
-                    WHERE g.version_id <= ?
-                ) as grouped
-                WHERE grouped.version_id=grouped.max
-            ), tmp_groups AS (
-        		SELECT id, vid, parent_vid FROM sublatest 
-        		WHERE (vid in (SELECT group_vid FROM leaves where version_id = ?)) or 
-        				(vid in (SELECT vid FROM groups where version_id = ?))
-        	UNION
-        		SELECT g.id, g.vid, g.parent_vid FROM sublatest AS g JOIN tmp_groups ON g.vid=tmp_groups.parent_vid
-        ) SELECT id FROM tmp_groups
+            WITH RECURSIVE sublatest AS (
+                    SELECT grouped.* FROM (
+                        SELECT g.*, max(version_id) OVER (PARTITION BY vid) FROM groups AS g
+                        WHERE g.version_id <= ?
+                    ) as grouped
+                    WHERE grouped.version_id=grouped.max
+                ), tmp_groups AS (
+                    SELECT id, vid, parent_vid FROM sublatest 
+                    WHERE (vid in (SELECT group_vid FROM leaves where version_id = ?)) or 
+                            (vid in (SELECT vid FROM groups where version_id = ?))
+                UNION
+                    SELECT g.id, g.vid, g.parent_vid FROM sublatest AS g JOIN tmp_groups ON g.vid=tmp_groups.parent_vid
+            ) SELECT id FROM tmp_groups
         """
 
     private const val FIND_GROUPS_AFFECTED_BY_SUBLATEST_LEAVES_QUERY =
@@ -64,13 +64,11 @@ object GroupRepo : AbstractCrudRepository<Group, Int>(Group) {
         """
 
     fun findGroupsAffectedByVersion(version: Version): SizedIterable<Group> = transaction {
-        connection.prepareStatement(FIND_GROUPS_AFFECTED_BY_VERSION_QUERY, arrayOf("id"))
-            .apply {
-                set(1, version.id.value)
-                set(2, version.id.value)
-                set(3, version.id.value)
-            }
-            .executeQuery().iterate { getInt("id") }.let { Group.forIds(it) }
+        raw(FIND_GROUPS_AFFECTED_BY_VERSION_QUERY, arrayOf("id")) {
+            set(1, version.id.value)
+            set(2, version.id.value)
+            set(3, version.id.value)
+        }.iterate { getInt("id") }.let { Group.forIds(it) }
     }
 
     fun findGroupsAffectedByLeaves(leaves: Iterable<Leaf>, version: Version): SizedIterable<Group> = transaction {
@@ -78,12 +76,11 @@ object GroupRepo : AbstractCrudRepository<Group, Int>(Group) {
             it.groupVid
         }.distinct()
 
-        connection.prepareStatement(FIND_GROUPS_AFFECTED_BY_SUBLATEST_LEAVES_QUERY, arrayOf("id"))
-            .apply {
-                set(1, version.id.value)
-                set(2, (connection.connection as java.sql.Connection).createArrayOf("INTEGER", groupVids.toTypedArray()))
-            }
-            .executeQuery().iterate { getInt("id") }.let { Group.forIds(it) }
+        raw(FIND_GROUPS_AFFECTED_BY_SUBLATEST_LEAVES_QUERY, arrayOf("id")) {
+            set(1, version.id.value)
+            set(2, (connection.connection as java.sql.Connection).createArrayOf("INTEGER", groupVids.toTypedArray()))
+        }
+            .iterate { getInt("id") }.let { Group.forIds(it) }
     }
 
     fun findLatestGroupByVid(vid: Int): Group = transaction {
@@ -93,31 +90,25 @@ object GroupRepo : AbstractCrudRepository<Group, Int>(Group) {
     }
 
     fun findSublatestGroup(vid: Int, versionId: Int): Group? = transaction {
-        connection.prepareStatement(FIND_SUBLATEST_GROUP_QUERY, arrayOf("id"))
-            .apply {
-                set(1, vid)
-                set(2, versionId)
+        raw(FIND_SUBLATEST_GROUP_QUERY, arrayOf("id")) {
+            set(1, vid)
+            set(2, versionId)
+        }.let {
+            if (it.next()) {
+                val id = it.getInt("id")
+                Group.findById(id)
+            } else {
+                null
             }
-            .executeQuery()
-            .let {
-                if (it.next()) {
-                    val id = it.getInt("id")
-                    Group.findById(id)
-                } else {
-                    null
-                }
-            }
+        }
     }
 
     fun findEarliestByVids(vids: Iterable<Int>): List<Int> = transaction {
-        connection.prepareStatement(FIND_EARLIEST_GROUP_QUERY, arrayOf("id"))
-            .apply {
-                set(1, (connection.connection as java.sql.Connection).createArrayOf("INTEGER", vids.toList().toTypedArray()))
-            }
-            .executeQuery()
-            .iterate {
-                this.getInt("id")
-            }
+        raw(FIND_EARLIEST_GROUP_QUERY, arrayOf("id")) {
+            set(1, (connection.connection as java.sql.Connection).createArrayOf("INTEGER", vids.toList().toTypedArray()))
+        }.iterate {
+            this.getInt("id")
+        }
     }
 
     fun findByVids(vids: Iterable<Int>, version: Version): SizedIterable<Group> = transaction {
