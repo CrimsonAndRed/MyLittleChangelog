@@ -1,10 +1,7 @@
 package my.little.changelog.routing.auth
 
 import io.ktor.http.*
-import io.ktor.server.testing.*
 import io.ktor.util.*
-import kotlinx.serialization.encodeToString
-import my.little.changelog.configuration.Json
 import my.little.changelog.model.auth.dto.external.AuthDto
 import my.little.changelog.model.auth.dto.external.UserCreationDto
 import my.little.changelog.routing.AbstractIntegrationTest
@@ -23,12 +20,7 @@ internal class AuthIntegrationValidationTest : AbstractIntegrationTest() {
                     password = "Password"
                 )
 
-                with(
-                    handleRequest(HttpMethod.Post, "/auth") {
-                        addHeader("Content-Type", "application/json")
-                        setBody(Json.encodeToString(dto))
-                    }
-                ) {
+                testRequest(HttpMethod.Post, "/auth", dto) {
                     Assertions.assertEquals(HttpStatusCode.BadRequest, response.status())
                 }
             }
@@ -44,12 +36,7 @@ internal class AuthIntegrationValidationTest : AbstractIntegrationTest() {
                     password = ""
                 )
 
-                with(
-                    handleRequest(HttpMethod.Post, "/auth") {
-                        addHeader("Content-Type", "application/json")
-                        setBody(Json.encodeToString(dto))
-                    }
-                ) {
+                testRequest(HttpMethod.Post, "/auth", dto) {
                     Assertions.assertEquals(HttpStatusCode.BadRequest, response.status())
                 }
             }
@@ -65,12 +52,7 @@ internal class AuthIntegrationValidationTest : AbstractIntegrationTest() {
                     password = "Password"
                 )
 
-                with(
-                    handleRequest(HttpMethod.Post, "/user") {
-                        addHeader("Content-Type", "application/json")
-                        setBody(Json.encodeToString(dto))
-                    }
-                ) {
+                testRequest(HttpMethod.Post, "/user", dto) {
                     Assertions.assertEquals(HttpStatusCode.BadRequest, response.status())
                 }
             }
@@ -86,12 +68,7 @@ internal class AuthIntegrationValidationTest : AbstractIntegrationTest() {
                     password = ""
                 )
 
-                with(
-                    handleRequest(HttpMethod.Post, "/user") {
-                        addHeader("Content-Type", "application/json")
-                        setBody(Json.encodeToString(dto))
-                    }
-                ) {
+                testRequest(HttpMethod.Post, "/user", dto) {
                     Assertions.assertEquals(HttpStatusCode.BadRequest, response.status())
                 }
             }

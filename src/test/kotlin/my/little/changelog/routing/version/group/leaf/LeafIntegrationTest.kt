@@ -39,12 +39,11 @@ internal class LeafIntegrationTest : AbstractIntegrationTest() {
                 "Test Value 1"
             )
 
-            with(
-                handleRequest(HttpMethod.Post, "version/${version.id.value}/group/${group.id.value}/leaf") {
-                    addHeader("Authorization", "Bearer $token")
-                    addHeader("Content-Type", "application/json")
-                    setBody(Json.encodeToString(dto))
-                }
+            testAuthorizedRequest(
+                HttpMethod.Post,
+                "version/${version.id.value}/group/${group.id.value}/leaf",
+                token,
+                dto
             ) {
 
                 assertEquals(HttpStatusCode.OK, response.status())
@@ -69,12 +68,11 @@ internal class LeafIntegrationTest : AbstractIntegrationTest() {
                 "Test Value 1"
             )
 
-            with(
-                handleRequest(HttpMethod.Post, "version/${version.id.value}/group/${group.id.value}/leaf") {
-                    addHeader("Authorization", "Bearer $token")
-                    addHeader("Content-Type", "application/json")
-                    setBody(Json.encodeToString(dto))
-                }
+            testAuthorizedRequest(
+                HttpMethod.Post,
+                "version/${version.id.value}/group/${group.id.value}/leaf",
+                token,
+                dto
             ) {
                 assertEquals(HttpStatusCode.BadRequest, response.status())
                 val response = Json.decodeFromString<List<String>>(response.content!!)
@@ -95,12 +93,11 @@ internal class LeafIntegrationTest : AbstractIntegrationTest() {
                 "Test Value 1"
             )
 
-            with(
-                handleRequest(HttpMethod.Post, "version/${version.id.value + 1}/group/${group.id.value}/leaf") {
-                    addHeader("Authorization", "Bearer $token")
-                    addHeader("Content-Type", "application/json")
-                    setBody(Json.encodeToString(dto))
-                }
+            testAuthorizedRequest(
+                HttpMethod.Post,
+                "version/${version.id.value + 1}/group/${group.id.value}/leaf",
+                token,
+                dto
             ) {
                 assertEquals(HttpStatusCode.InternalServerError, response.status())
             }
@@ -119,12 +116,11 @@ internal class LeafIntegrationTest : AbstractIntegrationTest() {
                 "Test Value 1"
             )
 
-            with(
-                handleRequest(HttpMethod.Post, "version/${version.id.value + 1}/group/${group.id.value + 1}/leaf") {
-                    addHeader("Authorization", "Bearer $token")
-                    addHeader("Content-Type", "application/json")
-                    setBody(Json.encodeToString(dto))
-                }
+            testAuthorizedRequest(
+                HttpMethod.Post,
+                "version/${version.id.value + 1}/group/${group.id.value + 1}/leaf",
+                token,
+                dto
             ) {
                 assertEquals(HttpStatusCode.InternalServerError, response.status())
             }
@@ -144,17 +140,12 @@ internal class LeafIntegrationTest : AbstractIntegrationTest() {
                 group.vid
             )
 
-            with(
-                handleRequest(
-                    HttpMethod.Put,
-                    "version/${version.id.value}/group/${group.id.value}/leaf/${leaf.id.value}"
-                ) {
-                    addHeader("Authorization", "Bearer $token")
-                    addHeader("Content-Type", "application/json")
-                    setBody(Json.encodeToString(dto))
-                }
+            testAuthorizedRequest(
+                HttpMethod.Put,
+                "version/${version.id.value}/group/${group.id.value}/leaf/${leaf.id.value}",
+                token,
+                dto
             ) {
-
                 assertEquals(HttpStatusCode.NoContent, response.status())
             }
         }
@@ -173,15 +164,11 @@ internal class LeafIntegrationTest : AbstractIntegrationTest() {
                 group.vid
             )
 
-            with(
-                handleRequest(
-                    HttpMethod.Put,
-                    "version/${version.id.value}/group/${group.id.value}/leaf/${leaf.id.value}"
-                ) {
-                    addHeader("Authorization", "Bearer $token")
-                    addHeader("Content-Type", "application/json")
-                    setBody(Json.encodeToString(dto))
-                }
+            testAuthorizedRequest(
+                HttpMethod.Put,
+                "version/${version.id.value}/group/${group.id.value}/leaf/${leaf.id.value}",
+                token,
+                dto
             ) {
                 assertEquals(HttpStatusCode.NoContent, response.status())
             }
@@ -203,15 +190,11 @@ internal class LeafIntegrationTest : AbstractIntegrationTest() {
                 parentVid = group2.vid,
             )
 
-            with(
-                handleRequest(
-                    HttpMethod.Put,
-                    "version/${version.id.value}/group/${group1.id.value}/leaf/${leaf.id.value}"
-                ) {
-                    addHeader("Authorization", "Bearer $token")
-                    addHeader("Content-Type", "application/json")
-                    setBody(Json.encodeToString(dto))
-                }
+            testAuthorizedRequest(
+                HttpMethod.Put,
+                "version/${version.id.value}/group/${group1.id.value}/leaf/${leaf.id.value}",
+                token,
+                dto
             ) {
                 assertEquals(HttpStatusCode.NoContent, response.status())
             }
@@ -232,15 +215,11 @@ internal class LeafIntegrationTest : AbstractIntegrationTest() {
                 group.vid
             )
 
-            with(
-                handleRequest(
-                    HttpMethod.Put,
-                    "version/${version.id.value + 1}/group/${group.id.value}/leaf/${leaf.id.value}"
-                ) {
-                    addHeader("Authorization", "Bearer $token")
-                    addHeader("Content-Type", "application/json")
-                    setBody(Json.encodeToString(dto))
-                }
+            testAuthorizedRequest(
+                HttpMethod.Put,
+                "version/${version.id.value + 1}/group/${group.id.value}/leaf/${leaf.id.value}",
+                token,
+                dto
             ) {
                 assertEquals(HttpStatusCode.NoContent, response.status())
             }
@@ -260,15 +239,11 @@ internal class LeafIntegrationTest : AbstractIntegrationTest() {
                 group.vid + 1
             )
 
-            with(
-                handleRequest(
-                    HttpMethod.Put,
-                    "version/${version.id.value}/group/${group.id.value}/leaf/${leaf.id.value}"
-                ) {
-                    addHeader("Authorization", "Bearer $token")
-                    addHeader("Content-Type", "application/json")
-                    setBody(Json.encodeToString(dto))
-                }
+            testAuthorizedRequest(
+                HttpMethod.Put,
+                "version/${version.id.value}/group/${group.id.value}/leaf/${leaf.id.value}",
+                token,
+                dto
             ) {
                 assertEquals(HttpStatusCode.InternalServerError, response.status())
             }
@@ -282,14 +257,10 @@ internal class LeafIntegrationTest : AbstractIntegrationTest() {
             val group = transaction.createGroup(version)
             val leaf = transaction.createLeaf(version, group.vid)
 
-            with(
-                handleRequest(
-                    HttpMethod.Delete,
-                    "version/${version.id.value}/group/${group.id.value}/leaf/${leaf.id.value}"
-                ) {
-                    addHeader("Authorization", "Bearer $token")
-                    addHeader("Authorization", "Bearer $token")
-                }
+            testAuthorizedRequest(
+                HttpMethod.Delete,
+                "version/${version.id.value}/group/${group.id.value}/leaf/${leaf.id.value}",
+                token,
             ) {
                 assertEquals(HttpStatusCode.NoContent, response.status())
             }
@@ -305,14 +276,10 @@ internal class LeafIntegrationTest : AbstractIntegrationTest() {
             val group = transaction.createGroup(version1)
             val leaf = transaction.createLeaf(version1, group.vid)
 
-            with(
-                handleRequest(
-                    HttpMethod.Delete,
-                    "version/${version2.id.value}/group/${group.id.value}/leaf/${leaf.id.value}"
-                ) {
-                    addHeader("Authorization", "Bearer $token")
-                    addHeader("Authorization", "Bearer $token")
-                }
+            testAuthorizedRequest(
+                HttpMethod.Delete,
+                "version/${version2.id.value}/group/${group.id.value}/leaf/${leaf.id.value}",
+                token
             ) {
                 assertEquals(HttpStatusCode.BadRequest, response.status())
             }
@@ -327,14 +294,10 @@ internal class LeafIntegrationTest : AbstractIntegrationTest() {
             val group = transaction.createGroup(version1)
             val leaf = transaction.createLeaf(version1, group.vid)
 
-            with(
-                handleRequest(
-                    HttpMethod.Delete,
-                    "version/${version1.id.value}/group/${group.id.value}/leaf/${leaf.id.value + 1}"
-                ) {
-                    addHeader("Authorization", "Bearer $token")
-                    addHeader("Authorization", "Bearer $token")
-                }
+            testAuthorizedRequest(
+                HttpMethod.Delete,
+                "version/${version1.id.value}/group/${group.id.value}/leaf/${leaf.id.value + 1}",
+                token
             ) {
                 assertEquals(HttpStatusCode.InternalServerError, response.status())
             }
@@ -376,11 +339,7 @@ internal class LeafIntegrationTest : AbstractIntegrationTest() {
         token: String
     ) {
         val dto = ChangeLeafPositionDto(leaf2.id.value)
-        handleRequest(HttpMethod.Patch, "/version/${version.id}/group/${group.id}/leaf/${leaf1.id}/position") {
-            addHeader("Authorization", "Bearer $token")
-            addHeader("Content-Type", "application/json")
-            setBody(Json.encodeToString(dto))
-        }.apply {
+        testAuthorizedRequest(HttpMethod.Patch, "/version/${version.id}/group/${group.id}/leaf/${leaf1.id}/position", token, dto) {
             assertEquals(HttpStatusCode.NoContent, response.status())
             assertEquals(LeafRepo.findById(leaf1.id.value).order, leaf2.order)
             assertEquals(LeafRepo.findById(leaf2.id.value).order, leaf1.order)
@@ -395,11 +354,7 @@ internal class LeafIntegrationTest : AbstractIntegrationTest() {
         token: String
     ) {
         val dto = ChangeLeafPositionDto(leaf2.id.value)
-        handleRequest(HttpMethod.Patch, "/version/${version.id}/group/${group.id}/leaf/${leaf1.id}/position") {
-            addHeader("Authorization", "Bearer $token")
-            addHeader("Content-Type", "application/json")
-            setBody(Json.encodeToString(dto))
-        }.apply {
+        testAuthorizedRequest(HttpMethod.Patch, "/version/${version.id}/group/${group.id}/leaf/${leaf1.id}/position", token, dto) {
             assertEquals(HttpStatusCode.BadRequest, response.status())
         }
     }

@@ -31,13 +31,7 @@ internal class LeafIntegrationValidationTest : AbstractIntegrationTest() {
                 "Test Value 1"
             )
 
-            with(
-                handleRequest(HttpMethod.Post, "version/${version.id.value}/group/${group.id.value}/leaf") {
-                    addHeader("Authorization", "Bearer $token")
-                    addHeader("Content-Type", "application/json")
-                    setBody(Json.encodeToString(dto))
-                }
-            ) {
+            testAuthorizedRequest(HttpMethod.Post, "version/${version.id.value}/group/${group.id.value}/leaf", token, dto) {
                 Assertions.assertEquals(HttpStatusCode.BadRequest, response.status())
                 val response = Json.decodeFromString<List<String>>(response.content!!)
                 assertTrue { 1 >= response.size }
@@ -58,15 +52,11 @@ internal class LeafIntegrationValidationTest : AbstractIntegrationTest() {
                 group.vid
             )
 
-            with(
-                handleRequest(
-                    HttpMethod.Put,
-                    "version/${version.id.value}/group/${group.id.value}/leaf/${leaf.id.value}"
-                ) {
-                    addHeader("Authorization", "Bearer $token")
-                    addHeader("Content-Type", "application/json")
-                    setBody(Json.encodeToString(dto))
-                }
+            testAuthorizedRequest(
+                HttpMethod.Put,
+                "version/${version.id.value}/group/${group.id.value}/leaf/${leaf.id.value}",
+                token,
+                dto
             ) {
                 Assertions.assertEquals(HttpStatusCode.BadRequest, response.status())
                 val response = Json.decodeFromString<List<String>>(response.content!!)
@@ -88,15 +78,11 @@ internal class LeafIntegrationValidationTest : AbstractIntegrationTest() {
                 group.vid
             )
 
-            with(
-                handleRequest(
-                    HttpMethod.Put,
-                    "version/${version.id.value}/group/${group.id.value}/leaf/${leaf.id.value}"
-                ) {
-                    addHeader("Authorization", "Bearer $token")
-                    addHeader("Content-Type", "application/json")
-                    setBody(Json.encodeToString(dto))
-                }
+            testAuthorizedRequest(
+                HttpMethod.Put,
+                "version/${version.id.value}/group/${group.id.value}/leaf/${leaf.id.value}",
+                token,
+                dto
             ) {
                 Assertions.assertEquals(HttpStatusCode.NoContent, response.status())
             }
@@ -116,15 +102,11 @@ internal class LeafIntegrationValidationTest : AbstractIntegrationTest() {
                 group.vid
             )
 
-            with(
-                handleRequest(
-                    HttpMethod.Put,
-                    "version/${version.id.value}/group/${group.id.value}/leaf/${leaf.id.value}"
-                ) {
-                    addHeader("Authorization", "Bearer $token")
-                    addHeader("Content-Type", "application/json")
-                    setBody(Json.encodeToString(dto))
-                }
+            testAuthorizedRequest(
+                HttpMethod.Put,
+                "version/${version.id.value}/group/${group.id.value}/leaf/${leaf.id.value}",
+                token,
+                dto
             ) {
                 Assertions.assertEquals(HttpStatusCode.BadRequest, response.status())
                 val response = Json.decodeFromString<List<String>>(response.content!!)

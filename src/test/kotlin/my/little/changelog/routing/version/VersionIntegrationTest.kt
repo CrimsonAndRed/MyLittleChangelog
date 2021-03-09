@@ -1,9 +1,7 @@
 package my.little.changelog.routing.version
 
-import io.ktor.http.HttpMethod
-import io.ktor.http.HttpStatusCode
-import io.ktor.server.testing.handleRequest
-import io.ktor.util.KtorExperimentalAPI
+import io.ktor.http.*
+import io.ktor.util.*
 import kotlinx.serialization.decodeFromString
 import my.little.changelog.configuration.Json
 import my.little.changelog.model.group.dto.external.WholeGroupDto
@@ -28,11 +26,7 @@ internal class VersionIntegrationTest : AbstractIntegrationTest() {
         authorizedTest { user, token, transaction ->
             val version = transaction.createVersion(user)
 
-            with(
-                handleRequest(HttpMethod.Get, "version/${version.id.value}") {
-                    addHeader("Authorization", "Bearer $token")
-                }
-            ) {
+            testAuthorizedRequest(HttpMethod.Get, "version/${version.id.value}", token) {
                 assertEquals(HttpStatusCode.OK, response.status())
             }
         }
@@ -82,11 +76,8 @@ internal class VersionIntegrationTest : AbstractIntegrationTest() {
                 name = version.name
             )
 
-            with(
-                handleRequest(HttpMethod.Get, "version/${version.id}") {
-                    addHeader("Authorization", "Bearer $token")
-                }
-            ) {
+
+            testAuthorizedRequest(HttpMethod.Get, "version/${version.id}", token) {
                 assertEquals(HttpStatusCode.OK, response.status())
                 val json: WholeVersion = Json.decodeFromString(response.content!!)
                 assertEquals(json, wholeVersion)
@@ -100,11 +91,7 @@ internal class VersionIntegrationTest : AbstractIntegrationTest() {
             transaction.createVersion(user)
             transaction.createVersion(user)
 
-            with(
-                handleRequest(HttpMethod.Get, "version") {
-                    addHeader("Authorization", "Bearer $token")
-                }
-            ) {
+            testAuthorizedRequest(HttpMethod.Get, "version", token) {
                 assertEquals(HttpStatusCode.OK, response.status())
                 val jsonList: List<ReturnedVersionDto> = Json.decodeFromString(response.content!!)
                 assertEquals(2, jsonList.size)
@@ -121,11 +108,7 @@ internal class VersionIntegrationTest : AbstractIntegrationTest() {
             transaction.createGroup(latestVersion, g1.vid)
             transaction.createLeaf(latestVersion, g1.vid)
 
-            with(
-                handleRequest(HttpMethod.Delete, "version/${latestVersion.id.value}") {
-                    addHeader("Authorization", "Bearer $token")
-                }
-            ) {
+            testAuthorizedRequest(HttpMethod.Delete, "version/${latestVersion.id.value}", token) {
                 transaction {
                     assertEquals(HttpStatusCode.NoContent, response.status())
                     assertEquals(firstVersion.id, VersionRepo.findLatest().id)
@@ -144,11 +127,7 @@ internal class VersionIntegrationTest : AbstractIntegrationTest() {
             val group = transaction.createGroup(latestVersion)
             transaction.createLeaf(latestVersion, group.vid)
 
-            with(
-                handleRequest(HttpMethod.Delete, "version/${firstVersion.id.value}") {
-                    addHeader("Authorization", "Bearer $token")
-                }
-            ) {
+            testAuthorizedRequest(HttpMethod.Delete, "version/${firstVersion.id.value}", token) {
                 transaction {
                     assertEquals(HttpStatusCode.BadRequest, response.status())
                     assertNotEquals(firstVersion, VersionRepo.findLatestByUser(user))
@@ -165,11 +144,7 @@ internal class VersionIntegrationTest : AbstractIntegrationTest() {
             val firstVersion = transaction.createVersion(user)
             transaction.createGroup(firstVersion)
 
-            with(
-                handleRequest(HttpMethod.Delete, "version/${firstVersion.id.value + 1}") {
-                    addHeader("Authorization", "Bearer $token")
-                }
-            ) {
+            testAuthorizedRequest(HttpMethod.Delete, "version/${firstVersion.id.value + 1}", token) {
                 transaction {
                     assertEquals(HttpStatusCode.InternalServerError, response.status())
                 }
@@ -183,11 +158,7 @@ internal class VersionIntegrationTest : AbstractIntegrationTest() {
             val latestVersion = transaction.createVersion(user)
             val group = transaction.createGroup(latestVersion)
             val leaf = transaction.createLeaf(latestVersion, group.vid)
-            with(
-                handleRequest(HttpMethod.Get, "version/previous") {
-                    addHeader("Authorization", "Bearer $token")
-                }
-            ) {
+            testAuthorizedRequest(HttpMethod.Get, "version/previous", token) {
                 transaction {
                     assertEquals(HttpStatusCode.OK, response.status())
                     val json: PreviousVersionsDTO = Json.decodeFromString(response.content!!)
@@ -220,11 +191,7 @@ internal class VersionIntegrationTest : AbstractIntegrationTest() {
             val v1 = transaction.createVersion(user)
             val v2 = transaction.createVersion(user)
 
-            with(
-                handleRequest(HttpMethod.Get, "version") {
-                    addHeader("Authorization", "Bearer $token")
-                }
-            ) {
+            testAuthorizedRequest(HttpMethod.Get, "version", token) {
                 assertEquals(HttpStatusCode.OK, response.status())
                 val jsonList: List<ReturnedVersionDto> = Json.decodeFromString(response.content!!)
                 assertEquals(2, jsonList.size)

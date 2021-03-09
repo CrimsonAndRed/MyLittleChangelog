@@ -1,18 +1,13 @@
 package my.little.changelog.routing.version.group
 
-import io.ktor.http.HttpMethod
-import io.ktor.http.HttpStatusCode
-import io.ktor.server.testing.handleRequest
-import io.ktor.server.testing.setBody
-import io.ktor.util.KtorExperimentalAPI
+import io.ktor.http.*
+import io.ktor.util.*
 import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.encodeToString
 import my.little.changelog.configuration.Json
 import my.little.changelog.model.group.dto.external.ChangeGroupPositionDto
 import my.little.changelog.model.group.dto.external.GroupCreationDto
 import my.little.changelog.model.group.dto.external.GroupUpdateDto
 import my.little.changelog.routing.AbstractIntegrationTest
-import org.jetbrains.exposed.sql.transactions.transaction
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import kotlin.test.assertTrue
@@ -25,13 +20,7 @@ internal class GroupIntegrationValidationTest : AbstractIntegrationTest() {
             val version1 = transaction.createVersion(user)
             val dto = GroupCreationDto(" ")
 
-            with(
-                handleRequest(HttpMethod.Post, "version/${version1.id.value}/group") {
-                    addHeader("Authorization", "Bearer $token")
-                    addHeader("Content-Type", "application/json")
-                    setBody(Json.encodeToString(dto))
-                }
-            ) {
+            testAuthorizedRequest(HttpMethod.Post, "version/${version1.id.value}/group", token, dto) {
                 Assertions.assertEquals(HttpStatusCode.BadRequest, response.status())
                 val response = Json.decodeFromString<List<String>>(response.content!!)
                 assertTrue { 1 >= response.size }
@@ -46,13 +35,7 @@ internal class GroupIntegrationValidationTest : AbstractIntegrationTest() {
             val group = transaction.createGroup(version1)
             val dto = GroupUpdateDto(" ")
 
-            with(
-                handleRequest(HttpMethod.Put, "version/${version1.id.value}/group/${group.id.value}") {
-                    addHeader("Authorization", "Bearer $token")
-                    addHeader("Content-Type", "application/json")
-                    setBody(Json.encodeToString(dto))
-                }
-            ) {
+            testAuthorizedRequest(HttpMethod.Put, "version/${version1.id.value}/group/${group.id.value}", token, dto) {
                 Assertions.assertEquals(HttpStatusCode.BadRequest, response.status())
                 val response = Json.decodeFromString<List<String>>(response.content!!)
                 assertTrue { 1 >= response.size }
@@ -68,13 +51,7 @@ internal class GroupIntegrationValidationTest : AbstractIntegrationTest() {
             val group2 = transaction.createGroup(version1, group.vid)
             val dto = ChangeGroupPositionDto(group2.vid)
 
-            with(
-                handleRequest(HttpMethod.Patch, "version/${version1.id.value}/group/${group.id.value}/position") {
-                    addHeader("Authorization", "Bearer $token")
-                    addHeader("Content-Type", "application/json")
-                    setBody(Json.encodeToString(dto))
-                }
-            ) {
+            testAuthorizedRequest(HttpMethod.Patch, "version/${version1.id.value}/group/${group.id.value}/position", token, dto) {
                 Assertions.assertEquals(HttpStatusCode.BadRequest, response.status())
                 val response = Json.decodeFromString<List<String>>(response.content!!)
                 assertTrue { 1 >= response.size }

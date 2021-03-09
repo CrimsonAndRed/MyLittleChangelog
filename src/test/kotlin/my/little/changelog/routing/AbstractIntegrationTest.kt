@@ -1,9 +1,12 @@
 package my.little.changelog.routing
 
 import io.ktor.config.*
+import io.ktor.http.*
 import io.ktor.server.engine.*
 import io.ktor.server.testing.*
 import io.ktor.util.*
+import kotlinx.serialization.encodeToString
+import my.little.changelog.configuration.Json
 import my.little.changelog.configuration.auth.JwtConfig
 import my.little.changelog.model.auth.User
 import my.little.changelog.model.group.Group
@@ -56,6 +59,50 @@ abstract class AbstractIntegrationTest {
                 val token = JwtConfig.makeToken(user)
                 this@testApplication.test(user, token, this)
             }
+        }
+    }
+
+    protected inline fun <reified T> TestApplicationEngine.testRequest(
+        method: HttpMethod,
+        uri: String,
+        dto: T,
+        test: TestApplicationCall.() -> Unit
+    ) {
+        with(handleRequest(method, uri) {
+            addHeader("Content-Type", "application/json")
+            setBody(Json.encodeToString(dto))
+        }) {
+            test()
+        }
+    }
+
+    protected inline fun <reified T> TestApplicationEngine.testAuthorizedRequest(
+        method: HttpMethod,
+        uri: String,
+        token: String,
+        dto: T,
+        test: TestApplicationCall.() -> Unit
+    ) {
+        with(handleRequest(method, uri) {
+            addHeader("Content-Type", "application/json")
+            setBody(Json.encodeToString(dto))
+            addHeader("Authorization", "Bearer $token")
+        }) {
+            test()
+        }
+    }
+
+    protected fun TestApplicationEngine.testAuthorizedRequest(
+        method: HttpMethod,
+        uri: String,
+        token: String,
+        test: TestApplicationCall.() -> Unit
+    ) {
+        with(handleRequest(method, uri) {
+            addHeader("Content-Type", "application/json")
+            addHeader("Authorization", "Bearer $token")
+        }) {
+            test()
         }
     }
 

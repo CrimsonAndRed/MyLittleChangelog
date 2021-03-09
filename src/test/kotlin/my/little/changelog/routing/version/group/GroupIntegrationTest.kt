@@ -30,13 +30,7 @@ internal class GroupIntegrationTest : AbstractIntegrationTest() {
             val version = transaction.createVersion(user)
             val dto = GroupCreationDto("Test Name 1")
 
-            with(
-                handleRequest(HttpMethod.Post, "version/${version.id.value}/group") {
-                    addHeader("Content-Type", "application/json")
-                    addHeader("Authorization", "Bearer $token")
-                    setBody(Json.encodeToString(dto))
-                }
-            ) {
+            testAuthorizedRequest(HttpMethod.Post, "version/${version.id.value}/group", token, dto) {
                 assertEquals(HttpStatusCode.OK, response.status())
 
                 val response: ReturnedGroupDto = Json.decodeFromString(response.content!!)
@@ -53,13 +47,7 @@ internal class GroupIntegrationTest : AbstractIntegrationTest() {
             val group = transaction.createGroup(version)
             val dto = GroupCreationDto("Test Name 1", parentVid = group.vid)
 
-            with(
-                handleRequest(HttpMethod.Post, "version/${version.id.value}/group") {
-                    addHeader("Authorization", "Bearer $token")
-                    addHeader("Content-Type", "application/json")
-                    setBody(Json.encodeToString(dto))
-                }
-            ) {
+            testAuthorizedRequest(HttpMethod.Post, "version/${version.id.value}/group", token, dto) {
                 assertEquals(HttpStatusCode.OK, response.status())
 
                 val response: ReturnedGroupDto = Json.decodeFromString(response.content!!)
@@ -77,13 +65,7 @@ internal class GroupIntegrationTest : AbstractIntegrationTest() {
             val group = transaction.createGroup(version1)
             val dto = GroupCreationDto(group.name, vid = group.vid)
 
-            with(
-                handleRequest(HttpMethod.Post, "version/${version2.id.value}/group") {
-                    addHeader("Authorization", "Bearer $token")
-                    addHeader("Content-Type", "application/json")
-                    setBody(Json.encodeToString(dto))
-                }
-            ) {
+            testAuthorizedRequest(HttpMethod.Post, "version/${version2.id.value}/group", token, dto) {
                 assertEquals(HttpStatusCode.OK, response.status())
 
                 val response: ReturnedGroupDto = Json.decodeFromString(response.content!!)
@@ -103,13 +85,7 @@ internal class GroupIntegrationTest : AbstractIntegrationTest() {
             val group = transaction.createGroup(version1)
             val dto = GroupCreationDto(group.name, vid = group.vid)
 
-            with(
-                handleRequest(HttpMethod.Post, "version/${version2.id.value + 1}/group") {
-                    addHeader("Authorization", "Bearer $token")
-                    addHeader("Content-Type", "application/json")
-                    setBody(Json.encodeToString(dto))
-                }
-            ) {
+            testAuthorizedRequest(HttpMethod.Post, "version/${version2.id.value + 1}/group", token, dto) {
                 assertEquals(HttpStatusCode.InternalServerError, response.status())
             }
         }
@@ -123,13 +99,7 @@ internal class GroupIntegrationTest : AbstractIntegrationTest() {
             val group = transaction.createGroup(version1)
             val dto = GroupCreationDto(group.name, vid = group.vid + 1)
 
-            with(
-                handleRequest(HttpMethod.Post, "version/$version2/group") {
-                    addHeader("Authorization", "Bearer $token")
-                    addHeader("Content-Type", "application/json")
-                    setBody(Json.encodeToString(dto))
-                }
-            ) {
+            testAuthorizedRequest(HttpMethod.Post, "version/$version2/group", token, dto) {
                 assertEquals(HttpStatusCode.InternalServerError, response.status())
             }
         }
@@ -142,13 +112,7 @@ internal class GroupIntegrationTest : AbstractIntegrationTest() {
             val group = transaction.createGroup(version)
             val dto = GroupUpdateDto("Test Base Group 2", null)
 
-            with(
-                handleRequest(HttpMethod.Put, "version/${version.id.value}/group/${group.id.value}") {
-                    addHeader("Authorization", "Bearer $token")
-                    addHeader("Content-Type", "application/json")
-                    setBody(Json.encodeToString(dto))
-                }
-            ) {
+            testAuthorizedRequest(HttpMethod.Put, "version/${version.id.value}/group/${group.id.value}", token, dto) {
                 assertEquals(HttpStatusCode.NoContent, response.status())
             }
         }
@@ -163,13 +127,7 @@ internal class GroupIntegrationTest : AbstractIntegrationTest() {
 
             val dto = GroupUpdateDto("Test Base Group 2", groupRoot.id.value)
 
-            with(
-                handleRequest(HttpMethod.Put, "version/${version.id.value}/group/${groupSub.id.value}") {
-                    addHeader("Authorization", "Bearer $token")
-                    addHeader("Content-Type", "application/json")
-                    setBody(Json.encodeToString(dto))
-                }
-            ) {
+            testAuthorizedRequest(HttpMethod.Put, "version/${version.id.value}/group/${groupSub.id.value}", token, dto) {
                 assertEquals(HttpStatusCode.NoContent, response.status())
             }
         }
@@ -183,13 +141,7 @@ internal class GroupIntegrationTest : AbstractIntegrationTest() {
             val group = transaction.createGroup(version)
             val dto = GroupUpdateDto("Test Base Group 2", null)
 
-            with(
-                handleRequest(HttpMethod.Put, "version/${version.id.value}/group/${group.id.value}") {
-                    addHeader("Authorization", "Bearer $token")
-                    addHeader("Content-Type", "application/json")
-                    setBody(Json.encodeToString(dto))
-                }
-            ) {
+            testAuthorizedRequest(HttpMethod.Put, "version/${version.id.value}/group/${group.id.value}", token, dto) {
                 assertEquals(HttpStatusCode.BadRequest, response.status())
                 val response = Json.decodeFromString<List<String>>(response.content!!)
                 assertTrue { 1 >= response.size }
@@ -202,14 +154,10 @@ internal class GroupIntegrationTest : AbstractIntegrationTest() {
         authorizedTest { user, token, transaction ->
             val version = transaction.createVersion(user)
             val group = transaction.createGroup(version)
-            with(
-                handleRequest(
-                    HttpMethod.Delete,
-                    "version/${version.id.value}/group/${group.id.value}?hierarchy=true"
-                ) {
-                    addHeader("Authorization", "Bearer $token")
-                    addHeader("Content-Type", "application/json")
-                }
+            testAuthorizedRequest(
+                HttpMethod.Delete,
+                "version/${version.id.value}/group/${group.id.value}?hierarchy=true",
+                token
             ) {
                 assertEquals(HttpStatusCode.NoContent, response.status())
             }
@@ -223,14 +171,10 @@ internal class GroupIntegrationTest : AbstractIntegrationTest() {
             val version2 = transaction.createVersion(user)
             val group = transaction.createGroup(version)
 
-            with(
-                handleRequest(
-                    HttpMethod.Delete,
-                    "version/${version2.id.value}/group/${group.id.value}?hierarchy=true"
-                ) {
-                    addHeader("Authorization", "Bearer $token")
-                    addHeader("Content-Type", "application/json")
-                }
+            testAuthorizedRequest(
+                HttpMethod.Delete,
+                "version/${version2.id.value}/group/${group.id.value}?hierarchy=true",
+                token
             ) {
                 assertEquals(HttpStatusCode.BadRequest, response.status())
                 val response = Json.decodeFromString<List<String>>(response.content!!)
@@ -245,14 +189,10 @@ internal class GroupIntegrationTest : AbstractIntegrationTest() {
             val version = transaction.createVersion(user)
             val group = transaction.createGroup(version)
             transaction.createLeaf(version, group.vid)
-            with(
-                handleRequest(
-                    HttpMethod.Delete,
-                    "version/${version.id.value}/group/${group.id.value}?hierarchy=false"
-                ) {
-                    addHeader("Authorization", "Bearer $token")
-                    addHeader("Content-Type", "application/json")
-                }
+            testAuthorizedRequest(
+                HttpMethod.Delete,
+                "version/${version.id.value}/group/${group.id.value}?hierarchy=false",
+                token
             ) {
                 assertEquals(HttpStatusCode.BadRequest, response.status())
             }
@@ -265,14 +205,10 @@ internal class GroupIntegrationTest : AbstractIntegrationTest() {
             val version = transaction.createVersion(user)
             val group = transaction.createGroup(version)
             val leaf = transaction.createLeaf(version, group.vid)
-            with(
-                handleRequest(
-                    HttpMethod.Delete,
-                    "version/${version.id.value}/group/${group.id.value}?hierarchy=true"
-                ) {
-                    addHeader("Authorization", "Bearer $token")
-                    addHeader("Content-Type", "application/json")
-                }
+            testAuthorizedRequest(
+                HttpMethod.Delete,
+                "version/${version.id.value}/group/${group.id.value}?hierarchy=true",
+                token
             ) {
                 assertEquals(HttpStatusCode.NoContent, response.status())
             }
@@ -286,14 +222,10 @@ internal class GroupIntegrationTest : AbstractIntegrationTest() {
         authorizedTest { user, token, transaction ->
             val version = transaction.createVersion(user)
             val group = transaction.createGroup(version)
-            with(
-                handleRequest(
-                    HttpMethod.Delete,
-                    "version/${version.id.value + 1}/group/${group.id.value}?hierarchy=true"
-                ) {
-                    addHeader("Authorization", "Bearer $token")
-                    addHeader("Content-Type", "application/json")
-                }
+            testAuthorizedRequest(
+                HttpMethod.Delete,
+                "version/${version.id.value + 1}/group/${group.id.value}?hierarchy=true",
+                token
             ) {
                 assertEquals(HttpStatusCode.NoContent, response.status())
             }
@@ -305,14 +237,10 @@ internal class GroupIntegrationTest : AbstractIntegrationTest() {
         authorizedTest { user, token, transaction ->
             val version = transaction.createVersion(user)
             val group = transaction.createGroup(version)
-            with(
-                handleRequest(
-                    HttpMethod.Delete,
-                    "version/${version.id.value}/group/${group.id.value + 1}?hierarchy=true"
-                ) {
-                    addHeader("Authorization", "Bearer $token")
-                    addHeader("Content-Type", "application/json")
-                }
+            testAuthorizedRequest(
+                HttpMethod.Delete,
+                "version/${version.id.value}/group/${group.id.value + 1}?hierarchy=true",
+                token
             ) {
                 assertEquals(HttpStatusCode.InternalServerError, response.status())
             }
@@ -345,26 +273,33 @@ internal class GroupIntegrationTest : AbstractIntegrationTest() {
         }
     }
 
-    private fun TestApplicationEngine.testMoveGroupPositive(version: Version, group1: Group, group2: Group, token: String) {
+    private fun TestApplicationEngine.testMoveGroupPositive(
+        version: Version,
+        group1: Group,
+        group2: Group,
+        token: String
+    ) {
         val dto = ChangeGroupPositionDto(group2.id.value)
-        handleRequest(HttpMethod.Patch, "/version/${version.id}/group/${group1.id}/position") {
-            addHeader("Authorization", "Bearer $token")
-            addHeader("Content-Type", "application/json")
-            setBody(Json.encodeToString(dto))
-        }.apply {
+        testAuthorizedRequest(
+            HttpMethod.Patch,
+            "/version/${version.id}/group/${group1.id}/position",
+            token,
+            dto
+        ) {
             assertEquals(HttpStatusCode.NoContent, response.status())
             assertEquals(GroupRepo.findById(group1.id.value).order, group2.order)
             assertEquals(GroupRepo.findById(group2.id.value).order, group1.order)
         }
     }
 
-    private fun TestApplicationEngine.testMoveGroupNegative(version: Version, group1: Group, group2: Group, token: String) {
+    private fun TestApplicationEngine.testMoveGroupNegative(
+        version: Version,
+        group1: Group,
+        group2: Group,
+        token: String
+    ) {
         val dto = ChangeGroupPositionDto(group2.id.value)
-        handleRequest(HttpMethod.Patch, "/version/${version.id}/group/${group1.id}/position") {
-            addHeader("Authorization", "Bearer $token")
-            addHeader("Content-Type", "application/json")
-            setBody(Json.encodeToString(dto))
-        }.apply {
+        testAuthorizedRequest(HttpMethod.Patch, "/version/${version.id}/group/${group1.id}/position", token, dto) {
             assertEquals(HttpStatusCode.BadRequest, response.status())
         }
     }

@@ -19,13 +19,10 @@ internal class DifferenceIntegrationTest : AbstractIntegrationTest() {
             val version1 = transaction.createVersion(user)
             val version2 = transaction.createVersion(user)
 
-            with(
-                handleRequest(
-                    HttpMethod.Get,
-                    "difference?from=${version1.id.value}&to=${version2.id.value}"
-                ) {
-                    addHeader("Authorization", "Bearer $token")
-                }
+            testAuthorizedRequest(
+                HttpMethod.Get,
+                "difference?from=${version1.id.value}&to=${version2.id.value}",
+                token
             ) {
                 assertEquals(HttpStatusCode.OK, response.status())
                 val responseBody = Json.decodeFromString<ReturnedDifferenceDto>(response.content!!)
@@ -45,10 +42,10 @@ internal class DifferenceIntegrationTest : AbstractIntegrationTest() {
             val group = transaction.createGroup(version2)
             val leaf = transaction.createLeaf(version2, group.vid)
 
-            with(
-                handleRequest(HttpMethod.Get, "difference?from=${version1.id.value}&to=${version2.id.value}") {
-                    addHeader("Authorization", "Bearer $token")
-                }
+            testAuthorizedRequest(
+                HttpMethod.Get,
+                "difference?from=${version1.id.value}&to=${version2.id.value}",
+                token
             ) {
                 assertEquals(HttpStatusCode.OK, response.status())
                 val responseBody = Json.decodeFromString<ReturnedDifferenceDto>(response.content!!)
@@ -75,13 +72,10 @@ internal class DifferenceIntegrationTest : AbstractIntegrationTest() {
             val version1 = transaction.createVersion(user)
             val version2 = transaction.createVersion(user)
 
-            with(
-                handleRequest(
-                    HttpMethod.Get,
-                    "difference?from=${version1.id.value}&to=${version2.id.value + 1}"
-                ) {
-                    addHeader("Authorization", "Bearer $token")
-                }
+            testAuthorizedRequest(
+                HttpMethod.Get,
+                "difference?from=${version1.id.value}&to=${version2.id.value + 1}",
+                token
             ) {
                 assertEquals(HttpStatusCode.InternalServerError, response.status())
             }
@@ -93,11 +87,7 @@ internal class DifferenceIntegrationTest : AbstractIntegrationTest() {
         authorizedTest { user, token, transaction ->
             val version1 = transaction.createVersion(user)
             transaction.createVersion(user)
-            with(
-                handleRequest(HttpMethod.Get, "difference?from=${version1.id.value}") {
-                    addHeader("Authorization", "Bearer $token")
-                }
-            ) {
+            testAuthorizedRequest(HttpMethod.Get, "difference?from=${version1.id.value}", token) {
                 assertEquals(HttpStatusCode.InternalServerError, response.status())
             }
         }
