@@ -68,10 +68,12 @@ abstract class AbstractIntegrationTest {
         dto: T,
         test: TestApplicationCall.() -> Unit
     ) {
-        with(handleRequest(method, uri) {
-            addHeader("Content-Type", "application/json")
-            setBody(Json.encodeToString(dto))
-        }) {
+        with(
+            handleRequest(method, uri) {
+                addHeader("Content-Type", "application/json")
+                setBody(Json.encodeToString(dto))
+            }
+        ) {
             test()
         }
     }
@@ -83,11 +85,13 @@ abstract class AbstractIntegrationTest {
         dto: T,
         test: TestApplicationCall.() -> Unit
     ) {
-        with(handleRequest(method, uri) {
-            addHeader("Content-Type", "application/json")
-            setBody(Json.encodeToString(dto))
-            addHeader("Authorization", "Bearer $token")
-        }) {
+        with(
+            handleRequest(method, uri) {
+                addHeader("Content-Type", "application/json")
+                setBody(Json.encodeToString(dto))
+                addHeader("Authorization", "Bearer $token")
+            }
+        ) {
             test()
         }
     }
@@ -98,10 +102,12 @@ abstract class AbstractIntegrationTest {
         token: String,
         test: TestApplicationCall.() -> Unit
     ) {
-        with(handleRequest(method, uri) {
-            addHeader("Content-Type", "application/json")
-            addHeader("Authorization", "Bearer $token")
-        }) {
+        with(
+            handleRequest(method, uri) {
+                addHeader("Content-Type", "application/json")
+                addHeader("Authorization", "Bearer $token")
+            }
+        ) {
             test()
         }
     }

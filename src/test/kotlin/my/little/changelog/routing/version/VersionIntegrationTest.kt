@@ -76,7 +76,6 @@ internal class VersionIntegrationTest : AbstractIntegrationTest() {
                 name = version.name
             )
 
-
             testAuthorizedRequest(HttpMethod.Get, "version/${version.id}", token) {
                 assertEquals(HttpStatusCode.OK, response.status())
                 val json: WholeVersion = Json.decodeFromString(response.content!!)

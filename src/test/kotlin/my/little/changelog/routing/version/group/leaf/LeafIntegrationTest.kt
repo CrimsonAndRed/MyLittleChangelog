@@ -4,7 +4,6 @@ import io.ktor.http.*
 import io.ktor.server.testing.*
 import io.ktor.util.*
 import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.encodeToString
 import my.little.changelog.configuration.Json
 import my.little.changelog.model.group.Group
 import my.little.changelog.model.leaf.Leaf
