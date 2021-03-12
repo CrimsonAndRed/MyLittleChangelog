@@ -52,9 +52,16 @@ object LeafService {
 
     fun deleteLeaf(leafDeletionDto: LeafDeletionDto): Response<Unit> = transaction {
         val leaf = LeafRepo.findById(leafDeletionDto.id)
+
         VersionValidator.validateLatest(leaf.version, leafDeletionDto.principal.user)
             .ifValid {
-                LeafRepo.delete(leaf)
+                if (leafDeletionDto.completely) {
+                    leaf.isDeleted = true
+                    LeafRepo.update(leaf)
+                } else {
+                    LeafRepo.delete(leaf)
+                }
+                Unit
             }
     }
 

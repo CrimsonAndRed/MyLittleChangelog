@@ -305,6 +305,26 @@ internal class LeafIntegrationTest : AbstractIntegrationTest() {
     }
 
     @Test
+    fun `Test Complete Delete Leaf Success`() {
+        authorizedTest { user, token, transaction ->
+            val version1 = transaction.createVersion(user)
+            val group = transaction.createGroup(version1)
+            val leaf = transaction.createLeaf(version1, group.vid)
+
+            testAuthorizedRequest(
+                HttpMethod.Delete,
+                "version/${version1.id.value}/group/${group.id.value}/leaf/${leaf.id.value}?completely=true",
+                token
+            ) {
+                assertEquals(HttpStatusCode.NoContent, response.status())
+                val dbLeaf = LeafRepo.findById(leaf.id.value)
+                assertEquals(true, dbLeaf.isDeleted)
+            }
+            assertNotNull(Leaf[leaf.id])
+        }
+    }
+
+    @Test
     fun `Test Move leaf Mixed`() {
         authorizedTest { user, token, transaction ->
             val version = transaction.createVersion(user)

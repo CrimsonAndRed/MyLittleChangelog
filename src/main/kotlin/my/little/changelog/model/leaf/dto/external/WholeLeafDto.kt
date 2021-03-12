@@ -9,4 +9,5 @@ data class WholeLeafDto(
     val name: String,
     val valueType: Int,
     val value: String,
+    val isDeleted: Boolean
 )

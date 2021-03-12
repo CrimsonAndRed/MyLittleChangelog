@@ -10,8 +10,8 @@
           </ng-template>
         </tree-container>
         <ng-container *ngFor="let leaf of node.value.leafContent">
-          <div class="leaf-content">
-            <leaf-header [node]="node" [leaf]="leaf" *ngIf="wholeVersionService.wholeVersionHeader.canChange"></leaf-header>
+          <div class="leaf-content" [ngClass]="{'deleted-leaf': leaf.isDeleted}">
+            <leaf-header [node]="node" [leaf]="leaf" *ngIf="wholeVersionService.wholeVersionHeader.canChange && !leaf.isDeleted"></leaf-header>
             <leaf-body [leaf]="leaf"></leaf-body>
           </div>
         </ng-container>

@@ -46,7 +46,7 @@ object VersionService {
             }
             .ifValid {
                 LeafRepo.findByVersion(version).forEach {
-                    LeafService.deleteLeaf(LeafDeletionDto(it.id.value, deletionDto.principal))
+                    LeafService.deleteLeaf(LeafDeletionDto(it.id.value, deletionDto.principal, false))
                 }
                 GroupRepo.findByVersion(version).forEach {
                     GroupRepo.delete(it)
@@ -93,7 +93,7 @@ object VersionService {
         val rootLeafDtos = leavesMap[value]?.sortedBy {
             it.order
         }?.map {
-            WholeLeafDto(it.id.value, it.vid, it.name, it.valueType, it.value)
+            WholeLeafDto(it.id.value, it.vid, it.name, it.valueType, it.value, it.isDeleted)
         } ?: emptyList()
 
         return rootGroupDtos to rootLeafDtos
@@ -133,7 +133,7 @@ object VersionService {
         val rootLeafDtos = leavesMap[value]?.sortedBy {
             it.order
         }?.map {
-            WholeLeafDto(it.id.value, it.vid, it.name, it.valueType, it.value)
+            WholeLeafDto(it.id.value, it.vid, it.name, it.valueType, it.value, false)
         } ?: emptyList()
 
         return rootGroupDtos to rootLeafDtos

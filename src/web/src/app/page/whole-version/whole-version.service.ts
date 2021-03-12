@@ -80,6 +80,19 @@ export class WholeVersionService {
     )
   }
 
+  completeDeleteLeaf(leafId: number, groupVid: number, cb: OperatorFunction<void, void> = tap()) {
+    const params = new HttpParams().set('completely', 'true');
+
+    const groupId = this.groupsByVid.get(groupVid).value.id;
+    this.preloaderService.wrap(
+     this.http.delete<void>(`${environment.backendPath}/version/${this.wholeVersionHeader.id}/group/${groupId}/leaf/${leafId}`, params)
+      .pipe(
+        cb,
+        switchMap(() => this.initWholeVersion(this.wholeVersionHeader.id))
+      )
+    )
+  }
+
   deleteGroup(groupId: number, cb: OperatorFunction<void, void> = tap()) {
     const params = new HttpParams().set('hierarchy', 'true');
 

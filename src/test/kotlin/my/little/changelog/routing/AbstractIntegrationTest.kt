@@ -121,12 +121,14 @@ abstract class AbstractIntegrationTest {
     protected fun Transaction.createGroup(
         version: Version,
         parentVid: Int? = null,
-        name: String = "Test Group"
+        name: String = "Test Group",
+        isDeleted: Boolean = false
     ): Group = Group
         .new {
             this.version = version
             this.parentVid = parentVid
             this.name = name
+            this.isDeleted = isDeleted
         }.also { commit() }
 
     protected fun Transaction.createLeaf(
@@ -134,7 +136,8 @@ abstract class AbstractIntegrationTest {
         groupVid: Int,
         name: String = "Test Leaf",
         valueType: Int = LeafType.TEXTUAL.id,
-        value: String = "Test Value"
+        value: String = "Test Value",
+        isDeleted: Boolean = false
     ): Leaf = Leaf
         .new {
             this.version = version
@@ -142,6 +145,7 @@ abstract class AbstractIntegrationTest {
             this.name = name
             this.valueType = valueType
             this.value = value
+            this.isDeleted = isDeleted
         }.also { commit() }
 
     protected fun Transaction.createUser(login: String = "Test user", password: String = "password"): User = User

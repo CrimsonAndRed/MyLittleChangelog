@@ -4,5 +4,6 @@ import my.little.changelog.configuration.auth.CustomPrincipal
 
 class LeafDeletionDto(
     val id: Int,
-    val principal: CustomPrincipal
+    val principal: CustomPrincipal,
+    val completely: Boolean
 )

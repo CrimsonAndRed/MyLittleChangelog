@@ -22,7 +22,8 @@ fun LeafUpdateDto.toServiceDto(leafId: Int, cp: CustomPrincipal) = my.little.cha
     principal = cp
 )
 
-fun LeafDeletionDto.toServiceDto(cp: CustomPrincipal) = my.little.changelog.model.leaf.dto.service.LeafDeletionDto(
+fun LeafDeletionDto.toServiceDto(cp: CustomPrincipal, completely: Boolean) = my.little.changelog.model.leaf.dto.service.LeafDeletionDto(
     id = id,
-    principal = cp
+    principal = cp,
+    completely = completely
 )

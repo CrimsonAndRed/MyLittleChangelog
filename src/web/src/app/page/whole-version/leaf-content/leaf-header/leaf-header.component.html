@@ -5,6 +5,9 @@
 <delete-leaf-button [node]="node"
                     [leaf]="leaf"
                     (onDeleteLeaf)="handleDeleteLeaf()"></delete-leaf-button>
+<complete-delete-leaf-button [node]="node"
+                    [leaf]="leaf"
+                    (onDeleteLeaf)="handleCompleteDeleteLeaf()"></complete-delete-leaf-button>
 <edit-leaf-button [leaf]="leaf"
                   [node]="node"
                   (onUpdateLeaf)="handleUpdateLeaf($event)"></edit-leaf-button>

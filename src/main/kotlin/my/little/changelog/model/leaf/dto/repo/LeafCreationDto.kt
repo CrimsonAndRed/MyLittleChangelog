@@ -20,5 +20,6 @@ data class LeafCreationDto(
         value = this@LeafCreationDto.value
         version = this@LeafCreationDto.version
         groupVid = this@LeafCreationDto.group.vid
+        isDeleted = false
     }
 }

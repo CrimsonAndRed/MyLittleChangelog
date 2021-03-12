@@ -57,6 +57,7 @@ internal class VersionIntegrationTest : AbstractIntegrationTest() {
                 name = leaf.name,
                 valueType = leaf.valueType,
                 value = leaf.value,
+                isDeleted = false
             )
 
             val group1Dto = WholeGroupDto(

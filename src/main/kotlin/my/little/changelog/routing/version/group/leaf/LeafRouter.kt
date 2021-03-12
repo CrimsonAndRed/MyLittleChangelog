@@ -57,7 +57,8 @@ fun Routing.leafRouting() {
             delete {
                 val principal = call.principal<CustomPrincipal>()!!
                 val leafDeletionDto = LeafDeletionDto(call.parameters.getOrFail("leafId").toInt())
-                val resp: Response<Unit> = LeafService.deleteLeaf(leafDeletionDto.toServiceDto(principal))
+                val dropCompletely = call.request.queryParameters["completely"]?.toBoolean() ?: false
+                val resp: Response<Unit> = LeafService.deleteLeaf(leafDeletionDto.toServiceDto(principal, dropCompletely))
                 call.ofEmptyResponse(resp)
             }
         }

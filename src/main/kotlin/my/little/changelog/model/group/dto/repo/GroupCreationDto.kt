@@ -17,5 +17,6 @@ data class GroupCreationDto(
         parentVid = this@GroupCreationDto.parentVid
         version = this@GroupCreationDto.version
         this@GroupCreationDto.order?.let { order = it }
+        isDeleted = false
     }
 }

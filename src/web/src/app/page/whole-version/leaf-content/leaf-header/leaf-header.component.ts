@@ -24,6 +24,10 @@ export class LeafHeaderComponent {
     this.wholeVersionService.deleteLeaf(this.leaf.id, this.node.value.vid);
   }
 
+  handleCompleteDeleteLeaf(): void {
+    this.wholeVersionService.completeDeleteLeaf(this.leaf.id, this.node.value.vid);
+  }
+
   handleUpdateLeaf(leaf: LeafToUpdate): void {
     this.wholeVersionService.updateLeaf(leaf, this.node.value.id, this.leaf.id);
   }
