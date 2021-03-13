@@ -75,20 +75,22 @@ object GroupService {
                         val groupsByVids = groups.map { it.vid to it }.toMap()
 
                         groups.forEach {
-                            if (it.version.id.value == versionId) {
-                                it.isDeleted = true
-                                GroupRepo.update(it)
-                            } else {
-                                GroupRepo.create(
-                                    my.little.changelog.model.group.dto.repo.GroupCreationDto(
-                                        it.name,
-                                        it.vid,
-                                        it.parentVid,
-                                        currentVersion,
-                                        it.order,
-                                        true
+                            if (!it.isDeleted) {
+                                if (it.version.id.value == versionId) {
+                                    it.isDeleted = true
+                                    GroupRepo.update(it)
+                                } else {
+                                    GroupRepo.create(
+                                        my.little.changelog.model.group.dto.repo.GroupCreationDto(
+                                            it.name,
+                                            it.vid,
+                                            it.parentVid,
+                                            currentVersion,
+                                            it.order,
+                                            true
+                                        )
                                     )
-                                )
+                                }
                             }
                         }
 

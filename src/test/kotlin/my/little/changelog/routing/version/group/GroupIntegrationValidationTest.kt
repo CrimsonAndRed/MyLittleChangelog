@@ -48,7 +48,7 @@ internal class GroupIntegrationValidationTest : AbstractIntegrationTest() {
         authorizedTest { user, token, transaction ->
             val version1 = transaction.createVersion(user)
             val group = transaction.createGroup(version1)
-            val group2 = transaction.createGroup(version1, group.vid)
+            val group2 = transaction.createGroup(version1, null, group.vid)
             val dto = ChangeGroupPositionDto(group2.vid)
 
             testAuthorizedRequest(HttpMethod.Patch, "version/${version1.id.value}/group/${group.id.value}/position", token, dto) {

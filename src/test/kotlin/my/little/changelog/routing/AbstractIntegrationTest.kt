@@ -120,6 +120,7 @@ abstract class AbstractIntegrationTest {
 
     protected fun Transaction.createGroup(
         version: Version,
+        vid: Int? = null,
         parentVid: Int? = null,
         name: String = "Test Group",
         isDeleted: Boolean = false
@@ -127,6 +128,9 @@ abstract class AbstractIntegrationTest {
         .new {
             this.version = version
             this.parentVid = parentVid
+            if (vid != null) {
+                this.vid = vid
+            }
             this.name = name
             this.isDeleted = isDeleted
         }.also { commit() }

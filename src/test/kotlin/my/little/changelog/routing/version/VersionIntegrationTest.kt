@@ -38,7 +38,7 @@ internal class VersionIntegrationTest : AbstractIntegrationTest() {
 
             val version = transaction.createVersion(user)
             val group1 = transaction.createGroup(version)
-            val group2 = transaction.createGroup(version, group1.vid)
+            val group2 = transaction.createGroup(version, null, group1.vid)
             val leaf = transaction.createLeaf(version, group1.vid)
 
             val group2Dto = WholeGroupDto(
@@ -49,6 +49,7 @@ internal class VersionIntegrationTest : AbstractIntegrationTest() {
                 groupContent = emptyList(),
                 leafContent = emptyList(),
                 isEarliest = true,
+                isDeleted = false
             )
 
             val leafDto = WholeLeafDto(
@@ -68,6 +69,7 @@ internal class VersionIntegrationTest : AbstractIntegrationTest() {
                 groupContent = listOf(group2Dto),
                 leafContent = listOf(leafDto),
                 isEarliest = true,
+                isDeleted = false
             )
 
             val wholeVersion = WholeVersion(
@@ -105,7 +107,7 @@ internal class VersionIntegrationTest : AbstractIntegrationTest() {
             val firstVersion = transaction.createVersion(user)
             val latestVersion = transaction.createVersion(user)
             val g1 = transaction.createGroup(latestVersion)
-            transaction.createGroup(latestVersion, g1.vid)
+            transaction.createGroup(latestVersion, null, g1.vid)
             transaction.createLeaf(latestVersion, g1.vid)
 
             testAuthorizedRequest(HttpMethod.Delete, "version/${latestVersion.id.value}", token) {

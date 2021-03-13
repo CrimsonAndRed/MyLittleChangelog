@@ -12,6 +12,7 @@ import my.little.changelog.model.group.dto.external.GroupUpdateDto
 import my.little.changelog.model.group.dto.external.ReturnedGroupDto
 import my.little.changelog.model.leaf.Leaf
 import my.little.changelog.model.version.Version
+import my.little.changelog.persistence.repo.GroupLatestRepo
 import my.little.changelog.persistence.repo.GroupRepo
 import my.little.changelog.routing.AbstractIntegrationTest
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -247,27 +248,89 @@ internal class GroupIntegrationTest : AbstractIntegrationTest() {
     }
 
     @Test
+    fun `Test Group Complete Delete Success`() {
+        authorizedTest { user, token, transaction ->
+            val version = transaction.createVersion(user)
+            val group1 = transaction.createGroup(version)
+            val group2 = transaction.createGroup(version, null, group1.vid)
+            testAuthorizedRequest(
+                HttpMethod.Delete,
+                "version/${version.id.value}/group/${group1.id.value}?completely=true",
+                token
+            ) {
+                assertEquals(HttpStatusCode.NoContent, response.status())
+                val group2After = GroupRepo.findById(group2.id.value)
+                assertEquals(true, group2After.isDeleted)
+            }
+        }
+    }
+
+    @Test
+    fun `Test Group Complete Delete Fetch From Prev Success`() {
+        authorizedTest { user, token, transaction ->
+            val version1 = transaction.createVersion(user)
+            val group1 = transaction.createGroup(version1)
+            val group2 = transaction.createGroup(version1, null, group1.vid, "Test", false)
+            val version2 = transaction.createVersion(user)
+            val group3 = transaction.createGroup(version2, group1.vid)
+            testAuthorizedRequest(
+                HttpMethod.Delete,
+                "version/${version2.id.value}/group/${group3.id.value}?completely=true",
+                token
+            ) {
+                assertEquals(HttpStatusCode.NoContent, response.status())
+
+                val group2After = GroupLatestRepo.findByVid(group2.vid)
+                assertEquals(true, group2After.isDeleted)
+                assertEquals(version2.id.value, group2After.version.id.value)
+            }
+        }
+    }
+
+    @Test
+    fun `Test Group Complete Delete Already Deleted Child Success`() {
+        authorizedTest { user, token, transaction ->
+            val version1 = transaction.createVersion(user)
+            val group1 = transaction.createGroup(version1)
+            val group2 = transaction.createGroup(version1, null, group1.vid, "Test", true)
+            val version2 = transaction.createVersion(user)
+            val group3 = transaction.createGroup(version2, group1.vid, group1.parentVid)
+            testAuthorizedRequest(
+                HttpMethod.Delete,
+                "version/${version2.id.value}/group/${group3.id.value}?completely=true",
+                token
+            ) {
+                assertEquals(HttpStatusCode.NoContent, response.status())
+
+                val group2After = GroupLatestRepo.findByVid(group2.vid)
+                assertEquals(true, group2After.isDeleted)
+                assertEquals(version1.id.value, group2After.version.id.value)
+            }
+        }
+    }
+
+    @Test
     fun `Test Move group Mixed`() {
         authorizedTest { user, token, transaction ->
             val version = transaction.createVersion(user)
             val parentGroup = transaction.createGroup(version)
-            val group1 = transaction.createGroup(version, parentGroup.vid)
-            val group2 = transaction.createGroup(version, parentGroup.vid)
+            val group1 = transaction.createGroup(version, null, parentGroup.vid)
+            val group2 = transaction.createGroup(version, null, parentGroup.vid)
             testMoveGroupPositive(version, group1, group2, token)
         }
         authorizedTest { user, token, transaction ->
             val version = transaction.createVersion(user)
             val parentGroup = transaction.createGroup(version)
-            val group1 = transaction.createGroup(version, parentGroup.vid)
-            val group2 = transaction.createGroup(version, parentGroup.vid)
+            val group1 = transaction.createGroup(version, null, parentGroup.vid)
+            val group2 = transaction.createGroup(version, null, parentGroup.vid)
             testMoveGroupPositive(version, group2, group1, token)
         }
         authorizedTest { user, token, transaction ->
             val version = transaction.createVersion(user)
             val parentGroup1 = transaction.createGroup(version)
             val parentGroup2 = transaction.createGroup(version)
-            val group1 = transaction.createGroup(version, parentGroup1.vid)
-            val group2 = transaction.createGroup(version, parentGroup2.vid)
+            val group1 = transaction.createGroup(version, null, parentGroup1.vid)
+            val group2 = transaction.createGroup(version, null, parentGroup2.vid)
             testMoveGroupNegative(version, group1, group2, token)
         }
     }
