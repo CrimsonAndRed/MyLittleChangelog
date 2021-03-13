@@ -87,7 +87,16 @@ object VersionService {
             it.order
         }?.map {
             val pair = createDtosRecursive(groupsMap, leavesMap, earliestIds, currentVersion, it.vid)
-            WholeGroupDto(it.id.value, it.vid, it.name, earliestIds.contains(it.id.value), currentVersion == it.version.id.value, pair.first, pair.second)
+            WholeGroupDto(
+                it.id.value,
+                it.vid,
+                it.name,
+                earliestIds.contains(it.id.value),
+                currentVersion == it.version.id.value,
+                pair.first,
+                pair.second,
+                it.isDeleted
+            )
         } ?: emptyList()
 
         val rootLeafDtos = leavesMap[value]?.sortedBy {
@@ -101,8 +110,8 @@ object VersionService {
 
     fun getPreviousVersions(cp: CustomPrincipal): PreviousVersionsDTO = transaction {
         val version = VersionRepo.findLatestByUser(cp.user)
-        val groups = GroupLatestRepo.findAllByUser(cp.user)
-        val leaves = LeafLatestRepo.findAllByUser(cp.user)
+        val groups = GroupLatestRepo.findAllByUserNotDeleted(cp.user)
+        val leaves = LeafLatestRepo.findAllByUserNotDeleted(cp.user)
         val earliestIds = GroupRepo.findEarliestByVids(groups.map { it.vid }).toSet()
 
         createLatestDtosRecursive(
@@ -127,7 +136,16 @@ object VersionService {
         }?.map {
             val pair = createLatestDtosRecursive(groupsMap, leavesMap, earliestIds, currentVersion, it.vid)
             val id = it.id.value
-            WholeGroupDto(id, it.vid, it.name, earliestIds.contains(id), currentVersion == it.version.id.value, pair.first, pair.second)
+            WholeGroupDto(
+                id,
+                it.vid,
+                it.name,
+                earliestIds.contains(id),
+                currentVersion == it.version.id.value,
+                pair.first,
+                pair.second,
+                it.isDeleted
+            )
         } ?: emptyList()
 
         val rootLeafDtos = leavesMap[value]?.sortedBy {

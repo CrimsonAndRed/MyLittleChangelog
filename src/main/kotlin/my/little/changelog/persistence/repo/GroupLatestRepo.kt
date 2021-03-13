@@ -34,7 +34,7 @@ object GroupLatestRepo : AbstractCrudRepository<GroupLatest, Int>(GroupLatest) {
         """
            SELECT groups_latest.id FROM groups_latest
            JOIN versions ON groups_latest.version_id = versions.id
-           WHERE versions.user_id = ?
+           WHERE versions.user_id = ? AND groups_latest.is_deleted <> true
         """
 
     fun findByVid(vid: Int): GroupLatest = transaction {
@@ -53,7 +53,7 @@ object GroupLatestRepo : AbstractCrudRepository<GroupLatest, Int>(GroupLatest) {
         }.iterate { getInt("id") }
     }
 
-    fun findAllByUser(user: User): SizedIterable<GroupLatest> = transaction {
+    fun findAllByUserNotDeleted(user: User): SizedIterable<GroupLatest> = transaction {
         raw(FIND_GROUPS_BY_USER_QUERY, arrayOf("id")) {
             set(1, user.id.value)
         }.iterate { getInt("id") }.let { GroupLatest.forIds(it) }

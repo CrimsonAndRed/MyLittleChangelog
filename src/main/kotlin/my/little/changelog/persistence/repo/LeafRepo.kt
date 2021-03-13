@@ -63,4 +63,8 @@ object LeafRepo : AbstractCrudRepository<Leaf, Int>(Leaf) {
             emptySized()
         }
     }
+
+    fun findByIds(ids: Iterable<Int>): SizedIterable<Leaf> = transaction {
+        Leaf.find { Leaves.id inList ids }
+    }
 }

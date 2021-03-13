@@ -6,6 +6,7 @@ import my.little.changelog.model.leaf.Leaf
 import my.little.changelog.model.version.Version
 import my.little.changelog.persistence.AbstractCrudRepository
 import org.jetbrains.exposed.sql.SizedIterable
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.inList
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.statements.jdbc.iterate
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -122,5 +123,9 @@ object GroupRepo : AbstractCrudRepository<Group, Int>(Group) {
     fun findParents(vid: Int?): SizedIterable<Group> = transaction {
         GroupLatestRepo.findParentIds(vid)
             .let { Group.forIds(it.toList()) }
+    }
+
+    fun findByIds(ids: Iterable<Int>): SizedIterable<Group> = transaction {
+        Group.find { Groups.id inList ids }
     }
 }

@@ -117,6 +117,18 @@ export class WholeVersionService {
       );
   }
 
+  completeDeleteGroup(groupId: number, cb: OperatorFunction<void, void> = tap()) {
+    const params = new HttpParams().set('completely', 'true');
+
+    this.preloaderService.wrap(
+      this.http.delete<void>(`${environment.backendPath}/version/${this.wholeVersionHeader.id}/group/${groupId}`, params)
+        .pipe(
+          cb,
+          switchMap(() => this.initWholeVersion(this.wholeVersionHeader.id))
+        )
+      )
+  }
+
   updateGroup(group: GroupToUpdate, groupId: number, cb: OperatorFunction<void, void> = tap()) {
     this.preloaderService.wrap(
       this.http.put<void>(`${environment.backendPath}/version/${this.wholeVersionHeader.id}/group/${groupId}`, group)

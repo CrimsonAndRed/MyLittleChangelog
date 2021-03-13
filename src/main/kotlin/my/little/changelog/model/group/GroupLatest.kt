@@ -16,6 +16,7 @@ class GroupLatest(id: EntityID<Int>) : IntEntity(id) {
     var name by GroupsLatest.name
     var parentVid by GroupsLatest.parentVid
     var order by GroupsLatest.order
+    var isDeleted by GroupsLatest.isDeleted
 }
 
 object GroupsLatest : IntIdTable("groups_latest") {
@@ -24,4 +25,5 @@ object GroupsLatest : IntIdTable("groups_latest") {
     val parentVid = integer("parent_vid").nullable()
     val version = reference("version_id", Versions)
     val order = integer("order").autoIncrement("groups_order_seq")
+    val isDeleted = bool("is_deleted")
 }

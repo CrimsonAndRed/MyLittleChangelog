@@ -1,6 +1,6 @@
 <div class="group-container">
-  <div class="group {{ node.value?.realNode ? 'in-use-group' : 'not-in-use-group' }}">
-    <group-header [node]="node" *ngIf="wholeVersionService.wholeVersionHeader.canChange"></group-header>
+  <div class="group {{ node.value?.realNode ? 'in-use-group' : 'not-in-use-group' }}" [ngClass]="{'deleted-group': node.value.isDeleted}">
+    <group-header [node]="node" *ngIf="wholeVersionService.wholeVersionHeader.canChange && !node.value.isDeleted"></group-header>
     <group-body [node]="node"></group-body>
     <version-expand-block [node]="node">
       <div>

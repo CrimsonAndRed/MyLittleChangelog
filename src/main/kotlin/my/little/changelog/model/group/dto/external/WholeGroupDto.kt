@@ -12,4 +12,5 @@ data class WholeGroupDto(
     val realNode: Boolean,
     val groupContent: List<WholeGroupDto>,
     val leafContent: List<WholeLeafDto>,
+    val isDeleted: Boolean
 )

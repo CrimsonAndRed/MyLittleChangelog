@@ -57,7 +57,8 @@ fun Routing.groupRouting() {
                 val principal = call.principal<CustomPrincipal>()!!
                 val groupId = call.parameters.getOrFail("groupId").toInt()
                 val dropHierarchy = call.request.queryParameters["hierarchy"]?.toBoolean() ?: true
-                val resp = GroupService.deleteGroup(GroupDeletionDto(groupId, principal), dropHierarchy)
+                val dropCompletely = call.request.queryParameters["completely"]?.toBoolean() ?: false
+                val resp = GroupService.deleteGroup(GroupDeletionDto(groupId, principal), dropHierarchy, dropCompletely)
                 call.ofEmptyResponse(resp)
             }
         }

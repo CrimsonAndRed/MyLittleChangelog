@@ -9,7 +9,8 @@ data class GroupCreationDto(
     val vid: Int? = null,
     val parentVid: Int? = null,
     val version: Version,
-    val order: Int?
+    val order: Int?,
+    val isDeleted: Boolean = false
 ) : RepoCreationDto<Group> {
     override fun convertToEntity(): Group.() -> Unit = {
         name = this@GroupCreationDto.name
@@ -17,6 +18,6 @@ data class GroupCreationDto(
         parentVid = this@GroupCreationDto.parentVid
         version = this@GroupCreationDto.version
         this@GroupCreationDto.order?.let { order = it }
-        isDeleted = false
+        isDeleted = this@GroupCreationDto.isDeleted
     }
 }

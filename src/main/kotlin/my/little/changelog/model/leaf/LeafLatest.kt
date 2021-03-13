@@ -17,6 +17,7 @@ class LeafLatest(id: EntityID<Int>) : IntEntity(id) {
     var version by Version referencedOn LeavesLatest.version
     var groupVid by LeavesLatest.groupVid
     var order by LeavesLatest.order
+    var isDeleted by LeavesLatest.isDeleted
 }
 
 object LeavesLatest : IntIdTable("leaves_latest") {
@@ -27,4 +28,5 @@ object LeavesLatest : IntIdTable("leaves_latest") {
     val version = reference("version_id", Versions)
     val groupVid = integer("group_vid").nullable()
     val order = integer("order").autoIncrement("leaves_order_seq")
+    val isDeleted = bool("is_deleted")
 }

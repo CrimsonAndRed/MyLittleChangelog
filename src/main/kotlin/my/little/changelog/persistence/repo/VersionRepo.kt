@@ -21,7 +21,6 @@ object VersionRepo : AbstractCrudRepository<Version, Int>(Version) {
         Version.find { Versions.user eq user.id }
     }
 
-    // TODO Exception?
     private fun findMaxVersionIdByUser(user: User): Int = transaction {
         Version.find { Versions.user eq user.id }.maxOf { it.id }.value
     }

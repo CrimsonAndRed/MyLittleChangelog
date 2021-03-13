@@ -8,6 +8,7 @@ export interface GroupContent {
   isEarliest: boolean;
   groupContent: GroupContent[];
   leafContent: LeafContent[];
+  isDeleted: boolean;
 }
 
 export interface NewGroup {

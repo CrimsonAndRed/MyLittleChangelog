@@ -7,6 +7,7 @@ import my.little.changelog.model.group.dto.service.GroupUpdateDto
 import my.little.changelog.model.group.dto.service.ReturnedGroupDto
 import my.little.changelog.model.group.dto.service.toRepoDto
 import my.little.changelog.model.group.toReturnedDto
+import my.little.changelog.model.leaf.dto.repo.LeafCreationDto
 import my.little.changelog.persistence.repo.*
 import my.little.changelog.validator.*
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -47,12 +48,13 @@ object GroupService {
             }
     }
 
-    fun deleteGroup(groupDelete: GroupDeletionDto, dropHierarchy: Boolean): Response<Unit> = transaction {
+    fun deleteGroup(groupDelete: GroupDeletionDto, dropHierarchy: Boolean, dropCompletely: Boolean): Response<Unit> = transaction {
         val group = GroupRepo.findById(groupDelete.id)
-        val versionId = group.version.id.value
-        AuthValidator.validateAuthority(groupDelete.principal.user, group.version.user)
+        val currentVersion = group.version
+        val versionId = currentVersion.id.value
+        AuthValidator.validateAuthority(groupDelete.principal.user, currentVersion.user)
             .chain {
-                VersionValidator.validateLatest(group.version, groupDelete.principal.user)
+                VersionValidator.validateLatest(currentVersion, groupDelete.principal.user)
             }
             .chain {
                 if (!dropHierarchy) {
@@ -62,23 +64,75 @@ object GroupService {
                 ValidatorResponse(emptyList())
             }
             .ifValid {
-                if (dropHierarchy) {
-                    val latestGroupsHierarchy = GroupLatestRepo.findHierarchyToChildByVid(group.vid)
+                when {
+                    dropCompletely -> {
+                        val latestGroupsHierarchy = GroupLatestRepo.findHierarchyToChildByVid(group.vid)
+                        val latestGroupVids = latestGroupsHierarchy.map { it.vid }
+                        val latestLeaves = LeafLatestRepo.findAllByGroupsNotDeleted(latestGroupVids)
+                        val leaves = LeafRepo.findByIds(latestLeaves.map { it.id.value })
+                        val groups = GroupRepo.findByIds(latestGroupsHierarchy.map { it.id.value })
 
-                    val leaves = LeafRepo.findCurrentGroupsLeaves(latestGroupsHierarchy.map { it.vid }, group.version)
-                    leaves.forEach {
-                        it.delete()
-                    }
-                    val groups = GroupRepo.findByVids(
-                        latestGroupsHierarchy.filter { it.version.id.value == versionId }.map { it.vid },
-                        group.version
-                    )
+                        val groupsByVids = groups.map { it.vid to it }.toMap()
 
-                    groups.forEach { g ->
-                        GroupRepo.delete(g)
+                        groups.forEach {
+                            if (it.version.id.value == versionId) {
+                                it.isDeleted = true
+                                GroupRepo.update(it)
+                            } else {
+                                GroupRepo.create(
+                                    my.little.changelog.model.group.dto.repo.GroupCreationDto(
+                                        it.name,
+                                        it.vid,
+                                        it.parentVid,
+                                        currentVersion,
+                                        it.order,
+                                        true
+                                    )
+                                )
+                            }
+                        }
+
+                        leaves.forEach {
+                            if (it.version.id.value == versionId) {
+                                it.isDeleted = true
+                                LeafRepo.update(it)
+                            } else {
+                                LeafRepo.create(
+                                    LeafCreationDto(
+                                        it.vid,
+                                        it.name,
+                                        it.valueType,
+                                        it.value,
+                                        groupsByVids[it.groupVid]!!,
+                                        currentVersion,
+                                        true
+                                    )
+                                )
+                            }
+                        }
                     }
-                } else {
-                    GroupRepo.delete(group)
+                    dropHierarchy -> {
+                        val latestGroupsHierarchy = GroupLatestRepo.findHierarchyToChildByVid(group.vid)
+
+                        val leaves = LeafRepo.findCurrentGroupsLeaves(
+                            latestGroupsHierarchy.map { it.vid },
+                            currentVersion
+                        )
+                        leaves.forEach {
+                            it.delete()
+                        }
+                        val groups = GroupRepo.findByVids(
+                            latestGroupsHierarchy.filter { it.version.id.value == versionId }.map { it.vid },
+                            currentVersion
+                        )
+
+                        groups.forEach { g ->
+                            GroupRepo.delete(g)
+                        }
+                    }
+                    else -> {
+                        GroupRepo.delete(group)
+                    }
                 }
             }
     }

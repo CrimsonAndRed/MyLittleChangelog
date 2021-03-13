@@ -32,6 +32,7 @@ npm start
 
 # Things to do
 - Other types of leaves?
-- Deleting group "totally" (the way this group can not be chosen in "choose from previous").
 - Init database vs current migration scripts?
 - Repositories are definitely not optimal (going to DB several times per method)
+- Make difference prettier (name differences, path differences, complete deletions)
+- Undoing complete deletions?

@@ -31,6 +31,11 @@ export class GroupHeaderComponent {
     this.wholeVersionService.deleteGroup(this.node.value.id);
   }
 
+  handleCompleteDeleteGroup(): void {
+    this.wholeVersionService.completeDeleteGroup(this.node.value.id);
+  }
+
+
   handleUpdateGroup(group: GroupToUpdate): void {
     this.wholeVersionService.updateGroup(group, this.node.value.id);
   }
