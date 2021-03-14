@@ -31,7 +31,6 @@ npm start
 ```
 
 # Things to do
-- Other types of leaves?
 - Init database vs current migration scripts?
 - Repositories are definitely not optimal (going to DB several times per method)
 - Make difference prettier (name differences, path differences, complete deletions)

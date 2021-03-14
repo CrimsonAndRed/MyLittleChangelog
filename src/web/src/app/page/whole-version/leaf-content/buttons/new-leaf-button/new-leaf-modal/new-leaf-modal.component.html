@@ -4,15 +4,20 @@
       <label>Name</label><input [(ngModel)]="leaf.name"/>
     </div>
     <div>
-      <label>Value</label><input [(ngModel)]="leaf.value"/>
-    </div>
-    <div>
       <label>Value type</label>
       <mat-form-field appearance="fill">
-        <mat-select [(ngModel)]="leaf.valueType">
+        <mat-select [(ngModel)]="leaf.valueType" (selectionChange)="onLeafTypeChanged($event)">
           <mat-option *ngFor="let leafType of leafTypes" [value]="leafType.id"> {{ leafType.name }}</mat-option>
         </mat-select>
       </mat-form-field>
+    </div>
+    <div *ngIf="leaf.valueType == null">
+    </div>
+    <div *ngIf="leaf.valueType == 1">
+      <label>Value</label><input [(ngModel)]="leaf.value"/>
+    </div>
+    <div *ngIf="leaf.valueType == 2">
+      <label>Value</label><input type="number" step="0.001" pattern="^\d+(?:\.\d{1,2})?$" [(ngModel)]="leaf.value"/>
     </div>
   </div>
 </mat-dialog-content>

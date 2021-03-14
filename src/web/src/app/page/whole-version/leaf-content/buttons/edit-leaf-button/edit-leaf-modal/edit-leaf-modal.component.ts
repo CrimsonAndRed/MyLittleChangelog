@@ -44,4 +44,8 @@ export class EditLeafModalComponent {
       newParentGroupVid: this.newParentGroupVid
     }
   }
+
+  onLeafTypeChanged(leafType) {
+    this.leaf.value = null;
+  }
 }
