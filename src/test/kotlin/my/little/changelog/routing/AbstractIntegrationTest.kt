@@ -15,6 +15,8 @@ import my.little.changelog.model.leaf.LeafType
 import my.little.changelog.model.version.Version
 import my.little.changelog.persistence.Db
 import my.little.changelog.service.auth.AuthService
+import org.flywaydb.core.Flyway
+import org.flywaydb.core.api.Location
 import org.jetbrains.exposed.sql.Schema
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.Transaction
@@ -36,15 +38,9 @@ abstract class AbstractIntegrationTest {
     @BeforeEach
     fun createSchemas() {
         transaction {
+            SchemaUtils.dropSchema(Schema("public"), cascade = true, inBatch = true)
             SchemaUtils.createSchema(Schema("public"), inBatch = true)
             Db.flyway.migrate()
-        }
-    }
-
-    @AfterEach
-    fun dropSchemas() {
-        transaction {
-            SchemaUtils.dropSchema(Schema("public"), cascade = true, inBatch = true)
         }
     }
 
@@ -186,6 +182,7 @@ abstract class AbstractIntegrationTest {
             e.application.applicationModule(testing = true)
             e.application.routingModule()
             e.application.persistenceModule()
+            Db.flyway = Flyway.configure().dataSource(Db.source).locations(Location("classpath:/db/init")).load()
             Pg.engine = e
         }
 

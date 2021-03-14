@@ -31,7 +31,6 @@ npm start
 ```
 
 # Things to do
-- Init database vs current migration scripts?
 - Repositories are definitely not optimal (going to DB several times per method)
 - Make difference prettier (name differences, path differences, complete deletions)
 - Undoing complete deletions?
