@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Http } from 'app/service/http.service';
-import { Version } from 'app/model/version';
+import { NewVersion, Version } from 'app/model/version';
 import { PreloaderService } from 'app/preloader/preloader.service';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
@@ -24,9 +24,9 @@ export class VersionsListService {
       );
   }
 
-  createVersion(cb: OperatorFunction<Version, Version> = tap()) {
+  createVersion(version: NewVersion, cb: OperatorFunction<Version, Version> = tap()) {
     this.preloaderService.wrap(
-      this.http.post<Version>(`${environment.backendPath}/version`)
+      this.http.post<Version>(`${environment.backendPath}/version`, version)
         .pipe(
           cb,
           tap((version) => this.versions.push(version))

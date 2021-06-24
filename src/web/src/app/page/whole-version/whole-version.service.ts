@@ -80,6 +80,19 @@ export class WholeVersionService {
     )
   }
 
+  completeDeleteLeaf(leafId: number, groupVid: number, cb: OperatorFunction<void, void> = tap()) {
+    const params = new HttpParams().set('completely', 'true');
+
+    const groupId = this.groupsByVid.get(groupVid).value.id;
+    this.preloaderService.wrap(
+     this.http.delete<void>(`${environment.backendPath}/version/${this.wholeVersionHeader.id}/group/${groupId}/leaf/${leafId}`, params)
+      .pipe(
+        cb,
+        switchMap(() => this.initWholeVersion(this.wholeVersionHeader.id))
+      )
+    )
+  }
+
   deleteGroup(groupId: number, cb: OperatorFunction<void, void> = tap()) {
     const params = new HttpParams().set('hierarchy', 'true');
 
@@ -102,6 +115,18 @@ export class WholeVersionService {
           switchMap(() => this.initWholeVersion(this.wholeVersionHeader.id))
         )
       );
+  }
+
+  completeDeleteGroup(groupId: number, cb: OperatorFunction<void, void> = tap()) {
+    const params = new HttpParams().set('completely', 'true');
+
+    this.preloaderService.wrap(
+      this.http.delete<void>(`${environment.backendPath}/version/${this.wholeVersionHeader.id}/group/${groupId}`, params)
+        .pipe(
+          cb,
+          switchMap(() => this.initWholeVersion(this.wholeVersionHeader.id))
+        )
+      )
   }
 
   updateGroup(group: GroupToUpdate, groupId: number, cb: OperatorFunction<void, void> = tap()) {
@@ -134,7 +159,7 @@ export class WholeVersionService {
 
   getPrevoiusVersion(cb: OperatorFunction<WholeVersion, WholeVersion> = tap()) {
     this.preloaderService.wrap(
-      this.http.get<WholeVersion>('${environment.backendPath}/version/previous')
+      this.http.get<WholeVersion>(`${environment.backendPath}/version/previous`)
         .pipe(cb)
     )
   }

@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { GroupDifference } from 'app/model/difference';
 import { GroupContent } from 'app/model/group-content';
 import { TreeNode } from 'app/model/tree';
+import { DifferenceService } from '../difference.service';
 
 @Component({
   selector: 'difference-node',
@@ -11,9 +12,8 @@ import { TreeNode } from 'app/model/tree';
 export class DifferenceNodeComponent {
 
   @Input() node: TreeNode<GroupDifference>;
-  @Input() expandMap: Map<number, boolean>;
 
-  constructor() { }
+  constructor(public differenceService: DifferenceService) { }
 
   changeGlobalContentShow(value: boolean): void {
     this.setGlobalExpandValue(this.node, value);
@@ -24,16 +24,16 @@ export class DifferenceNodeComponent {
   }
 
   setLocalExpandValue(node: TreeNode<GroupDifference>, value: boolean) {
-    this.expandMap.set(node.value.vid, value);
+    this.differenceService.expandMap.set(node.value.vid, value);
   }
 
   setGlobalExpandValue(node: TreeNode<GroupDifference>, value: boolean) {
-    this.expandMap.set(node.value.vid, value);
+    this.differenceService.expandMap.set(node.value.vid, value);
     node.children.forEach(c => this.setGlobalExpandValue(c, value))
   }
 
   isContentShowed(): boolean {
-    return this.expandMap.get(this.node.value.vid) === true;
+    return this.differenceService.expandMap.get(this.node.value.vid) === true;
   }
 
   isExpandButtonShowed(): boolean {

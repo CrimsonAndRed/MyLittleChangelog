@@ -4,6 +4,7 @@ export interface LeafContent {
   name: string;
   valueType: number;
   value: string;
+  isDeleted: boolean;
 }
 
 export interface NewLeaf {

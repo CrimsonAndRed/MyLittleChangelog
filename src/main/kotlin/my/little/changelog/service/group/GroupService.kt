@@ -1,28 +1,25 @@
 package my.little.changelog.service.group
 
+import my.little.changelog.configuration.auth.CustomPrincipal
 import my.little.changelog.model.group.dto.external.GroupDeletionDto
 import my.little.changelog.model.group.dto.service.GroupCreationDto
 import my.little.changelog.model.group.dto.service.GroupUpdateDto
 import my.little.changelog.model.group.dto.service.ReturnedGroupDto
 import my.little.changelog.model.group.dto.service.toRepoDto
 import my.little.changelog.model.group.toReturnedDto
-import my.little.changelog.persistence.repo.GroupLatestRepo
-import my.little.changelog.persistence.repo.GroupRepo
-import my.little.changelog.persistence.repo.LeafRepo
-import my.little.changelog.persistence.repo.VersionRepo
-import my.little.changelog.validator.Err
-import my.little.changelog.validator.GroupValidator
-import my.little.changelog.validator.Response
-import my.little.changelog.validator.Valid
-import my.little.changelog.validator.ValidatorResponse
-import my.little.changelog.validator.VersionValidator
+import my.little.changelog.model.leaf.dto.repo.LeafCreationDto
+import my.little.changelog.persistence.repo.*
+import my.little.changelog.validator.*
 import org.jetbrains.exposed.sql.transactions.transaction
 
 object GroupService {
 
     fun createGroup(group: GroupCreationDto): Response<ReturnedGroupDto> = transaction {
         val version = VersionRepo.findById(group.versionId)
-        VersionValidator.validateLatest(version)
+        AuthValidator.validateAuthority(group.principal.user, version.user)
+            .chain {
+                VersionValidator.validateLatest(version, group.principal.user)
+            }
             .chain {
                 GroupValidator.validateNew(group)
             }
@@ -33,7 +30,10 @@ object GroupService {
 
     fun updateGroup(groupUpdate: GroupUpdateDto): Response<Unit> = transaction {
         val group = GroupRepo.findById(groupUpdate.id)
-        VersionValidator.validateLatest(group.version)
+        AuthValidator.validateAuthority(groupUpdate.principal.user, group.version.user)
+            .chain {
+                VersionValidator.validateLatest(group.version, groupUpdate.principal.user)
+            }
             .chain {
                 GroupValidator.validateUpdate(groupUpdate, group)
             }
@@ -48,10 +48,14 @@ object GroupService {
             }
     }
 
-    fun deleteGroup(groupDelete: GroupDeletionDto, dropHierarchy: Boolean): Response<Unit> = transaction {
+    fun deleteGroup(groupDelete: GroupDeletionDto, dropHierarchy: Boolean, dropCompletely: Boolean): Response<Unit> = transaction {
         val group = GroupRepo.findById(groupDelete.id)
-        val versionId = group.version.id.value
-        VersionValidator.validateLatest(group.version)
+        val currentVersion = group.version
+        val versionId = currentVersion.id.value
+        AuthValidator.validateAuthority(groupDelete.principal.user, currentVersion.user)
+            .chain {
+                VersionValidator.validateLatest(currentVersion, groupDelete.principal.user)
+            }
             .chain {
                 if (!dropHierarchy) {
                     GroupRepo.findSublatestGroup(group.vid, versionId)
@@ -60,73 +64,129 @@ object GroupService {
                 ValidatorResponse(emptyList())
             }
             .ifValid {
-                if (dropHierarchy) {
-                    val latestGroupsHierarchy = GroupLatestRepo.findHierarchyToChildByVid(group.vid)
+                when {
+                    dropCompletely -> {
+                        val latestGroupsHierarchy = GroupLatestRepo.findHierarchyToChildByVid(group.vid)
+                        val latestGroupVids = latestGroupsHierarchy.map { it.vid }
+                        val latestLeaves = LeafLatestRepo.findAllByGroupsNotDeleted(latestGroupVids)
+                        val leaves = LeafRepo.findByIds(latestLeaves.map { it.id.value })
+                        val groups = GroupRepo.findByIds(latestGroupsHierarchy.map { it.id.value })
 
-                    val leaves = LeafRepo.findCurrentGroupsLeaves(latestGroupsHierarchy.map { it.vid }, group.version)
-                    leaves.forEach {
-                        it.delete()
-                    }
-                    val groups = GroupRepo.findByVids(
-                        latestGroupsHierarchy.filter { it.version.id.value == versionId }.map { it.vid },
-                        group.version
-                    )
+                        val groupsByVids = groups.map { it.vid to it }.toMap()
 
-                    groups.forEach { g ->
-                        GroupRepo.delete(g)
+                        groups.forEach {
+                            if (!it.isDeleted) {
+                                if (it.version.id.value == versionId) {
+                                    it.isDeleted = true
+                                    GroupRepo.update(it)
+                                } else {
+                                    GroupRepo.create(
+                                        my.little.changelog.model.group.dto.repo.GroupCreationDto(
+                                            it.name,
+                                            it.vid,
+                                            it.parentVid,
+                                            currentVersion,
+                                            it.order,
+                                            true
+                                        )
+                                    )
+                                }
+                            }
+                        }
+
+                        leaves.forEach {
+                            if (it.version.id.value == versionId) {
+                                it.isDeleted = true
+                                LeafRepo.update(it)
+                            } else {
+                                LeafRepo.create(
+                                    LeafCreationDto(
+                                        it.vid,
+                                        it.name,
+                                        it.valueType,
+                                        it.value,
+                                        groupsByVids[it.groupVid]!!,
+                                        currentVersion,
+                                        true
+                                    )
+                                )
+                            }
+                        }
                     }
-                } else {
-                    GroupRepo.delete(group)
+                    dropHierarchy -> {
+                        val latestGroupsHierarchy = GroupLatestRepo.findHierarchyToChildByVid(group.vid)
+
+                        val leaves = LeafRepo.findCurrentGroupsLeaves(
+                            latestGroupsHierarchy.map { it.vid },
+                            currentVersion
+                        )
+                        leaves.forEach {
+                            it.delete()
+                        }
+                        val groups = GroupRepo.findByVids(
+                            latestGroupsHierarchy.filter { it.version.id.value == versionId }.map { it.vid },
+                            currentVersion
+                        )
+
+                        groups.forEach { g ->
+                            GroupRepo.delete(g)
+                        }
+                    }
+                    else -> {
+                        GroupRepo.delete(group)
+                    }
                 }
             }
     }
 
-    fun changePosition(groupId: Int, changeAgainstId: Int): Response<Unit> = transaction {
+    fun changePosition(groupId: Int, changeAgainstId: Int, cp: CustomPrincipal): Response<Unit> = transaction {
         val group = GroupRepo.findById(groupId)
-        // TODO Грязный трюк
-        // Если нам нужно материализовать группу - то мы сначала создаем группу с новым order, а потом его заменяем нужным.
-        // Это не совсем верно
-        val groupChangeAgainstOrigin = GroupRepo.findById(changeAgainstId)
-        var groupChangeAgainst = groupChangeAgainstOrigin
-        val latestVersion = VersionRepo.findLatest()
-        VersionValidator.validateLatest(group.version)
+
+        val groupChangeAgainst = GroupRepo.findById(changeAgainstId)
+        val latestVersion = VersionRepo.findLatestByUser(cp.user)
+        val validator = AuthValidator.validateAuthority(cp.user, group.version.user)
+            .chain {
+                AuthValidator.validateAuthority(cp.user, groupChangeAgainst.version.user)
+            }
+            .chain {
+                VersionValidator.validateLatest(group.version, cp.user)
+            }
             .chain {
                 ValidatorResponse
-                    .ofSimple("Could not modify groups that is not in the same group. IDs [${group.id.value}] [${groupChangeAgainst.id.value}]") {
+                    .ofSimple("Could not modify groups that is not in the same parent group. IDs [${group.id.value}] [${groupChangeAgainst.id.value}]") {
                         group.parentVid != groupChangeAgainst.parentVid
                     }
             }
-            .chain {
-                if (groupChangeAgainst.version.id != latestVersion.id) {
-                    val materializedGroupResponse = GroupService.createGroup(
-                        GroupCreationDto(
-                            groupChangeAgainst.name,
-                            groupChangeAgainst.vid,
-                            groupChangeAgainst.parentVid,
-                            latestVersion.id.value
-                        )
+
+        if (groupChangeAgainst.version.id != latestVersion.id) {
+            validator.chain {
+                createGroup(
+                    GroupCreationDto(
+                        groupChangeAgainst.name,
+                        groupChangeAgainst.vid,
+                        groupChangeAgainst.parentVid,
+                        latestVersion.id.value,
+                        group.order,
+                        cp
                     )
-
-                    ValidatorResponse.ofSimple("Could not materialize group to swap orders") {
-                        when (materializedGroupResponse) {
-                            is Valid -> {
-                                groupChangeAgainst = GroupRepo.findById(materializedGroupResponse.data.id)
-                                return@ofSimple true
-                            }
-                            is Err -> return@ofSimple false
-                        }
+                ).mapValidation()
+                    .chain {
+                        group.apply { order = groupChangeAgainst.order }
+                        GroupRepo.update(group)
+                        ValidatorResponse(emptyList())
                     }
+            }.toResponse(Unit)
+        } else {
+            validator
+                .chain {
+                    val tmpOrder = group.order
+                    group.apply { order = groupChangeAgainst.order }
+                    groupChangeAgainst.apply { order = tmpOrder }
+                    GroupRepo.update(group)
+                    GroupRepo.update(groupChangeAgainst)
+                    ValidatorResponse(emptyList())
                 }
-
-                ValidatorResponse(emptyList())
-            }
-            .ifValid {
-                val tmpOrder = group.order
-                group.apply { order = groupChangeAgainstOrigin.order }
-                groupChangeAgainst.apply { order = tmpOrder }
-                GroupRepo.update(group)
-                GroupRepo.update(groupChangeAgainst)
-            }
-            .mapEmpty()
+                .toResponse(Unit)
+        }
     }
 }

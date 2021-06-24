@@ -4,7 +4,7 @@
       <label>Choose "from" version</label>
       <mat-form-field appearance="fill">
         <mat-select [(ngModel)]="fromVersion" (selectionChange)="onFromChanged($event)">
-          <mat-option *ngFor="let version of versions" [value]="version"> {{ version.id }}</mat-option>
+          <mat-option *ngFor="let version of versions" [value]="version"> {{ version.name }}</mat-option>
         </mat-select>
       </mat-form-field>
     </div>
@@ -13,7 +13,7 @@
     <label>Choose "to" version</label>
     <mat-form-field appearance="fill">
       <mat-select [(ngModel)]="toVersion" (selectionChange)="onToChanged($event)">
-        <mat-option *ngFor="let version of versions" [value]="version"> {{ version.id }}</mat-option>
+        <mat-option *ngFor="let version of versions" [value]="version"> {{ version.name }}</mat-option>
       </mat-select>
     </mat-form-field>
   </div>

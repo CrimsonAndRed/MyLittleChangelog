@@ -3,12 +3,13 @@ package my.little.changelog.persistence
 import my.little.changelog.model.RepoCreationDto
 import org.jetbrains.exposed.dao.Entity
 import org.jetbrains.exposed.dao.EntityClass
+import org.jetbrains.exposed.sql.SizedIterable
 import org.jetbrains.exposed.sql.transactions.transaction
 
 abstract class AbstractCrudRepository<E : Entity<ID>, ID : Comparable<ID>>(
     private val accessor: EntityClass<ID, E>
 ) : CrudRepository<E, ID> {
-    override fun findAll(): Iterable<E> = transaction { accessor.all() }
+    override fun findAll(): SizedIterable<E> = transaction { accessor.all() }
 
     override fun findById(id: ID): E = transaction { accessor[id] }
 

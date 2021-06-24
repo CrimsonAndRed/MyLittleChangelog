@@ -30,6 +30,9 @@ import { LeafBodyComponent } from './leaf-content/leaf-body/leaf-body.component'
 import { PreviousVersionNodeComponent } from './common/tree-node/previous-version-node/previous-version-node.component';
 import { PreviousVersionSelectButtonComponent } from './version-header/previous-version/previous-version-select-button/previous-version-select-button.component';
 import { PreviousVersionModalComponent } from './version-header/previous-version/previous-version-modal/previous-version-modal.component';
+import { VersionExpandBlockComponent } from './common/version-expand-block/version-expand-block.component';
+import { CompleteDeleteLeafButtonComponent } from './leaf-content/buttons/complete-delete-leaf-button/complete-delete-leaf-button.component';
+import { CompleteDeleteGroupButtonComponent } from './group-content/buttons/complete-delete-group-button/complete-delete-group-button.component';
 
 @NgModule({
   declarations: [
@@ -57,11 +60,15 @@ import { PreviousVersionModalComponent } from './version-header/previous-version
     MoveUpDownButtonComponent,
     GroupBodyComponent,
     LeafBodyComponent,
+    VersionExpandBlockComponent,
 
     WholeVersionNodeComponent,
     PreviousVersionSelectButtonComponent,
     PreviousVersionModalComponent,
-    PreviousVersionNodeComponent
+    PreviousVersionNodeComponent,
+
+    CompleteDeleteLeafButtonComponent,
+    CompleteDeleteGroupButtonComponent
   ],
   imports: [
     BrowserModule,

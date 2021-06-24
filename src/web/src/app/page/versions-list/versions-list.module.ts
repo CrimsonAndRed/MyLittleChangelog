@@ -10,6 +10,8 @@ import { DifferenceModalComponent } from './difference-button/difference-modal/d
 
 import { HttpClientModule } from '@angular/common/http';
 import { MatSelectModule } from '@angular/material/select';
+import { NewVersionModalComponent } from './new-version-button/new-version-modal/new-version-modal.component';
+import { MatDialogModule } from '@angular/material/dialog';
 
 @NgModule({
   declarations: [
@@ -17,13 +19,15 @@ import { MatSelectModule } from '@angular/material/select';
     NewVersionButtonComponent,
     DifferenceButtonComponent,
     DifferenceModalComponent,
+    NewVersionModalComponent
   ],
   imports: [
     BrowserModule,
     FormsModule,
     HttpClientModule,
     RouterModule,
-    MatSelectModule
+    MatSelectModule,
+    MatDialogModule
   ],
 })
 export class VersionsListModule { }

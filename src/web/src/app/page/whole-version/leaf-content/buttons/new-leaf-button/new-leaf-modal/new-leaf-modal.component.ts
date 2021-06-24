@@ -25,7 +25,7 @@ export class NewLeafModalComponent {
     this.leafTypes = [...leafTypeService.leafTypes()];
   }
 
-  onLeafTypeClick(leafType: LeafType): void {
-    this.leaf.valueType = leafType.id;
+  onLeafTypeChanged(leafType) {
+    this.leaf.value = null;
   }
 }

@@ -12,6 +12,7 @@ data class LeafCreationDto(
     val value: String,
     val group: Group,
     val version: Version,
+    val isDeleted: Boolean = false
 ) : RepoCreationDto<Leaf> {
     override fun convertToEntity(): Leaf.() -> Unit = {
         this@LeafCreationDto.vid?.let { vid = it }
@@ -20,5 +21,6 @@ data class LeafCreationDto(
         value = this@LeafCreationDto.value
         version = this@LeafCreationDto.version
         groupVid = this@LeafCreationDto.group.vid
+        isDeleted = this@LeafCreationDto.isDeleted
     }
 }

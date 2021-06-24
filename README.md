@@ -17,7 +17,8 @@ Backend is written in Kotlin language.
 Angular 2 technology is used as frontend framework.
 
 # Requirements
-Database and backend only require Docker to be installed. Docker used originally was 20.10.2 version.
+Database only require Docker to be installed. Docker used originally was 20.10.2 version.
+Backend also requires Java to be installed (used 14.0.2).
 Frontend requires node (used version 10.19) and npm (used version 6.14.8).
 
 # Running application
@@ -30,14 +31,6 @@ npm start
 ```
 
 # Things to do
-- TODO in code
-- using expand-block requires to duplicate a lot of code.
-- when moving group we have preserve order. It is a bit complicated.
-
-- Other types of leaves?
-- A lot of DTOs used in project. It was interesting to try, but mistakes were made.
-- Names of versions? And sorting of versions.
-- Should root contain leaves or groups only.
-- Using RxJs BehaviorSubject in services.
-- Deleting group "totally" (the way this group can not be chosen in "choose from previous").
-- Differences between 400 and 500 return code. Is referencing missing ID a 500 or 400?
+- Repositories are definitely not optimal (going to DB several times per method)
+- Make difference prettier (name differences, path differences, complete deletions)
+- Undoing complete deletions?

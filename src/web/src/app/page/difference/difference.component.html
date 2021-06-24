@@ -1,11 +1,11 @@
 <div *ngIf="difference != null">
   <div>
-    <p>From {{ difference.from }} to {{ difference.to }}</p>
+    <p>From {{ difference.from.name }} to {{ difference.to.name }}</p>
   </div>
   <div>
     <tree-container [node]="differenceService.differenceTree">
       <ng-template #groupContainer let-child>
-        <difference-node [node]="child" [expandMap]="differenceService.expandMap"></difference-node>
+        <difference-node [node]="child"></difference-node>
       </ng-template>
     </tree-container>
   </div>

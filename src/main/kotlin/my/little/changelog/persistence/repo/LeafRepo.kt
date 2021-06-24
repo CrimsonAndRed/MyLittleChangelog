@@ -5,8 +5,10 @@ import my.little.changelog.model.leaf.Leaf
 import my.little.changelog.model.leaf.Leaves
 import my.little.changelog.model.version.Version
 import my.little.changelog.persistence.AbstractCrudRepository
+import org.jetbrains.exposed.sql.SizedIterable
 import org.jetbrains.exposed.sql.SortOrder
 import org.jetbrains.exposed.sql.and
+import org.jetbrains.exposed.sql.emptySized
 import org.jetbrains.exposed.sql.statements.jdbc.iterate
 import org.jetbrains.exposed.sql.transactions.transaction
 
@@ -30,39 +32,39 @@ object LeafRepo : AbstractCrudRepository<Leaf, Int>(Leaf) {
         ) sub where sub.version_id  = sub.max_version
     """
 
-    fun findByVersion(version: Version): Iterable<Leaf> = transaction {
+    fun findByVersion(version: Version): SizedIterable<Leaf> = transaction {
         Leaf.find { Leaves.version eq version.id.value }
             .orderBy(Leaves.order to SortOrder.ASC)
     }
 
-    fun findCurrentGroupLeaves(group: Group): Iterable<Leaf> = transaction {
+    fun findCurrentGroupLeaves(group: Group): SizedIterable<Leaf> = transaction {
         Leaf.find { (Leaves.version eq group.version.id.value) and (Leaves.groupVid eq group.vid) }
             .orderBy(Leaves.order to SortOrder.ASC)
     }
 
-    fun findCurrentGroupsLeaves(groupVids: Iterable<Int>, version: Version): Iterable<Leaf> = transaction {
+    fun findCurrentGroupsLeaves(groupVids: Iterable<Int>, version: Version): SizedIterable<Leaf> = transaction {
         Leaf.find { (Leaves.version eq version.id.value) and (Leaves.groupVid inList groupVids) }
     }
 
-    fun findDifferentialLeaves(fromVersion: Version, toVersion: Version): Iterable<Leaf> = transaction {
-        connection.prepareStatement(DIFFERENTIAL_LEAVES_QUERY, arrayOf("id"))
-            .apply {
-                set(1, fromVersion.id.value)
-                set(2, toVersion.id.value)
-            }
-            .executeQuery().iterate { getInt("id") }.let { Leaf.forIds(it) }
+    fun findDifferentialLeaves(fromVersion: Version, toVersion: Version): SizedIterable<Leaf> = transaction {
+        raw(DIFFERENTIAL_LEAVES_QUERY, arrayOf("id")) {
+            set(1, fromVersion.id.value)
+            set(2, toVersion.id.value)
+        }.iterate { getInt("id") }.let { Leaf.forIds(it) }
     }
 
-    fun findPreDifferentialLeaves(fromVersion: Version, leaves: Iterable<Leaf>): Iterable<Leaf> = transaction {
+    fun findPreDifferentialLeaves(fromVersion: Version, leaves: Iterable<Leaf>): SizedIterable<Leaf> = transaction {
         if (leaves.iterator().hasNext()) {
-            connection.prepareStatement(PREDIFFERENTIAL_LEAVES_QUERY, arrayOf("id"))
-                .apply {
-                    set(1, fromVersion.id.value)
-                    set(2, (connection.connection as java.sql.Connection).createArrayOf("INTEGER", leaves.map { it.vid }.toList().toTypedArray()))
-                }
-                .executeQuery().iterate { getInt("id") }.let { Leaf.forIds(it) }
+            raw(PREDIFFERENTIAL_LEAVES_QUERY, arrayOf("id")) {
+                set(1, fromVersion.id.value)
+                set(2, (connection.connection as java.sql.Connection).createArrayOf("INTEGER", leaves.map { it.vid }.toList().toTypedArray()))
+            }.iterate { getInt("id") }.let { Leaf.forIds(it) }
         } else {
-            emptyList()
+            emptySized()
         }
+    }
+
+    fun findByIds(ids: Iterable<Int>): SizedIterable<Leaf> = transaction {
+        Leaf.find { Leaves.id inList ids }
     }
 }

@@ -7,6 +7,7 @@
                     (up)="handleMoveUp()"
                     (down)="handleMoveDown()"></move-updown-button>
   <delete-group-button *ngIf="node.value.realNode" [node]="node" (onDeleteGroup)="handleDeleteGroup($event)"></delete-group-button>
+  <complete-delete-group-button *ngIf="node.value.realNode" [node]="node" (onDeleteGroup)="handleCompleteDeleteGroup()"></complete-delete-group-button>
   <edit-group-button *ngIf="node.value.realNode" [node]="node" (onUpdateGroup)="handleUpdateGroup($event)"></edit-group-button>
   <materialize-group-button *ngIf="!node.value.realNode" [node]="node" (onMaterializeGroup)="handleMaterializeGroup($event)"></materialize-group-button>
   <dematerialize-group-button *ngIf="node.value.realNode && !node.value.isEarliest" [node]="node" (onDematerializeGroup)="handleDematerializeGroup($event)"></dematerialize-group-button>

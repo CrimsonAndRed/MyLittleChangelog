@@ -1,6 +1,5 @@
 package my.little.changelog.model.group
 
-import my.little.changelog.model.group.GroupsLatest.autoIncrement
 import my.little.changelog.model.version.Version
 import my.little.changelog.model.version.Versions
 import org.jetbrains.exposed.dao.IntEntity
@@ -16,6 +15,7 @@ class Group(id: EntityID<Int>) : IntEntity(id) {
     var name by Groups.name
     var parentVid by Groups.parentVid
     var order by Groups.order
+    var isDeleted by Groups.isDeleted
 }
 
 object Groups : IntIdTable() {
@@ -24,4 +24,5 @@ object Groups : IntIdTable() {
     val parentVid = integer("parent_vid").nullable()
     val version = reference("version_id", Versions)
     val order = integer("order").autoIncrement("groups_order_seq")
+    val isDeleted = bool("is_deleted")
 }

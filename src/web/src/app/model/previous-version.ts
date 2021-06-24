@@ -64,6 +64,6 @@ export function leafContentToPrevious(leaf: LeafContent, usedVids: PreviousUsedG
     name: leaf.name,
     valueType: leaf.valueType,
     value: leaf.value,
-    inCurrentVersion: usedVids.usedLeaves.has(leaf.id),
+    inCurrentVersion: usedVids.usedLeaves.has(leaf.vid),
   };
 }

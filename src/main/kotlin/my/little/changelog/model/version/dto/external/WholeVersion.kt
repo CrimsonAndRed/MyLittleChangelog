@@ -7,5 +7,6 @@ import my.little.changelog.model.group.dto.external.WholeGroupDto
 data class WholeVersion(
     val id: Int,
     val canChange: Boolean,
-    val groupContent: List<WholeGroupDto>
+    val groupContent: List<WholeGroupDto>,
+    val name: String
 )

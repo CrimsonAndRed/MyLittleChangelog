@@ -11,7 +11,7 @@
 
       <tree-container [node]="node">
         <ng-template #groupContainer let-child>
-          <difference-node [node]="child" [expandMap]="expandMap"></difference-node>
+          <difference-node [node]="child"></difference-node>
         </ng-template>
       </tree-container>
       <div class="leaf-content" *ngFor="let leaf of node.value.leafContent">

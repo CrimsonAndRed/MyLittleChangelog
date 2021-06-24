@@ -21,8 +21,7 @@ export class NewLeafButtonComponent {
 
   @Input() node: TreeNode<GroupContent>;
 
-  constructor(private http: Http,
-              private dialog: MatDialog,
+  constructor(private dialog: MatDialog,
               private wholeVersionService: WholeVersionService) {
   }
 

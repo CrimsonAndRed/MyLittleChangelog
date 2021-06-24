@@ -6,11 +6,7 @@
       (click)="onNodeCheckRadioClick()">
     <group-body *ngIf="node.parent != null" [node]="node"></group-body>
     <label *ngIf="node.parent == null">Root Node</label>
-    <expand-block
-      *ngIf="isExpandButtonShowed()"
-      [isContentShowed]="isContentShowed()"
-      (localShowChange)="changeLocalContentShow($event)"
-      (globalShowChange)="changeGlobalContentShow($event)">
+    <version-expand-block [node]="node" [expandMap]="expandMap">
       <div>
         <tree-container [node]="node">
           <ng-template #groupContainer let-child>
@@ -21,6 +17,6 @@
           </ng-template>
         </tree-container>
       </div>
-    </expand-block>
+    </version-expand-block>
   </div>
 </div>

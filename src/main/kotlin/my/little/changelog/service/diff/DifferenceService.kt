@@ -6,9 +6,11 @@ import my.little.changelog.model.group.Group
 import my.little.changelog.model.group.dto.service.GroupDifferenceDto
 import my.little.changelog.model.leaf.Leaf
 import my.little.changelog.model.leaf.dto.service.LeafDifferenceDto
+import my.little.changelog.model.version.toReturnedDto
 import my.little.changelog.persistence.repo.GroupRepo
 import my.little.changelog.persistence.repo.LeafRepo
 import my.little.changelog.persistence.repo.VersionRepo
+import my.little.changelog.validator.AuthValidator
 import org.jetbrains.exposed.sql.transactions.transaction
 
 object DifferenceService {
@@ -16,19 +18,19 @@ object DifferenceService {
     fun findDifference(dto: DifferenceDto): ReturnedDifferenceDto = transaction {
         val toVersion = VersionRepo.findById(dto.toVersion)
         val fromVersion = VersionRepo.findById(dto.fromVersion)
+
+        AuthValidator.validateAuthority(dto.principal.user, fromVersion.user)
+        AuthValidator.validateAuthority(dto.principal.user, toVersion.user)
         val leavesTo = LeafRepo.findDifferentialLeaves(fromVersion, toVersion)
         val groupsTo = GroupRepo.findGroupsAffectedByLeaves(leavesTo, toVersion)
 
         val leavesFrom = LeafRepo.findPreDifferentialLeaves(fromVersion, leavesTo)
-        // TODO groupsFrom нужны?
-//        val groupsFrom = GroupRepo.findGroupsAffectedByLeaves(leavesFrom, fromVersion)
-
         createDtosRecursive(
             groupsTo.groupBy { it.parentVid },
             leavesTo.groupBy { it.groupVid },
             leavesFrom.map { it.groupVid to it }.toMap(),
         ).let {
-            ReturnedDifferenceDto(dto.fromVersion, dto.toVersion, it.first, it.second)
+            ReturnedDifferenceDto(fromVersion.toReturnedDto(), toVersion.toReturnedDto(), it.first, it.second)
         }
     }
 

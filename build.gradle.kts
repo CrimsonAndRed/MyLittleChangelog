@@ -18,6 +18,7 @@ plugins {
     kotlin("plugin.serialization")
     id("com.github.johnrengelman.shadow")
     id("org.jlleitschuh.gradle.ktlint")
+    id("com.github.ben-manes.versions")
 }
 
 val ktorVersion: String by project
@@ -29,6 +30,7 @@ val flywayVersion: String by project
 val jupiterVersion: String by project
 val testContainersVersion: String by project
 val mockkVersion: String by project
+val kotlinVersion: String by project
 
 dependencies {
     implementation("io.ktor", "ktor-server-netty", ktorVersion)
@@ -55,6 +57,7 @@ dependencies {
     testImplementation("org.testcontainers", "testcontainers", testContainersVersion) {
         exclude("junit")
     }
+    implementation(kotlin("stdlib-jdk8", kotlinVersion))
 }
 
 tasks {
@@ -74,4 +77,16 @@ tasks.test {
     testLogging {
         events("passed", "skipped", "failed")
     }
+}
+val compileKotlin: KotlinCompile by tasks
+compileKotlin.kotlinOptions {
+    jvmTarget = "14"
+}
+val compileTestKotlin: KotlinCompile by tasks
+compileTestKotlin.kotlinOptions {
+    jvmTarget = "14"
+}
+
+configure<org.jlleitschuh.gradle.ktlint.KtlintExtension> {
+    disabledRules.set(setOf("no-wildcard-imports"))
 }

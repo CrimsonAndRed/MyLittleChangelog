@@ -17,9 +17,7 @@ export class GroupHeaderComponent {
 
   @Input() node: TreeNode<GroupContent>
 
-  constructor(private wholeVersionService: WholeVersionService,
-              private preloaderService: PreloaderService,
-              private http: Http) { }
+  constructor(private wholeVersionService: WholeVersionService) { }
 
   handleNewGroup(group: Group): void {
     this.wholeVersionService.createNewGroup(group)
@@ -32,6 +30,11 @@ export class GroupHeaderComponent {
   handleDeleteGroup(): void {
     this.wholeVersionService.deleteGroup(this.node.value.id);
   }
+
+  handleCompleteDeleteGroup(): void {
+    this.wholeVersionService.completeDeleteGroup(this.node.value.id);
+  }
+
 
   handleUpdateGroup(group: GroupToUpdate): void {
     this.wholeVersionService.updateGroup(group, this.node.value.id);
