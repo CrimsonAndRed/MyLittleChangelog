@@ -3,7 +3,6 @@ package my.little.changelog.routing.auth
 import io.ktor.application.*
 import io.ktor.request.*
 import io.ktor.routing.*
-import io.ktor.util.*
 import my.little.changelog.model.auth.dto.external.AuthDto
 import my.little.changelog.model.auth.dto.external.Token
 import my.little.changelog.model.auth.dto.external.UserCreationDto
@@ -13,7 +12,6 @@ import my.little.changelog.routing.ofResponse
 import my.little.changelog.service.auth.AuthService
 import my.little.changelog.validator.dto.AuthDtoValidator
 
-@KtorExperimentalAPI
 fun Routing.authRouting() {
     route("/auth") {
         post {

@@ -1,7 +1,6 @@
 package my.little.changelog.routing.auth
 
 import io.ktor.http.*
-import io.ktor.util.*
 import io.mockk.every
 import io.mockk.mockkObject
 import my.little.changelog.exception.ForbiddenException
@@ -14,7 +13,6 @@ import my.little.changelog.validator.Valid
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
-@KtorExperimentalAPI
 class AuthRouterTest : AbstractRouterTest(
     { authRouting() }
 ) {

@@ -2,22 +2,19 @@ package my.little.changelog.persistence
 
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
-import io.ktor.application.Application
-import io.ktor.config.ApplicationConfig
-import io.ktor.util.KtorExperimentalAPI
+import io.ktor.application.*
+import io.ktor.config.*
 import org.flywaydb.core.Flyway
 import org.flywaydb.core.api.Location
 import org.jetbrains.exposed.sql.Database
 import javax.sql.DataSource
 
-@KtorExperimentalAPI
 fun Application.module() {
     val dataSource = initDb(environment.config.config("database"))
     Db.source = dataSource
     initMigration(dataSource)
 }
 
-@KtorExperimentalAPI
 fun initDb(conf: ApplicationConfig): DataSource {
     val hikariConfig = HikariConfig().apply {
         jdbcUrl = conf.property("url").getString()

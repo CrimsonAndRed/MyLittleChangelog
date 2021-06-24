@@ -4,7 +4,6 @@ import io.ktor.config.*
 import io.ktor.http.*
 import io.ktor.routing.*
 import io.ktor.server.testing.*
-import io.ktor.util.*
 import io.mockk.MockKMatcherScope
 import io.mockk.every
 import kotlinx.serialization.encodeToString
@@ -16,7 +15,6 @@ import my.little.changelog.module
 import org.jetbrains.exposed.dao.id.EntityID
 import kotlin.test.assertEquals
 
-@KtorExperimentalAPI
 abstract class AbstractRouterTest(
     private val routing: Routing.() -> Unit
 ) {

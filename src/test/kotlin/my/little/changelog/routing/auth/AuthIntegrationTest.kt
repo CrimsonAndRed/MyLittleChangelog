@@ -14,7 +14,6 @@ import org.jetbrains.exposed.sql.transactions.transaction
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 
-@KtorExperimentalAPI
 class AuthIntegrationTest : AbstractIntegrationTest() {
 
     @Test

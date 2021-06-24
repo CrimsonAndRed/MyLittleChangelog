@@ -1,29 +1,18 @@
 package my.little.changelog.routing.version.group
 
-import io.ktor.application.call
+import io.ktor.application.*
 import io.ktor.auth.*
-import io.ktor.request.receive
-import io.ktor.routing.Routing
-import io.ktor.routing.delete
-import io.ktor.routing.patch
-import io.ktor.routing.post
-import io.ktor.routing.put
-import io.ktor.routing.route
-import io.ktor.util.KtorExperimentalAPI
-import io.ktor.util.getOrFail
+import io.ktor.request.*
+import io.ktor.routing.*
+import io.ktor.util.*
 import my.little.changelog.configuration.auth.CustomPrincipal
-import my.little.changelog.model.group.dto.external.ChangeGroupPositionDto
-import my.little.changelog.model.group.dto.external.GroupCreationDto
-import my.little.changelog.model.group.dto.external.GroupDeletionDto
-import my.little.changelog.model.group.dto.external.GroupUpdateDto
-import my.little.changelog.model.group.dto.external.toServiceDto
+import my.little.changelog.model.group.dto.external.*
 import my.little.changelog.model.group.dto.service.toExternalDto
 import my.little.changelog.routing.ofEmptyResponse
 import my.little.changelog.routing.ofResponse
 import my.little.changelog.service.group.GroupService
 import my.little.changelog.validator.dto.GroupDtoValidator
 
-@KtorExperimentalAPI
 fun Routing.groupRouting() {
     authenticate {
         route("/version/{versionId}/group") {

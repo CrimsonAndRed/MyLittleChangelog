@@ -23,7 +23,6 @@ import org.slf4j.event.Level
 
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 
-@KtorExperimentalAPI
 fun Application.module(testing: Boolean = false, authTest: Boolean = false) {
 
     install(ContentNegotiation) {

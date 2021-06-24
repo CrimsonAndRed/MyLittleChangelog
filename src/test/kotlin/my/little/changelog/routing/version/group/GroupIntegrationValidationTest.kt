@@ -12,7 +12,6 @@ import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import kotlin.test.assertTrue
 
-@KtorExperimentalAPI
 internal class GroupIntegrationValidationTest : AbstractIntegrationTest() {
     @Test
     fun `Test Group Create With Blank Name Failure`() {

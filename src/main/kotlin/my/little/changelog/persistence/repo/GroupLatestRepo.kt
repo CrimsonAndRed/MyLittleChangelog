@@ -47,7 +47,7 @@ object GroupLatestRepo : AbstractCrudRepository<GroupLatest, Int>(GroupLatest) {
         }.iterate { getInt("id") }.let { GroupLatest.forIds(it) }
     }
 
-    fun findParentIds(vid: Int?): List<Int> = transaction {
+    fun findParentIds(vid: Int): List<Int> = transaction {
         raw(FIND_PARENT_GROUPS_QUERY, arrayOf("id")) {
             set(1, vid)
         }.iterate { getInt("id") }

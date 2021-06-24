@@ -18,7 +18,6 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotEquals
 import org.junit.jupiter.api.Test
 
-@KtorExperimentalAPI
 internal class VersionIntegrationTest : AbstractIntegrationTest() {
 
     @Test

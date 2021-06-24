@@ -1,17 +1,11 @@
 package my.little.changelog.routing.version
 
-import io.ktor.application.call
+import io.ktor.application.*
 import io.ktor.auth.*
-import io.ktor.auth.jwt.*
-import io.ktor.request.receive
-import io.ktor.response.respond
-import io.ktor.routing.Routing
-import io.ktor.routing.delete
-import io.ktor.routing.get
-import io.ktor.routing.post
-import io.ktor.routing.route
-import io.ktor.util.KtorExperimentalAPI
-import io.ktor.util.getOrFail
+import io.ktor.request.*
+import io.ktor.response.*
+import io.ktor.routing.*
+import io.ktor.util.*
 import my.little.changelog.configuration.auth.CustomPrincipal
 import my.little.changelog.model.version.dto.external.VersionCreationDto
 import my.little.changelog.model.version.dto.external.toServiceDto
@@ -21,7 +15,6 @@ import my.little.changelog.routing.ofEmptyResponse
 import my.little.changelog.service.version.VersionService
 import my.little.changelog.validator.Response
 
-@KtorExperimentalAPI
 fun Routing.versionRouting() {
     authenticate {
         route("/version") {

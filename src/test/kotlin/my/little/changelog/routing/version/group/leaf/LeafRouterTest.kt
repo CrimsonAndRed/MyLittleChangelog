@@ -1,8 +1,6 @@
 package my.little.changelog.routing.version.group.leaf
 
-import io.ktor.http.HttpMethod
-import io.ktor.http.HttpStatusCode
-import io.ktor.util.KtorExperimentalAPI
+import io.ktor.http.*
 import io.mockk.every
 import io.mockk.mockkObject
 import kotlinx.serialization.decodeFromString
@@ -22,7 +20,6 @@ import kotlin.test.assertEquals
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
-@KtorExperimentalAPI
 internal class LeafRouterTest : AbstractRouterTest({
     leafRouting()
 }) {

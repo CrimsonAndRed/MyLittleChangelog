@@ -1,8 +1,6 @@
 package my.little.changelog.routing.difference
 
 import io.ktor.http.*
-import io.ktor.server.testing.*
-import io.ktor.util.*
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import my.little.changelog.model.diff.dto.external.ReturnedDifferenceDto
@@ -10,7 +8,6 @@ import my.little.changelog.routing.AbstractIntegrationTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
-@KtorExperimentalAPI
 internal class DifferenceIntegrationTest : AbstractIntegrationTest() {
 
     @Test

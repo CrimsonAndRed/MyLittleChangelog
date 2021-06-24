@@ -1,8 +1,6 @@
 package my.little.changelog.routing.version.group
 
-import io.ktor.http.HttpMethod
-import io.ktor.http.HttpStatusCode
-import io.ktor.util.KtorExperimentalAPI
+import io.ktor.http.*
 import io.mockk.every
 import io.mockk.mockkObject
 import kotlinx.serialization.decodeFromString
@@ -18,7 +16,6 @@ import my.little.changelog.validator.Valid
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
-@KtorExperimentalAPI
 internal class GroupRouterTest : AbstractRouterTest(
     { groupRouting() }
 ) {

@@ -30,7 +30,6 @@ import my.little.changelog.module as applicationModule
 import my.little.changelog.persistence.module as persistenceModule
 import my.little.changelog.routing.module as routingModule
 
-@KtorExperimentalAPI
 @Testcontainers
 abstract class AbstractIntegrationTest {
 

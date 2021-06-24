@@ -21,7 +21,6 @@ import kotlin.test.assertNotEquals
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
-@KtorExperimentalAPI
 internal class GroupIntegrationTest : AbstractIntegrationTest() {
 
     @Test

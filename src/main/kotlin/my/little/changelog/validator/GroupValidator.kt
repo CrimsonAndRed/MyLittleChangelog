@@ -17,7 +17,7 @@ object GroupValidator {
     fun validateUpdate(group: GroupUpdateDto, currentGroup: Group): ValidatorResponse {
         val errors: MutableList<String> = mutableListOf()
         this.validateName(group.name, errors)
-        if (group.parentVid != currentGroup.parentVid) {
+        if (group.parentVid != currentGroup.parentVid && group.parentVid != null) {
             val movedToChild = GroupRepo.findParents(group.parentVid)
                 .map { it.vid }
                 .contains(currentGroup.parentVid)

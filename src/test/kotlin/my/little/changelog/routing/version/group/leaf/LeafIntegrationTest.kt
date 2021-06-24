@@ -22,7 +22,6 @@ import org.junit.jupiter.api.assertThrows
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
-@KtorExperimentalAPI
 internal class LeafIntegrationTest : AbstractIntegrationTest() {
 
     @Test

@@ -120,7 +120,7 @@ object GroupRepo : AbstractCrudRepository<Group, Int>(Group) {
         Group.find { Groups.version eq version.id.value }
     }
 
-    fun findParents(vid: Int?): SizedIterable<Group> = transaction {
+    fun findParents(vid: Int): SizedIterable<Group> = transaction {
         GroupLatestRepo.findParentIds(vid)
             .let { Group.forIds(it.toList()) }
     }
