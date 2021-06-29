@@ -11,26 +11,32 @@ import my.little.changelog.persistence.repo.GroupRepo
 import my.little.changelog.persistence.repo.LeafRepo
 import my.little.changelog.persistence.repo.VersionRepo
 import my.little.changelog.validator.AuthValidator
+import my.little.changelog.validator.Response
+import my.little.changelog.validator.ValidatorResponse
 import org.jetbrains.exposed.sql.transactions.transaction
 
 object DifferenceService {
 
-    fun findDifference(dto: DifferenceDto): ReturnedDifferenceDto = transaction {
+    fun findDifference(dto: DifferenceDto): Response<ReturnedDifferenceDto> = transaction {
         val toVersion = VersionRepo.findById(dto.toVersion)
         val fromVersion = VersionRepo.findById(dto.fromVersion)
 
-        AuthValidator.validateAuthority(dto.principal.user, fromVersion.user)
-        AuthValidator.validateAuthority(dto.principal.user, toVersion.user)
-        val leavesTo = LeafRepo.findDifferentialLeaves(fromVersion, toVersion)
-        val groupsTo = GroupRepo.findGroupsAffectedByLeaves(leavesTo, toVersion)
+        ValidatorResponse.ofSimple("Chosen versions belong to different projects") {
+            fromVersion.project.id.value != toVersion.project.id.value
+        }.chain {
+            AuthValidator.validateAuthority(dto.principal.user, fromVersion.project.user)
+        }.ifValid {
+            val leavesTo = LeafRepo.findDifferentialLeaves(fromVersion, toVersion)
+            val groupsTo = GroupRepo.findGroupsAffectedByLeaves(leavesTo, toVersion)
 
-        val leavesFrom = LeafRepo.findPreDifferentialLeaves(fromVersion, leavesTo)
-        createDtosRecursive(
-            groupsTo.groupBy { it.parentVid },
-            leavesTo.groupBy { it.groupVid },
-            leavesFrom.map { it.groupVid to it }.toMap(),
-        ).let {
-            ReturnedDifferenceDto(fromVersion.toReturnedDto(), toVersion.toReturnedDto(), it.first, it.second)
+            val leavesFrom = LeafRepo.findPreDifferentialLeaves(fromVersion, leavesTo)
+            createDtosRecursive(
+                groupsTo.groupBy { it.parentVid },
+                leavesTo.groupBy { it.groupVid },
+                leavesFrom.map { it.groupVid to it }.toMap(),
+            ).let {
+                ReturnedDifferenceDto(fromVersion.toReturnedDto(), toVersion.toReturnedDto(), it.first, it.second)
+            }
         }
     }
 

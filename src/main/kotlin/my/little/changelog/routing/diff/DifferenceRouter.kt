@@ -9,6 +9,7 @@ import my.little.changelog.configuration.auth.CustomPrincipal
 import my.little.changelog.model.diff.dto.external.DifferenceDto
 import my.little.changelog.model.diff.dto.external.toServiceDto
 import my.little.changelog.model.diff.dto.service.toExternalDto
+import my.little.changelog.routing.ofResponse
 import my.little.changelog.service.diff.DifferenceService
 
 fun Routing.differenceRouting() {
@@ -20,7 +21,10 @@ fun Routing.differenceRouting() {
                 val to = call.request.queryParameters.getOrFail("to").toInt()
 
                 val dto = DifferenceDto(from, to)
-                call.respond(DifferenceService.findDifference(dto.toServiceDto(principal)).toExternalDto())
+                val resp = DifferenceService.findDifference(dto.toServiceDto(principal)).map {
+                    it.toExternalDto()
+                }
+                call.ofResponse(resp)
             }
         }
     }

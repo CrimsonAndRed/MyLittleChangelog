@@ -7,7 +7,7 @@ sealed class Response<T> {
         is Err -> Err(this.errors)
     }
 
-    fun mapEmpty(): Response<Unit> = map { Unit }
+    fun mapEmpty(): Response<Unit> = map { }
 
     fun mapValidation(): ValidatorResponse = when (this) {
         is Valid -> ValidatorResponse(emptyList())

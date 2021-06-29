@@ -12,6 +12,7 @@ import my.little.changelog.model.version.dto.external.toServiceDto
 import my.little.changelog.model.version.dto.service.VersionDeletionDto
 import my.little.changelog.model.version.dto.service.toExternalDto
 import my.little.changelog.routing.ofEmptyResponse
+import my.little.changelog.routing.ofResponse
 import my.little.changelog.service.version.VersionService
 import my.little.changelog.validator.Response
 
@@ -28,7 +29,10 @@ fun Routing.versionRouting() {
                 val principal = call.principal<CustomPrincipal>()!!
                 val dto = call.receive<VersionCreationDto>()
                 val projectId = call.parameters.getOrFail("projectId")
-                call.respond(VersionService.createVersion(dto.toServiceDto(projectId.toInt(), principal)).toExternalDto())
+                val resp = VersionService.createVersion(dto.toServiceDto(projectId.toInt(), principal)).map {
+                    it.toExternalDto()
+                }
+                call.ofResponse(resp)
             }
 
             route("/previous") {

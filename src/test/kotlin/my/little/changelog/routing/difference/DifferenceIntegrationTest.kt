@@ -93,4 +93,22 @@ internal class DifferenceIntegrationTest : AbstractIntegrationTest() {
             }
         }
     }
+
+    @Test
+    fun `Test Get Difference Different Projects Failure`() {
+        authorizedTest { user, token, transaction ->
+            val project = transaction.createProject(user)
+            val version1 = transaction.createVersion(user, project)
+            val project2 = transaction.createProject(user)
+            val version2 = transaction.createVersion(user, project2)
+
+            testAuthorizedRequest(
+                HttpMethod.Get,
+                "difference?from=${version1.id.value}&to=${version2.id.value}",
+                token
+            ) {
+                assertEquals(HttpStatusCode.BadRequest, response.status())
+            }
+        }
+    }
 }

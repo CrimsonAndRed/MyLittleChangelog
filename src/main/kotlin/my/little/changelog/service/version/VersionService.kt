@@ -19,6 +19,7 @@ import my.little.changelog.persistence.repo.*
 import my.little.changelog.service.leaf.LeafService
 import my.little.changelog.validator.AuthValidator
 import my.little.changelog.validator.Response
+import my.little.changelog.validator.Valid
 import my.little.changelog.validator.VersionValidator
 import org.jetbrains.exposed.dao.with
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -34,17 +35,21 @@ object VersionService {
         }
     }
 
-    fun createVersion(versionCreationDto: VersionCreationDto): ReturnedVersionDto = transaction {
+    fun createVersion(versionCreationDto: VersionCreationDto): Response<ReturnedVersionDto> = transaction {
         val project = ProjectRepo.findById(versionCreationDto.projectId)
-        VersionRepo.create(versionCreationDto.toRepoDto(versionCreationDto.principal.user, project)).toReturnedDto()
+        AuthValidator.validateAuthority(project.user, versionCreationDto.principal.user)
+            .ifValidResponse {
+                Valid(VersionRepo.create(versionCreationDto.toRepoDto(versionCreationDto.principal.user, project)).toReturnedDto())
+            }
     }
 
     fun deleteVersion(deletionDto: VersionDeletionDto): Response<Unit> = transaction {
         val version = VersionRepo.findById(deletionDto.id)
+
         VersionValidator
-            .validateLatest(version, deletionDto.principal.user)
+            .validateLatest(version)
             .chain {
-                AuthValidator.validateAuthority(version.user, deletionDto.principal.user)
+                AuthValidator.validateAuthority(version.project.user, deletionDto.principal.user)
             }
             .ifValid {
                 LeafRepo.findByVersion(version).forEach {

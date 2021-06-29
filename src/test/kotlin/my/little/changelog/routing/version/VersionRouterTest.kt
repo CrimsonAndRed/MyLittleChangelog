@@ -13,6 +13,7 @@ import my.little.changelog.model.version.dto.external.WholeVersion
 import my.little.changelog.model.version.dto.service.ReturnedVersionDto
 import my.little.changelog.routing.AbstractRouterTest
 import my.little.changelog.service.version.VersionService
+import my.little.changelog.validator.Valid
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
@@ -26,7 +27,6 @@ internal class VersionRouterTest : AbstractRouterTest(
 
     data class Project(val v: Int)
 
-    private val vg = Project(0)
     private val baseUrl: (Int) -> String = { v -> "project/$v/version" }
 
     @Test
@@ -34,7 +34,7 @@ internal class VersionRouterTest : AbstractRouterTest(
         val dto = ReturnedVersionDto(0, "test", 0)
         val createDto = VersionCreationDto("test")
 
-        every { VersionService.createVersion(any()) } returns dto
+        every { VersionService.createVersion(any()) } returns Valid(dto)
 
         testAuthorizedRoute(HttpMethod.Post, baseUrl(dto.id), createDto) {
             assertEquals(HttpStatusCode.OK, response.status())

@@ -126,6 +126,22 @@ internal class VersionIntegrationTest : AbstractIntegrationTest() {
     }
 
     @Test
+    fun `Test Delete Other User Version Failure`() {
+        authorizedTest { user, token, transaction ->
+            val otherUser = transaction.createUser()
+            val project = transaction.createProject(otherUser)
+            val version = transaction.createVersion(user, project)
+
+            testAuthorizedRequest(HttpMethod.Delete, "version/${version.id.value}", token) {
+                transaction {
+                    assertEquals(HttpStatusCode.Forbidden, response.status())
+                }
+            }
+        }
+    }
+
+
+    @Test
     fun `Test Delete Not Latest Version Failure`() {
         authorizedTest { user, token, transaction ->
             val project = transaction.createProject(user)
@@ -155,6 +171,23 @@ internal class VersionIntegrationTest : AbstractIntegrationTest() {
             testAuthorizedRequest(HttpMethod.Delete, "version/${firstVersion.id.value + 1}", token) {
                 transaction {
                     assertEquals(HttpStatusCode.InternalServerError, response.status())
+                }
+            }
+        }
+    }
+
+    @Test
+    fun `Test Delete Latest Version With Other Project Success`() {
+        authorizedTest { user, token, transaction ->
+            val project = transaction.createProject(user)
+            val firstVersion = transaction.createVersion(user, project)
+            val project2 = transaction.createProject(user)
+            val version2 = transaction.createVersion(user, project2)
+            transaction.createGroup(firstVersion)
+
+            testAuthorizedRequest(HttpMethod.Delete, "version/${firstVersion.id.value}", token) {
+                transaction {
+                    assertEquals(HttpStatusCode.NoContent, response.status())
                 }
             }
         }

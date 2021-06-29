@@ -41,6 +41,20 @@ internal class GroupIntegrationTest : AbstractIntegrationTest() {
     }
 
     @Test
+    fun `Test Root Group Creation Other User Project Failure`() {
+        authorizedTest { user, token, transaction ->
+            val otherUser = transaction.createUser()
+            val project = transaction.createProject(otherUser)
+            val version = transaction.createVersion(otherUser, project)
+            val dto = GroupCreationDto("Test Name 1")
+
+            testAuthorizedRequest(HttpMethod.Post, "version/${version.id.value}/group", token, dto) {
+                assertEquals(HttpStatusCode.Forbidden, response.status())
+            }
+        }
+    }
+
+    @Test
     fun `Test Subgroup Creation Success`() {
         authorizedTest { user, token, transaction ->
             val project = transaction.createProject(user)
@@ -124,6 +138,21 @@ internal class GroupIntegrationTest : AbstractIntegrationTest() {
     }
 
     @Test
+    fun `Test Group Update Other User Failure`() {
+        authorizedTest { _, token, transaction ->
+            val otherUser = transaction.createUser()
+            val project = transaction.createProject(otherUser)
+            val version = transaction.createVersion(otherUser, project)
+            val group = transaction.createGroup(version)
+            val dto = GroupUpdateDto("Test Base Group 2", null)
+
+            testAuthorizedRequest(HttpMethod.Put, "version/${version.id.value}/group/${group.id.value}", token, dto) {
+                assertEquals(HttpStatusCode.Forbidden, response.status())
+            }
+        }
+    }
+
+    @Test
     fun `Test Group Update Parent Success`() {
         authorizedTest { user, token, transaction ->
             val project = transaction.createProject(user)
@@ -168,6 +197,21 @@ internal class GroupIntegrationTest : AbstractIntegrationTest() {
                 token
             ) {
                 assertEquals(HttpStatusCode.NoContent, response.status())
+            }
+        }
+    }
+
+    @Test
+    fun `Test Group Delete Other User Failure`() {
+        authorizedTest { _, token, transaction ->
+            val otherUser = transaction.createUser()
+            val project = transaction.createProject(otherUser)
+            val version = transaction.createVersion(otherUser, project)
+            val group = transaction.createGroup(version)
+            val dto = GroupUpdateDto("Test Base Group 2", null)
+
+            testAuthorizedRequest(HttpMethod.Delete, "version/${version.id.value}/group/${group.id.value}", token, dto) {
+                assertEquals(HttpStatusCode.Forbidden, response.status())
             }
         }
     }

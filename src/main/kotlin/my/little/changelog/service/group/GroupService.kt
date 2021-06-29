@@ -18,7 +18,7 @@ object GroupService {
         val version = VersionRepo.findById(group.versionId)
         AuthValidator.validateAuthority(group.principal.user, version.user)
             .chain {
-                VersionValidator.validateLatest(version, group.principal.user)
+                VersionValidator.validateLatest(version)
             }
             .chain {
                 GroupValidator.validateNew(group)
@@ -32,7 +32,7 @@ object GroupService {
         val group = GroupRepo.findById(groupUpdate.id)
         AuthValidator.validateAuthority(groupUpdate.principal.user, group.version.user)
             .chain {
-                VersionValidator.validateLatest(group.version, groupUpdate.principal.user)
+                VersionValidator.validateLatest(group.version)
             }
             .chain {
                 GroupValidator.validateUpdate(groupUpdate, group)
@@ -54,7 +54,7 @@ object GroupService {
         val versionId = currentVersion.id.value
         AuthValidator.validateAuthority(groupDelete.principal.user, currentVersion.user)
             .chain {
-                VersionValidator.validateLatest(currentVersion, groupDelete.principal.user)
+                VersionValidator.validateLatest(currentVersion)
             }
             .chain {
                 if (!dropHierarchy) {
@@ -148,7 +148,7 @@ object GroupService {
                 AuthValidator.validateAuthority(cp.user, groupChangeAgainst.version.user)
             }
             .chain {
-                VersionValidator.validateLatest(group.version, cp.user)
+                VersionValidator.validateLatest(group.version)
             }
             .chain {
                 ValidatorResponse

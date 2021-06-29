@@ -82,6 +82,20 @@ internal class ProjectIntegrationTest : AbstractIntegrationTest() {
     }
 
     @Test
+    fun `Test Delete Other User Project Failure`() {
+        authorizedTest { _, token, transaction ->
+            val otherUser = transaction.createUser()
+            val project = transaction.createProject(otherUser)
+
+            testAuthorizedRequest(HttpMethod.Delete, "project/${project.id.value}", token) {
+                transaction {
+                    assertEquals(HttpStatusCode.Forbidden, response.status())
+                }
+            }
+        }
+    }
+
+    @Test
     fun `Test Delete Nonexistent Project Failure`() {
         authorizedTest { user, token, transaction ->
             val project = transaction.createProject(user)

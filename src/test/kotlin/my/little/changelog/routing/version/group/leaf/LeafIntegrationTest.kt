@@ -82,6 +82,32 @@ internal class LeafIntegrationTest : AbstractIntegrationTest() {
     }
 
     @Test
+    fun `Test Create Leaf Other User Project Failure`() {
+        authorizedTest { _, token, transaction ->
+            val otherUser = transaction.createUser()
+            val project = transaction.createProject(otherUser)
+            val version = transaction.createVersion(otherUser, project)
+            val group = transaction.createGroup(version)
+
+            val dto = LeafCreationDto(
+                null,
+                "Test Name 1",
+                LeafType.TEXTUAL.id,
+                "Test Value 1"
+            )
+
+            testAuthorizedRequest(
+                HttpMethod.Post,
+                "version/${version.id.value}/group/${group.id.value}/leaf",
+                token,
+                dto
+            ) {
+                assertEquals(HttpStatusCode.Forbidden, response.status())
+            }
+        }
+    }
+
+    @Test
     fun `Test Create Leaf With Nonexistent Version Failure`() {
         authorizedTest { user, token, transaction ->
             val project = transaction.createProject(user)
@@ -150,6 +176,32 @@ internal class LeafIntegrationTest : AbstractIntegrationTest() {
                 dto
             ) {
                 assertEquals(HttpStatusCode.NoContent, response.status())
+            }
+        }
+    }
+
+    @Test
+    fun `Test Update Leaf Other User Project Failure`() {
+        authorizedTest { _, token, transaction ->
+            val otherUser = transaction.createUser()
+            val project = transaction.createProject(otherUser)
+            val version = transaction.createVersion(otherUser, project)
+            val group = transaction.createGroup(version)
+            val leaf = transaction.createLeaf(version, group.vid)
+            val dto = LeafUpdateDto(
+                "Test Name 1",
+                LeafType.TEXTUAL.id,
+                "Test Value 2",
+                group.vid
+            )
+
+            testAuthorizedRequest(
+                HttpMethod.Put,
+                "version/${version.id.value}/group/${group.id.value}/leaf/${leaf.id.value}",
+                token,
+                dto
+            ) {
+                assertEquals(HttpStatusCode.Forbidden, response.status())
             }
         }
     }
@@ -273,6 +325,25 @@ internal class LeafIntegrationTest : AbstractIntegrationTest() {
                 assertEquals(HttpStatusCode.NoContent, response.status())
             }
             assertThrows<EntityNotFoundException> { Leaf[leaf.id] }
+        }
+    }
+
+    @Test
+    fun `Test Delete Leaf Other User Project Failure`() {
+        authorizedTest { _, token, transaction ->
+            val otherUser = transaction.createUser()
+            val project = transaction.createProject(otherUser)
+            val version = transaction.createVersion(otherUser, project)
+            val group = transaction.createGroup(version)
+            val leaf = transaction.createLeaf(version, group.vid)
+
+            testAuthorizedRequest(
+                HttpMethod.Delete,
+                "version/${version.id.value}/group/${group.id.value}/leaf/${leaf.id.value}",
+                token,
+            ) {
+                assertEquals(HttpStatusCode.Forbidden, response.status())
+            }
         }
     }
 
