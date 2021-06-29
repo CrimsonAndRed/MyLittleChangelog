@@ -21,7 +21,7 @@ import org.junit.jupiter.api.Test
 internal class VersionIntegrationTest : AbstractIntegrationTest() {
 
     @Test
-    fun `Test Create Version Success`() {
+    fun `Test Get Simple Version Success`() {
         authorizedTest { user, token, transaction ->
             val project = transaction.createProject(user)
             val version = transaction.createVersion(user, project)
