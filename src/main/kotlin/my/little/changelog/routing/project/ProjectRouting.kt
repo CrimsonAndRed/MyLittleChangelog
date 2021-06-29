@@ -14,8 +14,8 @@ import my.little.changelog.model.project.dto.service.toExternalDto
 import my.little.changelog.routing.ofEmptyResponse
 import my.little.changelog.routing.ofResponse
 import my.little.changelog.service.project.ProjectService
-import my.little.changelog.validator.dto.ProjectDtoValidator
 import my.little.changelog.validator.Response
+import my.little.changelog.validator.dto.ProjectDtoValidator
 
 fun Routing.projectRouting() {
     authenticate {

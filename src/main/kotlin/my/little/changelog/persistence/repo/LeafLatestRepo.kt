@@ -1,6 +1,5 @@
 package my.little.changelog.persistence.repo
 
-import my.little.changelog.model.auth.User
 import my.little.changelog.model.leaf.LeafLatest
 import my.little.changelog.model.leaf.LeavesLatest
 import my.little.changelog.model.project.Project

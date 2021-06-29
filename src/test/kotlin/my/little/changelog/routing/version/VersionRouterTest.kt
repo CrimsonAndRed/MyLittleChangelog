@@ -12,7 +12,6 @@ import my.little.changelog.model.version.dto.external.VersionCreationDto
 import my.little.changelog.model.version.dto.external.WholeVersion
 import my.little.changelog.model.version.dto.service.ReturnedVersionDto
 import my.little.changelog.routing.AbstractRouterTest
-import my.little.changelog.routing.version.group.GroupRouterTest
 import my.little.changelog.service.version.VersionService
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
