@@ -19,7 +19,7 @@ export class LoginService {
         .pipe(
           tap((res) => this.authService.setToken(res)),
           tap(() => {
-            this.router.navigate(['versions'], {skipLocationChange: false});
+            this.router.navigate(['projects'], {skipLocationChange: false});
           })
         )
     )

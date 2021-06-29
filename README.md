@@ -34,3 +34,6 @@ npm start
 - Repositories are definitely not optimal (going to DB several times per method)
 - Make difference prettier (name differences, path differences, complete deletions)
 - Undoing complete deletions?
+- Authority validation on changing data
+- Validate same project on any modifications
+- Tests for validators

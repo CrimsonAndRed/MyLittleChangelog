@@ -16,7 +16,8 @@ internal class GroupIntegrationValidationTest : AbstractIntegrationTest() {
     @Test
     fun `Test Group Create With Blank Name Failure`() {
         authorizedTest { user, token, transaction ->
-            val version1 = transaction.createVersion(user)
+            val project = transaction.createProject(user)
+            val version1 = transaction.createVersion(user, project)
             val dto = GroupCreationDto(" ")
 
             testAuthorizedRequest(HttpMethod.Post, "version/${version1.id.value}/group", token, dto) {
@@ -30,7 +31,8 @@ internal class GroupIntegrationValidationTest : AbstractIntegrationTest() {
     @Test
     fun `Test Group Update With Blank Name Failure`() {
         authorizedTest { user, token, transaction ->
-            val version1 = transaction.createVersion(user)
+            val project = transaction.createProject(user)
+            val version1 = transaction.createVersion(user, project)
             val group = transaction.createGroup(version1)
             val dto = GroupUpdateDto(" ")
 
@@ -45,7 +47,8 @@ internal class GroupIntegrationValidationTest : AbstractIntegrationTest() {
     @Test
     fun `Test Group Move To Child Failure`() {
         authorizedTest { user, token, transaction ->
-            val version1 = transaction.createVersion(user)
+            val project = transaction.createProject(user)
+            val version1 = transaction.createVersion(user, project)
             val group = transaction.createGroup(version1)
             val group2 = transaction.createGroup(version1, null, group.vid)
             val dto = ChangeGroupPositionDto(group2.vid)

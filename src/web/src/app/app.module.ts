@@ -12,6 +12,7 @@ import { Preloader } from './preloader/preloader.component';
 import { ErrorModule } from 'app/error/error.module';
 import { DifferenceModule } from 'app/page/difference/difference.module';
 import { LoginModule } from './page/login/login.module';
+import { ProjectsListModule } from './page/projects/projects-list.module';
 
 @NgModule({
   declarations: [
@@ -28,7 +29,8 @@ import { LoginModule } from './page/login/login.module';
     HttpClientModule,
     NoopAnimationsModule,
     ErrorModule,
-    LoginModule
+    LoginModule,
+    ProjectsListModule
   ],
   bootstrap: [AppComponent]
 })

@@ -1,0 +1,14 @@
+<mat-dialog-content>
+  <div>
+    <div>
+      <label>Name</label><input [(ngModel)]="project.name"/>
+    </div>
+    <div>
+      <label>Description</label><input [(ngModel)]="project.description"/>
+    </div>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button [mat-dialog-close]="null">Cancel</button>
+  <button [mat-dialog-close]="project">Save</button>
+</mat-dialog-actions>

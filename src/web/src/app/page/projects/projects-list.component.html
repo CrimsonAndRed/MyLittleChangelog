@@ -1,0 +1,10 @@
+<new-project-button></new-project-button>
+<div>
+  <ul>
+    <li *ngFor="let project of projects">
+      <a [routerLink]="gotoProjectPage(project)">{{project.name}}</a>
+      <button (click)="onProjectDelete(project)">Delete project</button>
+    </li>
+  </ul>
+</div>
+<br>

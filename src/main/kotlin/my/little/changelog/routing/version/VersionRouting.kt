@@ -17,22 +17,25 @@ import my.little.changelog.validator.Response
 
 fun Routing.versionRouting() {
     authenticate {
-        route("/version") {
+        route("project/{projectId}/version") {
             get {
                 val principal = call.principal<CustomPrincipal>()!!
-                call.respond(VersionService.getVersions(principal).map { it.toExternalDto() })
+                val projectId = call.parameters.getOrFail("projectId")
+                call.respond(VersionService.getVersions(projectId.toInt(), principal).map { it.toExternalDto() })
             }
 
             post {
                 val principal = call.principal<CustomPrincipal>()!!
                 val dto = call.receive<VersionCreationDto>()
-                call.respond(VersionService.createVersion(dto.toServiceDto(principal)).toExternalDto())
+                val projectId = call.parameters.getOrFail("projectId")
+                call.respond(VersionService.createVersion(dto.toServiceDto(projectId.toInt(), principal)).toExternalDto())
             }
 
             route("/previous") {
                 get {
                     val principal = call.principal<CustomPrincipal>()!!
-                    call.respond(VersionService.getPreviousVersions(principal))
+                    val projectId = call.parameters.getOrFail("projectId")
+                    call.respond(VersionService.getPreviousVersions(projectId.toInt(), principal))
                 }
             }
         }

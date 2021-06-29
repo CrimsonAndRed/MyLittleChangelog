@@ -12,6 +12,7 @@ import my.little.changelog.model.auth.User
 import my.little.changelog.model.group.Group
 import my.little.changelog.model.leaf.Leaf
 import my.little.changelog.model.leaf.LeafType
+import my.little.changelog.model.project.Project
 import my.little.changelog.model.version.Version
 import my.little.changelog.persistence.Db
 import my.little.changelog.service.auth.AuthService
@@ -106,8 +107,20 @@ abstract class AbstractIntegrationTest {
         }
     }
 
-    protected fun Transaction.createVersion(user: User, name: String = "Test version"): Version = Version
+    protected fun Transaction.createProject(
+        user: User,
+        name: String = "Test Project",
+        description: String = "Test Description",
+    ): Project = Project
         .new {
+            this.user = user
+            this.name = name
+            this.description = description
+        }.also { commit() }
+
+    protected fun Transaction.createVersion(user: User, project: Project, name: String = "Test version"): Version = Version
+        .new {
+            this.project = project
             this.name = name
             this.user = user
         }.also { commit() }

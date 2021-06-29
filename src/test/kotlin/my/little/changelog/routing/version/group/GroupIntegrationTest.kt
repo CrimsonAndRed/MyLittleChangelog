@@ -26,7 +26,8 @@ internal class GroupIntegrationTest : AbstractIntegrationTest() {
     @Test
     fun `Test Root Group Creation Success`() {
         authorizedTest { user, token, transaction ->
-            val version = transaction.createVersion(user)
+            val project = transaction.createProject(user)
+            val version = transaction.createVersion(user, project)
             val dto = GroupCreationDto("Test Name 1")
 
             testAuthorizedRequest(HttpMethod.Post, "version/${version.id.value}/group", token, dto) {
@@ -42,7 +43,8 @@ internal class GroupIntegrationTest : AbstractIntegrationTest() {
     @Test
     fun `Test Subgroup Creation Success`() {
         authorizedTest { user, token, transaction ->
-            val version = transaction.createVersion(user)
+            val project = transaction.createProject(user)
+            val version = transaction.createVersion(user, project)
             val group = transaction.createGroup(version)
             val dto = GroupCreationDto("Test Name 1", parentVid = group.vid)
 
@@ -59,8 +61,9 @@ internal class GroupIntegrationTest : AbstractIntegrationTest() {
     @Test
     fun `Test Group Append to New Version Success`() {
         authorizedTest { user, token, transaction ->
-            val version1 = transaction.createVersion(user)
-            val version2 = transaction.createVersion(user)
+            val project = transaction.createProject(user)
+            val version1 = transaction.createVersion(user, project)
+            val version2 = transaction.createVersion(user, project)
             val group = transaction.createGroup(version1)
             val dto = GroupCreationDto(group.name, vid = group.vid)
 
@@ -79,8 +82,9 @@ internal class GroupIntegrationTest : AbstractIntegrationTest() {
     @Test
     fun `Test Group Create With Nonexistent Version Failure`() {
         authorizedTest { user, token, transaction ->
-            val version1 = transaction.createVersion(user)
-            val version2 = transaction.createVersion(user)
+            val project = transaction.createProject(user)
+            val version1 = transaction.createVersion(user, project)
+            val version2 = transaction.createVersion(user, project)
             val group = transaction.createGroup(version1)
             val dto = GroupCreationDto(group.name, vid = group.vid)
 
@@ -93,8 +97,9 @@ internal class GroupIntegrationTest : AbstractIntegrationTest() {
     @Test
     fun `Test Group Create With Nonexistent Parent Group Failure`() {
         authorizedTest { user, token, transaction ->
-            val version1 = transaction.createVersion(user)
-            val version2 = transaction.createVersion(user)
+            val project = transaction.createProject(user)
+            val version1 = transaction.createVersion(user, project)
+            val version2 = transaction.createVersion(user, project)
             val group = transaction.createGroup(version1)
             val dto = GroupCreationDto(group.name, vid = group.vid + 1)
 
@@ -107,7 +112,8 @@ internal class GroupIntegrationTest : AbstractIntegrationTest() {
     @Test
     fun `Test Group Update Name Success`() {
         authorizedTest { user, token, transaction ->
-            val version = transaction.createVersion(user)
+            val project = transaction.createProject(user)
+            val version = transaction.createVersion(user, project)
             val group = transaction.createGroup(version)
             val dto = GroupUpdateDto("Test Base Group 2", null)
 
@@ -120,7 +126,8 @@ internal class GroupIntegrationTest : AbstractIntegrationTest() {
     @Test
     fun `Test Group Update Parent Success`() {
         authorizedTest { user, token, transaction ->
-            val version = transaction.createVersion(user)
+            val project = transaction.createProject(user)
+            val version = transaction.createVersion(user, project)
             val groupRoot = transaction.createGroup(version)
             val groupSub = transaction.createGroup(version)
 
@@ -135,8 +142,9 @@ internal class GroupIntegrationTest : AbstractIntegrationTest() {
     @Test
     fun `Test Group Update With Old Version Failure`() {
         authorizedTest { user, token, transaction ->
-            val version = transaction.createVersion(user)
-            transaction.createVersion(user)
+            val project = transaction.createProject(user)
+            val version = transaction.createVersion(user, project)
+            transaction.createVersion(user, project)
             val group = transaction.createGroup(version)
             val dto = GroupUpdateDto("Test Base Group 2", null)
 
@@ -151,7 +159,8 @@ internal class GroupIntegrationTest : AbstractIntegrationTest() {
     @Test
     fun `Test Group Delete Success`() {
         authorizedTest { user, token, transaction ->
-            val version = transaction.createVersion(user)
+            val project = transaction.createProject(user)
+            val version = transaction.createVersion(user, project)
             val group = transaction.createGroup(version)
             testAuthorizedRequest(
                 HttpMethod.Delete,
@@ -166,8 +175,9 @@ internal class GroupIntegrationTest : AbstractIntegrationTest() {
     @Test
     fun `Test Group Delete With Old Version Failure`() {
         authorizedTest { user, token, transaction ->
-            val version = transaction.createVersion(user)
-            val version2 = transaction.createVersion(user)
+            val project = transaction.createProject(user)
+            val version = transaction.createVersion(user, project)
+            val version2 = transaction.createVersion(user, project)
             val group = transaction.createGroup(version)
 
             testAuthorizedRequest(
@@ -185,7 +195,8 @@ internal class GroupIntegrationTest : AbstractIntegrationTest() {
     @Test
     fun `Test Group Dematerialize Sublatest Failure`() {
         authorizedTest { user, token, transaction ->
-            val version = transaction.createVersion(user)
+            val project = transaction.createProject(user)
+            val version = transaction.createVersion(user, project)
             val group = transaction.createGroup(version)
             transaction.createLeaf(version, group.vid)
             testAuthorizedRequest(
@@ -201,7 +212,8 @@ internal class GroupIntegrationTest : AbstractIntegrationTest() {
     @Test
     fun `Test Group Delete Hierarchy Success`() {
         authorizedTest { user, token, transaction ->
-            val version = transaction.createVersion(user)
+            val project = transaction.createProject(user)
+            val version = transaction.createVersion(user, project)
             val group = transaction.createGroup(version)
             val leaf = transaction.createLeaf(version, group.vid)
             testAuthorizedRequest(
@@ -219,7 +231,8 @@ internal class GroupIntegrationTest : AbstractIntegrationTest() {
     @Test
     fun `Test Group Delete With Nonexistent Version Success`() {
         authorizedTest { user, token, transaction ->
-            val version = transaction.createVersion(user)
+            val project = transaction.createProject(user)
+            val version = transaction.createVersion(user, project)
             val group = transaction.createGroup(version)
             testAuthorizedRequest(
                 HttpMethod.Delete,
@@ -234,7 +247,8 @@ internal class GroupIntegrationTest : AbstractIntegrationTest() {
     @Test
     fun `Test Group Delete With Nonexistent Group Failure`() {
         authorizedTest { user, token, transaction ->
-            val version = transaction.createVersion(user)
+            val project = transaction.createProject(user)
+            val version = transaction.createVersion(user, project)
             val group = transaction.createGroup(version)
             testAuthorizedRequest(
                 HttpMethod.Delete,
@@ -249,7 +263,8 @@ internal class GroupIntegrationTest : AbstractIntegrationTest() {
     @Test
     fun `Test Group Complete Delete Success`() {
         authorizedTest { user, token, transaction ->
-            val version = transaction.createVersion(user)
+            val project = transaction.createProject(user)
+            val version = transaction.createVersion(user, project)
             val group1 = transaction.createGroup(version)
             val group2 = transaction.createGroup(version, null, group1.vid)
             testAuthorizedRequest(
@@ -267,10 +282,11 @@ internal class GroupIntegrationTest : AbstractIntegrationTest() {
     @Test
     fun `Test Group Complete Delete Fetch From Prev Success`() {
         authorizedTest { user, token, transaction ->
-            val version1 = transaction.createVersion(user)
+            val project = transaction.createProject(user)
+            val version1 = transaction.createVersion(user, project)
             val group1 = transaction.createGroup(version1)
             val group2 = transaction.createGroup(version1, null, group1.vid, "Test", false)
-            val version2 = transaction.createVersion(user)
+            val version2 = transaction.createVersion(user, project)
             val group3 = transaction.createGroup(version2, group1.vid)
             testAuthorizedRequest(
                 HttpMethod.Delete,
@@ -289,10 +305,11 @@ internal class GroupIntegrationTest : AbstractIntegrationTest() {
     @Test
     fun `Test Group Complete Delete Already Deleted Child Success`() {
         authorizedTest { user, token, transaction ->
-            val version1 = transaction.createVersion(user)
+            val project = transaction.createProject(user)
+            val version1 = transaction.createVersion(user, project)
             val group1 = transaction.createGroup(version1)
             val group2 = transaction.createGroup(version1, null, group1.vid, "Test", true)
-            val version2 = transaction.createVersion(user)
+            val version2 = transaction.createVersion(user, project)
             val group3 = transaction.createGroup(version2, group1.vid, group1.parentVid)
             testAuthorizedRequest(
                 HttpMethod.Delete,
@@ -311,21 +328,24 @@ internal class GroupIntegrationTest : AbstractIntegrationTest() {
     @Test
     fun `Test Move group Mixed`() {
         authorizedTest { user, token, transaction ->
-            val version = transaction.createVersion(user)
+            val project = transaction.createProject(user)
+            val version = transaction.createVersion(user, project)
             val parentGroup = transaction.createGroup(version)
             val group1 = transaction.createGroup(version, null, parentGroup.vid)
             val group2 = transaction.createGroup(version, null, parentGroup.vid)
             testMoveGroupPositive(version, group1, group2, token)
         }
         authorizedTest { user, token, transaction ->
-            val version = transaction.createVersion(user)
+            val project = transaction.createProject(user)
+            val version = transaction.createVersion(user, project)
             val parentGroup = transaction.createGroup(version)
             val group1 = transaction.createGroup(version, null, parentGroup.vid)
             val group2 = transaction.createGroup(version, null, parentGroup.vid)
             testMoveGroupPositive(version, group2, group1, token)
         }
         authorizedTest { user, token, transaction ->
-            val version = transaction.createVersion(user)
+            val project = transaction.createProject(user)
+            val version = transaction.createVersion(user, project)
             val parentGroup1 = transaction.createGroup(version)
             val parentGroup2 = transaction.createGroup(version)
             val group1 = transaction.createGroup(version, null, parentGroup1.vid)

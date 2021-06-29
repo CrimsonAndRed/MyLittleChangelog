@@ -141,9 +141,8 @@ object GroupService {
 
     fun changePosition(groupId: Int, changeAgainstId: Int, cp: CustomPrincipal): Response<Unit> = transaction {
         val group = GroupRepo.findById(groupId)
-
         val groupChangeAgainst = GroupRepo.findById(changeAgainstId)
-        val latestVersion = VersionRepo.findLatestByUser(cp.user)
+        val latestVersion = VersionRepo.findLatestByProject(group.version.project)
         val validator = AuthValidator.validateAuthority(cp.user, group.version.user)
             .chain {
                 AuthValidator.validateAuthority(cp.user, groupChangeAgainst.version.user)

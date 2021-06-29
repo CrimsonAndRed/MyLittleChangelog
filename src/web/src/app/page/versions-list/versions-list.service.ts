@@ -13,12 +13,14 @@ import { environment } from 'environments/environment';
 })
 export class VersionsListService {
   public versions: Version[] = [];
+  public projectId: number;
 
   constructor(private http: Http,
               private preloaderService: PreloaderService) {  }
 
-  initVersions(): Observable<Version[]> {
-    return this.http.get<Version[]>(`${environment.backendPath}/version`)
+  initVersions(projectId: number): Observable<Version[]> {
+    this.projectId = projectId;
+    return this.http.get<Version[]>(`${environment.backendPath}/project/${this.projectId}/version`)
       .pipe(
         tap(res => this.versions = res),
       );
@@ -26,7 +28,7 @@ export class VersionsListService {
 
   createVersion(version: NewVersion, cb: OperatorFunction<Version, Version> = tap()) {
     this.preloaderService.wrap(
-      this.http.post<Version>(`${environment.backendPath}/version`, version)
+      this.http.post<Version>(`${environment.backendPath}/project/${this.projectId}/version`, version)
         .pipe(
           cb,
           tap((version) => this.versions.push(version))

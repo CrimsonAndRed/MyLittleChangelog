@@ -8,7 +8,7 @@ object VersionValidator {
 
     fun validateLatest(version: Version, user: User): ValidatorResponse {
         val errors = mutableListOf<String>()
-        if (version.id != VersionRepo.findLatestByUser(user).id) {
+        if (version.id != VersionRepo.findLatestByProject(version.project).id) {
             errors.add("Version is not latest!")
         }
         return ValidatorResponse(errors)

@@ -12,6 +12,7 @@ import my.little.changelog.model.version.dto.external.VersionCreationDto
 import my.little.changelog.model.version.dto.external.WholeVersion
 import my.little.changelog.model.version.dto.service.ReturnedVersionDto
 import my.little.changelog.routing.AbstractRouterTest
+import my.little.changelog.routing.version.group.GroupRouterTest
 import my.little.changelog.service.version.VersionService
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
@@ -24,7 +25,10 @@ internal class VersionRouterTest : AbstractRouterTest(
         mockkObject(VersionService)
     }
 
-    private val baseUrl = "version"
+    data class Project(val v: Int)
+
+    private val vg = Project(0)
+    private val baseUrl: (Int) -> String = { v -> "project/$v/version" }
 
     @Test
     fun `Test Version Create Success`() {
@@ -33,7 +37,7 @@ internal class VersionRouterTest : AbstractRouterTest(
 
         every { VersionService.createVersion(any()) } returns dto
 
-        testAuthorizedRoute(HttpMethod.Post, baseUrl, createDto) {
+        testAuthorizedRoute(HttpMethod.Post, baseUrl(dto.id), createDto) {
             assertEquals(HttpStatusCode.OK, response.status())
         }
     }
@@ -42,7 +46,7 @@ internal class VersionRouterTest : AbstractRouterTest(
     fun `Test Version Create Exception`() {
         val createDto = VersionCreationDto("test")
         testAuthorizedExceptions(
-            constructAuthorizedRequest(HttpMethod.Post, baseUrl, createDto),
+            constructAuthorizedRequest(HttpMethod.Post, baseUrl(0), createDto),
             listOf { VersionService.createVersion(any()) },
             listOf(
                 { RuntimeException() } to HttpStatusCode.InternalServerError,
@@ -54,11 +58,11 @@ internal class VersionRouterTest : AbstractRouterTest(
 
     @Test
     fun `Test Version Read Success`() {
-        val dto = WholeVersion(0, true, emptyList(), "test")
+        val dto = WholeVersion(0, true, emptyList(), "test", 0)
 
         every { VersionService.getWholeVersion(any(), allAny()) } returns dto
 
-        testAuthorizedRoute(HttpMethod.Get, "$baseUrl/${dto.id}") {
+        testAuthorizedRoute(HttpMethod.Get, "version/${dto.id}") {
             assertEquals(HttpStatusCode.OK, response.status())
             val resp = Json.decodeFromString<WholeVersion>(response.content!!)
             assertEquals(dto.id, resp.id)
@@ -68,9 +72,9 @@ internal class VersionRouterTest : AbstractRouterTest(
 
     @Test
     fun `Test Version Read Exception`() {
-        val dto = WholeVersion(0, true, emptyList(), "test")
+        val dto = WholeVersion(0, true, emptyList(), "test", 0)
         testAuthorizedExceptions(
-            constructAuthorizedRequest(HttpMethod.Get, "$baseUrl/${dto.id}"),
+            constructAuthorizedRequest(HttpMethod.Get, "version/${dto.id}"),
             listOf { VersionService.getWholeVersion(any(), allAny()) },
             listOf(
                 { RuntimeException() } to HttpStatusCode.InternalServerError,
@@ -84,17 +88,17 @@ internal class VersionRouterTest : AbstractRouterTest(
     fun `Test Versions Get Success`() {
         val dto = ReturnedVersionDto(0, "test", 0)
 
-        every { VersionService.getVersions(allAny()) } returns listOf(dto)
+        every { VersionService.getVersions(allAny(), allAny()) } returns listOf(dto)
 
-        testAuthorizedRoute(HttpMethod.Get, baseUrl) {
+        testAuthorizedRoute(HttpMethod.Get, baseUrl(dto.id)) {
             assertEquals(HttpStatusCode.OK, response.status())
         }
     }
 
     @Test
     fun `Test Versions Get Exception`() = testAuthorizedExceptions(
-        constructAuthorizedRequest(HttpMethod.Get, baseUrl),
-        listOf { VersionService.getVersions(allAny()) },
+        constructAuthorizedRequest(HttpMethod.Get, baseUrl(0)),
+        listOf { VersionService.getVersions(allAny(), allAny()) },
         listOf(
             { RuntimeException() } to HttpStatusCode.InternalServerError,
             { UnauthException() } to HttpStatusCode.Unauthorized,
@@ -106,17 +110,17 @@ internal class VersionRouterTest : AbstractRouterTest(
     fun `Test Previous Versions Get Success`() {
         val dto = PreviousVersionsDTO(emptyList())
 
-        every { VersionService.getPreviousVersions(allAny()) } returns dto
+        every { VersionService.getPreviousVersions(allAny(), allAny()) } returns dto
 
-        testAuthorizedRoute(HttpMethod.Get, "$baseUrl/previous") {
+        testAuthorizedRoute(HttpMethod.Get, "${baseUrl(0)}/previous") {
             assertEquals(HttpStatusCode.OK, response.status())
         }
     }
 
     @Test
     fun `Test Previous Versions Get Exception`() = testAuthorizedExceptions(
-        constructAuthorizedRequest(HttpMethod.Get, "$baseUrl/previous"),
-        listOf { VersionService.getPreviousVersions(allAny()) },
+        constructAuthorizedRequest(HttpMethod.Get, "${baseUrl(0)}/previous"),
+        listOf { VersionService.getPreviousVersions(allAny(), allAny()) },
         listOf(
             { RuntimeException() } to HttpStatusCode.InternalServerError,
             { UnauthException() } to HttpStatusCode.Unauthorized,

@@ -15,7 +15,8 @@ internal class LeafIntegrationValidationTest : AbstractIntegrationTest() {
     @Test
     fun `Test Create Leaf With Blank Name Failure`() {
         authorizedTest { user, token, transaction ->
-            val version = transaction.createVersion(user)
+            val project = transaction.createProject(user)
+            val version = transaction.createVersion(user, project)
             val group = transaction.createGroup(version)
             val dto = LeafCreationDto(
                 null,
@@ -35,7 +36,8 @@ internal class LeafIntegrationValidationTest : AbstractIntegrationTest() {
     @Test
     fun `Test Create Leaf With Textual Type Success`() {
         authorizedTest { user, token, transaction ->
-            val version = transaction.createVersion(user)
+            val project = transaction.createProject(user)
+            val version = transaction.createVersion(user, project)
             val group = transaction.createGroup(version)
             val dto = LeafCreationDto(
                 null,
@@ -58,7 +60,8 @@ internal class LeafIntegrationValidationTest : AbstractIntegrationTest() {
     @Test
     fun `Test Create Leaf With Numeric Type Success`() {
         authorizedTest { user, token, transaction ->
-            val version = transaction.createVersion(user)
+            val project = transaction.createProject(user)
+            val version = transaction.createVersion(user, project)
             val group = transaction.createGroup(version)
             val dto = LeafCreationDto(
                 null,
@@ -81,7 +84,8 @@ internal class LeafIntegrationValidationTest : AbstractIntegrationTest() {
     @Test
     fun `Test Update Leaf With Blank Name Failure`() {
         authorizedTest { user, token, transaction ->
-            val version = transaction.createVersion(user)
+            val project = transaction.createProject(user)
+            val version = transaction.createVersion(user, project)
             val group = transaction.createGroup(version)
             val leaf = transaction.createLeaf(version, group.vid)
             val dto = LeafUpdateDto(
@@ -107,7 +111,8 @@ internal class LeafIntegrationValidationTest : AbstractIntegrationTest() {
     @Test
     fun `Test Update Leaf With Textual Type Success`() {
         authorizedTest { user, token, transaction ->
-            val version = transaction.createVersion(user)
+            val project = transaction.createProject(user)
+            val version = transaction.createVersion(user, project)
             val group = transaction.createGroup(version)
             val leaf = transaction.createLeaf(version, group.vid)
             val dto = LeafUpdateDto(
@@ -131,7 +136,8 @@ internal class LeafIntegrationValidationTest : AbstractIntegrationTest() {
     @Test
     fun `Test Update Leaf With Wrong Leaf Type Failure`() {
         authorizedTest { user, token, transaction ->
-            val version = transaction.createVersion(user)
+            val project = transaction.createProject(user)
+            val version = transaction.createVersion(user, project)
             val group = transaction.createGroup(version)
             val leaf = transaction.createLeaf(version, group.vid)
             val dto = LeafUpdateDto(
@@ -157,7 +163,8 @@ internal class LeafIntegrationValidationTest : AbstractIntegrationTest() {
     @Test
     fun `Test Update Leaf With Numeric Type Success`() {
         authorizedTest { user, token, transaction ->
-            val version = transaction.createVersion(user)
+            val project = transaction.createProject(user)
+            val version = transaction.createVersion(user, project)
             val group = transaction.createGroup(version)
             val leaf = transaction.createLeaf(version, group.vid)
             val dto = LeafUpdateDto(
@@ -181,7 +188,8 @@ internal class LeafIntegrationValidationTest : AbstractIntegrationTest() {
     @Test
     fun `Test Update Leaf With Numeric Type Incorrect Value Failure`() {
         authorizedTest { user, token, transaction ->
-            val version = transaction.createVersion(user)
+            val project = transaction.createProject(user)
+            val version = transaction.createVersion(user, project)
             val group = transaction.createGroup(version)
             val leaf = transaction.createLeaf(version, group.vid)
             val dto = LeafUpdateDto(

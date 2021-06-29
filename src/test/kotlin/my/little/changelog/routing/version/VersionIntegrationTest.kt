@@ -23,7 +23,8 @@ internal class VersionIntegrationTest : AbstractIntegrationTest() {
     @Test
     fun `Test Create Version Success`() {
         authorizedTest { user, token, transaction ->
-            val version = transaction.createVersion(user)
+            val project = transaction.createProject(user)
+            val version = transaction.createVersion(user, project)
 
             testAuthorizedRequest(HttpMethod.Get, "version/${version.id.value}", token) {
                 assertEquals(HttpStatusCode.OK, response.status())
@@ -35,7 +36,8 @@ internal class VersionIntegrationTest : AbstractIntegrationTest() {
     fun `Test Get Version Success`() {
         authorizedTest { user, token, transaction ->
 
-            val version = transaction.createVersion(user)
+            val project = transaction.createProject(user)
+            val version = transaction.createVersion(user, project)
             val group1 = transaction.createGroup(version)
             val group2 = transaction.createGroup(version, null, group1.vid)
             val leaf = transaction.createLeaf(version, group1.vid)
@@ -75,7 +77,8 @@ internal class VersionIntegrationTest : AbstractIntegrationTest() {
                 id = version.id.value,
                 canChange = true,
                 groupContent = listOf(group1Dto),
-                name = version.name
+                name = version.name,
+                projectId = project.id.value
             )
 
             testAuthorizedRequest(HttpMethod.Get, "version/${version.id}", token) {
@@ -89,10 +92,11 @@ internal class VersionIntegrationTest : AbstractIntegrationTest() {
     @Test
     fun `Test Get Versions Success`() {
         authorizedTest { user, token, transaction ->
-            transaction.createVersion(user)
-            transaction.createVersion(user)
+            val project = transaction.createProject(user)
+            transaction.createVersion(user, project)
+            transaction.createVersion(user, project)
 
-            testAuthorizedRequest(HttpMethod.Get, "version", token) {
+            testAuthorizedRequest(HttpMethod.Get, "project/${project.id}/version", token) {
                 assertEquals(HttpStatusCode.OK, response.status())
                 val jsonList: List<ReturnedVersionDto> = Json.decodeFromString(response.content!!)
                 assertEquals(2, jsonList.size)
@@ -103,8 +107,9 @@ internal class VersionIntegrationTest : AbstractIntegrationTest() {
     @Test
     fun `Test Delete Version Success`() {
         authorizedTest { user, token, transaction ->
-            val firstVersion = transaction.createVersion(user)
-            val latestVersion = transaction.createVersion(user)
+            val project = transaction.createProject(user)
+            val firstVersion = transaction.createVersion(user, project)
+            val latestVersion = transaction.createVersion(user, project)
             val g1 = transaction.createGroup(latestVersion)
             transaction.createGroup(latestVersion, null, g1.vid)
             transaction.createLeaf(latestVersion, g1.vid)
@@ -112,7 +117,7 @@ internal class VersionIntegrationTest : AbstractIntegrationTest() {
             testAuthorizedRequest(HttpMethod.Delete, "version/${latestVersion.id.value}", token) {
                 transaction {
                     assertEquals(HttpStatusCode.NoContent, response.status())
-                    assertEquals(firstVersion.id, VersionRepo.findLatest().id)
+                    assertEquals(firstVersion.id, VersionRepo.findLatestByProject(project).id)
                     assertEquals(0, GroupRepo.findAll().count())
                     assertEquals(0, LeafRepo.findAll().count())
                 }
@@ -123,15 +128,16 @@ internal class VersionIntegrationTest : AbstractIntegrationTest() {
     @Test
     fun `Test Delete Not Latest Version Failure`() {
         authorizedTest { user, token, transaction ->
-            val firstVersion = transaction.createVersion(user)
-            val latestVersion = transaction.createVersion(user)
+            val project = transaction.createProject(user)
+            val firstVersion = transaction.createVersion(user, project)
+            val latestVersion = transaction.createVersion(user, project)
             val group = transaction.createGroup(latestVersion)
             transaction.createLeaf(latestVersion, group.vid)
 
             testAuthorizedRequest(HttpMethod.Delete, "version/${firstVersion.id.value}", token) {
                 transaction {
                     assertEquals(HttpStatusCode.BadRequest, response.status())
-                    assertNotEquals(firstVersion, VersionRepo.findLatestByUser(user))
+                    assertNotEquals(firstVersion, VersionRepo.findLatestByProject(project))
                     assertEquals(1, GroupRepo.findAll().count())
                     assertEquals(1, LeafRepo.findAll().count())
                 }
@@ -142,7 +148,8 @@ internal class VersionIntegrationTest : AbstractIntegrationTest() {
     @Test
     fun `Test Delete Nonexistent Version Failure`() {
         authorizedTest { user, token, transaction ->
-            val firstVersion = transaction.createVersion(user)
+            val project = transaction.createProject(user)
+            val firstVersion = transaction.createVersion(user, project)
             transaction.createGroup(firstVersion)
 
             testAuthorizedRequest(HttpMethod.Delete, "version/${firstVersion.id.value + 1}", token) {
@@ -156,10 +163,11 @@ internal class VersionIntegrationTest : AbstractIntegrationTest() {
     @Test
     fun `Test Get Previous Version Success`() {
         authorizedTest { user, token, transaction ->
-            val latestVersion = transaction.createVersion(user)
+            val project = transaction.createProject(user)
+            val latestVersion = transaction.createVersion(user, project)
             val group = transaction.createGroup(latestVersion)
             val leaf = transaction.createLeaf(latestVersion, group.vid)
-            testAuthorizedRequest(HttpMethod.Get, "version/previous", token) {
+            testAuthorizedRequest(HttpMethod.Get, "project/${project.id}/version/previous", token) {
                 transaction {
                     assertEquals(HttpStatusCode.OK, response.status())
                     val json: PreviousVersionsDTO = Json.decodeFromString(response.content!!)
@@ -189,10 +197,11 @@ internal class VersionIntegrationTest : AbstractIntegrationTest() {
     @Test
     fun `Test Get Versions Preserve Order Success`() {
         authorizedTest { user, token, transaction ->
-            val v1 = transaction.createVersion(user)
-            val v2 = transaction.createVersion(user)
+            val project = transaction.createProject(user)
+            val v1 = transaction.createVersion(user, project)
+            val v2 = transaction.createVersion(user, project)
 
-            testAuthorizedRequest(HttpMethod.Get, "version", token) {
+            testAuthorizedRequest(HttpMethod.Get, "project/${project.id}/version", token) {
                 assertEquals(HttpStatusCode.OK, response.status())
                 val jsonList: List<ReturnedVersionDto> = Json.decodeFromString(response.content!!)
                 assertEquals(2, jsonList.size)

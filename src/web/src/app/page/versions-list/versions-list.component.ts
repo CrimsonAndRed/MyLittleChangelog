@@ -3,6 +3,7 @@ import { Version } from 'app/model/version';
 import { tap } from 'rxjs/operators';
 import { PreloaderService } from 'app/preloader/preloader.service';
 import { VersionsListService } from './versions-list.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'versions-list',
@@ -13,13 +14,14 @@ export class VersionsListComponent implements OnInit {
 
   versions: Version[] = [];
 
-  constructor(private preloaderService: PreloaderService,
+  constructor(private route: ActivatedRoute,
+              private preloaderService: PreloaderService,
               private versionsListService: VersionsListService) {
   }
 
   ngOnInit(): void {
     this.preloaderService.wrap(
-      this.versionsListService.initVersions().pipe(
+      this.versionsListService.initVersions(this.route.snapshot.params.id).pipe(
         tap((versions) => this.versions = versions),
       )
     );

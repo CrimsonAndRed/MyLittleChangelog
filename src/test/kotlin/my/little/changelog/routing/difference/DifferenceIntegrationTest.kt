@@ -13,8 +13,9 @@ internal class DifferenceIntegrationTest : AbstractIntegrationTest() {
     @Test
     fun `Test Get Difference Empty Success`() {
         authorizedTest { user, token, transaction ->
-            val version1 = transaction.createVersion(user)
-            val version2 = transaction.createVersion(user)
+            val project = transaction.createProject(user)
+            val version1 = transaction.createVersion(user, project)
+            val version2 = transaction.createVersion(user, project)
 
             testAuthorizedRequest(
                 HttpMethod.Get,
@@ -34,8 +35,9 @@ internal class DifferenceIntegrationTest : AbstractIntegrationTest() {
     @Test
     fun `Test Get Difference One Leaf Success`() {
         authorizedTest { user, token, transaction ->
-            val version1 = transaction.createVersion(user)
-            val version2 = transaction.createVersion(user)
+            val project = transaction.createProject(user)
+            val version1 = transaction.createVersion(user, project)
+            val version2 = transaction.createVersion(user, project)
             val group = transaction.createGroup(version2)
             val leaf = transaction.createLeaf(version2, group.vid)
 
@@ -66,8 +68,9 @@ internal class DifferenceIntegrationTest : AbstractIntegrationTest() {
     @Test
     fun `Test Get Difference With Nonexistent Version Failure`() {
         authorizedTest { user, token, transaction ->
-            val version1 = transaction.createVersion(user)
-            val version2 = transaction.createVersion(user)
+            val project = transaction.createProject(user)
+            val version1 = transaction.createVersion(user, project)
+            val version2 = transaction.createVersion(user, project)
 
             testAuthorizedRequest(
                 HttpMethod.Get,
@@ -82,8 +85,9 @@ internal class DifferenceIntegrationTest : AbstractIntegrationTest() {
     @Test
     fun `Test Get Difference With Param Missing Failure`() {
         authorizedTest { user, token, transaction ->
-            val version1 = transaction.createVersion(user)
-            transaction.createVersion(user)
+            val project = transaction.createProject(user)
+            val version1 = transaction.createVersion(user, project)
+            transaction.createVersion(user, project)
             testAuthorizedRequest(HttpMethod.Get, "difference?from=${version1.id.value}", token) {
                 assertEquals(HttpStatusCode.InternalServerError, response.status())
             }

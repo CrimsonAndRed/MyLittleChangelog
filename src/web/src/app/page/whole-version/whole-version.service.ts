@@ -159,7 +159,7 @@ export class WholeVersionService {
 
   getPrevoiusVersion(cb: OperatorFunction<WholeVersion, WholeVersion> = tap()) {
     this.preloaderService.wrap(
-      this.http.get<WholeVersion>(`${environment.backendPath}/version/previous`)
+      this.http.get<WholeVersion>(`${environment.backendPath}/project/${this.wholeVersionHeader.projectId}/version/previous`)
         .pipe(cb)
     )
   }

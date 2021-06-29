@@ -8,5 +8,6 @@ data class WholeVersion(
     val id: Int,
     val canChange: Boolean,
     val groupContent: List<WholeGroupDto>,
-    val name: String
+    val name: String,
+    val projectId: Int
 )

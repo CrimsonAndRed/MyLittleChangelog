@@ -4,6 +4,7 @@ import { VersionsListComponent } from './page/versions-list/versions-list.compon
 import { WholeVersionComponent } from './page/whole-version/whole-version.component';
 import { DifferenceComponent } from './page/difference/difference.component';
 import { LoginComponent } from './page/login/login.component';
+import { ProjectsListComponent } from './page/projects/projects-list.component';
 
 const routes: Routes = [
   {
@@ -11,8 +12,12 @@ const routes: Routes = [
     component: LoginComponent,
   },
   {
-    path: 'versions',
+    path: 'project/:id',
     component: VersionsListComponent,
+  },
+  {
+    path: 'projects',
+    component: ProjectsListComponent,
   },
   {
     path: 'version/:id',

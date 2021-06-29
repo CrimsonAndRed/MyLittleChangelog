@@ -4,11 +4,20 @@ CREATE TABLE users (
     password bytea
 );
 
+CREATE TABLE projects (
+    id SERIAL PRIMARY KEY,
+    name TEXT NOT NULL,
+    description TEXT,
+    "order" SERIAL,
+    user_id INTEGER NOT NULL REFERENCES users(id)
+);
+
 CREATE TABLE versions (
     id SERIAL PRIMARY KEY,
     name TEXT,
     "order" SERIAL,
-    user_id INT REFERENCES users (id)
+    user_id INT REFERENCES users (id),
+    project_id INT REFERENCES projects (id)
 );
 
 CREATE TABLE groups (

@@ -9,7 +9,8 @@ fun ReturnedVersionDto.toModel() = Version(
     id = EntityID(id, Versions)
 )
 
-fun VersionCreationDto.toServiceDto(cp: CustomPrincipal) = my.little.changelog.model.version.dto.service.VersionCreationDto(
+fun VersionCreationDto.toServiceDto(projectId: Int, cp: CustomPrincipal) = my.little.changelog.model.version.dto.service.VersionCreationDto(
     name = name,
+    projectId = projectId,
     principal = cp
 )

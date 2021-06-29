@@ -1,8 +1,8 @@
 package my.little.changelog.persistence.repo
 
-import my.little.changelog.model.auth.User
 import my.little.changelog.model.group.GroupLatest
 import my.little.changelog.model.group.GroupsLatest
+import my.little.changelog.model.project.Project
 import my.little.changelog.persistence.AbstractCrudRepository
 import org.jetbrains.exposed.sql.SizedIterable
 import org.jetbrains.exposed.sql.statements.jdbc.iterate
@@ -30,11 +30,11 @@ object GroupLatestRepo : AbstractCrudRepository<GroupLatest, Int>(GroupLatest) {
             ) SELECT id FROM parents
         """
 
-    private const val FIND_GROUPS_BY_USER_QUERY =
+    private const val FIND_GROUPS_BY_PROJECT_QUERY =
         """
            SELECT groups_latest.id FROM groups_latest
            JOIN versions ON groups_latest.version_id = versions.id
-           WHERE versions.user_id = ? AND groups_latest.is_deleted <> true
+           WHERE versions.project_id = ? AND groups_latest.is_deleted <> true
         """
 
     fun findByVid(vid: Int): GroupLatest = transaction {
@@ -53,9 +53,9 @@ object GroupLatestRepo : AbstractCrudRepository<GroupLatest, Int>(GroupLatest) {
         }.iterate { getInt("id") }
     }
 
-    fun findAllByUserNotDeleted(user: User): SizedIterable<GroupLatest> = transaction {
-        raw(FIND_GROUPS_BY_USER_QUERY, arrayOf("id")) {
-            set(1, user.id.value)
+    fun findAllByProjectNotDeleted(project: Project): SizedIterable<GroupLatest> = transaction {
+        raw(FIND_GROUPS_BY_PROJECT_QUERY, arrayOf("id")) {
+            set(1, project.id.value)
         }.iterate { getInt("id") }.let { GroupLatest.forIds(it) }
     }
 }
